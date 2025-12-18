@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Create an auditor user</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Authentication
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Auditor users
+description: Provide read-only access for auditing and compliance monitoring across all resources.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Auditor users have read-only access to all groups, projects, and other resources in the instance.</p>
+<p>Auditor users:</p>
+<ul>
+<li>Have read-only access to all groups and projects.</li>
+<li>Due to a <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/542815">known issue</a>, users must have at least the Reporter role to perform read-only tasks.</li>
+<li>Can have additional <a href="../user/permissions.html">permissions</a> to groups and projects based on their assigned role.</li>
+<li>Can create groups, projects, or snippets in their personal namespace.</li>
+<li>Cannot view the Admin area or perform any administration actions.</li>
+<li>Cannot access group or projects settings.</li>
+<li>Cannot view job logs when <a href="../ci/variables/variables_troubleshooting.md#enable-debug-logging">debug logging</a> is enabled.</li>
+<li>Cannot access areas designed for editing, including the <a href="../ci/pipeline_editor/_index.html">pipeline editor</a>.</li>
+</ul>
+<p>Auditor users are sometimes used in situations where:</p>
+<ul>
+<li>An organization needs to test security policy compliance across an entire GitLab instance.
+  An auditor user can do this without being added to every project or given administrator access.</li>
+<li>A specific user needs to view a large number of projects in the GitLab instance. Instead of
+  manually adding the user to every project, you can create an auditor user that can access
+  every project automatically.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>An auditor user counts as a billable user and consumes a license seat.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Create an auditor user</h2>
+<p>To create a new auditor user:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>Select <strong>New user</strong>.</li>
+<li>In the <strong>Account</strong> section, enter the required account information.</li>
+<li>For <strong>User type</strong>, select <strong>Auditor</strong>.</li>
+<li>Select <strong>Create user</strong>.</li>
+</ol>
+<p>You can also create auditor users with:</p>
+<ul>
+<li><a href="../integration/saml.md#auditor-groups">SAML groups</a>.</li>
+<li>The <a href="../api/users.html">users API</a>.</li>
+</ul></code></pre>
+</body>
+</html>

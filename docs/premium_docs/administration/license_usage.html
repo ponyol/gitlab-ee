@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Export license usage</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Fulfillment
+group: Seat Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: License usage</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can view the usage associated with your GitLab license
+and export the license usage file with the following information:</p>
+<ul>
+<li>License key</li>
+<li>Licensee email</li>
+<li>License start date (UTC)</li>
+<li>License end date (UTC)</li>
+<li>Company</li>
+<li>Timestamp the file was generated at and exported (UTC)</li>
+<li>Table of historical user counts for each day in the period:</li>
+<li>Timestamp the count was recorded (UTC)</li>
+<li>Billable user count</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>A custom format is used for <a href="https://gitlab.com/gitlab-org/gitlab/blob/3be39f19ac3412c089be28553e6f91b681e5d739/config/initializers/date_time_formats.rb#L7">dates</a> and <a href="https://gitlab.com/gitlab-org/gitlab/blob/3be39f19ac3412c089be28553e6f91b681e5d739/config/initializers/date_time_formats.rb#L13">times</a> in CSV files.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Export license usage</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<p>You can export your license usage into a CSV file.</p>
+<p>This file contains the information GitLab uses to manually process
+<a href="../subscriptions/quarterly_reconciliation.html">quarterly reconciliations</a>
+and <a href="../subscriptions/manage_subscription.md#renew-subscription">renewals</a>. If your instance is firewalled or an
+offline environment, you must provide GitLab with this information.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Do not open the license usage file. If you open the file, failures might occur when <a href="license_file.md#submit-license-usage-data">you submit your license usage data</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Subscription</strong>.</li>
+<li>In the upper-right corner, select <strong>Export license usage file</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 user/gitlab_duo/model_context_protocol/mcp_server_tools.md</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <pre><code><ol>
+<li>
+<p><strong>Зачем это нужно</strong><br />
+Инструменты GitLab MCP server позволяют интегрировать взаимодействие с GitLab в AI-агенты и автоматизированные процессы, расширяя возможности управления задачами, запросами на слияние и CI/CD-пайплайнами через API.</p>
+</li>
+<li>
+<p><strong>Основные возможности</strong>  </p>
+</li>
+<li>Получение версии GitLab MCP server (<code>get_mcp_server_version</code>)  </li>
+<li>Создание и получение информации об issue (<code>create_issue</code>, <code>get_issue</code>)  </li>
+<li>Создание и получение данных о merge request (<code>create_merge_request</code>, <code>get_merge_request</code>)  </li>
+<li>Получение коммитов, диффов и пайплайнов для merge request (<code>get_merge_request_commits</code>, <code>get_merge_request_diffs</code>, <code>get_merge_request_pipelines</code>)  </li>
+<li>Получение списка job в пайплайне (<code>get_pipeline_jobs</code>)  </li>
+<li>Создание комментариев к work item (<code>create_workitem_note</code>)  </li>
+<li>Поиск в GitLab по различным сущностям (issues, merge requests, projects) (<code>gitlab_search</code>)  </li>
+<li>
+<p>Поиск кода по семантике в проектах с включённым GitLab Duo (<code>semantic_code_search</code>)</p>
+</li>
+<li>
+<p><strong>Важные нюансы</strong>  </p>
+</li>
+<li>Требуется лицензия Tier: Premium или Ultimate  </li>
+<li>Дополнительное требование — GitLab Duo (Core, Pro или Enterprise)  </li>
+<li>Поддержка: GitLab.com, Self-Managed и Dedicated  </li>
+<li>Статус — Beta  </li>
+<li>Некоторые инструменты доступны только в определённых версиях GitLab (например, <code>create_workitem_note</code> — с 18.7)  </li>
+<li>Для <code>semantic_code_search</code> требуется включённый GitLab Duo и проиндексированные файлы проекта  </li>
+<li>Некоторые функции находятся на стадии эксперимента или бета-тестирования (например, <code>semantic_code_search</code>)</li>
+</ol>
+<hr /></code></pre>
+</body>
+</html>

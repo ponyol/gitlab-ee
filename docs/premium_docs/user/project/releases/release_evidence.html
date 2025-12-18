@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Collect release evidence</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Compliance
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Release evidence</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Each time a release is created, GitLab takes a snapshot of data that's related to it.
+This data is saved in a JSON file and called <em>release evidence</em>. The feature
+includes test artifacts and linked milestones to facilitate
+internal processes, like external audits.</p>
+<p>To access the release evidence, on the Releases page, select the link to the JSON file that's listed
+under the <strong>Evidence collection</strong> heading.</p>
+<p>You can also <a href="../../../api/releases/_index.md#collect-release-evidence">use the API</a> to
+generate release evidence for an existing release. Because of this, each release
+can have multiple release evidence snapshots. You can view the release evidence and
+its details on the Releases page.</p>
+<p>When the issue tracker is disabled, release evidence <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/208397">can't be downloaded</a>.</p>
+<p>Here is an example of a release evidence object:</p>
+<pre><code class="language-json">{
+  &quot;release&quot;: {
+    &quot;id&quot;: 5,
+    &quot;tag_name&quot;: &quot;v4.0&quot;,
+    &quot;name&quot;: &quot;New release&quot;,
+    &quot;project&quot;: {
+      &quot;id&quot;: 20,
+      &quot;name&quot;: &quot;Project name&quot;,
+      &quot;created_at&quot;: &quot;2019-04-14T11:12:13.940Z&quot;,
+      &quot;description&quot;: &quot;Project description&quot;
+    },
+    &quot;created_at&quot;: &quot;2019-06-28 13:23:40 UTC&quot;,
+    &quot;description&quot;: &quot;Release description&quot;,
+    &quot;milestones&quot;: [
+      {
+        &quot;id&quot;: 11,
+        &quot;title&quot;: &quot;v4.0-rc1&quot;,
+        &quot;state&quot;: &quot;closed&quot;,
+        &quot;due_date&quot;: &quot;2019-05-12 12:00:00 UTC&quot;,
+        &quot;created_at&quot;: &quot;2019-04-17 15:45:12 UTC&quot;,
+        &quot;description&quot;: &quot;milestone description&quot;,
+      },
+      {
+        &quot;id&quot;: 12,
+        &quot;title&quot;: &quot;v4.0-rc2&quot;,
+        &quot;state&quot;: &quot;closed&quot;,
+        &quot;due_date&quot;: &quot;2019-05-30 18:30:00 UTC&quot;,
+        &quot;created_at&quot;: &quot;2019-04-17 15:45:12 UTC&quot;,
+        &quot;description&quot;: &quot;milestone description&quot;,
+      }
+    ],
+    &quot;report_artifacts&quot;: [
+      {
+        &quot;url&quot;:&quot;https://gitlab.example.com/root/project-name/-/jobs/111/artifacts/download&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<h2>Collect release evidence</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When a release is created, release evidence is automatically collected. To initiate evidence collection any other time, use an <a href="../../../api/releases/_index.md#collect-release-evidence">API call</a>. You can collect release evidence multiple times for one release.</p>
+<p>Evidence collection snapshots are visible on the Releases page, along with the timestamp the evidence was collected.</p>
+<h2>Include report artifacts as release evidence</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When you create a release, if <a href="../../../ci/yaml/_index.md#artifactsreports">job artifacts</a> are included in the last pipeline that ran, they are automatically included in the release as release evidence.</p>
+<p>Although job artifacts usually expire, artifacts included in release evidence do not expire.</p>
+<p>To enable job artifact collection you must specify both:</p>
+<ol>
+<li><a href="../../../ci/yaml/_index.md#artifactspaths"><code>artifacts:paths</code></a></li>
+<li><a href="../../../ci/yaml/_index.md#artifactsreports"><code>artifacts:reports</code></a></li>
+</ol>
+<pre><code class="language-yaml">ruby:
+  script:
+    - gem install bundler
+    - bundle install
+    - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
+  artifacts:
+    paths:
+      - rspec.xml
+    reports:
+      junit: rspec.xml
+</code></pre>
+<p>If the pipeline ran successfully, when you create your release, the <code>rspec.xml</code> file is saved as
+release evidence.</p>
+<p>If you <a href="#schedule-release-evidence-collection">schedule release evidence collection</a>,
+some artifacts may already be expired by the time of evidence collection. To avoid this you can use
+the <a href="../../../ci/yaml/_index.md#artifactsexpire_in"><code>artifacts:expire_in</code></a>
+keyword. For more information, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/222351">issue 222351</a>.</p>
+<h2>Schedule release evidence collection</h2>
+<p>In the API:</p>
+<ul>
+<li>If you specify a future <code>released_at</code> date, the release becomes an <strong>Upcoming release</strong>
+  and the evidence is collected on the date of the release. You cannot collect
+  release evidence before then.</li>
+<li>If you specify a past <code>released_at</code> date, the release becomes an <strong>Historical
+  release</strong> and no evidence is collected.</li>
+<li>If you do not specify a <code>released_at</code> date, release evidence is collected on the
+  date the release is created.</li>
+</ul></code></pre>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Use with remote development</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Editor Extensions
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Connect and use GitLab Duo in JetBrains IDEs.
+title: GitLab Duo plugin for JetBrains IDEs</p>
+<hr />
+<p>The <a href="https://plugins.jetbrains.com/plugin/22325-gitlab-duo">GitLab Duo plugin</a> integrates GitLab Duo
+with JetBrains IDEs like IntelliJ, PyCharm, GoLand, Webstorm, and Rubymine.</p>
+<p>To install and configure the extension, see <a href="setup.html">Install and set up</a>.</p>
+<h2>Use with remote development</h2>
+<p>The GitLab Duo plugin works with JetBrains Remote Development when installed on the host machine (remote server).</p>
+<p>For information about installing plugins in remote development environments, see the JetBrains documentation:</p>
+<ul>
+<li><a href="https://www.jetbrains.com/help/idea/work-inside-remote-project.html#plugins">Install plugins in remote projects</a>.</li>
+<li><a href="https://www.jetbrains.com/help/idea/customizing-devcontainer-json-file.html#add_plugins">Add plugins to Dev Containers</a>.</li>
+</ul>
+<h2>Enable experimental or beta features</h2>
+<p>Some features in the plugin are in experiment or beta status. To use them, you must opt in:</p>
+<ol>
+<li>Go to your IDE's top menu bar and select <strong>Settings</strong>, or:</li>
+<li>MacOS: press <kbd>Command</kbd>+<kbd>,</kbd></li>
+<li>Windows or Linux: press <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd></li>
+<li>On the left sidebar, expand <strong>Tools</strong>, then select <strong>GitLab Duo</strong>.</li>
+<li>Select <strong>Enable Experiment or BETA features</strong>.</li>
+<li>To apply the changes, restart your IDE.</li>
+</ol>
+<h2>Update the extension</h2>
+<p>To update your extension to the latest version:</p>
+<ol>
+<li>In your JetBrains IDE, go to <strong>Settings</strong> &gt; <strong>Plugins</strong>.</li>
+<li>From <strong>Marketplace</strong>, select <strong>GitLab Duo</strong> published by <strong>GitLab, Inc.</strong>.</li>
+<li>Select <strong>Update</strong> to update to the latest plugin version.</li>
+</ol>
+<h2>Enable telemetry</h2>
+<p>The GitLab Duo plugin uses the telemetry settings in your JetBrains IDE to send usage and error
+information to GitLab. To enable telemetry in your JetBrains IDE:</p>
+<ol>
+<li>Go to your IDE's top menu bar and select <strong>Settings</strong>. For example, in PyCharm, select <strong>PyCharm</strong> &gt; <strong>Settings</strong>.</li>
+<li>On the left sidebar, expand <strong>Tools</strong>, then select <strong>GitLab Duo</strong>.</li>
+<li>Under <strong>Advanced</strong>, select the <strong>Enable telemetry</strong> checkbox.</li>
+<li>Select <strong>OK</strong> or <strong>Apply</strong> to save your changes.</li>
+</ol>
+<h2>Integrate with 1Password CLI</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-jetbrains-plugin/-/issues/291">Introduced</a> in GitLab Duo 2.1 for GitLab 16.11 and later.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can configure the plugin to use 1Password secret references for authentication instead of
+hard-coding personal access tokens.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You have the <a href="https://1password.com">1Password</a> desktop app installed.</li>
+<li>You have the <a href="https://developer.1password.com/docs/cli/get-started/">1Password CLI</a> tool installed.</li>
+</ul>
+<p>To integrate GitLab for JetBrains with the 1Password CLI:</p>
+<ol>
+<li>Authenticate with GitLab. Either:</li>
+<li><a href="https://docs.gitlab.com/cli/#install-the-cli">Install the <code>glab</code></a> CLI and
+     configure the <a href="https://developer.1password.com/docs/cli/shell-plugins/gitlab/">1Password shell plugin</a>.</li>
+<li>Follow the GitLab for JetBrains <a href="setup.html">set up steps</a>.</li>
+<li>Open the 1Password item.</li>
+<li><a href="https://developer.1password.com/docs/cli/secret-references/#step-1-copy-secret-references">Copy the secret reference</a>.</li>
+</ol>
+<p>If you use the <code>gitlab</code> 1Password shell plugin, the token is stored as a password under <code>"op://Private/GitLab Personal Access Token/token"</code>.</p>
+<p>From the IDE:</p>
+<ol>
+<li>Go to your IDE's top menu bar and select <strong>Settings</strong>.</li>
+<li>On the left sidebar, expand <strong>Tools</strong>, then select <strong>GitLab Duo</strong>.</li>
+<li>Under <strong>Authentication</strong>, select the <strong>1Password CLI</strong> tab.</li>
+<li>Select <strong>Integrate with 1Password CLI</strong>.</li>
+<li>Optional. For <strong>Secret reference</strong>, paste the secret reference you copied from 1Password.</li>
+<li>Optional. To verify your credentials, select <strong>Verify setup</strong>.</li>
+<li>Select <strong>OK</strong> or <strong>Save</strong>.</li>
+</ol>
+<h2>Report issues with the plugin</h2>
+<p>You can report any issues, bugs, or feature requests in the
+<a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-jetbrains-plugin/-/issues"><code>gitlab-jetbrains-plugin</code> issue tracker</a>.
+Use the <code>Bug</code> or <code>Feature Proposal</code> template.</p>
+<p>If you encounter an error while using GitLab Duo, you can also report it with your IDE's
+built-in error reporting tool:</p>
+<ol>
+<li>To access the tool, either:</li>
+<li>When an error occurs, in the error message, select <strong>See details and submit report</strong>.</li>
+<li>In the status bar, on the bottom right, select the exclamation mark.</li>
+<li>In the <strong>IDE Internal Errors</strong> dialog, describe the error.</li>
+<li>Select <strong>Report and clear all</strong>.</li>
+<li>Your browser opens a GitLab issue form, pre-populated with debug information.</li>
+<li>Follow the prompts in the issue template to fill out the description, providing
+   as much context as you can.</li>
+<li>Select <strong>Create issue</strong> to file the bug report.</li>
+</ol>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../security_considerations.html">Security considerations for editor extensions</a></li>
+<li><a href="../../user/project/repository/code_suggestions/_index.html">Code Suggestions</a></li>
+<li><a href="jetbrains_troubleshooting.html">JetBrains troubleshooting</a></li>
+<li><a href="../language_server/_index.html">GitLab Language Server documentation</a></li>
+<li><a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-jetbrains-plugin/-/issues/">Open issues for this plugin</a></li>
+<li><a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-jetbrains-plugin/-/blob/main/README.md">Plugin documentation</a></li>
+<li><a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-jetbrains-plugin">View source code</a></li>
+</ul></code></pre>
+</body>
+</html>

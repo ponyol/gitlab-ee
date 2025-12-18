@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Create a job that must be run manually</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Pipeline Authoring
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Control how jobs run</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Before a new pipeline starts, GitLab checks the pipeline configuration to determine
+which jobs can run in that pipeline. You can configure jobs to run depending on
+conditions like the value of variables or the pipeline type with <a href="job_rules.html"><code>rules</code></a>.
+When using job rules, learn how to <a href="job_rules.md#avoid-duplicate-pipelines">avoid duplicate pipelines</a>. To control pipeline creation, use <a href="../yaml/workflow.html"><code>workflow:rules</code></a>.</p>
+<h2>Create a job that must be run manually</h2>
+<p>You can require that a job doesn't run unless a user starts it. This is called a <strong>manual job</strong>.
+You might want to use a manual job for something like deploying to production.</p>
+<p>To specify a job as manual, add <a href="../yaml/_index.md#when"><code>when: manual</code></a> to the job
+in the <code>.gitlab-ci.yml</code> file.</p>
+<p>By default, manual jobs display as skipped when the pipeline starts.</p>
+<p>You can use <a href="../../user/project/repository/branches/protected.html">protected branches</a> to more strictly
+<a href="#protect-manual-jobs">protect manual deployments</a> from being run by unauthorized users.</p>
+<p>Manual jobs that are <a href="../../administration/settings/continuous_integration.md#archive-pipelines">archived</a> do not run.</p>
+<h3>Types of manual jobs</h3>
+<p>Manual jobs can be either optional or blocking.</p>
+<p>In optional manual jobs:</p>
+<ul>
+<li><a href="../yaml/_index.md#allow_failure"><code>allow_failure</code></a> is <code>true</code>, which is the default
+  setting for jobs that have <code>when: manual</code> defined outside of <code>rules</code>.</li>
+<li>The status does not contribute to the overall pipeline status. A pipeline can
+  succeed even if all of its manual jobs fail.</li>
+</ul>
+<p>In blocking manual jobs:</p>
+<ul>
+<li><code>allow_failure</code> is <code>false</code>, which is the default setting for jobs that have <code>when: manual</code>
+  defined inside <a href="../yaml/_index.md#rules"><code>rules</code></a>.</li>
+<li>The pipeline stops at the stage where the job is defined. To let the pipeline
+  continue running, <a href="#run-a-manual-job">run the manual job</a>.</li>
+<li>Merge requests in projects with <a href="../../user/project/merge_requests/auto_merge.md#require-a-successful-pipeline-for-merge"><strong>Pipelines must succeed</strong></a>
+  enabled can't be merged with a blocked pipeline.</li>
+<li>The pipeline shows a status of <strong>blocked</strong>.</li>
+</ul>
+<p>When using manual jobs in triggered pipelines with a <a href="../yaml/_index.md#triggerstrategy"><code>trigger:strategy</code></a>,
+the type of manual job can affect the trigger job's status while the pipeline runs.</p>
+<h3>Run a manual job</h3>
+<p>To run a manual job, you must have permission to merge to the assigned branch:</p>
+<ol>
+<li>Go to the pipeline, job, <a href="../environments/deployments.md#configure-manual-deployments">environment</a>,
+   or deployment view.</li>
+<li>Next to the manual job, select <strong>Run</strong> ({{&lt; icon name="play" &gt;}}).</li>
+</ol>
+<h3>Specify variables when running manual jobs</h3>
+<p>When running manual jobs you can supply additional job specific CI/CD variables.
+Specify variables here when you want to alter the execution of a job that uses
+<a href="../variables/_index.html">CI/CD variables</a>.</p>
+<p>To run a manual job and specify additional variables:</p>
+<ul>
+<li>Select the <strong>name</strong> of the manual job in the pipeline view, not <strong>Run</strong> ({{&lt; icon name="play" &gt;}}).</li>
+<li>In the form, add variable key and value pairs.</li>
+<li>Select <strong>Run job</strong>.</li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Any project member with permissions to run a manual job can retry the job and view the variables
+that were provided when the job was initially run. This includes:</p>
+<ul>
+<li>In public projects: Users with at least the Developer role.</li>
+<li>In private or internal projects: Users with at least the Guest role.</li>
+</ul>
+<p>Consider this visibility when entering sensitive information as manual job variables.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>If you add a variable that is already defined in the CI/CD settings or <code>.gitlab-ci.yml</code> file,
+the <a href="../variables/_index.md#use-pipeline-variables">variable is overridden</a> with the new value.
+Any variables overridden by using this process are <a href="../variables/_index.md#allow-cicd-variable-expansion">expanded</a>
+and not <a href="../variables/_index.md#mask-a-cicd-variable">masked</a>.</p>
+<h4>Retry a manual job with updated variables</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/96199">Introduced</a> in GitLab 15.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you retry a manual job that was previously run with manually-specified variables,
+you can update the variables or use the same variables.</p>
+<p>To retry a manual job with previously-specified variables:</p>
+<ul>
+<li>With the same variables:</li>
+<li>From the job details page, select <strong>Retry</strong> ({{&lt; icon name="retry" &gt;}}).</li>
+<li>With updated variables:</li>
+<li>From the job details page, select <strong>Update CI/CD variables</strong> ({{&lt; icon name="pencil-square" &gt;}}).</li>
+<li>The variables that were specified in the previous run are prefilled in the form.
+    You can add, modify, or delete CI/CD variables from this form.</li>
+<li>Select <strong>Run job again</strong>.</li>
+</ul>
+<h3>Require confirmation for manual jobs</h3>
+<p>Use <a href="../yaml/_index.md#manual_confirmation"><code>manual_confirmation</code></a> with <code>when: manual</code> to require confirmation for manual jobs.
+This helps prevent accidental deployments or deletions for sensitive jobs like those that deploy to production.</p>
+<p>When you trigger the job, you must confirm the action before it runs.</p>
+<h3>Protect manual jobs</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use <a href="../environments/protected_environments.html">protected environments</a>
+to define a list of users authorized to run a manual job. You can authorize only
+the users associated with a protected environment to trigger manual jobs, which can:</p>
+<ul>
+<li>More precisely limit who can deploy to an environment.</li>
+<li>Block a pipeline until an approved user "approves" it.</li>
+</ul>
+<p>To protect a manual job:</p>
+<ol>
+<li>Add an <code>environment</code> to the job. For example:</li>
+</ol>
+<p><code>yaml
+   deploy_prod:
+     stage: deploy
+     script:
+       - echo "Deploy to production server"
+     environment:
+       name: production
+       url: https://example.com
+     when: manual
+     rules:
+       - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</code></p>
+<ol>
+<li>In the <a href="../environments/protected_environments.md#protecting-environments">protected environments settings</a>,
+   select the environment (<code>production</code> in this example) and add the users, roles or groups
+   that are authorized to trigger the manual job to the <strong>Allowed to Deploy</strong> list. Only those in
+   this list can trigger this manual job, and GitLab administrators
+   who are always able to use protected environments.</li>
+</ol>
+<p>You can use protected environments with blocking manual jobs to have a list of users
+allowed to approve later pipeline stages. Add <code>allow_failure: false</code> to the protected
+manual job and the pipeline's next stages only run after the manual job is triggered
+by authorized users.</p>
+<h2>Run a job after a delay</h2>
+<p>Use <a href="../yaml/_index.md#when"><code>when: delayed</code></a> to execute scripts after a waiting period, or if you want to avoid
+jobs immediately entering the <code>pending</code> state.</p>
+<p>You can set the period with <code>start_in</code> keyword. The value of <code>start_in</code> is an elapsed time
+in seconds, unless a unit is provided. The minimum is one second, and the maximum is one week.
+Examples of valid values include:</p>
+<ul>
+<li><code>'5'</code> (a value with no unit must be surrounded by single quotes)</li>
+<li><code>5 seconds</code></li>
+<li><code>30 minutes</code></li>
+<li><code>1 day</code></li>
+<li><code>1 week</code></li>
+</ul>
+<p>When a stage includes a delayed job, the pipeline doesn't progress until the delayed job finishes.
+You can use this keyword to insert delays between different stages.</p>
+<p>The timer of a delayed job starts immediately after the previous stage completes.
+Similar to other types of jobs, a delayed job's timer doesn't start unless the previous stage passes.</p>
+<p>The following example creates a job named <code>timed rollout 10%</code> that is executed 30 minutes after the previous stage completes:</p>
+<pre><code class="language-yaml">timed rollout 10%:
+  stage: deploy
+  script: echo 'Rolling out 10% ...'
+  when: delayed
+  start_in: 30 minutes
+  environment: production
+</code></pre>
+<p>To stop the active timer of a delayed job, select <strong>Unschedule</strong> ({{&lt; icon name="time-out" &gt;}}).
+This job can no longer be scheduled to run automatically. You can, however, execute the job manually.</p>
+<p>To start a delayed job manually, select <strong>Unschedule</strong> ({{&lt; icon name="time-out" &gt;}}) to stop the delay timer and then select <strong>Run</strong> ({{&lt; icon name="play" &gt;}}).
+Soon GitLab Runner starts the job.</p>
+<p>Delayed jobs that are <a href="../../administration/settings/continuous_integration.md#archive-pipelines">archived</a>
+do not run.</p>
+<h2>Parallelize large jobs</h2>
+<p>To split a large job into multiple smaller jobs that run in parallel, use the
+<a href="../yaml/_index.md#parallel"><code>parallel</code></a> keyword in your <code>.gitlab-ci.yml</code> file.</p>
+<p>Different languages and test suites have different methods to enable parallelization.
+For example, use <a href="https://github.com/renderedtext/test-boosters">Semaphore Test Boosters</a>
+and RSpec to run Ruby tests in parallel:</p>
+<pre><code class="language-ruby"># Gemfile
+source 'https://rubygems.org'
+
+gem 'rspec'
+gem 'semaphore_test_boosters'
+</code></pre>
+<pre><code class="language-yaml">test:
+  parallel: 3
+  script:
+    - bundle
+    - bundle exec rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL
+</code></pre>
+<p>You can then go to the <strong>Jobs</strong> tab of a new pipeline build and see your RSpec
+job split into three separate jobs.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Test Boosters reports usage statistics to the author.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Run a one-dimensional matrix of parallel jobs</h3>
+<p>To run a job multiple times in parallel in a single pipeline, but with different values for each instance of the job,
+use the <a href="../yaml/_index.md#parallelmatrix"><code>parallel:matrix</code></a> keyword:</p>
+<pre><code class="language-yaml">deploystacks:
+  stage: deploy
+  script:
+    - bin/deploy
+  parallel:
+    matrix:
+      - PROVIDER: [aws, ovh, gcp, vultr]
+  environment: production/$PROVIDER
+</code></pre>
+<p>In this example, 4 <code>deploystacks</code> jobs are created, and <code>PROVIDER</code> becomes a CI/CD variable
+with a different value in each:</p>
+<ul>
+<li><code>deploystacks: [aws]</code></li>
+<li><code>deploystacks: [ovh]</code></li>
+<li><code>deploystacks: [gcp]</code></li>
+<li><code>deploystacks: [vultr]</code></li>
+</ul>
+<h3>Run a matrix of parallel trigger jobs</h3>
+<p>You can run a <a href="../yaml/_index.md#trigger">trigger</a> job multiple times in parallel in a single pipeline,
+but with different variables available for each instance of the job.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">deploystacks:
+  stage: deploy
+  trigger:
+    include: path/to/child-pipeline.yml
+  parallel:
+    matrix:
+      - PROVIDER: aws
+        STACK: [monitoring, app1]
+      - PROVIDER: ovh
+        STACK: [monitoring, backup]
+      - PROVIDER: [gcp, vultr]
+        STACK: [data]
+</code></pre>
+<p>This example generates 6 parallel <code>deploystacks</code> trigger jobs, each with different values
+for <code>PROVIDER</code> and <code>STACK</code>, and they create 6 different child pipelines with those variables.</p>
+<pre><code class="language-plaintext">deploystacks: [aws, monitoring]
+deploystacks: [aws, app1]
+deploystacks: [ovh, monitoring]
+deploystacks: [ovh, backup]
+deploystacks: [gcp, data]
+deploystacks: [vultr, data]
+</code></pre>
+<h3>Select different runner tags for each parallel matrix job</h3>
+<p>You can use values defined in <code>parallel: matrix</code> with the <a href="../yaml/_index.md#tags"><code>tags</code></a>
+keyword for dynamic runner selection:</p>
+<pre><code class="language-yaml">deploystacks:
+  stage: deploy
+  script:
+    - bin/deploy
+  parallel:
+    matrix:
+      - PROVIDER: aws
+        STACK: [monitoring, app1]
+      - PROVIDER: gcp
+        STACK: [data]
+  tags:
+    - ${PROVIDER}-${STACK}
+  environment: $PROVIDER/$STACK
+</code></pre>
+<h3>Fetch artifacts from a <code>parallel:matrix</code> job</h3>
+<p>You can fetch artifacts from a job created with <a href="../yaml/_index.md#parallelmatrix"><code>parallel:matrix</code></a>
+by using the <a href="../yaml/_index.md#dependencies"><code>dependencies</code></a> keyword. Use the job name
+as the value for <code>dependencies</code> as a string in the form:</p>
+<pre><code class="language-plaintext">&lt;job_name&gt; [&lt;matrix argument 1&gt;, &lt;matrix argument 2&gt;, ... &lt;matrix argument N&gt;]
+</code></pre>
+<p>For example, to fetch the artifacts from the job with a <code>RUBY_VERSION</code> of <code>2.7</code> and
+a <code>PROVIDER</code> of <code>aws</code>:</p>
+<pre><code class="language-yaml">ruby:
+  image: ruby:${RUBY_VERSION}
+  parallel:
+    matrix:
+      - RUBY_VERSION: [&quot;2.5&quot;, &quot;2.6&quot;, &quot;2.7&quot;, &quot;3.0&quot;, &quot;3.1&quot;]
+        PROVIDER: [aws, gcp]
+  script: bundle install
+
+deploy:
+  image: ruby:2.7
+  stage: deploy
+  dependencies:
+    - &quot;ruby: [2.7, aws]&quot;
+  script: echo hello
+  environment: production
+</code></pre>
+<p>Quotes around the <code>dependencies</code> entry are required.</p>
+<h3>Specify a parallelized job using needs with multiple parallelized jobs</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/254821">Introduced</a> in GitLab 16.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can use <a href="../yaml/_index.md#needsparallelmatrix"><code>needs:parallel:matrix</code></a> to create
+dependencies between multiple parallelized jobs. You can use two techniques for configuration:</p>
+<ul>
+<li>Automatically with <a href="../yaml/matrix_expressions.html"><code>matrix.</code> expressions</a>.</li>
+<li>Manually, as demonstrated below.</li>
+</ul>
+<p>For example:</p>
+<pre><code class="language-yaml">linux:build:
+  stage: build
+  script: echo &quot;Building linux...&quot;
+  parallel:
+    matrix:
+      - PROVIDER: aws
+        STACK:
+          - monitoring
+          - app1
+          - app2
+
+mac:build:
+  stage: build
+  script: echo &quot;Building mac...&quot;
+  parallel:
+    matrix:
+      - PROVIDER: [gcp, vultr]
+        STACK: [data, processing]
+
+linux:rspec:
+  stage: test
+  needs:
+    - job: linux:build
+      parallel:
+        matrix:
+          - PROVIDER: aws
+            STACK: app1
+  script: echo &quot;Running rspec on linux...&quot;
+
+mac:rspec:
+  stage: test
+  needs:
+    - job: mac:build
+      parallel:
+        matrix:
+          - PROVIDER: [gcp, vultr]
+            STACK: [data]
+  script: echo &quot;Running rspec on mac...&quot;
+
+production:
+  stage: deploy
+  script: echo &quot;Running production...&quot;
+  environment: production
+</code></pre>
+<p>This example generates several jobs. The parallel jobs each have different values
+for <code>PROVIDER</code> and <code>STACK</code>.</p>
+<ul>
+<li>3 parallel <code>linux:build</code> jobs:</li>
+<li><code>linux:build: [aws, monitoring]</code></li>
+<li><code>linux:build: [aws, app1]</code></li>
+<li><code>linux:build: [aws, app2]</code></li>
+<li>4 parallel <code>mac:build</code> jobs:</li>
+<li><code>mac:build: [gcp, data]</code></li>
+<li><code>mac:build: [gcp, processing]</code></li>
+<li><code>mac:build: [vultr, data]</code></li>
+<li><code>mac:build: [vultr, processing]</code></li>
+<li>A <code>linux:rspec</code> job.</li>
+<li>A <code>production</code> job.</li>
+</ul>
+<p>The jobs have three paths of execution:</p>
+<ul>
+<li>Linux path: The <code>linux:rspec</code> job runs as soon as the <code>linux:build: [aws, app1]</code>
+  job finishes, without waiting for <code>mac:build</code> to finish.</li>
+<li>macOS path: The <code>mac:rspec</code> job runs as soon as the <code>mac:build: [gcp, data]</code> and
+  <code>mac:build: [vultr, data]</code> jobs finish, without waiting for <code>linux:build</code> to finish.</li>
+<li>The <code>production</code> job runs as soon as all previous jobs finish.</li>
+</ul>
+<h4>Specify needs between parallelized jobs</h4>
+<p>You can further define the order of each parallel matrix job using <a href="../yaml/_index.md#needsparallelmatrix"><code>needs:parallel:matrix</code></a>.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">build_job:
+  stage: build
+  script:
+    # ensure that other parallel job other than build_job [1, A] runs longer
+    - '[[ &quot;$VERSION&quot; == &quot;1&quot; &amp;&amp; &quot;$MODE&quot; == &quot;A&quot; ]] || sleep 30'
+    - echo build $VERSION $MODE
+  parallel:
+    matrix:
+      - VERSION: [1,2]
+        MODE: [A, B]
+
+deploy_job:
+  stage: deploy
+  script: echo deploy $VERSION $MODE
+  parallel:
+    matrix:
+      - VERSION: [3,4]
+        MODE: [C, D]
+
+'deploy_job: [3, D]':
+  stage: deploy
+  script: echo something
+  needs:
+  - 'build_job: [1, A]'
+</code></pre>
+<p>This example generates several jobs. The parallel jobs each have different values
+for <code>VERSION</code> and <code>MODE</code>.</p>
+<ul>
+<li>4 parallel <code>build_job</code> jobs:</li>
+<li><code>build_job: [1, A]</code></li>
+<li><code>build_job: [1, B]</code></li>
+<li><code>build_job: [2, A]</code></li>
+<li><code>build_job: [2, B]</code></li>
+<li>4 parallel <code>deploy_job</code> jobs:</li>
+<li><code>deploy_job: [3, C]</code></li>
+<li><code>deploy_job: [3, D]</code></li>
+<li><code>deploy_job: [4, C]</code></li>
+<li><code>deploy_job: [4, D]</code></li>
+</ul>
+<p>The <code>deploy_job: [3, D]</code> job runs as soon as <code>build_job: [1, A]</code> job finishes,
+without waiting for the other <code>build_job</code> jobs to finish.</p>
+<h2>Troubleshooting</h2>
+<h3>Inconsistent user assignment when running manual jobs</h3>
+<p>In some edge cases, the user that runs a manual job does not get assigned as the user for later jobs
+that depend on the manual job.</p>
+<p>If you need strict security over who is assigned as the user for jobs that depend on a manual job,
+you should <a href="#protect-manual-jobs">protect the manual job</a>.</p></code></pre>
+</body>
+</html>

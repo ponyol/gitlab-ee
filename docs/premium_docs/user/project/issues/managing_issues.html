@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Edit an issue</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Project Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Learn how to manage GitLab issues including editing, moving, closing, bulk operations, and using various issue features like assignees, health status, and automation.
+title: Manage issues</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>GitLab issues help you track work and collaborate with your team.
+You can manage issues to:</p>
+<ul>
+<li>Edit details like title, description, assignees, and metadata.</li>
+<li>Move issues between projects while maintaining their context and history.</li>
+<li>Close completed issues and reopen them if needed.</li>
+<li>Use bulk editing to update multiple issues efficiently.</li>
+<li>Track issue health status to monitor progress and identify risks.</li>
+</ul>
+<h2>Edit an issue</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to edit an issue <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can edit an issue's title and description.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project, be the author of the issue, or be assigned to the issue.</li>
+</ul>
+<p>To edit an issue:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select the title of your issue to view it.</li>
+<li>To the right of the title, select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}).</li>
+<li>Edit the available fields.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Populate an issue with Issue Description Generation</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Enterprise</li>
+<li>Offering: GitLab.com</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Model information" &gt;}}</p>
+<ul>
+<li>LLM: Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-3-5-sonnet">Claude 3.5 Sonnet</a></li>
+<li>Not available on GitLab Duo with self-hosted models</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/10762">Introduced</a> in GitLab 16.3 as an <a href="../../../policy/development_stages_support.md#experiment">experiment</a>.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6 and later.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Generate a detailed description for an issue based on a short summary you provide.</p>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=-BWBQat7p5M">Watch an overview</a></p>
+<!-- Video published on 2024-12-18 -->
+
+<p>Prerequisites:</p>
+<ul>
+<li>You must belong to at least one group with the <a href="../../gitlab_duo/turn_on_off.md#turn-on-beta-and-experimental-features">experiment and beta features setting</a> enabled.</li>
+<li>You must have permission to create an issue.</li>
+<li>Only available for the plain text editor.</li>
+<li>Only available when creating a new issue.
+  For a proposal to add support for generating descriptions when editing existing issues, see
+  <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/474141">issue 474141</a>.</li>
+</ul>
+<p>To generate an issue description:</p>
+<ol>
+<li>Create a new issue.</li>
+<li>Above the <strong>Description</strong> field, select <strong>GitLab Duo</strong> ({{&lt; icon name="tanuki-ai" &gt;}}) &gt; <strong>Generate issue description</strong>.</li>
+<li>Write a short description and select <strong>Submit</strong>.</li>
+</ol>
+<p>The issue description is replaced with AI-generated text.</p>
+<p>Provide feedback on this experimental feature in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/409844">issue 409844</a>.</p>
+<p><strong>Data usage</strong>: When you use this feature, the text you enter is sent to
+the large language model.</p>
+<h2>Bulk edit issues</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to bulk edit issues <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520791">Added</a> more bulk editing attributes in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can edit multiple issues at a time when you're in a group or project.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the group or project.</li>
+</ul>
+<p>To edit multiple issues at the same time:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>.</li>
+<li>Select <strong>Bulk edit</strong>. On the right, a sidebar with editable fields appears.</li>
+<li>Select the checkboxes next to each issue you want to edit.</li>
+<li>From the sidebar, edit the available fields.</li>
+<li>Select <strong>Update selected</strong>.</li>
+</ol>
+<p>When bulk editing issues, you can edit the following attributes:</p>
+<ul>
+<li>State (open or closed)</li>
+<li><a href="../../work_items/status.html">Status</a></li>
+<li><a href="managing_issues.md#assignees">Assignees</a></li>
+<li><a href="../labels.html">Labels</a></li>
+<li><a href="#health-status">Health status</a></li>
+<li><a href="../../profile/notifications.html">Notification</a> subscription</li>
+<li><a href="confidential_issues.html">Confidentiality</a></li>
+<li><a href="../../group/iterations/_index.html">Iteration</a></li>
+<li><a href="../milestones/_index.html">Milestone</a></li>
+<li>Parent item</li>
+<li><a href="#move-an-issue">Move to another project</a></li>
+</ul>
+<h2>Move an issue</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to move an issue <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you move an issue, it's closed and copied to the target project.
+The original issue is not deleted. A <a href="../system_notes.html">system note</a>, which indicates
+where it came from and went to, is added to both issues.</p>
+<p>Be careful when moving an issue to a project with different access rules. Before moving the issue, make sure it does not contain sensitive data.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To move an issue:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) &gt; <strong>Move</strong>.</li>
+<li>Search for a project to move the issue to.</li>
+<li>Select <strong>Move</strong>.</li>
+</ol>
+<p>You can also use the <a href="../quick_actions.md#move"><code>/move</code> quick action</a> in a comment or description.</p>
+<h3>Moving child items when the parent issue is moved</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/371252">Introduced</a> in GitLab 16.9 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>move_issue_children</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/371252">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 16.11.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/371252">Generally available</a> in GitLab 17.3. Feature flag <code>move_issue_children</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you move an issue to another project, all its child items are also moved to the target project
+and remain as child items of the moved issue.
+Each item is moved the same way as the parent, that is, it's closed in the original project and
+copied to the target project.</p>
+<h3>Bulk move issues</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to bulk move issues <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<h4>From the Issues page</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/15991">Introduced</a> in GitLab 15.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can move multiple issues at the same time when you're in a project.
+You can't move tasks or test cases.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To move multiple issues at the same time:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>.</li>
+<li>Select <strong>Bulk edit</strong>. On the right, a sidebar with editable fields appears.</li>
+<li>Select the checkboxes next to each issue you want to move.</li>
+<li>From the <strong>Move</strong> dropdown list, select the destination project.</li>
+<li>Select <strong>Move items</strong>.</li>
+</ol>
+<h4>From the Rails console</h4>
+<p>You can move all open issues from one project to another.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have access to the Rails console of the GitLab instance.</li>
+</ul>
+<p>To do it:</p>
+<ol>
+<li>Optional (but recommended). <a href="../../../administration/backup_restore/_index.html">Create a backup</a> before
+   attempting any changes in the console.</li>
+<li>Open the <a href="../../../administration/operations/rails_console.html">Rails console</a>.</li>
+<li>Run the following script. Make sure to change <code>project</code>, <code>admin_user</code>, and <code>target_project</code> to
+   your values.</li>
+</ol>
+<p>```ruby
+   project = Project.find_by_full_path('full path of the project where issues are moved from')
+   issues = project.issues
+   admin_user = User.find_by_username('username of admin user') # make sure user has permissions to move the issues
+   target_project = Project.find_by_full_path('full path of target project where issues moved to')</p>
+<p>issues.each do |issue|
+      if issue.state != "closed" &amp;&amp; issue.moved_to.nil?
+         Issues::MoveService.new(container: project, current_user: admin_user).execute(issue, target_project)
+      else
+         puts "issue with id: #{issue.id} and title: #{issue.title} was not moved"
+      end
+   end; nil
+   ```</p>
+<ol>
+<li>To exit the Rails console, enter <code>quit</code>.</li>
+</ol>
+<h2>Description lists and task lists</h2>
+<p>When you use ordered lists, unordered lists, or task lists in issue descriptions, you can:</p>
+<ul>
+<li>Reorder all list items with drag and drop.</li>
+<li>Delete task list items.</li>
+<li><a href="../../tasks.md#from-a-task-list-item">Convert task list items to task work items</a>.</li>
+</ul>
+<h3>Delete a task list item</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project, or be the author or assignee of the issue.</li>
+</ul>
+<p>In an issue description with task list items:</p>
+<ol>
+<li>Hover over a task list item and select the options menu ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Delete</strong>.</li>
+</ol>
+<p>The task list item is removed from the issue description.
+Any nested task list items are moved up a nested level.</p>
+<h3>Reorder list items in the issue description</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to reorder list items in the issue description <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you view an issue that has a list in the description, you can also reorder the list items.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project, be the author of the issue, or be
+  assigned to the issue.</li>
+<li>The issue's description must have an <a href="../../markdown.md#lists">ordered, unordered</a>, or
+  <a href="../../markdown.md#task-lists">task</a> list.</li>
+</ul>
+<p>To reorder list items, when viewing an issue:</p>
+<ol>
+<li>Hover over the list item row to make the grip icon ({{&lt; icon name="grip" &gt;}}) visible.</li>
+<li>Select and hold the grip icon.</li>
+<li>Drag the row to the new position in the list.</li>
+<li>Release the grip icon.</li>
+</ol>
+<h2>Close an issue</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to close an issue <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you decide that an issue is resolved or no longer needed, you can close it.
+The issue is marked as closed but is not deleted.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project, be the author of the issue, or be assigned to the issue.</li>
+</ul>
+<p>To close an issue, you can either:</p>
+<ul>
+<li>In an <a href="../issue_board.html">issue board</a>, drag an issue card from its list into the <strong>Closed</strong> list.</li>
+<li>From any other page in the GitLab UI:</li>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) and then <strong>Close issue</strong>.</li>
+</ul>
+<p>You can also use the <a href="../quick_actions.md#close"><code>/close</code> quick action</a> in a comment or description.</p>
+<h3>Reopen a closed issue</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to reopen a closed issue <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project, be the author of the issue, or be assigned to the issue.</li>
+</ul>
+<p>To reopen a closed issue, in the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) and then <strong>Reopen issue</strong>.
+A reopened issue is no different from any other open issue.</p>
+<p>You can also use the <a href="../quick_actions.md#reopen"><code>/reopen</code> quick action</a> in a comment or description.</p>
+<h3>Closing issues automatically</h3>
+<p>You can close issues automatically by using certain words, called a <em>closing pattern</em>,
+in a commit message or merge request description. GitLab Self-Managed administrators
+can <a href="../../../administration/issue_closing_pattern.html">change the default closing pattern</a>.</p>
+<p>If a commit message or merge request description contains text matching the <a href="#default-closing-pattern">closing pattern</a>,
+all issues referenced in the matched text are closed when either:</p>
+<ul>
+<li>The commit is pushed to a project's <a href="../repository/branches/default.html"><strong>default</strong> branch</a>.</li>
+<li>The commit or merge request is merged into the default branch.</li>
+</ul>
+<p>For example, if you include <code>Closes #4, #6, Related to #5</code> in a merge request
+description:</p>
+<ul>
+<li>Issues <code>#4</code> and <code>#6</code> are closed automatically when the MR is merged.</li>
+<li>Issue <code>#5</code> is marked as a <a href="related_issues.html">related issue</a>, but it's not closed automatically.</li>
+</ul>
+<p>Alternatively, when you <a href="../merge_requests/creating_merge_requests.md#from-an-issue">create a merge request from an issue</a>,
+it inherits the issue's milestone and labels.</p>
+<p>For performance reasons, automatic issue closing is disabled for the very first
+push from an existing repository.</p>
+<h4>User responsibility when merging</h4>
+<p>When you merge a merge request, it's your responsibility to check that it's appropriate for any targeted issues
+to close. Users can include issue closing patterns in the merge request description, and also in the body
+of a commit message. Closing messages in commit messages are easy to miss. In both cases, the merge request widget
+shows information about the issue to close on merge:</p>
+<p><img alt="This merge request closes issue #2754." src="img/closing_pattern_v17_4.png" /></p>
+<p>When you merge a merge request, GitLab checks that you have permission to close the targeted issues.
+In public repositories, this check is important, because external users can create both merge requests
+and commits that contain closing patterns. When you are the user who merges, it's important
+that you are aware of the effects the merge has on both the code and issues in your project.</p>
+<p>When <a href="../merge_requests/auto_merge.html">auto-merge</a> is enabled for a merge request, no further changes can be made to
+the list of issues that will be automatically closed.</p>
+<h4>Default closing pattern</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/465391">Introduced</a> work item (task, objective, or key result) references in GitLab 17.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To automatically close an issue, use the following keywords followed by the issue reference.</p>
+<p>Available keywords:</p>
+<ul>
+<li><code>Close</code>, <code>Closes</code>, <code>Closed</code>, <code>Closing</code>, <code>close</code>, <code>closes</code>, <code>closed</code>, <code>closing</code></li>
+<li><code>Fix</code>, <code>Fixes</code>, <code>Fixed</code>, <code>Fixing</code>, <code>fix</code>, <code>fixes</code>, <code>fixed</code>, <code>fixing</code></li>
+<li><code>Resolve</code>, <code>Resolves</code>, <code>Resolved</code>, <code>Resolving</code>, <code>resolve</code>, <code>resolves</code>, <code>resolved</code>, <code>resolving</code></li>
+<li><code>Implement</code>, <code>Implements</code>, <code>Implemented</code>, <code>Implementing</code>, <code>implement</code>, <code>implements</code>, <code>implemented</code>, <code>implementing</code></li>
+</ul>
+<p>Available issue reference formats:</p>
+<ul>
+<li>A local issue (<code>#123</code>).</li>
+<li>A cross-project issue (<code>group/project#123</code>).</li>
+<li>The full URL of an issue (<code>https://gitlab.example.com/&lt;project_full_path&gt;/-/issues/123</code>).</li>
+<li>The full URL of a work item (for example, task, objective, or key result):</li>
+<li>In a project (<code>https://gitlab.example.com/&lt;project_full_path&gt;/-/work_items/123</code>).</li>
+<li>In a group (<code>https://gitlab.example.com/groups/&lt;group_full_path&gt;/-/work_items/123</code>).</li>
+</ul>
+<p>For example:</p>
+<pre><code class="language-plaintext">Awesome commit message
+
+Fix #20, Fixes #21 and Closes group/otherproject#22.
+This commit is also related to #17 and fixes #18, #19
+and https://gitlab.example.com/group/otherproject/-/issues/23.
+</code></pre>
+<p>The previous commit message closes <code>#18</code>, <code>#19</code>, <code>#20</code>, and <code>#21</code> in the project this commit is pushed to,
+as well as <code>#22</code> and <code>#23</code> in <code>group/otherproject</code>. <code>#17</code> is not closed as it does
+not match the pattern.</p>
+<p>You can use the closing patterns in multi-line commit messages or one-liners
+done from the command line with <code>git commit -m</code>.</p>
+<p>The default issue closing pattern regex:</p>
+<pre><code class="language-shell">\b((?:[Cc]los(?:e[sd]?|ing)|\b[Ff]ix(?:e[sd]|ing)?|\b[Rr]esolv(?:e[sd]?|ing)|\b[Ii]mplement(?:s|ed|ing)?)(:?) +(?:(?:issues? +)?%{issue_ref}(?:(?: *,? +and +| *,? *)?)|([A-Z][A-Z0-9_]+-\d+))+)
+</code></pre>
+<h4>Disable automatic issue closing</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/240922">Changed</a> in GitLab 15.4: The referenced issue's project setting is checked instead of the project of the commit or merge request.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can disable the automatic issue closing feature on a per-project basis
+in the <a href="#disable-automatic-issue-closing">project's settings</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To disable automatic issue closing:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand <strong>Branch defaults</strong>.</li>
+<li>Clear the <strong>Auto-close referenced issues on default branch</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>Referenced issues are still displayed, but are not closed automatically.</p>
+<p>Changing this setting applies only to new merge requests or commits. Already
+closed issues remain as they are.
+Disabling automatic issue closing only applies to issues in the project where the setting was disabled.
+Merge requests and commits in this project can still close another project's issues.</p>
+<h4>Customize the issue closing pattern</h4>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have <a href="../../../administration/_index.html">administrator access</a> to your GitLab instance.</li>
+</ul>
+<p>Learn how to change the default <a href="../../../administration/issue_closing_pattern.html">issue closing pattern</a>
+of your installation.</p>
+<h2>Prevent truncating descriptions with <strong>Read more</strong></h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/181184">Introduced</a> in GitLab 17.10.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>If an issue description is long, GitLab displays only part of it.
+To see the whole description, you must select <strong>Read more</strong>.
+This truncation makes it easier to find other elements on the page without scrolling through lengthy text.</p>
+<p>To change whether descriptions are truncated:</p>
+<ol>
+<li>On an issue, in the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Toggle <strong>Truncate descriptions</strong> according to your preference.</li>
+</ol>
+<p>This setting is remembered and affects all issues, tasks, epics, objectives, and key results.</p>
+<h2>Hide the right sidebar</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/181184">Introduced</a> in GitLab 17.10.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Issue attributes are shown in a sidebar to the right of the description when space allows.</p>
+<p>To hide the sidebar and increase space for the description:</p>
+<ol>
+<li>On an issue, in the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Hide sidebar</strong>.</li>
+</ol>
+<p>This setting is remembered and affects all issues, tasks, epics, objectives, and key results.</p>
+<p>To show the sidebar again:</p>
+<ul>
+<li>Repeat the previous steps and select <strong>Show sidebar</strong>.</li>
+</ul>
+<h2>Delete an issue</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Required role to delete an issue <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Owner to Owner or Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Planner or Owner role for a project.</li>
+</ul>
+<p>To delete an issue:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Delete issue</strong>.</li>
+</ol>
+<h2>Change the issue type</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to change the issue type <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+<li>Changing issues to key results, objectives, and tasks <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520791">introduced</a> in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be the issue author or have at least the Planner role for the project, be the author of the issue, or be assigned to the issue.</li>
+</ul>
+<p>To change issue type:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Change type</strong></li>
+<li>
+<p>From the <strong>Type</strong> dropdown list select the new type:</p>
+</li>
+<li>
+<p>Key result</p>
+</li>
+<li>Objective</li>
+<li>Task</li>
+<li>
+<p>Epic (moves issue to the parent group)
+     For more information, see <a href="#promote-an-issue-to-an-epic">Promote an issue to an epic</a>.</p>
+</li>
+<li>
+<p>Select <strong>Change type</strong>.</p>
+</li>
+</ol>
+<p>To promote an issue to an incident, see <a href="#promote-an-issue-to-an-incident">Promote an issue to an incident</a></p>
+<h3>Promote an issue to an epic</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to promote an issue to an epic <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can promote an issue to an <a href="../../group/epics/_index.html">epic</a> in the immediate parent group.</p>
+<p>Promoting a confidential issue to an epic creates a
+<a href="../../group/epics/manage_epics.md#make-an-epic-confidential">confidential epic</a>, retaining
+confidentiality.</p>
+<p>When an issue is promoted to an epic:</p>
+<ul>
+<li>An epic is created in the same group as the project of the issue.</li>
+<li>Subscribers of the issue are notified that the epic was created.</li>
+</ul>
+<p>The following issue metadata is copied to the epic:</p>
+<ul>
+<li>Title, description, activity, and comment threads.</li>
+<li>Upvotes and downvotes.</li>
+<li>Participants.</li>
+<li>Group labels that the issue had.</li>
+<li>Parent item.</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>The project to which the issue belongs must be in a group.</li>
+<li>You must have at least the Planner role the project's immediate parent group.</li>
+<li>You must either:</li>
+<li>Have at least the Planner role for the project.</li>
+<li>Be the author of the issue.</li>
+<li>Be assigned to the issue.</li>
+</ul>
+<p>To promote an issue to an epic:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Change type</strong></li>
+<li>From the <strong>Type</strong> dropdown list select <strong>Epic</strong>.</li>
+<li>Select <strong>Change type</strong>.</li>
+</ol>
+<p>Alternatively, you can use the <a href="../quick_actions.md#promote_to"><code>/promote_to Epic</code> quick action</a>.</p>
+<h3>Promote an issue to an incident</h3>
+<p>You can use the <a href="../quick_actions.md#promote_to"><code>/promote_to Incident</code> quick action</a> to promote the issue to an <a href="../../../operations/incident_management/incidents.html">incident</a>.</p>
+<h2>Add an issue to an iteration</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To add an issue to an <a href="../../group/iterations/_index.html">iteration</a>:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>On the right sidebar, in the <strong>Iteration</strong> section, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select the iteration to add this issue to.</li>
+<li>Select any area outside the dropdown list.</li>
+</ol>
+<p>To add an issue to an iteration, you can also:</p>
+<ul>
+<li>Use the <a href="../quick_actions.md#iteration"><code>/iteration</code> quick action</a>.</li>
+<li>Drag an issue into an iteration list in a board.</li>
+<li>Bulk edit issues from the issues list.</li>
+</ul>
+<h2>View all issues assigned to you</h2>
+<p>To view all issues assigned to you:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong>. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>From the dropdown list, select <strong>Issues assigned to me</strong>.</li>
+</ol>
+<p>Or:</p>
+<ul>
+<li>To use a <a href="../../shortcuts.html">keyboard shortcut</a>, press <kbd>Shift</kbd>+<kbd>i</kbd>.</li>
+<li>On the left sidebar, at the top, select <strong>Assigned issues</strong> ({{&lt; icon name="issues" &gt;}}). If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this button is in the upper-right corner.</li>
+</ul>
+<!-- When the feature flag paneled_view is removed, refer only to the button icon -->
+
+<h2>Issue list</h2>
+<p>The issue list shows all issues in your project or group.
+You can use it to view, sort, and manage issues.</p>
+<p>To view the issue list:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>.</li>
+</ol>
+<p>To set which attributes are shown for epics on the issue list, <a href="../../work_items/_index.md#configure-list-display-preferences">configure display preferences</a>.</p>
+<p>From the issue list, you can:</p>
+<ul>
+<li>View issue details like title, assignees, labels, and milestone.</li>
+<li><a href="sorting_issue_lists.html">Sort issues</a> by various criteria.</li>
+<li>Filter issues to find specific ones.</li>
+<li>Edit issues individually or in bulk.</li>
+<li>Create new issues.</li>
+</ul>
+<p>The following sections describe how to work with the issue list.</p>
+<h3>Filter the list of issues</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>OR filtering <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/23532">introduced</a> in GitLab 15.6 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>or_issuable_queries</code>. Disabled by default.</li>
+<li>OR filtering <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/104292">enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 15.9.</li>
+<li>OR filtering <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/296031">generally available</a> in GitLab 17.0. Feature flag <code>or_issuable_queries</code> removed.</li>
+<li>Filtering the list of issues by custom status or the parent item <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520791">introduced</a> in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To filter the list of issues:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>.</li>
+<li>Above the list of issues, select <strong>Search or filter results</strong>.</li>
+<li>From the dropdown list that appears, select the attribute you want to filter by.
+   The following filters are available:</li>
+<li>Assignee</li>
+<li>Author</li>
+<li>Confidential</li>
+<li><a href="../../crm/_index.html">Contact</a></li>
+<li><a href="managing_issues.md#health-status">Health</a></li>
+<li>Iteration</li>
+<li>Label</li>
+<li>Milestone</li>
+<li>My reaction</li>
+<li><a href="../../crm/_index.html">Organization</a></li>
+<li><a href="../../group/epics/_index.html">Parent</a></li>
+<li>Release</li>
+<li>Search within (titles or descriptions)</li>
+<li>Status</li>
+<li>Subscribed</li>
+<li>Type</li>
+<li>Weight</li>
+<li><a href="../../work_items/custom_fields.html">Custom fields</a></li>
+<li>Select or type the operator to use for filtering the attribute. The following operators are
+   available:</li>
+<li><code>=</code>: Is</li>
+<li><code>!=</code>: Is not one of</li>
+<li><code>||</code>: Is one of (for Assignee, Author, Label, Type).
+     Works like an inclusive OR.
+     For example, if you filter by <code>Assignee is one of Sidney Jones</code> and <code>Assignee is one of Zhang Wei</code>,
+     GitLab shows issues where either <code>Sidney</code>, <code>Zhang</code>, or both of them are assignees.</li>
+<li>Enter the text to filter the attribute by.
+   You can filter some attributes by <strong>None</strong> or <strong>Any</strong>.</li>
+<li>Repeat this process to filter by multiple attributes. Multiple attributes are joined by a logical
+   <code>AND</code>.</li>
+<li>Press <kbd>Enter</kbd> or select the search icon ({{&lt; icon name="search" &gt;}}).</li>
+</ol>
+<h4>Filter by title or description</h4>
+<p>To filter the list issues for text in a title or description:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>.</li>
+<li>Above the list of issues, in the <strong>Search or filter results</strong> text box, enter the searched phrase.</li>
+<li>In the dropdown list that appears, select <strong>Search within</strong>, and then either <strong>Titles</strong> or <strong>Descriptions</strong>.</li>
+<li>Press <kbd>Enter</kbd> or select the search icon ({{&lt; icon name="search" &gt;}}).</li>
+</ol>
+<p>Filtering issues uses <a href="https://www.postgresql.org/docs/16/textsearch-intro.html">PostgreSQL full text search</a>
+to match meaningful and significant words to answer a query.</p>
+<p>For example, if you search for <code>I am securing information for M&amp;A</code>,
+GitLab can return results with <code>securing</code>, <code>secured</code>,
+or <code>information</code> in the title or description.
+However, GitLab doesn't match the sentence or the words <code>I</code>, <code>am</code> or <code>M&amp;A</code> exactly,
+as they aren't deemed lexically meaningful or significant.
+It's a limitation of PostgreSQL full text search.</p>
+<h4>Filter issues by ID</h4>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>.</li>
+<li>Above the list of issues, in the <strong>Search or filter results</strong> text box, type <code>#</code> followed by the issue ID.
+   For example, enter <code>#362255</code> to return only issue 362255.</li>
+<li>Select <strong>Search for this text</strong>.</li>
+<li>Press <kbd>Enter</kbd> or select the search icon ({{&lt; icon name="search" &gt;}}).</li>
+</ol>
+<h3>Open issues in a drawer</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/464063">Introduced</a> in GitLab 17.4 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>issues_list_drawer</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/463829">Generally available</a> in GitLab 18.6. Feature flag <code>issues_list_drawer</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you select an issue from the list or issue board, it opens in a drawer.</p>
+<p>You can then view and edit its details without losing context of the epic list or board.</p>
+<p>When using the drawer:</p>
+<ul>
+<li>Select an epic from the list to open it in the drawer.</li>
+<li>The drawer appears on the right side of the screen.</li>
+<li>You can edit the epic directly in the drawer.</li>
+<li>To close the drawer, select the close icon ({{&lt; icon name="close" &gt;}}) or press <strong>Escape</strong>.</li>
+</ul>
+<p>If you've <a href="../../interface_redesign.html">turned on the new navigation</a>,
+the issue opens in a details panel</p>
+<h4>Open an issue in full page view</h4>
+<p>To open the issue in full view:</p>
+<ul>
+<li>Open the issue in a new tab. From the list of issues, either:</li>
+<li>Right-click the issue and open it in a new browser tab.</li>
+<li>Hold <kbd>Command</kbd> or <kbd>Control</kbd> and select the issue.</li>
+<li>Select an issue, and from the drawer, either:</li>
+<li>In the upper-left corner, select the issue reference, for example <code>my_project#123</code>.</li>
+<li>In the upper-right corner, select <strong>Open in full page</strong> ({{&lt; icon name="maximize" &gt;}}).</li>
+</ul>
+<p>To always open issues in full page view, see <a href="../../work_items/_index.md#configure-list-display-preferences">Set preference whether to open items in a drawer</a>.</p>
+<h2>Copy issue reference</h2>
+<p>To refer to an issue elsewhere in GitLab, you can use its full URL or a short reference, which looks like
+<code>namespace/project-name#123</code>, where <code>namespace</code> is either a group or a username.</p>
+<p>To copy the issue reference to your clipboard:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) &gt; <strong>Copy Reference</strong>.</li>
+</ol>
+<p>You can now paste the reference into another description or comment.</p>
+<p>Read more about issue references in <a href="../../markdown.md#gitlab-specific-references">GitLab-Flavored Markdown</a>.</p>
+<h2>Copy issue email address</h2>
+<p>You can create a comment in an issue by sending an email.
+Sending an email to this address creates a comment that contains the email body.</p>
+<p>For more information about creating comments by sending an email and the necessary configuration, see
+<a href="../../discussions/_index.md#reply-to-a-comment-by-sending-email">Reply to a comment by sending email</a>.</p>
+<p>To copy the issue's email address:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) &gt; <strong>Copy issue email address</strong>.</li>
+</ol>
+<h2>Assignees</h2>
+<p>An issue can be assigned to one or <a href="multiple_assignees_for_issues.html">more users</a>.</p>
+<p>The assignees can be changed as often as needed. The idea is that the assignees are
+people responsible for the issue.
+When an issue is assigned to someone, it appears in their <strong>Assigned issues</strong> page.</p>
+<p>If a user is not a member of a project, an issue can only be assigned to them if they create it
+themselves or another project member assigns them.</p>
+<h3>Change assignee on an issue</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to change assignee <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To change the assignee on an issue:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>On the right sidebar, in the <strong>Assignees</strong> section, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select the user to add as an assignee.</li>
+<li>Select any area outside the dropdown list.</li>
+</ol>
+<p>The assignee is changed without having to refresh the page.</p>
+<h2>Similar issues</h2>
+<p>To prevent duplication of issues on the same topic, GitLab searches for similar issues
+when you create a new issue.</p>
+<p>As you type in the title text box of the <strong>New issue</strong> page, GitLab searches titles and descriptions
+across all issues in the current project. Only issues you have access to are returned.
+Up to five similar issues, sorted by most recently updated, are displayed below the title text box.</p>
+<h2>Health status</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To better track the risk in meeting your plans, you can assign a health status to each issue.
+You can use health status to signal to others in your organization whether issues are progressing
+as planned or need attention to stay on schedule.</p>
+<p>Incorporate a review of issue health status into your daily stand-up, project status reports, or weekly meetings to address risks to timely delivery of your planned work.</p>
+<h3>Change health status of an issue</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to change health status <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To edit health status of an issue:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>On the right sidebar, in the <strong>Health status</strong> section, select <strong>Edit</strong>.</li>
+<li>
+<p>From the dropdown list, select the status to add to this issue:</p>
+</li>
+<li>
+<p>On track</p>
+</li>
+<li>Needs attention</li>
+<li>At risk</li>
+</ol>
+<p>You can see the issue's health status in:</p>
+<ul>
+<li>The <strong>Issues</strong> page</li>
+<li>Epic's <strong>Child items</strong> section</li>
+<li>Issue cards in issue boards</li>
+</ul>
+<p>After an issue is closed, its health status can't be edited and the <strong>Edit</strong> button becomes disabled
+until the issue is reopened.</p>
+<p>You can also set and clear health statuses using the <a href="../quick_actions.md#health_status"><code>/health_status</code></a> and <a href="../quick_actions.md#clear_health_status"><code>/clear_health_status</code></a>
+quick actions.</p>
+<h2>Status</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/543862">Introduced</a> in GitLab 18.2 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>work_item_status_feature_flag</code>. Enabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/521286">Generally available</a> in GitLab 18.4. Feature flag <code>work_item_status_feature_flag</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<!-- Turn off the future tense test because of "won't do". -->
+<!-- vale gitlab_base.FutureTense = NO -->
+
+<p>You can assign a status to issues to track their progress through your workflow.
+Status provides more granular tracking than the basic open/closed states, so you can use specific
+stages like <strong>In progress</strong>, <strong>Done</strong>, or <strong>Won't do</strong>.</p>
+<p>For more information about status, including how to configure custom statuses, see <a href="../../work_items/status.html">Status</a>.</p>
+<!-- vale gitlab_base.FutureTense = YES -->
+
+<h3>Change status</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project, be the author of the issue, or be assigned to the issue.</li>
+</ul>
+<p>To change the status of an issue:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>On the right sidebar, in the <strong>Status</strong> section, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select the status.</li>
+</ol>
+<p>The issue's status updates immediately.</p>
+<p>You can view the issue's status in:</p>
+<ul>
+<li>The <strong>Issues</strong> page</li>
+<li>An epic's <strong>Child items</strong> section</li>
+<li>Cards on issue boards</li>
+</ul>
+<p>You can also set the status by using the <a href="../quick_actions.md#status"><code>/status</code> quick action</a>.</p>
+<h2>Publish an issue</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>If a status page application is associated with the project, you can use the <a href="../quick_actions.md#publish"><code>/publish</code> quick action</a> to publish the issue.</p>
+<p>For more information, see <a href="../../../operations/incident_management/status_page.html">GitLab Status Page</a>.</p>
+<h2>Issue-related quick actions</h2>
+<p>You can also use quick actions to manage issues.</p>
+<p>Some actions don't have corresponding UI buttons yet.
+You can do the following <strong>only by using quick actions</strong>:</p>
+<ul>
+<li><a href="associate_zoom_meeting.html">Add or remove a Zoom meeting</a> (<a href="../quick_actions.md#zoom"><code>/zoom</code> and <code>/remove_zoom</code></a>).</li>
+<li><a href="#publish-an-issue">Publish an issue</a> (<a href="../quick_actions.md#publish"><code>/publish</code></a>).</li>
+<li>Clone an issue to the same or another project (<a href="../quick_actions.md#clone"><code>/clone</code></a>).</li>
+<li>Close an issue and mark as a duplicate of another issue (<a href="../quick_actions.md#duplicate"><code>/duplicate</code></a>).</li>
+<li>Copy labels and milestone from another merge request or issue in the project (<a href="../quick_actions.md#copy_metadata"><code>/copy_metadata</code></a>).</li>
+</ul></code></pre>
+</body>
+</html>

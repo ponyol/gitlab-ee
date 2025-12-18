@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Set cost factors</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Pipeline Execution
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Configure cost factor settings for compute minutes on GitLab.com.
+title: Compute minutes administration for GitLab.com</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>GitLab.com administrators have additional controls over compute minutes beyond what is
+available for <a href="compute_minutes.html">GitLab Self-Managed</a>.</p>
+<h2>Set cost factors</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator for GitLab.com.</li>
+</ul>
+<p>To set cost factors for a runner:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>CI/CD</strong> &gt; <strong>Runners</strong>.</li>
+<li>For the runner you want to update, select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}).</li>
+<li>In the <strong>Public projects compute cost factor</strong> text box, enter the public cost factor.</li>
+<li>In the <strong>Private projects compute cost factor</strong> text box, enter the private cost factor.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Reduce cost factors for community contributions</h2>
+<p>When the <code>ci_minimal_cost_factor_for_gitlab_namespaces</code> feature flag is enabled for a namespace,
+merge request pipelines from forks that target projects in the enabled namespace use a reduced cost factor.
+This ensures community contributions don't consume excessive compute minutes.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be able to control feature flags.</li>
+<li>You must have the namespace ID for which you want to enable reduced cost factors.</li>
+</ul>
+<p>To enable a namespace to use a reduced cost factor:</p>
+<ol>
+<li><a href="../feature_flags/_index.md#how-to-enable-and-disable-features-behind-flags">Enable the feature flag</a> <code>ci_minimal_cost_factor_for_gitlab_namespaces</code> for the namespace ID you want to include.</li>
+</ol>
+<p>This feature is recommended for use on GitLab.com only. Community contributors should use
+community forks for contributions to avoid accumulating minutes when running pipelines
+that are not in a merge request targeting a GitLab project.</p></code></pre>
+</body>
+</html>

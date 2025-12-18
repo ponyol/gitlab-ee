@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Fetch pipeline refs</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Geo API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>The Geo API is used internally by GitLab components to assist in coordinating Geo actions. It is inaccessible to admins or users.</p>
+<h2>Fetch pipeline refs</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/415179">Introduced</a> in GitLab 16.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>This method returns a list of branches matching <code>pipeline/refs/X</code> that exist on the repository for <code>gl_repository</code> on the current Geo node. This endpoint is used by runners registered with a secondary Geo instance to check if a repository is up to date.</p>
+<pre><code class="language-plaintext">GET /geo/repositories/:gl_repository/pipeline_refs
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gl_repository</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The <code>gl_repository</code> ID of the repository to query</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="../../api/rest/troubleshooting.md#status-codes"><code>200</code></a> and the following
+response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>attribute</code></td>
+<td>'array'</td>
+<td>An array of ids matching <code>refs/pipeline/X</code> created for running pipelines.</td>
+</tr>
+</tbody>
+</table></code></pre>
+</body>
+</html>

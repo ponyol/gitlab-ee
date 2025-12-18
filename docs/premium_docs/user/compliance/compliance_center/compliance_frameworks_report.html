@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># View the compliance frameworks report</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Compliance
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Compliance frameworks report</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/422973">Introduced</a> in GitLab 16.5 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>compliance_framework_report_ui</code>. Disabled by default.</li>
+<li>In GitLab 16.4 and earlier, <strong>Compliance frameworks report</strong> referred to what is now called <strong>Compliance projects report</strong>. The formally-named <strong>Compliance frameworks report</strong> was <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/422963">renamed to <strong>Compliance projects report</strong></a> in GitLab 16.5.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/140825">Enabled by default</a> in GitLab 16.8.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/425242">Generally available</a> in GitLab 16.10. Feature flag <code>compliance_framework_report_ui</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>With the compliance frameworks report, you can see all the compliance frameworks in a group. Each row of the report shows:</p>
+<ul>
+<li>Framework name.</li>
+<li>Associated projects.</li>
+</ul>
+<p>The default framework for the group has a <strong>default</strong> badge.</p>
+<h2>View the compliance frameworks report</h2>
+<p>To view the compliance frameworks report:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+</ol>
+<h2>Create a new compliance framework</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator or have the Owner role for the group.</li>
+</ul>
+<p>To create a new compliance framework from the compliance frameworks report:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Select the <strong>New framework</strong>.</li>
+<li>Select <strong>Create blank framework</strong>.</li>
+<li>Select the <strong>Add framework</strong> to create compliance framework.</li>
+</ol>
+<h2>Edit a compliance framework</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator or have the Owner role for the group.</li>
+</ul>
+<p>To edit a compliance framework from the compliance frameworks report:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Hover over framework and select <strong>Edit the framework</strong>.</li>
+<li>Select the <strong>Save changes</strong> to edit compliance framework.</li>
+</ol>
+<h2>Delete a compliance framework</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator or have the Owner role for the group.</li>
+</ul>
+<p>To delete a compliance framework from the compliance frameworks report:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Hover over framework and select <strong>Edit the framework</strong>.</li>
+<li>Select the <strong>Delete framework</strong> to delete compliance framework.</li>
+</ol>
+<h2>Set and remove a compliance framework as default</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/181500">Introduced</a> in GitLab 17.10.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator or have the Owner role for the group.</li>
+</ul>
+<p>To set a compliance framework as <a href="../compliance_frameworks/_index.md#default-compliance-frameworks">default</a>] from the compliance frameworks report:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Next to the compliance framework you want to set as default, select {{&lt; icon name="pencil" &gt;}} action.</li>
+<li>Select the <strong>Set as default</strong> to set as default.</li>
+</ol>
+<p>To remove a compliance framework as default from the compliance frameworks report:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Next to the compliance framework that is default, select {{&lt; icon name="pencil" &gt;}} action.</li>
+<li>Select the <strong>Remove as default</strong> to remove as default.</li>
+</ol>
+<h2>Export a report of compliance frameworks in a group</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/413736">Introduced</a> in GitLab 16.11 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>compliance_frameworks_report_csv_export</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/152644">Generally available</a> in GitLab 17.1. Feature flag <code>compliance_frameworks_report_csv_export</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Exports the contents of a compliance frameworks report in a group. Reports are truncated at 15 MB to avoid a large email attachment.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator or have the Owner role for the group.</li>
+</ul>
+<p>To export the standards adherence report for projects in a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>In the upper-right corner, select <strong>Export</strong>.</li>
+<li>Select <strong>Export framework report</strong>.</li>
+</ol>
+<p>A report is compiled and delivered to your email inbox as an attachment.</p></code></pre>
+</body>
+</html>

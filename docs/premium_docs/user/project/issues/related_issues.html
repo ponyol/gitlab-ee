@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Add a linked issue</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Product Planning
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Linked issues</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/10267">Changed</a> minimum required role from Reporter (if true) to Guest in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Linked issues are a bi-directional relationship between any two issues and appear in a block below
+the issue description. You can link issues in different projects.</p>
+<p>The relationship only shows up in the UI if the user can see both issues. When you try to close an
+issue that has open blockers, a warning is displayed.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>To manage linked issues through our API, see <a href="../../../api/issue_links.html">Issue links API</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Add a linked issue</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Guest role for both projects.</li>
+</ul>
+<p>To link one issue to another:</p>
+<ol>
+<li>In the <strong>Linked items</strong> section of an issue,
+   select the add linked issue button ({{&lt; icon name="plus" &gt;}}).</li>
+<li>Select the relationship between the two issues. Either:</li>
+<li><strong>relates to</strong></li>
+<li><strong><a href="#blocking-issues">blocks</a></strong></li>
+<li><strong><a href="#blocking-issues">is blocked by</a></strong></li>
+<li>Input the issue number or paste in the full URL of the issue.</li>
+</ol>
+<p><img alt="Linking related issues with the current issue" src="img/related_issues_add_v15_3.png" /></p>
+<p>Issues of the same project can be specified just by the reference number.
+   Issues from a different project require additional information like the
+   group and the project name. For example:</p>
+<ul>
+<li>The same project: <code>#44</code></li>
+<li>The same group: <code>project#44</code></li>
+<li>Different group: <code>group/project#44</code></li>
+</ul>
+<p>Valid references are added to a temporary list that you can review.</p>
+<ol>
+<li>When you have added all the linked issues, select <strong>Add</strong>.</li>
+</ol>
+<p>When you have finished adding all linked issues, you can see
+them categorized so their relationships can be better understood visually.</p>
+<p><img alt="Section to view or manage related issues" src="img/related_issue_block_v15_3.png" /></p>
+<p>You can also add a linked issue from a commit message or the description in another issue or MR.
+For more information, see <a href="crosslinking_issues.html">Crosslinking issues</a>.</p>
+<h2>Remove a linked issue</h2>
+<p>In the <strong>Linked items</strong> section of an issue, select the remove button ({{&lt; icon name="close" &gt;}}) on the
+right-side of each issue token to remove.</p>
+<p>Due to the bi-directional relationship, the relationship no longer appears in either issue.</p>
+<p><img alt="Unlinking a related issue from the current issue" src="img/related_issues_remove_v15_3.png" /></p>
+<p>Access our <a href="../../permissions.html">permissions</a> page for more information.</p>
+<h2>Blocking issues</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When you <a href="#add-a-linked-issue">add a linked issue</a>, you can show that it <strong>blocks</strong> or
+<strong>is blocked by</strong> another issue.</p>
+<p>Issues blocked by other issues have an icon ({{&lt; icon name="entity-blocked" &gt;}}) next to their title, shown in the
+issue lists and <a href="../issue_board.html">boards</a>.
+The icon disappears when the blocking issue is closed or their relationship is changed or
+<a href="#remove-a-linked-issue">removed</a>.</p>
+<p>If you try to close a blocked issue using the "Close issue" button, a confirmation message appears.</p></code></pre>
+</body>
+</html>

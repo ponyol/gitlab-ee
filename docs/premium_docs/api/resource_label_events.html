@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Issues</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Project Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Resource label events API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use this API to retrieve resource label events that track who, when, and which
+<a href="../user/project/labels.html">label</a> was added to (or removed from)
+an issue, merge request, or epic.</p>
+<h2>Issues</h2>
+<h3>List project issue label events</h3>
+<p>Gets a list of all label events for a single issue.</p>
+<pre><code class="language-plaintext">GET /projects/:id/issues/:issue_iid/resource_label_events
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>issue_iid</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The IID of an issue</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 142,
+    &quot;user&quot;: {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Administrator&quot;,
+      &quot;username&quot;: &quot;root&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+    },
+    &quot;created_at&quot;: &quot;2018-08-20T13:38:20.077Z&quot;,
+    &quot;resource_type&quot;: &quot;Issue&quot;,
+    &quot;resource_id&quot;: 253,
+    &quot;label&quot;: {
+      &quot;id&quot;: 73,
+      &quot;name&quot;: &quot;a1&quot;,
+      &quot;color&quot;: &quot;#34495E&quot;,
+      &quot;description&quot;: &quot;&quot;
+    },
+    &quot;action&quot;: &quot;add&quot;
+  },
+  {
+    &quot;id&quot;: 143,
+    &quot;user&quot;: {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Administrator&quot;,
+      &quot;username&quot;: &quot;root&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+    },
+    &quot;created_at&quot;: &quot;2018-08-20T13:38:20.077Z&quot;,
+    &quot;resource_type&quot;: &quot;Issue&quot;,
+    &quot;resource_id&quot;: 253,
+    &quot;label&quot;: {
+      &quot;id&quot;: 74,
+      &quot;name&quot;: &quot;p1&quot;,
+      &quot;color&quot;: &quot;#0033CC&quot;,
+      &quot;description&quot;: &quot;&quot;
+    },
+    &quot;action&quot;: &quot;remove&quot;
+  }
+]
+</code></pre>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/projects/5/issues/11/resource_label_events&quot;
+</code></pre>
+<h3>Get single issue label event</h3>
+<p>Returns a single label event for a specific project issue</p>
+<pre><code class="language-plaintext">GET /projects/:id/issues/:issue_iid/resource_label_events/:resource_label_event_id
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>issue_iid</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The IID of an issue</td>
+</tr>
+<tr>
+<td><code>resource_label_event_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a label event</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/issues/11/resource_label_events/1&quot;
+</code></pre>
+<h2>Epics</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>The Epics REST API was <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/460668">deprecated</a> in GitLab 17.0
+and is planned for removal in v5 of the API.
+From GitLab 17.4 to 18.0, if <a href="../user/group/epics/_index.md#epics-as-work-items">the new look for epics</a> is enabled, and in GitLab 18.1 and later, use the
+Work Items API instead. For more information, see <a href="graphql/epic_work_items_api_migration_guide.html">migrate epic APIs to work items</a>.
+This change is a breaking change.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>List group epic label events</h3>
+<p>Gets a list of all label events for a single epic.</p>
+<pre><code class="language-plaintext">GET /groups/:id/epics/:epic_id/resource_label_events
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group</td>
+</tr>
+<tr>
+<td><code>epic_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of an epic</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 106,
+    &quot;user&quot;: {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Administrator&quot;,
+      &quot;username&quot;: &quot;root&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+    },
+    &quot;created_at&quot;: &quot;2018-08-19T11:43:01.746Z&quot;,
+    &quot;resource_type&quot;: &quot;Epic&quot;,
+    &quot;resource_id&quot;: 33,
+    &quot;label&quot;: {
+      &quot;id&quot;: 73,
+      &quot;name&quot;: &quot;a1&quot;,
+      &quot;color&quot;: &quot;#34495E&quot;,
+      &quot;description&quot;: &quot;&quot;
+    },
+    &quot;action&quot;: &quot;add&quot;
+  },
+  {
+    &quot;id&quot;: 107,
+    &quot;user&quot;: {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Administrator&quot;,
+      &quot;username&quot;: &quot;root&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+    },
+    &quot;created_at&quot;: &quot;2018-08-19T11:43:01.746Z&quot;,
+    &quot;resource_type&quot;: &quot;Epic&quot;,
+    &quot;resource_id&quot;: 33,
+    &quot;label&quot;: {
+      &quot;id&quot;: 37,
+      &quot;name&quot;: &quot;glabel2&quot;,
+      &quot;color&quot;: &quot;#A8D695&quot;,
+      &quot;description&quot;: &quot;&quot;
+    },
+    &quot;action&quot;: &quot;add&quot;
+  }
+]
+</code></pre>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/epics/11/resource_label_events&quot;
+</code></pre>
+<h3>Get single epic label event</h3>
+<p>Returns a single label event for a specific group epic</p>
+<pre><code class="language-plaintext">GET /groups/:id/epics/:epic_id/resource_label_events/:resource_label_event_id
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group</td>
+</tr>
+<tr>
+<td><code>epic_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of an epic</td>
+</tr>
+<tr>
+<td><code>resource_label_event_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a label event</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/epics/11/resource_label_events/107&quot;
+</code></pre>
+<h2>Merge requests</h2>
+<h3>List project merge request label events</h3>
+<p>Gets a list of all label events for a single merge request.</p>
+<pre><code class="language-plaintext">GET /projects/:id/merge_requests/:merge_request_iid/resource_label_events
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The IID of a merge request</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 119,
+    &quot;user&quot;: {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Administrator&quot;,
+      &quot;username&quot;: &quot;root&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+    },
+    &quot;created_at&quot;: &quot;2018-08-20T06:17:28.394Z&quot;,
+    &quot;resource_type&quot;: &quot;MergeRequest&quot;,
+    &quot;resource_id&quot;: 28,
+    &quot;label&quot;: {
+      &quot;id&quot;: 74,
+      &quot;name&quot;: &quot;p1&quot;,
+      &quot;color&quot;: &quot;#0033CC&quot;,
+      &quot;description&quot;: &quot;&quot;
+    },
+    &quot;action&quot;: &quot;add&quot;
+  },
+  {
+    &quot;id&quot;: 120,
+    &quot;user&quot;: {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Administrator&quot;,
+      &quot;username&quot;: &quot;root&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+    },
+    &quot;created_at&quot;: &quot;2018-08-20T06:17:28.394Z&quot;,
+    &quot;resource_type&quot;: &quot;MergeRequest&quot;,
+    &quot;resource_id&quot;: 28,
+    &quot;label&quot;: {
+      &quot;id&quot;: 41,
+      &quot;name&quot;: &quot;project&quot;,
+      &quot;color&quot;: &quot;#D1D100&quot;,
+      &quot;description&quot;: &quot;&quot;
+    },
+    &quot;action&quot;: &quot;add&quot;
+  }
+]
+</code></pre>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/merge_requests/11/resource_label_events&quot;
+</code></pre>
+<h3>Get single merge request label event</h3>
+<p>Returns a single label event for a specific project merge request</p>
+<pre><code class="language-plaintext">GET /projects/:id/merge_requests/:merge_request_iid/resource_label_events/:resource_label_event_id
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The IID of a merge request</td>
+</tr>
+<tr>
+<td><code>resource_label_event_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of a label event</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request GET \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/merge_requests/11/resource_label_events/120&quot;
+</code></pre></code></pre>
+</body>
+</html>

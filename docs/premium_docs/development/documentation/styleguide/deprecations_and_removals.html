@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Features not actively being developed</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: none
+group: unassigned
+info: For assistance with this Style Guide page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments-to-other-projects-and-subjects.
+description: Guidelines for deprecations and page removals
+title: Deprecations and removals</p>
+<hr />
+<p>When GitLab deprecates or removes a feature, use the following process to update the documentation.
+This process requires temporarily changing content to be "deprecated" or "removed" before it's deleted.</p>
+<p>If a feature is not generally available, you can delete the content outright instead of following these instructions.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>In the following cases, a separate process applies:</p>
+<ul>
+<li><a href="../redirects.html">Documentation redirects</a> to move, rename, or delete pages not related to feature deprecation.</li>
+<li><a href="../restful_api_styleguide.md#deprecations">REST API deprecations</a>.</li>
+<li><a href="../../../api/graphql/_index.md#deprecation-and-removal-process">GraphQL API deprecation process</a> and <a href="../../api_graphql_styleguide.md#deprecation-reason-style-guide">deprecation reasons</a>.</li>
+</ul>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Features not actively being developed</h2>
+<p>When a feature is no longer actively developed, but not deprecated, add the following note under
+the topic title and version history:</p>
+<pre><code class="language-markdown">{{&lt;/* alert type=&quot;note&quot; */&gt;}}
+
+This feature is not under active development, but
+[community contributions](https://about.gitlab.com/community/contribute/) are welcome.
+
+{{&lt;/* /alert */&gt;}}
+</code></pre>
+<h2>Deprecate a page or topic</h2>
+<p>To deprecate a page or topic:</p>
+<ol>
+<li>Add <code>(deprecated)</code> after the title. Use a warning <code>alert</code> to explain when it was deprecated,
+   when it will be removed, and the replacement feature.</li>
+</ol>
+<p>```markdown
+   title: Title (deprecated)</p>
+<hr />
+<p>{{&lt;/<em> details </em>/&gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt;/<em> /details </em>/&gt;}}</p>
+<p>{{&lt;/<em> alert type="warning" </em>/&gt;}}</p>
+<p>This feature was <a href="https://issue-link">deprecated</a> in GitLab 14.8
+   and is planned for removal in 15.4. Use <a href="link-to-docs.html">feature X</a> instead.</p>
+<p>{{&lt;/<em> /alert </em>/&gt;}}
+   ```</p>
+<p>If you're not sure when the feature will be removed or no
+   replacement feature exists, you don't need to add this information.</p>
+<ol>
+<li>If the deprecation is a <a href="../../../update/terminology.md#breaking-change">breaking change</a>, add this text:</li>
+</ol>
+<p><code>markdown
+   This change is a breaking change.</code></p>
+<p>You can add any additional context-specific details that might help users.</p>
+<ol>
+<li>Add the following HTML comments above and below the content. For <code>remove_date</code>,
+   set a date three months after the <a href="https://about.gitlab.com/releases/">release where it will be removed</a>.</li>
+</ol>
+<p>```markdown
+   title: Title (deprecated)</p>
+<hr />
+<!--- start_remove The following content will be removed on remove_date: 'YYYY-MM-DD' -->
+
+<p>{{&lt;/<em> details </em>/&gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt;/<em> /details </em>/&gt;}}</p>
+<p>{{&lt;/<em> alert type="warning" </em>/&gt;}}</p>
+<p>This feature was <a href="https://issue-link">deprecated</a> in GitLab 14.8
+   and is planned for removal in 15.4. Use <a href="link-to-docs.html">feature X</a> instead.</p>
+<p>{{&lt;/<em> /alert </em>/&gt;}}</p>
+<!--- end_remove -->
+<p>```</p>
+<ol>
+<li>Open a merge request to add the word <code>(deprecated)</code> to the left nav, after the page title.</li>
+</ol>
+<h2>Remove a page</h2>
+<p>Mark content as removed during the release the feature was removed.
+The title and a removed indicator remains until three months after the removal.</p>
+<p>To remove a page:</p>
+<ol>
+<li>Leave the page title. Remove all other content, including the history items and the <code>details</code> and <code>alert</code> shortcodes.</li>
+<li>After the <code>title</code>, change <code>(deprecated)</code> to <code>(removed)</code>.</li>
+<li>Update the YAML metadata:</li>
+<li>For <code>remove_date</code>, set the value to a date three months after
+     the release when the feature was removed.</li>
+<li>For the <code>redirect_to</code>, set a path to a file that makes sense. If no obvious
+     page exists, use the docs home page.</li>
+</ol>
+<p>```markdown</p>
+<hr />
+<p>stage: AI-powered
+   group: Global Search
+   info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+   remove_date: '2022-08-02'
+   redirect_to: '../newpath/to/file/_index.md'
+   title: Title (removed)</p>
+<hr />
+<p>{{&lt;/<em> details </em>/&gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt;/<em> /details </em>/&gt;}}</p>
+<p>This feature was <a href="https://issue-link">deprecated</a> in GitLab X.Y
+   and <a href="https://issue-link">removed</a> in X.Y.
+   Use <a href="link-to-docs.html">feature X</a> instead.
+   ```</p>
+<ol>
+<li>Edit the <a href="https://gitlab.com/gitlab-org/technical-writing/docs-gitlab-com/-/blob/main/data/en-us/navigation.yaml"><code>navigation.yaml</code></a> in <code>docs-gitlab-com</code>
+   to remove the page's entry from the global navigation.</li>
+<li>
+<p>Search the <a href="../../../update/deprecations.html">Deprecations and Removals</a> page for
+   links to the removed page. The links use full URLs like: <code>https://docs.gitlab.com/user/deprecated_page/</code>.
+   If you find any links, update the relevant <a href="https://gitlab.com/gitlab-org/gitlab/-/tree/master/data/deprecations">YAML files</a>:</p>
+</li>
+<li>
+<p>In the <code>body:</code> section, remove links to the removed page.</p>
+</li>
+<li>In the <code>documentation_url:</code> section, if the entry links to the page, delete the link.</li>
+<li>
+<p>Run the Rake task to update the documentation:</p>
+<p><code>shell
+ bin/rake gitlab:docs:compile_deprecations</code></p>
+</li>
+</ol>
+<p>This content is removed from the documentation as part of the Technical Writing team's
+<a href="https://handbook.gitlab.com/handbook/product/ux/technical-writing/#regularly-scheduled-tasks">regularly scheduled tasks</a>.</p>
+<h2>Remove a topic</h2>
+<p>To remove a topic:</p>
+<ol>
+<li>Leave the title and the details of the deprecation and removal. Remove all other content,
+   including the history items and the <code>details</code> and <code>alert</code> shortcodes.</li>
+<li>Add <code>(removed)</code> after the title.</li>
+<li>Add the following HTML comments above and below the topic.
+   For <code>remove_date</code>, set a date three months after the release where it was removed.</li>
+</ol>
+<p>```markdown
+   title: Title (removed)</p>
+<hr />
+<!--- start_remove The following content will be removed on remove_date: 'YYYY-MM-DD' -->
+
+<p>{{&lt;/<em> details </em>/&gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt;/<em> /details </em>/&gt;}}</p>
+<p>This feature was <a href="https://issue-link">deprecated</a> in GitLab X.Y
+   and <a href="https://issue-link">removed</a> in X.Y.
+   Use <a href="link-to-docs.html">feature X</a> instead.</p>
+<!--- end_remove -->
+<p>```</p>
+<ol>
+<li>
+<p>Search the <a href="../../../update/deprecations.html">Deprecations and Removals</a> page for
+   links to the removed page. The links use full URLs like: <code>https://docs.gitlab.com/user/deprecated_page/</code>.
+   If you find any links, update the relevant <a href="https://gitlab.com/gitlab-org/gitlab/-/tree/master/data/deprecations">YAML files</a>:</p>
+</li>
+<li>
+<p>In the <code>body:</code> section, remove links to the removed page.</p>
+</li>
+<li>In the <code>documentation_url:</code> section, if the entry links to the page, delete the link.</li>
+<li>
+<p>Run the Rake task to update the documentation:</p>
+<p><code>shell
+ bin/rake gitlab:docs:compile_deprecations</code></p>
+</li>
+</ol>
+<p>This content is removed from the documentation as part of the Technical Writing team's
+<a href="https://handbook.gitlab.com/handbook/product/ux/technical-writing/#regularly-scheduled-tasks">regularly scheduled tasks</a>.</p>
+<h2>Removing version-specific upgrade pages</h2>
+<p>Version-specific upgrade pages are in the <code>doc/update/versions/</code> directory.</p>
+<p>We don't remove version-specific upgrade pages immediately for a major milestone. This gives
+users time to upgrade from older versions.</p>
+<p>For example, <code>doc/update/versions/14_changes.md</code> should
+be removed during the <code>.3</code> milestone. Therefore <code>14_changes.md</code> are
+removed in GitLab 17.3.</p>
+<p>Instead of removing the unsupported page:</p>
+<ul>
+<li><a href="#remove-a-topic">Add a note</a> with a date three months in the future to ensure the page is removed during the
+  <a href="https://handbook.gitlab.com/handbook/product/ux/technical-writing/#regularly-scheduled-tasks">monthly maintenance task</a>.</li>
+<li>Do not add <code>Removed</code> to the title.</li>
+</ul>
+<p>If the <code>X_changes.md</code> page contains relative links to other sections
+that are removed as part of the versions cleanup, the <code>docs-lint links</code>
+job might fail. You can replace those relative links with an <a href="https://archives.docs.gitlab.com">archived version</a>.
+Choose the latest minor version of the unsupported version to be removed.</p></code></pre>
+</body>
+</html>

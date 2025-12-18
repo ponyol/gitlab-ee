@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># View a group wiki</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Knowledge
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Group wikis</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>If you use GitLab groups to manage multiple projects, some of your documentation
+might span multiple groups. You can create group wikis, instead of <a href="_index.html">project wikis</a>,
+to ensure all group members have the correct access permissions to contribute.
+Group wikis are similar to <a href="_index.html">project wikis</a>, with a few limitations:</p>
+<ul>
+<li><a href="../../../topics/git/lfs/_index.html">Git LFS</a> is not supported.</li>
+<li>Changes to group wikis don't show up in the <a href="../../group/manage.md#group-activity-analytics">group's activity feed</a>.</li>
+</ul>
+<p>For updates, follow <a href="https://gitlab.com/groups/gitlab-org/-/epics/2782">the epic that tracks feature parity with project wikis</a>.</p>
+<p>Similar to project wikis, group members with at least the Developer role
+can edit group wikis. Group wiki repositories can be moved using the
+<a href="../../../api/group_repository_storage_moves.html">Group repository storage moves API</a>.</p>
+<h2>View a group wiki</h2>
+<p>To access a group wiki:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>To display the wiki, either:</li>
+<li>On the left sidebar, select <strong>Plan</strong> &gt; <strong>Wiki</strong>.</li>
+<li>On any page in the group, use the <kbd>g</kbd>+<kbd>w</kbd>
+     <a href="../../shortcuts.html">wiki keyboard shortcut</a>.</li>
+</ol>
+<h2>Export a group wiki</h2>
+<p>Users with the Owner role in a group can
+<a href="../settings/import_export.md#migrate-groups-by-uploading-an-export-file-deprecated">import or export a group wiki</a> when they
+import or export a group.</p>
+<p>Content created in a group wiki is not deleted when an account is downgraded or a
+GitLab trial ends. The group wiki data is exported whenever the group owner of
+the wiki is exported.</p>
+<p>To access the group wiki data from the export file if the feature is no longer
+available, you have to:</p>
+<ol>
+<li>Extract the <a href="../settings/import_export.md#migrate-groups-by-uploading-an-export-file-deprecated">export file tarball</a>
+   with this command, replacing <code>FILENAME</code> with your file's name:
+   <code>tar -xvzf FILENAME.tar.gz</code></li>
+<li>Browse to the <code>repositories</code> directory. This directory contains a
+   <a href="https://git-scm.com/docs/git-bundle">Git bundle</a> with the extension <code>.wiki.bundle</code>.</li>
+<li>Clone the Git bundle into a new repository, replacing <code>FILENAME</code> with
+   your bundle's name: <code>git clone FILENAME.wiki.bundle</code></li>
+</ol>
+<p>All files in the wiki are available in this Git repository.</p>
+<h2>Configure group wiki visibility</h2>
+<p>Wikis are enabled by default in GitLab. Group <a href="../../permissions.html">administrators</a>
+can enable or disable a group wiki through the group settings.</p>
+<p>To open group settings:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Permissions and group features</strong>.</li>
+<li>Scroll to <strong>Wiki</strong> and select one of these options:</li>
+<li><strong>Enabled</strong>: For public groups, everyone can access the wiki. For internal groups, only authenticated users can access the wiki.</li>
+<li><strong>Private</strong>: Only group members can access the wiki.</li>
+<li><strong>Disabled</strong>: The wiki isn't accessible, and cannot be downloaded.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Delete the contents of a group wiki</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can delete the contents of a group wiki with the Rails console. You can then populate the wiki with new content.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>This operation deletes all data in the wiki.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>This command changes data directly and could be damaging if not run correctly.
+You should run these instructions in a test environment first. Keep a backup of the
+instance ready so you can restore the instance, if necessary.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<p>To delete all of the data from a group wiki and recreate it in a blank state:</p>
+<ol>
+<li><a href="../../../administration/operations/rails_console.md#starting-a-rails-console-session">Start a Rails console session</a>.</li>
+<li>Run these commands:</li>
+</ol>
+<p>```ruby
+   # Enter your group's path
+   g = Group.find_by_full_path('<group-name>')</p>
+<p># This command deletes the wiki group from the filesystem.
+   g.wiki.repository.remove</p>
+<p># Refresh the wiki repository state.
+   g.wiki.repository.expire_exists_cache
+   ```</p>
+<p>All data from the wiki has been cleared, and the wiki is ready for use.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../../../administration/wikis/_index.html">Wiki settings for administrators</a></li>
+<li><a href="../../../api/wikis.html">Project wikis API</a></li>
+<li><a href="../../../api/group_repository_storage_moves.html">Group repository storage moves API</a></li>
+<li><a href="../../../api/group_wikis.html">Group wikis API</a></li>
+<li><a href="../../shortcuts.md#wiki-pages">Wiki keyboard shortcuts</a></li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/2782">Epic: Feature parity with project wikis</a></li>
+</ul></code></pre>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Activate GitLab EE</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Fulfillment
+group: Provision
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Activate GitLab Enterprise Edition (EE)</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When you install a new GitLab instance without a license, only Free features
+are enabled. To enable more features in GitLab Enterprise Edition (EE), activate
+your instance with an activation code.</p>
+<h2>Activate GitLab EE</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must <a href="https://about.gitlab.com/pricing/">purchase a subscription</a>.</li>
+<li>You must be running GitLab Enterprise Edition (EE).</li>
+<li>Your instance must be connected to the internet.</li>
+</ul>
+<p>To activate your instance with an activation code:</p>
+<ol>
+<li>Copy the activation code, a 24-character alphanumeric string, from either:</li>
+<li>Your subscription confirmation email.</li>
+<li>The <a href="https://customers.gitlab.com/customers/sign_in">Customers Portal</a>, on the <strong>Manage Purchases</strong> page.</li>
+<li>Sign in to your instance.</li>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Subscription</strong>.</li>
+<li>Paste the activation code in <strong>Activation code</strong>.</li>
+<li>Read and accept the terms of service.</li>
+<li>Select <strong>Activate</strong>.</li>
+</ol>
+<p>The subscription is activated.</p>
+<h3>Using one activation code for multiple instances</h3>
+<p>You can use a single activation code or license key for multiple GitLab Self-Managed instances if the users are:</p>
+<ul>
+<li>Identical to your licensed production instance.</li>
+<li>A subset of your licensed production instance.</li>
+</ul>
+<p>The activation code is valid for these instances, regardless of how users are configured in groups and projects.</p>
+<h3>For scaled architectures</h3>
+<p>To activate your instance in a scaled architecture:</p>
+<ul>
+<li>Upload the license file to one application instance only.</li>
+</ul>
+<p>The license is stored in the database and is replicated to all instances.</p>
+<h3>For GitLab Geo</h3>
+<p>To activate your instance when using GitLab Geo:</p>
+<ul>
+<li>Upload the license to your primary Geo instance.</li>
+</ul>
+<p>The license is stored in the database and is replicated to all instances.</p>
+<h3>For offline environments</h3>
+<p>To activate your instance for an offline environment:</p>
+<ul>
+<li><a href="license_file.html">Activate GitLab EE with a license file or key</a>.</li>
+</ul>
+<p>If you have questions or need assistance activating your instance,
+<a href="https://about.gitlab.com/support/#contact-support">contact GitLab Support</a>.</p>
+<p>When <a href="license_file.md#what-happens-when-your-license-expires">the license expires</a>,
+some functionality is locked.</p>
+<h2>Verify your GitLab edition</h2>
+<p>To verify the edition, sign in to GitLab and select
+<strong>Help</strong> ({{&lt; icon name="question-o" &gt;}}) &gt; <strong>Help</strong>. The GitLab edition and version are listed
+at the top of the page.</p>
+<p>If you are running GitLab Community Edition (CE), you can upgrade your installation to GitLab
+EE. For more information, see <a href="../update/convert_to_ee/_index.html">other upgrade paths</a>.</p>
+<p>If you have questions or need assistance,
+<a href="https://about.gitlab.com/support/#contact-support">contact GitLab Support</a>.</p>
+<h2>Troubleshooting</h2>
+<p>When activating your paid subscription features on GitLab Self-Managed instances, you might encounter the following issues.</p>
+<h3>Error: <code>An error occurred while adding your subscription</code></h3>
+<p>This issue might occur after you enter your activation code.</p>
+<p>To find more details about the error, you can use your browser's developer tools:</p>
+<ol>
+<li>To open developer tools, right-click on a page and select <strong>Inspect</strong>.</li>
+<li>Select the <strong>Network</strong> tab.</li>
+<li>In GitLab, retry the activation code.</li>
+<li>In the <strong>Network</strong> tab, select the <code>graphql</code> entry.</li>
+<li>
+<p>Select the <strong>Response</strong> tab, and check for an error similar to:</p>
+<p><code>plaintext
+  [{"data":{"gitlabSubscriptionActivate":{"errors":["&lt;error&gt; returned=1 errno=0 state=error: &lt;error&gt;"],"license":null,"__typename":"GitlabSubscriptionActivatePayload"}}}]</code></p>
+</li>
+</ol>
+<p>To resolve the issue:</p>
+<ul>
+<li>If the GraphQL response includes <code>only get, head, options, and trace methods are allowed in silent mode</code>, disable <a href="silent_mode/_index.md#turn-off-silent-mode">silent mode</a> for your instance.</li>
+</ul>
+<p>If you are unable to determine the issue, contact <a href="https://about.gitlab.com/support/portal/">GitLab Support</a> and provide the GraphQL response in your description of the issue.</p>
+<h3>Error: <code>Cannot activate instance due to a connectivity issue</code></h3>
+<p>When activating your instance, you may encounter connectivity issues preventing connection to GitLab servers.
+This can be caused by:</p>
+<ul>
+<li><strong>Firewall settings</strong>:</li>
+<li>
+<p>To confirm that your GitLab instance can establish an encrypted connection to <code>https://customers.gitlab.com</code> on port 443, use the following curl command:</p>
+<p><code>shell
+curl --verbose "https://customers.gitlab.com/"</code></p>
+</li>
+<li>
+<p>If the curl command returns an error, either:</p>
+<ul>
+<li>Check your firewall or proxy. The domain <code>https://customers.gitlab.com</code> is
+  fronted by Cloudflare. Ensure your firewall or proxy allows traffic to the Cloudflare
+  <a href="https://www.cloudflare.com/ips-v4/">IPv4</a> and
+  <a href="https://www.cloudflare.com/ips-v6/">IPv6</a> ranges for activation to work.</li>
+<li><a href="https://docs.gitlab.com/omnibus/settings/environment-variables.html">Configure a proxy</a>
+  in <code>gitlab.rb</code> to point to your server.</li>
+</ul>
+<p>Contact your network administrator to make changes to an existing proxy or firewall.
+  - If an SSL inspection appliance is used, you must add the appliance's root CA certificate to <code>/etc/gitlab/trusted-certs</code> on your instance, then run <code>gitlab-ctl reconfigure</code>.</p>
+</li>
+<li>
+<p><strong>Customers Portal is not operational</strong>:</p>
+</li>
+<li>
+<p>Check for any active disruptions to the Customers Portal on <a href="https://status.gitlab.com/">status</a>.</p>
+</li>
+<li>
+<p><strong>An offline environment</strong>:</p>
+</li>
+<li>
+<p>If you are unable to configure your setup to allow connection to GitLab servers, contact your Sales Representative to request an <a href="https://about.gitlab.com/pricing/licensing-faq/cloud-licensing/#what-is-an-offline-cloud-license">Offline license</a>.</p>
+<p>For assistance, you can contact <a href="https://about.gitlab.com/support/#contact-support">GitLab support</a> with reference to <a href="https://handbook.gitlab.com/handbook/support/license-and-renewals/workflows/self-managed/troubleshoot_cloud_licensing/#troubleshooting-network-connectivity">troubleshooting network connectivity</a>.</p>
+</li>
+</ul></code></pre>
+</body>
+</html>

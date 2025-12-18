@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Before you begin</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Runner Core
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Get started connecting a Kubernetes cluster to GitLab</p>
+<hr />
+<p>This page guides you through setting up a basic Kubernetes integration in a single project. If you're new to the GitLab agent for Kubernetes, pull-based deployment, or Flux, you should start here.</p>
+<p>When you finish, you will be able to:</p>
+<ul>
+<li>View the status of your Kubernetes cluster with a real-time Kubernetes dashboard.</li>
+<li>Deploy updates to your cluster with Flux.</li>
+<li>Deploy updates to your cluster with GitLab CI/CD.</li>
+</ul>
+<h2>Before you begin</h2>
+<p>Make sure you have the following before you complete this tutorial:</p>
+<ul>
+<li>A Kubernetes cluster that you can access locally with <code>kubectl</code>.
+  To see what versions of Kubernetes GitLab supports, see <a href="_index.md#supported-kubernetes-versions-for-gitlab-features">Supported Kubernetes versions for GitLab features</a>.</li>
+</ul>
+<p>You can check that everything is properly configured by running:</p>
+<p><code>shell
+  kubectl cluster-info</code></p>
+<h2>Install and configure Flux</h2>
+<p><a href="https://fluxcd.io/flux/">Flux</a> is the recommended tool for GitOps deployments (also called pull-based deployments). Flux is a matured CNCF project.</p>
+<p>To install Flux:</p>
+<ul>
+<li>Complete the steps in <a href="https://fluxcd.io/flux/installation/#install-the-flux-cli">Install the Flux CLI</a> in the Flux documentation.</li>
+</ul>
+<p>Check that the Flux CLI is properly installed by running:</p>
+<pre><code class="language-shell">flux -v
+</code></pre>
+<h3>Create a personal access token</h3>
+<p>To authenticate with the Flux CLI, create a personal access token with
+the <code>api</code> scope:</p>
+<ol>
+<li>In the upper-right corner, select your avatar.</li>
+<li>Select <strong>Edit profile</strong>.</li>
+<li>Select <strong>Personal access tokens</strong>.</li>
+<li>Enter a name and optional expiry date for the token.</li>
+<li>Select the <code>api</code> scope.</li>
+<li>Select <strong>Create personal access token</strong>.</li>
+</ol>
+<p>You can also use a <a href="../../project/settings/project_access_tokens.html">project</a> or <a href="../../group/settings/group_access_tokens.html">group access token</a> with the <code>api</code> scope and the <code>maintainer</code> role.</p>
+<h3>Bootstrap Flux</h3>
+<p>In this section, you'll bootstrap Flux into an empty GitLab repository with the
+<a href="https://fluxcd.io/flux/installation/bootstrap/gitlab/"><code>flux bootstrap</code></a> command.</p>
+<p>To bootstrap a Flux installation:</p>
+<ul>
+<li>Run the <code>flux bootstrap gitlab</code> command. For example:</li>
+</ul>
+<p><code>shell
+  flux bootstrap gitlab \
+  --hostname=gitlab.example.org \
+  --owner=my-group/optional-subgroup \
+  --repository=my-repository \
+  --branch=main \
+  --path=clusters/testing \
+  --deploy-token-auth</code></p>
+<p>The arguments of <code>bootstrap</code> are:</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hostname</code></td>
+<td>Hostname of your GitLab instance.</td>
+</tr>
+<tr>
+<td><code>owner</code></td>
+<td>GitLab group containing the Flux repository.</td>
+</tr>
+<tr>
+<td><code>repository</code></td>
+<td>GitLab project containing the Flux repository.</td>
+</tr>
+<tr>
+<td><code>branch</code></td>
+<td>Git branch the changes are committed to.</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>File path to a folder where the Flux configuration is stored.</td>
+</tr>
+</tbody>
+</table>
+<p>The bootstrap script does the following:</p>
+<ol>
+<li>Creates a deploy token and saves it as a Kubernetes <code>secret</code>.</li>
+<li>Creates an empty GitLab project, if the project specified by the <code>--repository</code> argument doesn't exist.</li>
+<li>Generates Flux definition files for your project in a folder specified by the <code>--path</code> argument.</li>
+<li>Commits the definition files to the branch specified by the <code>--branch</code> argument.</li>
+<li>Applies the definition files to your cluster.</li>
+</ol>
+<p>After you run the script, Flux will be ready to manage itself and any other resources
+you add to the GitLab project and path.</p>
+<p>The rest of this tutorial assumes your path is <code>clusters/testing</code>, and your project is under <code>my-group/optional-subgroup/my-repository</code>.</p>
+<h2>Set up the agent connection</h2>
+<p>To connect your clusters, you need to install the GitLab agent for Kubernetes.
+You can do this by bootstrapping the agent with the GitLab CLI (<code>glab</code>).</p>
+<ol>
+<li><a href="https://gitlab.com/gitlab-org/cli/#installation">Install the GitLab CLI</a>.</li>
+</ol>
+<p>To check that the GitLab CLI is available, run</p>
+<p><code>shell
+   glab version</code></p>
+<ol>
+<li>
+<p><a href="https://gitlab.com/gitlab-org/cli/#installation">Authenticate <code>glab</code></a> to your GitLab instance.</p>
+</li>
+<li>
+<p>In the repository where you bootstrapped Flux, run the <code>glab cluster agent bootstrap</code> command:</p>
+</li>
+</ol>
+<p><code>shell
+   glab cluster agent bootstrap --manifest-path clusters/testing testing</code></p>
+<p>By default, the command:</p>
+<ol>
+<li>Registers the agent with <code>testing</code> as the name.</li>
+<li>Configures the agent.</li>
+<li>Configures an environment called <code>testing</code> with a dashboard for the agent.</li>
+<li>Creates an agent token.</li>
+<li>In the cluster, creates a Kubernetes secret with the agent token.</li>
+<li>Commits the Flux Helm resources to the Git repository.</li>
+<li>Triggers a Flux reconciliation.</li>
+</ol>
+<p>For more information about configuring the agent, see <a href="install/_index.html">Installing the agent for Kubernetes</a>.</p>
+<h2>Check out the dashboard for Kubernetes</h2>
+<p>The <code>glab cluster agent bootstrap</code> created an environment within GitLab and <a href="../../../ci/environments/kubernetes_dashboard.html">configured a dashboard</a>.</p>
+<p>To view your dashboard:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Operate</strong> &gt; <strong>Environments</strong>.</li>
+<li>Select your environment. For example, <code>flux-system/gitlab-agent</code>.</li>
+<li>Select the <strong>Kubernetes overview</strong> tab.</li>
+</ol>
+<h2>Secure the deployment</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>So far, you have deployed an agent using the <code>.gitlab/agents/testing/config.yaml</code> file.
+This configuration enables user access using the service account configured for the agent deployment. User access is used by the dashboard for Kubernetes, and for local access.</p>
+<p>To keep your deployments secure, you should change this setup to impersonate a GitLab user.
+In this case, you can manage your access to cluster resources through regular Kubernetes role-based access control (RBAC).</p>
+<p>To enable user impersonation:</p>
+<ol>
+<li>In your <code>.gitlab/agents/testing/config.yaml</code> file, replace <code>user_access.access_as.agent: {}</code> with <code>user_access.access_as.user: {}</code>.</li>
+<li>Go to the configured dashboard for Kubernetes. If access is restricted, the dashboard displays an error message.</li>
+<li>Add the following code to <code>clusters/testing/gitlab-user-read.yaml</code>:</li>
+</ol>
+<p><code>yaml
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+      name: gitlab-user-view
+   roleRef:
+      name: view
+      kind: ClusterRole
+      apiGroup: rbac.authorization.k8s.io
+   subjects:
+      - name: gitlab:user
+        kind: Group</code></p>
+<ol>
+<li>Wait a few seconds to allow Flux to apply the added manifest, then check the dashboard for Kubernetes again. The dashboard should be back to normal, thanks to the deployed cluster role binding that grants read access to all GitLab users.</li>
+</ol>
+<p>For more information about user access, see <a href="user_access.html">Grant users Kubernetes access</a>.</p>
+<h2>Keep everything up to date</h2>
+<p>You might need to upgrade Flux and <code>agentk</code> after installation.</p>
+<p>To do this:</p>
+<ul>
+<li>Rerun the <code>flux bootstrap gitlab</code> and <code>glab cluster agent bootstrap</code> commands.</li>
+</ul>
+<h2>Next steps</h2>
+<p>You can deploy directly to your cluster from the project where you registered the agent and stored your Flux manifests. The agent is designed to support multi-tenancy, and you can scale your configuration to other projects and groups with the configured agent and Flux installation.</p>
+<p>Consider working through the follow-up tutorial, <a href="getting_started_deployments.html">Get started deploying to Kubernetes</a>. To learn more about using Kubernetes with GitLab, see:</p>
+<ul>
+<li><a href="enterprise_considerations.html">Best practices for using the GitLab integration with Kubernetes</a></li>
+<li>Using the agent for <a href="vulnerabilities.html">operational container scanning</a></li>
+<li>Providing <a href="../../workspace/_index.html">remote workspaces</a> for your engineers</li>
+</ul></code></pre>
+</body>
+</html>

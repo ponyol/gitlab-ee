@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Edit merge request approval settings</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Define approval rules and limits in GitLab with merge request approval settings. Options include preventing author approval, requiring re-authentication, and removing approvals on new commits.
+title: Merge request approval settings</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can configure the settings for <a href="_index.html">merge request approvals</a> to
+ensure the approval rules meet your use case. You can also configure
+<a href="rules.html">approval rules</a>, which define the number and type of users who must
+approve work before it's merged. Merge request approval settings define how
+to apply those rules as a merge request moves toward completion.</p>
+<p>Use any combination of these settings to configure approval limits for merge requests:</p>
+<ul>
+<li><a href="#prevent-approval-by-merge-request-creator"><strong>Prevent approval by merge request creator</strong></a>:
+  Prevents the author of a merge request from approving it.</li>
+<li><a href="#prevent-approvals-by-users-who-add-commits"><strong>Prevent approvals by users who add commits</strong></a>:
+  Prevents users who add commits to a merge request from also approving it.</li>
+<li><a href="#prevent-editing-approval-rules-in-merge-requests"><strong>Prevent editing approval rules in merge requests</strong></a>:
+  Prevents users from overriding project approval rules on merge requests.</li>
+<li><a href="#require-user-re-authentication-to-approve"><strong>Require user re-authentication (password or SAML) to approve</strong></a>:
+  Force potential approvers to first authenticate with either a password or with SAML.</li>
+<li>Code Owner approval removals: Define what happens to existing approvals when
+  commits are added to the merge request.</li>
+<li><strong>Keep approvals</strong>: Do not remove any approvals.</li>
+<li><a href="#remove-all-approvals-when-commits-are-added-to-the-source-branch"><strong>Remove all approvals</strong></a>:
+    Remove all existing approvals.</li>
+<li><a href="#remove-approvals-by-code-owners-if-their-files-changed"><strong>Remove approvals by Code Owners if their files changed</strong></a>:
+    If a Code Owner approves a merge request, and a later commit changes files
+    they are a Code Owner for, their approval is removed.</li>
+</ul>
+<h2>Edit merge request approval settings</h2>
+<p>To view or edit merge request approval settings for a single project:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>Expand <strong>Approvals</strong>.</li>
+</ol>
+<h3>Cascade settings from the instance or top-level group</h3>
+<p>To simplify the management of approval rule settings, configure the approval rules
+at the broadest possible level. Rules created:</p>
+<ul>
+<li><a href="../../../../administration/merge_requests_approvals.html">For your instance</a> apply to all groups
+  and projects on an instance.</li>
+<li>On a <a href="../../../group/manage.md#group-merge-request-approval-settings">top-level group</a> apply to all subgroups
+  and projects.</li>
+</ul>
+<p>If a group or project inherits settings, you can't change them in the inheriting group or project.
+You must change the settings where they originated: the top-level group or instance.</p>
+<h2>Prevent approval by merge request creator</h2>
+<p>By default, the creator of a merge request (author) cannot approve it. To change this setting:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, scroll to <strong>Approval settings</strong> and
+   clear the <strong>Prevent approval by merge request creator (author)</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>Merge request creators can edit the approval rule in an individual merge request and override
+this setting, unless you configure one of these options:</p>
+<ul>
+<li><a href="#prevent-editing-approval-rules-in-merge-requests">Prevent overrides of default approvals</a> for your project.</li>
+<li><em>(GitLab Self-Managed instances only)</em> Prevent overrides of default approvals
+  <a href="../../../../administration/merge_requests_approvals.html">for your instance</a>. When configured
+  for your instance, you can't edit this setting on projects or individual
+  merge requests.</li>
+</ul>
+<h2>Prevent approvals by users who add commits</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/127744">Feature flag <code>keep_merge_commits_for_approvals</code></a> added in GitLab 16.3 to also include merge commits in this check.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/131778">Feature flag <code>keep_merge_commits_for_approvals</code></a> removed in GitLab 16.5. This check now includes merge commits.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>By default, users who commit to a merge request (the committers) can still approve it. To prevent
+committers in your project (or your instance) from approving merge requests that are partially
+their own:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, scroll to <strong>Approval settings</strong> and
+   select <strong>Prevent approvals by users who add commits</strong>.
+   If this checkbox is cleared, an administrator has disabled it
+   <a href="../../../../administration/merge_requests_approvals.html">for your instance</a>, and
+   you can't change it for your project.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p><a href="../../codeowners/_index.html">Code owners</a> who commit to a merge request cannot approve it,
+if the merge request affects files they own.</p>
+<p>For more information, see the <a href="https://git-scm.com/book/en/v2/Git-Basics-Viewing-the-Commit-History">official Git documentation</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>If a merge request is rebased by someone other than the user who originally committed the changes,
+the commit history is rewritten with a new committer. This might enable users who
+previously committed changes in a merge request to now approve changes in it, as they are
+no longer a committer.</p>
+<p>See also <a href="../../../../topics/git/git_rebase.md#approving-after-rebase">approving after rebase</a></p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Prevent editing approval rules in merge requests</h2>
+<p>By default, users can override the approval rules you <a href="rules.html">create for a project</a>
+on a per-merge-request basis. If you don't want users to change approval rules
+on merge requests, you can disable this setting:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, scroll to <strong>Approval settings</strong> and
+   select <strong>Prevent editing approval rules in merge requests</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>This change affects all open merge requests.</p>
+<p>When you change this field, it can affect all open merge requests depending on the setting:</p>
+<ul>
+<li>If users could edit approval rules previously, and you disable this behavior,
+  GitLab updates all open merge requests to enforce the approval rules.</li>
+<li>If users could not edit approval rules previously, and you enable approval rule
+  editing, open merge requests remain unchanged. This preserves any changes already
+  made to approval rules in those merge requests.</li>
+</ul>
+<h2>Require user re-authentication to approve</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Requiring re-authentication by using SAML authentication for GitLab.com groups <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/5981">introduced</a> in GitLab 16.6 <a href="../../../../administration/feature_flags/_index.html">with a flag</a> named <code>ff_require_saml_auth_to_approve</code>. Disabled by default.</li>
+<li>Requiring re-authentication by using SAML authentication for GitLab Self-Managed instances <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/431415">introduced</a> in GitLab 16.7 <a href="../../../../administration/feature_flags/_index.html">with a flag</a> named <code>ff_require_saml_auth_to_approve</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/431714">Enabled <code>ff_require_saml_auth_to_approve</code> by default</a> in GitLab 16.8 for GitLab.com and GitLab Self-Managed instances.</li>
+<li>Feature flag removed in GitLab 18.3</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>On GitLab Self-Managed, by default requiring re-authentication by using SAML authentication is available. To hide the feature, an administrator can
+<a href="../../../../administration/feature_flags/_index.html">disable the feature flag</a> named <code>ff_require_saml_auth_to_approve</code>. On GitLab.com and GitLab Dedicated, this feature is available.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>You can force potential approvers to first authenticate with SAML or a password.
+This permission enables an electronic signature for approvals, such as the one defined by
+<a href="https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfcfr/CFRSearch.cfm?CFRPart=11&amp;showFR=1&amp;subpartNode=21:1.0.1.1.8.3">Code of Federal Regulations (CFR) Part 11</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>This setting is only available on top-level groups.</p>
+</li>
+<li>
+<p>On the top bar, select <strong>Search or go to</strong> and find your project.</p>
+</li>
+<li>Enable password authentication and SAML authentication. For more information on:</li>
+<li>Password authentication, see
+     <a href="../../../../administration/settings/sign_in_restrictions.md#password-authentication-enabled">sign-in restrictions documentation</a>.</li>
+<li>SAML authentication for GitLab.com groups, see
+     <a href="../../../group/saml_sso/_index.html">SAML SSO for GitLab.com groups documentation</a>.</li>
+<li>SAML authentication for GitLab Self-Managed instances, see
+     <a href="../../../../integration/saml.html">SAML SSO for GitLab Self-Managed</a>.</li>
+<li>On the left sidebar, select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, scroll to <strong>Approval settings</strong> and
+   select <strong>Require user re-authentication (password or SAML) to approve</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<h2>Remove all approvals when commits are added to the source branch</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>By default, an approval on a merge request is removed when you add more changes
+after the approval.</p>
+<p>GitLab uses <a href="https://git-scm.com/docs/git-patch-id"><code>git patch-id</code></a> to identify diffs
+in merge requests. This value is a reasonably stable and unique identifier, and it enables
+smarter decisions about resetting approvals inside a merge request. When you push new changes
+to a merge request, the <code>patch-id</code> is evaluated against the previous <code>patch-id</code> to determine
+if the approvals should be reset. This enables GitLab to make better reset decisions when
+you perform commands like <code>git rebase</code> or <code>git merge &lt;target&gt;</code> on a feature branch.</p>
+<p>To keep existing approvals after more changes are added to a merge request:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, scroll to <strong>Approval settings</strong> and
+   clear the <strong>Remove all approvals</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>If you automate the creation and approval of merge requests, build in logic to ensure commits are
+processed fully before approving the merge request. This prevents an unintentional approval reset.
+See <a href="../../../../api/merge_request_approvals.md#approvals-for-automated-merge-requests">Approvals for automated merge requests</a>
+for more details.</p>
+<h2>Remove approvals by Code Owners if their files changed</h2>
+<p>To remove approvals only from Code Owners whose files change in a new commit:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for a project.</li>
+</ul>
+<p>To do this:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, scroll to <strong>Approval settings</strong> and
+   select <strong>Remove approvals by Code Owners if their files changed</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../../../../administration/merge_requests_approvals.html">Merge request approval settings for your instance</a></li>
+<li><a href="../../../compliance/compliance_center/_index.html">Compliance center</a></li>
+<li><a href="../../../../api/merge_request_approvals.html">Merge request approvals API</a></li>
+<li><a href="../../../../api/merge_request_approval_settings.html">Merge request approval settings API</a></li>
+</ul></code></pre>
+</body>
+</html>

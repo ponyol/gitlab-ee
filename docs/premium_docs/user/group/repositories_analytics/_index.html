@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># View group repository analytics</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Pipeline Execution
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Repository analytics for groups</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Repository analytics for groups provides test coverage data for all projects in a group.</p>
+<p>You can use group repository analytics to:</p>
+<ul>
+<li>Monitor code coverage trends across all projects in a group.</li>
+<li>Track the total number of projects and jobs that generate coverage reports.</li>
+<li>Download historical coverage data for analysis.</li>
+</ul>
+<p>Support for subgroups is proposed in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/273527">issue 273527</a>.</p>
+<h2>View group repository analytics</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>Projects within the group must be configured to collect test coverage data.</li>
+</ul>
+<p>To view repository analytics for a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Repository analytics</strong>.</li>
+</ol>
+<h2>Coverage metrics</h2>
+<p>The group <strong>Repository analytics</strong> page displays:</p>
+<ul>
+<li><strong>Current group code coverage</strong>:</li>
+<li>Number of projects with coverage reports.</li>
+<li>Average coverage percentage across all projects.</li>
+<li>
+<p>Total number of pipeline jobs that produce coverage reports.</p>
+</li>
+<li>
+<p><strong>Average test coverage</strong>: A graph that shows the average test coverage across all projects in your group for the last 30 days.</p>
+</li>
+<li>
+<p><strong>Latest test coverage results</strong>: A list of the most recent coverage data for each project in your group. Select projects from the dropdown list to filter the results.</p>
+</li>
+</ul>
+<h2>Download coverage data</h2>
+<p>You can download a CSV file containing historical coverage data for projects in your group.</p>
+<p>The CSV report:</p>
+<ul>
+<li>Contains up to 1000 records.</li>
+<li>Includes data from the default branch of each project.</li>
+<li>Shows one row per day when coverage was reported.</li>
+<li>Uses the last value of the day if multiple coverage reports were generated.</li>
+<li>Contains the following information for each coverage report:</li>
+<li>Date the coverage job ran</li>
+<li>Name of the job that generated the report</li>
+<li>Project name</li>
+<li>Coverage percentage</li>
+</ul>
+<p>To download the coverage data:</p>
+<ol>
+<li>On the group <strong>Repository analytics</strong> page, select <strong>Download historic test coverage data (.csv)</strong>.</li>
+<li>Select the projects to include:</li>
+<li>From the <strong>Projects</strong> dropdown list, choose specific projects. The projects dropdown list shows up to 100 projects.</li>
+<li>Optional. Select <strong>Select all</strong> to include all projects in your group.</li>
+<li>From the <strong>Date range</strong> dropdown list, select the time period to include.</li>
+<li>Select <strong>Download test coverage data (.csv)</strong>.</li>
+</ol>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../../analytics/repository_analytics.html">Repository analytics for projects</a></li>
+<li><a href="../../../ci/testing/code_coverage/_index.html">Code coverage</a></li>
+</ul></code></pre>
+</body>
+</html>

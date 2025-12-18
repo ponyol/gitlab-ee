@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Enable merge request approval settings for an instance</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+gitlab_dedicated: yes
+description: Configure merge request approvals for your GitLab instance.
+title: Merge request approvals</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Merge request approval rules prevent users from overriding certain project settings.
+When enabled, these settings are
+<a href="../user/project/merge_requests/approvals/settings.md#cascade-settings-from-the-instance-or-top-level-group">enforced for all projects and groups</a>
+in the instance.</p>
+<p>These merge request approval settings can be set for the entire instance:</p>
+<ul>
+<li><strong>Prevent approval by merge request creator</strong>. Prevents project maintainers from allowing merge
+  request authors to approve their own merge requests.</li>
+<li><strong>Prevent approvals by users who add commits</strong>. Prevents project maintainers from allowing users
+  to approve merge requests if they have submitted any commits to the source branch.</li>
+<li><strong>Prevent editing approval rules in projects and merge requests</strong>. Prevents users from modifying
+  the approvers list in project settings or in individual merge requests.</li>
+</ul>
+<p>The following are also affected by rules for the entire instance:</p>
+<ul>
+<li><a href="../user/project/merge_requests/approvals/_index.html">Project merge request approval rules</a>.</li>
+<li><a href="../user/group/manage.md#group-merge-request-approval-settings">Group merge request approval settings</a>.</li>
+</ul>
+<h2>Enable merge request approval settings for an instance</h2>
+<p>To do this:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Push rules</strong>.</li>
+<li>Expand <strong>Merge request approvals</strong>.</li>
+<li>Select the checkbox for any of the approval rules.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

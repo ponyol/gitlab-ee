@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Convert from CE to EE</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: GitLab Delivery
+group: Operate
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Convert a self-compiled CE instance to EE</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can convert an existing self-compiled instance from Community Edition (CE) to Enterprise Edition (EE).</p>
+<p>These instructions assume you have a correctly configured and tested self-compiled installation of GitLab CE.</p>
+<h2>Convert from CE to EE</h2>
+<p>In the following instructions, replace:</p>
+<ul>
+<li><code>EE_BRANCH</code> with the EE branch for the version you are using. EE branch names use the format <code>major-minor-stable-ee</code>.
+  For example, <code>17-7-stable-ee</code>.</li>
+<li><code>CE_BRANCH</code> with the Community Edition branch. CE branch names use the format <code>major-minor-stable</code>.
+  For example, <code>17-7-stable</code>.</li>
+</ul>
+<h3>Backup</h3>
+<p>To back up GitLab:</p>
+<pre><code class="language-shell">cd /home/git/gitlab
+sudo -u git -H bundle exec rake gitlab:backup:create RAILS_ENV=production
+</code></pre>
+<h3>Stop GitLab server</h3>
+<p>To stop the GitLab server:</p>
+<pre><code class="language-shell">sudo service gitlab stop
+</code></pre>
+<h3>Get the EE code</h3>
+<p>To get the EE code:</p>
+<pre><code class="language-shell">cd /home/git/gitlab
+sudo -u git -H git remote add -f ee https://gitlab.com/gitlab-org/gitlab.git
+sudo -u git -H git checkout EE_BRANCH
+</code></pre>
+<h3>Install libraries and run migrations</h3>
+<p>To install libraries and run migrations:</p>
+<pre><code class="language-shell">cd /home/git/gitlab
+
+# If you haven't done so during installation or a previous upgrade already
+sudo -u git -H bundle config set --local deployment 'true'
+sudo -u git -H bundle config set --local without 'development test kerberos'
+
+# Update gems
+sudo -u git -H bundle install
+
+# Optional: clean up old gems
+sudo -u git -H bundle clean
+
+# Run database migrations
+sudo -u git -H bundle exec rake db:migrate RAILS_ENV=production
+
+# Update node dependencies and recompile assets
+sudo -u git -H bundle exec rake yarn:install gitlab:assets:clean gitlab:assets:compile RAILS_ENV=production NODE_ENV=production NODE_OPTIONS=&quot;--max_old_space_size=4096&quot;
+
+# Clean up cache
+sudo -u git -H bundle exec rake cache:clear RAILS_ENV=production
+</code></pre>
+<h3>Install <code>gitlab-elasticsearch-indexer</code></h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To install <code>gitlab-elasticsearch-indexer</code>, follow the
+<a href="../../integration/advanced_search/elasticsearch.md#install-an-elasticsearch-or-aws-opensearch-cluster">install instruction</a>.</p>
+<h3>Start the application</h3>
+<p>To start the application:</p>
+<pre><code class="language-shell">sudo service gitlab start
+sudo service nginx restart
+</code></pre>
+<h3>Check application status</h3>
+<p>Check if GitLab and its environment are configured correctly:</p>
+<pre><code class="language-shell">sudo -u git -H bundle exec rake gitlab:env:info RAILS_ENV=production
+</code></pre>
+<p>To make sure you didn't miss anything, run a more thorough check:</p>
+<pre><code class="language-shell">sudo -u git -H bundle exec rake gitlab:check RAILS_ENV=production
+</code></pre>
+<p>If all items are green, then congratulations upgrade complete!</p>
+<h2>Revert back to CE</h2>
+<p>If you encounter problems converting to EE and want to revert back to CE:</p>
+<ol>
+<li>Revert the code to the previous version:</li>
+</ol>
+<p><code>shell
+   cd /home/git/gitlab
+   sudo -u git -H git checkout CE_BRANCH</code></p>
+<ol>
+<li>Restore from the backup:</li>
+</ol>
+<p><code>shell
+   cd /home/git/gitlab
+   sudo -u git -H bundle exec rake gitlab:backup:restore RAILS_ENV=production</code></p>
+<p>For information on reverting an EE instance to CE, see
+<a href="revert.html">how to revert from EE to CE</a>).</p></code></pre>
+</body>
+</html>

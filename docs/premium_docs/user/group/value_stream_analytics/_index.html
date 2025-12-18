@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Value streams</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Optimize
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Value stream analytics</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Value stream analytics calculates the duration of every stage of your software development process.
+You can measure how much time it takes to go from an idea to production by tracking merge request or issue events.</p>
+<p>Use value stream analytics to identify:</p>
+<ul>
+<li>The amount of time it takes to go from an idea to production.</li>
+<li>The velocity of a given project.</li>
+<li>Bottlenecks in the development process.</li>
+<li>Long-running issues or merge requests.</li>
+<li>Factors that cause your software development lifecycle to slow down.</li>
+</ul>
+<p>Value stream analytics helps businesses:</p>
+<ul>
+<li>Visualize their end-to-end DevSecOps workstreams.</li>
+<li>Identify and solve inefficiencies.</li>
+<li>Optimize their workstreams to deliver more value, faster (for example, <a href="https://about.gitlab.com/blog/2025/02/20/how-we-reduced-mr-review-time-with-value-stream-management/">reducing merge request review time</a>).</li>
+</ul>
+<p>For a click-through demo, see <a href="https://gitlab.navattic.com/vsm">the Value Stream Management product tour</a>.</p>
+<p>Value stream analytics has a hierarchical structure:</p>
+<ul>
+<li>A <strong>value stream</strong> contains a value stream stage list.</li>
+<li>Each value stream stage list contains one or more <strong>stages</strong>.</li>
+<li>Each stage is defined by two <strong>events</strong>: start and end.</li>
+</ul>
+<h2>Value streams</h2>
+<p>A value stream is the entire work process that delivers value to customers.
+Value streams are container objects for stages.
+You can have multiple value streams per group, to focus on different aspects of the DevOps lifecycle.</p>
+<h2>Value stream stages</h2>
+<p>A stage represents an event pair (start and end events) with additional metadata, such as the name of the stage.
+You can use value stream analytics with the built-in default stages, which you can reorder and hide.
+You can also create and add custom stages that align with your specific development workflows.</p>
+<h2>Value stream stage events</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Merge request first reviewer assigned event <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/466383">introduced</a> in GitLab 17.2. Reviewer assignment events in merge requests created or updated prior to GitLab 17.2 are not available for reporting.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Events are the building blocks that define when stages start and end.
+Each event has a start and end time:</p>
+<ul>
+<li>Start event time marks when work begins in a stage (for example, when an issue is created).</li>
+<li>End event time marks when work completes in a stage (for example, when an issue is closed).</li>
+</ul>
+<p>GitLab calculates stage duration based on the start and end event times, using this formula:
+Stage duration = End event time - Start event time</p>
+<p>Value stream analytics supports the following events:</p>
+<ul>
+<li>Issue closed</li>
+<li>Issue created</li>
+<li>Issue first added to a board</li>
+<li>Issue first added to iteration</li>
+<li>Issue first assigned</li>
+<li>Issue first associated with a milestone</li>
+<li>Issue first mentioned in a commit</li>
+<li>Issue label added</li>
+<li>Issue label removed</li>
+<li>Merge request closed</li>
+<li>Merge request created</li>
+<li>Merge request first assigned</li>
+<li>Merge request first committed</li>
+<li>Merge request first deployed to production</li>
+<li>Merge request label added</li>
+<li>Merge request label removed</li>
+<li>Merge request last approved</li>
+<li>Merge request last build finished</li>
+<li>Merge request last build started</li>
+<li>Merge request merged</li>
+<li>Merge request reviewer first assigned</li>
+</ul>
+<p>You can share your ideas or feedback about stage events in
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520962">issue 520962</a>.</p>
+<h2>Data aggregation</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Enable filtering by stop date <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/355000">added</a> in GitLab 15.0</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Value stream analytics uses a backend process to collect and aggregate stage-level data, which
+ensures it can scale for large groups with a high number of issues and merge requests. Due to this process,
+there may be a slight delay between when an action is taken (for example, closing an issue) and when the data
+displays on the value stream analytics page.</p>
+<p>It may take up to 10 minutes to process the data and display results. Data collection may take
+longer than 10 minutes in the following cases:</p>
+<ul>
+<li>If this is the first time you are viewing value stream analytics and have not yet created a value stream.</li>
+<li>If the group hierarchy has been re-arranged.</li>
+<li>If there have been bulk updates on issues and merge requests.</li>
+</ul>
+<p>To view when the data was most recently updated, in the right corner next to <strong>Edit</strong>, hover over the <strong>Last updated</strong> badge.</p>
+<h2>Stage measurement</h2>
+<p>Value stream analytics measures each stage from its start event to its end event.
+Only items that have reached their end event are included in the stage time calculation.</p>
+<p>By default, blocked issues are not included in the lifecycle overview.
+However, you can use custom labels (for example <code>workflow::blocked</code>) to track them.</p>
+<p>You can customize stages in value stream analytics based on pre-defined events.
+To help you with the configuration, GitLab provides a pre-defined list of stages that you can use as a template.
+For example, you can define a stage that starts when you add a label to an issue,
+and ends when you add another label.</p>
+<p>The following table gives an overview of the pre-defined stages in value stream analytics.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Measurement method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issue</td>
+<td>The median time between creating an issue and taking action to solve it, by either labeling it or adding it to a milestone, whichever comes first. The label is tracked only if it already has an <a href="../../project/issue_board.html">issue board list</a> created for it.</td>
+</tr>
+<tr>
+<td>Plan</td>
+<td>The median time between the action you took for the previous stage, and pushing the first commit to the branch. The first commit on the branch triggers the separation between <strong>Plan</strong> and <strong>Code</strong>. At least one of the commits in the branch must contain the related issue number (for example, <code>#42</code>). If none of the commits in the branch mention the related issue number, it is not considered in the measurement time of the stage.</td>
+</tr>
+<tr>
+<td>Code</td>
+<td>The median time between pushing a first commit (previous stage) and creating a merge request (MR) related to that commit. The key to keep the process tracked is to include the <a href="../../project/issues/managing_issues.md#default-closing-pattern">issue closing pattern</a> in the description of the merge request. For example, <code>Closes #xxx</code>, where <code>xxx</code> is the number of the issue related to this merge request. If the closing pattern is not present, then the calculation uses the creation time of the first commit in the merge request as the start time.</td>
+</tr>
+<tr>
+<td>Test</td>
+<td>The median time to run the entire pipeline for that project. It's related to the time GitLab CI/CD takes to run every job for the commits pushed to that merge request. It is basically the start-&gt;finish time for all pipelines.</td>
+</tr>
+<tr>
+<td>Review</td>
+<td>The median time taken to review a merge request that has a closing issue pattern, between its creation and until it's merged.</td>
+</tr>
+<tr>
+<td>Staging</td>
+<td>The median time between merging a merge request that has a closing issue pattern until the very first deployment to a <a href="#production-environment">production environment</a>. If there isn't a production environment, this is not tracked.</td>
+</tr>
+</tbody>
+</table>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Value stream analytics works on timestamp data and aggregates only the final start and stop events of the stage. For items that move back and forth between stages multiple times, the stage time is calculated solely from the final events' timestamps.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Example workflow</h3>
+<p>This example shows a workflow through all seven stages in one day.</p>
+<p>If a stage does not include a start and a stop time, its data is not included in the median time.
+In this example, milestones have been created and CI/CD for testing and setting environments is configured.</p>
+<ul>
+<li>09:00: Create issue. <strong>Issue</strong> stage starts.</li>
+<li>11:00: Add issue to a milestone (or backlog), start work on the issue, and create a branch locally.
+  <strong>Issue</strong> stage stops and <strong>Plan</strong> stage starts.</li>
+<li>12:00: Make the first commit.</li>
+<li>12:30: Make the second commit to the branch that mentions the issue number.
+  <strong>Plan</strong> stage stops and <strong>Code</strong> stage starts.</li>
+<li>14:00: Push branch and create a merge request that contains the
+  <a href="../../project/issues/managing_issues.md#closing-issues-automatically">issue closing pattern</a>.
+  <strong>Code</strong> stage stops and <strong>Test</strong> and <strong>Review</strong> stages start.</li>
+<li>GitLab CI/CD takes 5 minutes to run scripts defined in the <a href="../../../ci/yaml/_index.html"><code>.gitlab-ci.yml</code> file</a>.</li>
+<li>19:00: Merge the merge request. <strong>Review</strong> stage stops and <strong>Staging</strong> stage starts.</li>
+<li>19:30: Deployment to the <code>production</code> environment finishes. <strong>Staging</strong> stops.</li>
+</ul>
+<p>Value stream analytics records the following times for each stage:</p>
+<ul>
+<li><strong>Issue</strong>: 09:00 to 11:00: 2 hrs</li>
+<li><strong>Plan</strong>: 11:00 to 12:00: 1 hr</li>
+<li><strong>Code</strong>: 12:00 to 14:00: 2 hrs</li>
+<li><strong>Test</strong>: 5 minutes</li>
+<li><strong>Review</strong>: 14:00 to 19:00: 5 hrs</li>
+<li><strong>Staging</strong>: 19:00 to 19:30: 30 minutes</li>
+</ul>
+<p>Keep in mind the following observations related to this example:</p>
+<ul>
+<li>This example demonstrates that it doesn't matter if your first
+  commit doesn't mention the issue number, you can do this later in any commit
+  on the branch you are working on.</li>
+<li>The <strong>Test</strong> stage is used in the calculation for the overall time of
+  the cycle. It is included in the <strong>Review</strong> process, as every MR should be
+  tested.</li>
+<li>This example illustrates only <strong>one cycle</strong> of the seven stages. The value stream analytics dashboard
+  shows the median time for multiple cycles.</li>
+</ul>
+<h3>Cumulative label event duration</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/432576">Introduced</a> in GitLab 16.9 <a href="../../../administration/feature_flags/_index.html">with flags</a> named <code>enable_vsa_cumulative_label_duration_calculation</code> and <code>vsa_duration_from_db</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-com/gl-infra/production/-/issues/17476">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 16.10. Feature flag <code>vsa_duration_from_db</code> removed.</li>
+<li>Feature flag <code>enable_vsa_cumulative_label_duration_calculation</code> <a href="https://gitlab.com/gitlab-com/gl-infra/production/-/issues/17478">removed</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>With this feature, value stream analytics measures the duration of repetitive events for label-based stages. You should configure label removal or addition events for both start and end events.</p>
+<p>For example, a stage tracks when the <code>in progress</code> label is added and removed, with the following times:</p>
+<ul>
+<li>9:00: label added.</li>
+<li>10:00: label removed.</li>
+<li>12:00: label added.</li>
+<li>14:00 label removed.</li>
+</ul>
+<p>With the original calculation method, the duration is five hours (from 9:00 to 14:00).
+With cumulative label event duration calculation enabled, the duration is three hours (9:00 to 10:00 and 12:00 to 14:00).</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>When you upgrade your GitLab version to 16.10 (or to a higher version), existing label-based value stream analytics stages are automatically reaggregated using the background aggregation process.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h4>Reaggregate data after upgrade</h4>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>On large instances, when you upgrade the GitLab version and especially if several minor versions are skipped, the background aggregation processes might last longer. This delay can result in outdated data on the Value Stream Analytics page.
+To speed up the aggregation process and avoid outdated data, in the <a href="../../../administration/operations/rails_console.md#starting-a-rails-console-session">rails console</a> you can invoke the synchronous aggregation snippet for a given group:</p>
+<pre><code class="language-ruby">group = Group.find(-1) # put your group id here
+group_to_aggregate = group.root_ancestor
+
+loop do
+  cursor = {}
+  context = Analytics::CycleAnalytics::AggregationContext.new(cursor: cursor)
+  service_response = Analytics::CycleAnalytics::DataLoaderService.new(group: group_to_aggregate, model: Issue, context: context).execute
+
+  if service_response.success? &amp;&amp; service_response.payload[:reason] == :limit_reached
+    cursor = service_response.payload[:context].cursor
+  elsif service_response.success?
+    puts &quot;finished&quot;
+    break
+  else
+    puts &quot;failed&quot;
+    break
+  end
+end
+
+loop do
+  cursor = {}
+  context = Analytics::CycleAnalytics::AggregationContext.new(cursor: cursor)
+  service_response = Analytics::CycleAnalytics::DataLoaderService.new(group: group_to_aggregate, model: MergeRequest, context: context).execute
+
+  if service_response.success? &amp;&amp; service_response.payload[:reason] == :limit_reached
+    cursor = service_response.payload[:context].cursor
+  elsif service_response.success?
+    puts &quot;finished&quot;
+    break
+  else
+    puts &quot;failed&quot;
+    break
+  end
+end
+</code></pre>
+<h2>Production environment</h2>
+<p>Value stream analytics identifies <a href="../../../ci/environments/_index.md#deployment-tier-of-environments">production environments</a> by looking for project
+<a href="../../../ci/yaml/_index.md#environment">environments</a> with a name matching any of these patterns:</p>
+<ul>
+<li><code>prod</code> or <code>prod/*</code></li>
+<li><code>production</code> or <code>production/*</code></li>
+</ul>
+<p>These patterns are not case-sensitive.</p>
+<p>You can change the name of a project environment in your GitLab CI/CD configuration.</p>
+<h2>View value stream analytics</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Predefined date ranges dropdown list <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/408656/">introduced</a> in GitLab 16.5 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>vsa_predefined_date_ranges</code>. Disabled by default.</li>
+<li>Predefined date ranges dropdown list <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/433149">enabled on GitLab Self-Managed and GitLab.com</a> in GitLab 16.7.</li>
+<li>Predefined date ranges dropdown list <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/438051">generally available</a> in GitLab 16.9. Feature flag <code>vsa_predefined_date_ranges</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role.</li>
+<li>You must create a custom value stream. Value stream analytics only shows custom value streams created for your group or project.</li>
+</ul>
+<p>To view value stream analytics for your group or project:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong>.</li>
+<li>To view metrics for a particular stage, select a stage below the <strong>Filter results</strong> text box.</li>
+<li>Optional. Filter the results:</li>
+<li>Select the <strong>Filter results</strong> text box.</li>
+<li>Select a parameter.</li>
+<li>Select a value or enter text to refine the results.</li>
+<li>
+<p>To view metrics in a particular date range, from the dropdown list select a predefined date range or the <strong>Custom</strong> option. With the <strong>Custom</strong> option selected:</p>
+<ul>
+<li>In the <strong>From</strong> field, select a start date.</li>
+<li>In the <strong>To</strong> field, select an end date.</li>
+</ul>
+<p>The charts and list display workflow items created during the date range.
+1. Optional. Sort results by ascending or descending:
+  - To sort by most recent or oldest workflow item, select the <strong>Last event</strong> header.
+  - To sort by most or least amount of time spent in each stage, select the <strong>Duration</strong> header.</p>
+</li>
+</ol>
+<p>A badge next to the workflow items table header shows the number of workflow items that
+completed during the selected stage.</p>
+<p>The table shows a list of related workflow items for the selected stage. Based on the stage you select, this can be:</p>
+<ul>
+<li>Issues</li>
+<li>Merge requests</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The end date for each predefined date range is the current day, and is included in the number of days selected. For example, the start date for <code>Last 30 days</code> is 29 days prior to the current day for a total of 30 days.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Data filters</h3>
+<p>You can filter value stream analytics to view data that matches specific criteria. The following filters are supported:</p>
+<ul>
+<li>Date range</li>
+<li>Project</li>
+<li>Assignee</li>
+<li>Author</li>
+<li>Milestone</li>
+<li>Label</li>
+</ul>
+<h2>Value stream analytics metrics</h2>
+<p>The <strong>Overview</strong> page in value stream analytics displays key metrics of the DevSecOps lifecycle performance for projects and groups.</p>
+<h3>Lifecycle metrics</h3>
+<p>Value stream analytics includes the following lifecycle metrics:</p>
+<ul>
+<li><strong>Lead time</strong>: Median time from when the issue was created to when it was closed.</li>
+<li><strong>Cycle time</strong>: Median time between when an issue is first <a href="../../project/issues/crosslinking_issues.md#from-commit-messages">referenced in the commit message</a> of a merge request and when that referenced issue is closed. You must include <code>#</code> followed by the issue number (for example, <code>#123</code>) in the commit message, otherwise no data is displayed. Cycle time is typically shorter than lead time because the merge request is created after the first commit.</li>
+<li><strong>New issues</strong>: Number of new issues created.</li>
+<li><strong>Deploys</strong>: Total number of deployments to production.</li>
+</ul>
+<h3>DORA metrics</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/355304">Introduced</a> time to restore service tile in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/357071">Introduced</a> change failure rate tile in GitLab 15.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Value stream analytics includes the following <a href="../../analytics/dora_metrics.html">DORA</a> metrics:</p>
+<ul>
+<li>Deployment frequency</li>
+<li>Lead time for changes</li>
+<li>Time to restore service</li>
+<li>Change failure rate</li>
+</ul>
+<p>DORA metrics are calculated based on data from the
+<a href="../../../api/dora/metrics.html">DORA API</a>.</p>
+<p>If you have a GitLab Premium or Ultimate subscription:</p>
+<ul>
+<li>The number of successful deployments is calculated with DORA data.</li>
+<li>The data is filtered based on environment and environment tier.</li>
+</ul>
+<h2>View lifecycle and DORA metrics</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>To view deployment metrics, you must have a
+  <a href="#production-environment">production environment configured</a>.</li>
+</ul>
+<p>To view lifecycle metrics:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong>.
+   Lifecycle metrics display below the <strong>Filter results</strong> text box.</li>
+<li>Optional. Filter the results:</li>
+<li>Select the <strong>Filter results</strong> text box.
+      Based on the filter you select, the dashboard automatically aggregates lifecycle metrics and displays the status of the value stream.</li>
+<li>Select a parameter.</li>
+<li>Select a value or enter text to refine the results.</li>
+<li>To adjust the date range:<ul>
+<li>In the <strong>From</strong> field, select a start date.</li>
+<li>In the <strong>To</strong> field, select an end date.</li>
+</ul>
+</li>
+</ol>
+<p>To view the <a href="../../analytics/value_streams_dashboard.html">Value Streams Dashboard</a> and <a href="../../analytics/dora_metrics.html">DORA metrics</a>:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong>.</li>
+<li>Below the <strong>Filter results</strong> text box, in the <strong>Lifecycle metrics</strong> row, select <strong>Value Streams Dashboard / DORA</strong>.</li>
+<li>Optional. To open the new page, append this path <code>/analytics/dashboards/value_streams_dashboard</code> to the group URL
+   (for example, <code>https://gitlab.com/groups/gitlab-org/-/analytics/dashboards/value_streams_dashboard</code>).</li>
+</ol>
+<h2>View metrics for each development stage</h2>
+<p>Value stream analytics shows the median time spent by issues or merge requests in each development stage.</p>
+<p>To view the median time spent in each stage by a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong>.</li>
+<li>Optional. Filter the results:</li>
+<li>Select the <strong>Filter results</strong> text box.</li>
+<li>Select a parameter.</li>
+<li>Select a value or enter text to refine the results.</li>
+<li>To adjust the date range:<ul>
+<li>In the <strong>From</strong> field, select a start date.</li>
+<li>In the <strong>To</strong> field, select an end date.</li>
+</ul>
+</li>
+<li>To view the metrics for each stage, above the <strong>Filter results</strong> text box, hover over a stage.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The date range selector filters items by the event time. The event time is when the
+selected stage finished for the given item.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>View tasks by type</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>The <strong>Tasks by type</strong> chart displays the cumulative number of completed tasks (closed issues and merged merge requests) per day for your group.</p>
+<p>The chart uses the global page filters to display data based on the selected group and time frame.</p>
+<p>To view tasks by type:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong>.</li>
+<li>Below the <strong>Filter results</strong> text box, select <strong>Overview</strong>. The <strong>Tasks by type</strong> chart displays below the <strong>Total time</strong> chart.</li>
+<li>Optional. To filter the tasks by type, select <strong>Settings</strong> ({{&lt; icon name="settings" &gt;}}), then <strong>Issues</strong> or <strong>Merge Requests</strong>.</li>
+<li>Optional. To filter the tasks by label, select <strong>Settings</strong> ({{&lt; icon name="settings" &gt;}}), then one or more labels. By default the top group labels (maximum 10) are selected. You can select a maximum of 15 labels.</li>
+</ol>
+<h2>Create a value stream</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><strong>New value stream</strong> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/381002">changed</a> from a dialog to a page in GitLab 16.10 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>vsa_standalone_settings_page</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/171856">Generally available</a> in GitLab 17.7. Feature flag <code>vsa_standalone_settings_page</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<h3>With default stages</h3>
+<p>To create a value stream with default stages:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value Stream analytics</strong>.</li>
+<li>Select <strong>New Value Stream</strong>.</li>
+<li>Enter a name for the value stream.</li>
+<li>Select <strong>Create from default template</strong>.</li>
+<li>Customize the default stages:</li>
+<li>To re-order stages, select the up or down arrows.</li>
+<li>To hide a stage, select <strong>Hide</strong> ({{&lt; icon name="eye-slash" &gt;}}).</li>
+<li>To add a custom stage, select <strong>Add a stage</strong>.</li>
+<li>Enter a name for the stage.</li>
+<li>Select a <strong>Start event</strong> and a <strong>Stop event</strong>.</li>
+<li>Select <strong>New value stream</strong>.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If you have recently upgraded to GitLab Premium, it can take up to 30 minutes for data to collect and display.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>With custom stages</h3>
+<p>To create a value stream with custom stages:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value Stream analytics</strong>.</li>
+<li>Select <strong>New value stream</strong>.</li>
+<li>For each stage:</li>
+<li>Enter a name for the stage.</li>
+<li>Select a <strong>Start event</strong> and a <strong>Stop event</strong>.</li>
+<li>To add another stage, select <strong>Add a stage</strong>.</li>
+<li>To re-order the stages, select the up or down arrows.</li>
+<li>Select <strong>New value stream</strong>.</li>
+</ol>
+<p><i class="fa-youtube-play" aria-hidden="true"></i>
+For a video explanation, see <a href="https://www.youtube.com/watch?v=kblpge6xeL8">Optimizing merge request review process with Value Stream Analytics</a>.</p>
+<!-- Video published on 2024-07-29 -->
+
+<h2>Label-based stages for custom value streams</h2>
+<p>To measure complex workflows, you can use <a href="../../project/labels.md#scoped-labels">scoped labels</a>. For example, to measure deployment
+time from a staging environment to production, you could use the following labels:</p>
+<ul>
+<li>When the code is deployed to staging, the <code>workflow::staging</code> label is added to the merge request.</li>
+<li>When the code is deployed to production, the <code>workflow::production</code> label is added to the merge request.</li>
+</ul>
+<p><img alt="Label-based value stream analytics stage" src="img/vsa_label_based_stage_v14_0.png" title="Creating a label-based value stream analytics stage" /></p>
+<h3>Automatic data labeling with webhooks</h3>
+<p>You can automatically add labels by using <a href="../../project/integrations/webhook_events.html">GitLab webhook events</a>,
+so that a label is applied to merge requests or issues when a specific event occurs.
+Then, you can add label-based stages to track your workflow.
+To learn more about the implementation, see the blog post <a href="https://about.gitlab.com/blog/2016/08/19/applying-gitlab-labels-automatically/">Applying GitLab Labels Automatically</a>.</p>
+<h3>Example configuration</h3>
+<p><img alt="Example configuration" src="img/object_hierarchy_v14_10.png" title="Example custom value stream configuration" /></p>
+<p>In the previous example, two independent value streams are set up for two teams that are using different development workflows in the <strong>Test Group</strong> (top-level namespace).</p>
+<p>The first value stream uses standard timestamp-based events for defining the stages. The second value stream uses label events.</p>
+<h2>Edit a value stream</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><strong>Edit value stream</strong> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/381002">changed</a> from a dialog to a page in GitLab 16.10 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>vsa_standalone_settings_page</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/171856">Generally available</a> in GitLab 17.7. Feature flag <code>vsa_standalone_settings_page</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>After you create a value stream, you can customize it to suit your purposes. To edit a value stream:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong>.</li>
+<li>From the value stream dropdown list, select the value stream you want to edit.</li>
+<li>Next to the value stream dropdown list, select <strong>Edit</strong>.</li>
+<li>Optional:</li>
+<li>Rename the value stream.</li>
+<li>Hide or re-order default stages.</li>
+<li>Remove existing custom stages.</li>
+<li>To add new stages, select <strong>Add a stage</strong>.</li>
+<li>Select the start and end events for the stage.</li>
+<li>Optional. To undo any modifications, select <strong>Restore value stream defaults</strong>.</li>
+<li>Select <strong>Save Value Stream</strong>.</li>
+</ol>
+<h2>Delete a value stream</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To delete a custom value stream:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong>.</li>
+<li>From the value stream dropdown list, select the value stream you want to delete, then <strong>Delete (name of value stream)</strong>.</li>
+<li>To confirm, select <strong>Delete</strong>.</li>
+</ol>
+<h2>View number of days for a cycle to complete</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>The <strong>Total time chart</strong> shows the average number of days it takes for development cycles to complete.
+The chart shows data for the last 500 workflow items.</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong>.</li>
+<li>Above the <strong>Filter results</strong> box, select a stage:</li>
+<li>To view a summary of the cycle time for all stages, select <strong>Overview</strong>.</li>
+<li>To view the cycle time for specific stage, select a stage.</li>
+<li>Optional. Filter the results:</li>
+<li>Select the <strong>Filter results</strong> text box.</li>
+<li>Select a parameter.</li>
+<li>Select a value or enter text to refine the results.</li>
+<li>To adjust the date range:<ul>
+<li>In the <strong>From</strong> field, select a start date.</li>
+<li>In the <strong>To</strong> field, select an end date.</li>
+</ul>
+</li>
+</ol>
+<h2>Access permissions</h2>
+<p>Access permissions for value stream analytics depend on the project type.</p>
+<table>
+<thead>
+<tr>
+<th>Project type</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public</td>
+<td>Anyone can access.</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Any authenticated user can access.</td>
+</tr>
+<tr>
+<td>Private</td>
+<td>Any user with at least the Guest role can access.</td>
+</tr>
+</tbody>
+</table>
+<h2>Value Stream Analytics GraphQL API</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Loading stage metrics through GraphQL <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/410327">introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>With the VSA GraphQL API, you can request metrics from your configured value streams and value stream stages. This can be useful if you want to export VSA data to an external system or for a report.</p>
+<p>The following metrics are available:</p>
+<ul>
+<li>Number of completed items in the stage. The count is limited to a maximum of 10,000 items.</li>
+<li>Median duration for the completed items in the stage.</li>
+<li>Average duration for the completed items in the stage.</li>
+</ul>
+<h3>Request the metrics</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role.</li>
+</ul>
+<p>First, you must determine which value stream you want to use in the reporting.</p>
+<p>To request the configured value streams for a group, run:</p>
+<pre><code class="language-graphql">group(fullPath: &quot;your-group-path&quot;) {
+  valueStreams {
+    nodes {
+      id
+      name
+    }
+  }
+}
+</code></pre>
+<p>Similarly, to request metrics for a project, run:</p>
+<pre><code class="language-graphl">project(fullPath: &quot;your-project-path&quot;) {
+  valueStreams {
+    nodes {
+      id
+      name
+    }
+  }
+}
+</code></pre>
+<p>To request metrics for stages of a value stream, run:</p>
+<pre><code class="language-graphql">group(fullPath: &quot;your-group-path&quot;) {
+  valueStreams(id: &quot;your-value-stream-id&quot;) {
+    nodes {
+      stages {
+        id
+        name
+      }
+    }
+  }
+}
+</code></pre>
+<p>Depending how you want to consume the data, you can request metrics for one specific stage or all stages in your value stream.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Requesting metrics for all stages might be too slow for some installations.
+The recommended approach is to request metrics stage by stage.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Requesting metrics for the stage:</p>
+<pre><code class="language-graphql">group(fullPath: &quot;your-group-path&quot;) {
+  valueStreams(id: &quot;your-value-stream-id&quot;) {
+    nodes {
+      stages(id: &quot;your-stage-id&quot;) {
+        id
+        name
+        metrics(timeframe: { start: &quot;2024-03-01&quot;, end: &quot;2024-03-31&quot; }) {
+          average {
+            value
+            unit
+          }
+          median {
+            value
+            unit
+          }
+          count {
+            value
+            unit
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>You should always request metrics with a given time frame.
+The longest supported time frame is 180 days.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>The <code>metrics</code> node supports additional filtering options:</p>
+<ul>
+<li>Assignee usernames</li>
+<li>Author username</li>
+<li>Label names</li>
+<li>Milestone title</li>
+</ul>
+<p>Example request with filters:</p>
+<pre><code class="language-graphql">group(fullPath: &quot;your-group-path&quot;) {
+  valueStreams(id: &quot;your-value-stream-id&quot;) {
+    nodes {
+      stages(id: &quot;your-stage-id&quot;) {
+        id
+        name
+        metrics(
+          labelNames: [&quot;backend&quot;],
+          milestoneTitle: &quot;17.0&quot;,
+          timeframe: { start: &quot;2024-03-01&quot;, end: &quot;2024-03-31&quot; }
+        ) {
+          average {
+            value
+            unit
+          }
+          median {
+            value
+            unit
+          }
+          count {
+            value
+            unit
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h3>Best practices</h3>
+<ul>
+<li>To get an accurate view of the current status, request metrics as close to the end of the time frame as possible.</li>
+<li>For periodic reporting, you can create a script and use the <a href="../../../ci/pipelines/schedules.html">scheduled pipelines</a> feature to export the data in a timely manner.</li>
+<li>When invoking the API, you get the current data from the database. Over time, the same metrics might change due to changes in the underlying data in the database. For example, moving or removing a project from the group might affect group-level metrics.</li>
+<li>Re-requesting the metrics for previous periods and comparing them to the previously collected metrics can show skews in the data, which can help in discovering and explaining changing trends.</li>
+</ul>
+<h2>Feature availability</h2>
+<p>Value stream analytics offers different features at the project and group level for FOSS and licensed versions.</p>
+<ul>
+<li>On GitLab Free, value stream analytics does not aggregate data. It queries the database directly where the date range filter is applied to the creation date of issues and merge request. You can view value stream analytics with pre-defined default stages.</li>
+<li>On GitLab Premium, value stream analytics aggregates data and applies the date range filter on the end event. You can also create, edit, and delete value streams.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Group level (licensed)</th>
+<th>Project level (licensed)</th>
+<th>Project level (FOSS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create custom value streams</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No, only one value stream (default) is present with the default stages</td>
+</tr>
+<tr>
+<td>Create custom stages</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Filtering (for example, by author, label, milestone)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Stage time chart</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Total time chart</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Task by type chart</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>DORA Metrics</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Cycle time and lead time summary (Lifecycle metrics)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>New issues, commits, and deploys (Lifecycle metrics)</td>
+<td>Yes, excluding commits</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Uses aggregated backend</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Date filter behavior</td>
+<td>Filters items <a href="https://gitlab.com/groups/gitlab-org/-/epics/6046">finished in the date range</a></td>
+<td>Filters items by creation date.</td>
+<td>Filters items by creation date.</td>
+</tr>
+<tr>
+<td>Authorization</td>
+<td>At least reporter</td>
+<td>At least reporter</td>
+<td>Can be public</td>
+</tr>
+</tbody>
+</table>
+<h2>Troubleshooting</h2>
+<h3>100% CPU utilization by Sidekiq <code>cronjob:analytics_cycle_analytics</code></h3>
+<p>It is possible that value stream analytics background jobs
+strongly impact performance by monopolizing CPU resources.</p>
+<p>To recover from this situation:</p>
+<ol>
+<li>Disable the feature for all projects in <a href="../../../administration/operations/rails_console.html">the Rails console</a>,
+   and remove existing jobs:</li>
+</ol>
+<p>```ruby
+   Project.find_each do |p|
+     p.analytics_access_level='disabled';
+     p.save!
+   end</p>
+<p>Analytics::CycleAnalytics::GroupStage.delete_all
+   Analytics::CycleAnalytics::Aggregation.delete_all
+   ```</p>
+<ol>
+<li>Configure a <a href="../../../administration/sidekiq/processing_specific_job_classes.html">Sidekiq routing</a>
+   with for example a single <code>feature_category=value_stream_management</code>
+   and multiple <code>feature_category!=value_stream_management</code> entries.
+   Find other relevant queue metadata in the
+   <a href="../../../administration/sidekiq/processing_specific_job_classes.md#list-of-available-job-classes">Enterprise Edition list</a>.</li>
+<li>Enable value stream analytics for one project after another.
+   You might need to tweak the Sidekiq routing further according to your performance requirements.</li>
+</ol></code></pre>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Use cases</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Pipeline Execution
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Browser Performance Testing</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>If your application offers a web interface and you're using
+<a href="../_index.html">GitLab CI/CD</a>, you can quickly determine the rendering performance
+impact of pending code changes in the browser.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>You can automate this feature in your applications by using <a href="../../topics/autodevops/_index.html">Auto DevOps</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>GitLab uses <a href="https://www.sitespeed.io">Sitespeed.io</a>, a free and open source
+tool, for measuring the rendering performance of web sites. The
+<a href="https://gitlab.com/gitlab-org/gl-performance">Sitespeed plugin</a> that GitLab built outputs
+the performance score for each page analyzed in a file called <code>browser-performance.json</code>
+this data can be shown on merge requests.</p>
+<h2>Use cases</h2>
+<p>Consider the following workflow:</p>
+<ol>
+<li>A member of the marketing team is attempting to track engagement by adding a new tool.</li>
+<li>With browser performance metrics, they see how their changes are impacting the usability
+   of the page for end users.</li>
+<li>The metrics show that after their changes, the performance score of the page has gone down.</li>
+<li>When looking at the detailed report, they see the new JavaScript library was
+   included in <code>&lt;head&gt;</code>, which affects loading page speed.</li>
+<li>They ask for help from a front end developer, who sets the library to load asynchronously.</li>
+<li>The frontend developer approves the merge request, and authorizes its deployment to production.</li>
+</ol>
+<h2>How browser performance testing works</h2>
+<p>First, define a job in your <code>.gitlab-ci.yml</code> file that generates the
+<a href="../yaml/artifacts_reports.md#artifactsreportsbrowser_performance">Browser Performance report artifact</a>.
+GitLab then checks this report, compares key performance metrics for each page
+between the source and target branches, and shows the information in the merge request.</p>
+<p>For an example Browser Performance job, see
+<a href="#configuring-browser-performance-testing">Configuring Browser Performance Testing</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If the Browser Performance report has no data to compare, such as when you add the
+Browser Performance job in your <code>.gitlab-ci.yml</code> for the very first time,
+the Browser Performance report widget doesn't display. It must have run at least
+once on the target branch (<code>main</code>, for example), before it displays in a
+merge request targeting that branch. Additionally, the widget only displays if the
+job ran in the latest pipeline for the Merge request.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p><img alt="Browser Performance Widget" src="img/browser_performance_testing_v13_4.png" /></p>
+<h2>Configuring Browser Performance Testing</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Support for the <code>SITESPEED_DOCKER_OPTIONS</code> variable <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/134024">introduced</a> in GitLab 16.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>This example shows how to run the <a href="https://hub.docker.com/r/sitespeedio/sitespeed.io/">sitespeed.io container</a>
+on your code by using GitLab CI/CD and <a href="https://www.sitespeed.io">sitespeed.io</a>
+using Docker-in-Docker.</p>
+<ol>
+<li>First, set up GitLab Runner with a
+   <a href="../docker/using_docker_build.md#use-docker-in-docker">Docker-in-Docker build</a>.</li>
+<li>Configure the default Browser Performance Testing CI/CD job as follows in your <code>.gitlab-ci.yml</code> file:</li>
+</ol>
+<p>```yaml
+   include:
+     template: Verify/Browser-Performance.gitlab-ci.yml</p>
+<p>browser_performance:
+     variables:
+       URL: https://example.com
+   ```</p>
+<p>The previous example:</p>
+<ul>
+<li>Creates a <code>browser_performance</code> job in your CI/CD pipeline and runs sitespeed.io against the webpage you
+  defined in <code>URL</code> to gather key metrics.</li>
+<li>Uses a template that doesn't work with Kubernetes clusters. If you are using a Kubernetes cluster,
+  use <a href="https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Jobs/Browser-Performance-Testing.gitlab-ci.yml"><code>template: Jobs/Browser-Performance-Testing.gitlab-ci.yml</code></a>
+  instead.</li>
+</ul>
+<p>The template uses the <a href="https://gitlab.com/gitlab-org/gl-performance">GitLab plugin for sitespeed.io</a>,
+and it saves the full HTML sitespeed.io report as a <a href="../yaml/artifacts_reports.md#artifactsreportsbrowser_performance">Browser Performance report artifact</a>
+that you can later download and analyze. This implementation always takes the latest
+Browser Performance artifact available. If <a href="../../user/project/pages/_index.html">GitLab Pages</a> is enabled,
+you can view the report directly in your browser.</p>
+<p>You can also customize the jobs with CI/CD variables:</p>
+<ul>
+<li><code>SITESPEED_IMAGE</code>: Configure the Docker image to use for the job (default <code>sitespeedio/sitespeed.io</code>), but not the image version.</li>
+<li><code>SITESPEED_VERSION</code>: Configure the version of the Docker image to use for the job (default <code>14.1.0</code>).</li>
+<li><code>SITESPEED_OPTIONS</code>: Configure any additional sitespeed.io options as required (default <code>nil</code>). Refer to the <a href="https://www.sitespeed.io/documentation/sitespeed.io/configuration/">sitespeed.io documentation</a> for more details.</li>
+<li><code>SITESPEED_DOCKER_OPTIONS</code>: Configure any additional Docker options (default <code>nil</code>). Refer to the <a href="https://docs.docker.com/reference/cli/docker/container/run/#options">Docker options documentation</a> for more details.</li>
+</ul>
+<p>For example, you can override the number of runs sitespeed.io
+makes on the given URL, and change the version:</p>
+<pre><code class="language-yaml">include:
+  template: Verify/Browser-Performance.gitlab-ci.yml
+
+browser_performance:
+  variables:
+    URL: https://www.sitespeed.io/
+    SITESPEED_VERSION: 13.2.0
+    SITESPEED_OPTIONS: -n 5
+</code></pre>
+<h3>Configuring degradation threshold</h3>
+<p>You can configure the sensitivity of degradation alerts to avoid getting alerts for minor drops in metrics.
+This is done by setting the <code>DEGRADATION_THRESHOLD</code> CI/CD variable. In the following example, the alert only shows up
+if the <code>Total Score</code> metric degrades by 5 points or more:</p>
+<pre><code class="language-yaml">include:
+  template: Verify/Browser-Performance.gitlab-ci.yml
+
+browser_performance:
+  variables:
+    URL: https://example.com
+    DEGRADATION_THRESHOLD: 5
+</code></pre>
+<p>The <code>Total Score</code> metric is based on sitespeed.io's <a href="https://www.sitespeed.io/documentation/sitespeed.io/metrics/#performance-score">coach performance score</a>. There is more information in <a href="https://www.sitespeed.io/documentation/coach/how-to/#what-do-the-coach-do">the coach documentation</a>.</p>
+<h3>Performance testing on review apps</h3>
+<p>The previous CI YAML configuration is great for testing against static environments, and it can
+be extended for dynamic environments, but a few extra steps are required:</p>
+<ol>
+<li>The <code>browser_performance</code> job should run after the dynamic environment has started.</li>
+<li>In the <code>review</code> job:</li>
+<li>Generate a URL list file with the dynamic URL.</li>
+<li>Save the file as an artifact, for example with <code>echo $CI_ENVIRONMENT_URL &gt; environment_url.txt</code>
+      in your job's <code>script</code>.</li>
+<li>Pass the list as the URL environment variable (which can be a URL or a file containing URLs)
+      to the <code>browser_performance</code> job.</li>
+<li>You can now run the sitespeed.io container against the desired hostname and
+   paths.</li>
+</ol>
+<p>Your <code>.gitlab-ci.yml</code> file would look like:</p>
+<pre><code class="language-yaml">stages:
+  - deploy
+  - performance
+
+include:
+  template: Verify/Browser-Performance.gitlab-ci.yml
+
+review:
+  stage: deploy
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    url: http://$CI_COMMIT_REF_SLUG.$APPS_DOMAIN
+  script:
+    - run_deploy_script
+    - echo $CI_ENVIRONMENT_URL &gt; environment_url.txt
+  artifacts:
+    paths:
+      - environment_url.txt
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: never
+    - if: $CI_COMMIT_BRANCH
+
+browser_performance:
+  dependencies:
+    - review
+  variables:
+    URL: environment_url.txt
+</code></pre></code></pre>
+</body>
+</html>

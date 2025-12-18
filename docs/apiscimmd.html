@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 api/scim.md</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <pre><code><p><strong>1. Зачем это нужно</strong><br />
+SCIM API позволяет управлять идентификаторами пользователей в группах через внешние системы управления учетными записями (IdP), обеспечивая интеграцию с системами SSO и автоматизацию управления доступом.</p>
+<p><strong>2. Основные возможности</strong><br />
+- Получение списка SCIM идентификаторов для группы.<br />
+- Получение отдельного SCIM идентификатора по UID.<br />
+- Обновление поля <code>extern_uid</code> для SCIM идентификатора.<br />
+- Удаление отдельного SCIM идентификатора из группы.</p>
+<p><strong>3. Важные нюансы</strong><br />
+- Требуется включить <a href="../user/group/saml_sso/_index.html">Group SSO</a> и <a href="../user/group/saml_sso/scim_setup.html">SCIM для Group SSO</a>.<br />
+- Для аутентификации необходим <a href="../user/profile/personal_access_tokens.html">Personal Access Token</a> или <a href="../user/group/settings/group_access_tokens.html">Group Access Token</a> с нужным scope.<br />
+- API не реализует протокол <a href="https://www.rfc-editor.org/rfc/rfc7644">RFC7644</a>, в отличие от внутренних SCIM API.<br />
+- Доступно в тарифах <strong>Premium</strong> и <strong>Ultimate</strong>.<br />
+- Поддерживает только работу с группами, а не с экземпляром GitLab в целом.</p>
+<hr /></code></pre>
+</body>
+</html>

@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Who receives notifications</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Growth
+group: Engagement
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Notification emails</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Enhanced email styling <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/78604">introduced</a> in GitLab 14.9 <a href="../../administration/feature_flags/_index.html">with a feature flag</a> named <code>enhanced_notify_css</code>. Disabled by default.</li>
+<li>Enhanced email styling <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/355907">enabled on GitLab.com</a> in GitLab 14.9.</li>
+<li>Enhanced email styling <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/355907">enabled on GitLab Self-Managed</a> in GitLab 15.0.</li>
+<li>Enhanced email styling <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/355907">generally available</a> in GitLab 18.3. Feature flag <code>enhanced_notify_css</code> removed.</li>
+<li>Product marketing emails <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/418137">removed</a> in GitLab 16.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Stay informed about what's happening in GitLab with email notifications.
+You can receive updates about activity in issues, merge requests, epics, and designs.</p>
+<p>For the tool that GitLab administrators can use to send messages to users, read
+<a href="../../administration/email_from_gitlab.html">Email from GitLab</a>.</p>
+<p>In GitLab 17.2 and later, <a href="../../security/rate_limits.md#notification-emails">notifications are rate limited</a>
+per 24 hours per project or group per user.</p>
+<h2>Who receives notifications</h2>
+<p>When notifications are enabled for an issue, merge request, or epic, GitLab notifies you of actions
+that happen there.</p>
+<p>You might receive notifications for one of the following reasons:</p>
+<ul>
+<li>You participate in an issue, merge request, epic, or design. You become a participant when you comment
+  or edit, or someone mentions your username.</li>
+<li>You've <a href="#issue-merge-request-and-epic-events">enabled notifications in an issue, merge request, or epic</a>.</li>
+<li>You've configured notifications for the <a href="#change-level-of-project-notifications">project</a> or <a href="#group-notifications">group</a>.</li>
+<li>You're subscribed to group or project pipeline notifications through the pipeline emails <a href="../project/integrations/_index.html">integration</a>.</li>
+</ul>
+<p>GitLab does not send a notification when:</p>
+<ul>
+<li>The account is a project bot.</li>
+<li>The account is a service account with default email address.</li>
+<li>The account is blocked (banned) or deactivated.</li>
+<li><a href="../discussions/_index.md#edit-a-comment-to-add-a-mention">A comment is edited to include a user mention</a>.</li>
+<li>An administrator has blocked notifications.</li>
+</ul>
+<h2>Global notification settings</h2>
+<p>Your global notification settings are the default settings, unless you specify
+different settings for a project or a group.
+For example, you might want to be notified about all activity in a specific project.
+For other projects, you only want to be notified when you are mentioned by name.</p>
+<p>These notification settings apply only to you. They do not affect the notifications received by
+anyone else.</p>
+<h3>Edit notification settings</h3>
+<p>To edit your notification settings:</p>
+<ol>
+<li>In the upper-right corner, select your avatar.</li>
+<li>Select <strong>Preferences</strong>.</li>
+<li>On the left sidebar, select <strong>Notifications</strong>.</li>
+<li>In <strong>Global notification email</strong>, enter the email address your notifications are sent to.
+   Defaults to your primary email address.</li>
+<li>For <strong>Global notification level</strong>, select the default <a href="#notification-levels">notification level</a>
+   to apply to your notifications.</li>
+<li>Select the <strong>Receive notifications about your own activity</strong> checkbox to receive
+   notifications about your own activity. Not selected by default.</li>
+</ol>
+<h3>Notification levels</h3>
+<p>To the right of each project and group you can select a notification level:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Global</strong></td>
+<td>Your default global settings apply.</td>
+</tr>
+<tr>
+<td><strong>Watch</strong></td>
+<td>Receive notifications for most activity.</td>
+</tr>
+<tr>
+<td><strong>Participate</strong></td>
+<td>Receive notifications for threads you have participated in.</td>
+</tr>
+<tr>
+<td><strong>On mention</strong></td>
+<td>Receive notifications when you are <a href="../discussions/_index.md#mentions">mentioned</a> in a comment.</td>
+</tr>
+<tr>
+<td><strong>Disabled</strong></td>
+<td>Receive no notifications.</td>
+</tr>
+<tr>
+<td><strong>Custom</strong></td>
+<td>Same as <strong>Participate</strong>, plus any additional notification events you select.</td>
+</tr>
+</tbody>
+</table>
+<h3>Notification scope</h3>
+<p>You can tune the scope of your notifications by selecting different notification levels for each
+project and group.</p>
+<p>Notification scope is applied from the broadest to most specific levels:</p>
+<ul>
+<li>Your global, or <em>default</em>, notification level applies if you
+  have not selected a notification level for the project or group in which the activity occurred.</li>
+<li>Your group setting overrides your default setting.</li>
+<li>Your project setting overrides the group setting.</li>
+</ul>
+<p>When you set the notification level to <strong>Global</strong> for a project or subgroup, it does not directly inherit your global notification settings.
+Instead, it goes up the hierarchy and inherits the next non-global notification level that is configured, in the following order:</p>
+<ol>
+<li>The project setting.</li>
+<li>The parent group setting.</li>
+<li>The ancestor groups' settings (going up the hierarchy).</li>
+<li>The global notification setting as the final fallback setting.</li>
+</ol>
+<p>For example, you set your default global notification setting to <strong>Watch</strong>, and your group and project notification levels as follows:</p>
+<pre><code class="language-mermaid">%%{init: { &quot;fontFamily&quot;: &quot;GitLab Sans&quot;, 'theme':'neutral' }}%%
+flowchart TD
+  accTitle: Notification hierarchy
+  accDescr: Example of a group, subgroup, and project
+
+    N[Default/global notification level set to Watch]
+    N --&gt; A
+    A[Group A: Notification level set to Global]
+    A-. Inherits Watch level .-&gt; N
+    A --&gt; B[Subgroup B: Notification level set to Participate]
+    B --&gt; C[Project C: Notification level set to Global]
+    C-. Inherits Participate level .-&gt; B
+</code></pre>
+<p>Project C inherits the <strong>Participate</strong> notification level from subgroup B.
+It does not inherit the <strong>Watch</strong> notification level from your global notification settings.</p>
+<h3>Group notifications</h3>
+<p>You can select a notification level and email address for each group.</p>
+<h4>Change level of group notifications</h4>
+<p>To select a notification level for a group, use either of these methods:</p>
+<ol>
+<li>In the upper-right corner, select your avatar.</li>
+<li>Select <strong>Preferences</strong>.</li>
+<li>On the left sidebar, select <strong>Notifications</strong>.</li>
+<li>Locate the group in the <strong>Groups</strong> section.</li>
+<li>Select the desired <a href="#notification-levels">notification level</a>.</li>
+</ol>
+<p>Or:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select the notification dropdown list, next to the bell icon ({{&lt; icon name="notifications" &gt;}}).</li>
+<li>Select the desired <a href="#notification-levels">notification level</a>.</li>
+</ol>
+<h4>Change email address used for group notifications</h4>
+<p>You can select an email address to receive notifications for each group you belong to.
+You can use group notifications, for example, if you work freelance, and want to keep email about clients' projects separate.</p>
+<ol>
+<li>In the upper-right corner, select your avatar.</li>
+<li>Select <strong>Preferences</strong>.</li>
+<li>On the left sidebar, select <strong>Notifications</strong>.</li>
+<li>Locate the group in the <strong>Groups</strong> section.</li>
+<li>Select the desired email address.</li>
+</ol>
+<h3>Change level of project notifications</h3>
+<p>To help you stay up to date, you can select a notification level for each project.</p>
+<p>To select a notification level for a project, use either of these methods:</p>
+<ol>
+<li>In the upper-right corner, select your avatar.</li>
+<li>Select <strong>Preferences</strong>.</li>
+<li>On the left sidebar, select <strong>Notifications</strong>.</li>
+<li>Locate the project in the <strong>Projects</strong> section.</li>
+<li>Select the desired <a href="#notification-levels">notification level</a>.</li>
+</ol>
+<p>Or:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select the notification dropdown list, next to the bell icon ({{&lt; icon name="notifications" &gt;}}).</li>
+<li>Select the desired <a href="#notification-levels">notification level</a>.</li>
+</ol>
+<p><i class="fa-youtube-play" aria-hidden="true"></i>
+To learn how to be notified when a new release is available, watch <a href="https://www.youtube.com/watch?v=qyeNkGgqmH4">Notification for releases</a>.</p>
+<h2>Notification events</h2>
+<p>Notifications are sent for user, project, or group events, and for activity
+on work items.</p>
+<h3>User events</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Notification for personal access token rotated <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/199360">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>User notification events:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Sent to</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Email changed</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Group access level changed</td>
+<td>User</td>
+<td></td>
+</tr>
+<tr>
+<td>New email address added</td>
+<td>User</td>
+<td>Security email, sent to newly-added email address.</td>
+</tr>
+<tr>
+<td>New email address added</td>
+<td>User</td>
+<td>Security email, sent to primary email address.</td>
+</tr>
+<tr>
+<td>New SSH key added</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>New user created</td>
+<td>User</td>
+<td>Sent on user creation, except for OmniAuth (LDAP).</td>
+</tr>
+<tr>
+<td>Password changed</td>
+<td>User</td>
+<td>Security email, always sent when user changes their own password.</td>
+</tr>
+<tr>
+<td>Password changed by administrator</td>
+<td>User</td>
+<td>Security email, always sent when an administrator changes the password of another user.</td>
+</tr>
+<tr>
+<td>Personal access token has been revoked</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Personal access token has been rotated</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Personal access tokens expiring soon</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Personal access tokens have been created</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Personal access tokens have expired</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>SSH key has expired</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Two-factor authentication disabled</td>
+<td>User</td>
+<td>Security email, always sent.</td>
+</tr>
+</tbody>
+</table>
+<h3>Project events</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Notification for project access expired <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/12704">introduced</a> in GitLab 16.3.</li>
+<li>Notification for project access tokens expiring soon <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367706">introduced</a> in GitLab 16.4.</li>
+<li>Notification for project deploy tokens expiring soon <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/512197">introduced</a> in GitLab 18.3.</li>
+<li>Notification for project scheduled for deletion <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/522883">introduced</a> in GitLab 17.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Project notification events:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Sent to</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New release</td>
+<td>Project members</td>
+<td>Only sent when the  <strong>Release is created</strong> custom notification level is selected.</td>
+</tr>
+<tr>
+<td>Project access expired</td>
+<td>Project members</td>
+<td>Sent when user's access to a project expires in seven days.</td>
+</tr>
+<tr>
+<td>Project access level changed</td>
+<td>Project members</td>
+<td>Sent when user project access level is changed.</td>
+</tr>
+<tr>
+<td>Project access tokens expiring soon</td>
+<td>Direct project Owners and Maintainers</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Project deploy tokens expiring soon</td>
+<td>Project Owners and Maintainers</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Project moved</td>
+<td>Project members</td>
+<td>Sent for all notification levels except disabled, or when the  <strong>Project is moved</strong> custom notification level is selected.</td>
+</tr>
+<tr>
+<td>Project scheduled for deletion</td>
+<td>Project Owners</td>
+<td>Sent when project is scheduled for deletion.</td>
+</tr>
+<tr>
+<td>User added to project</td>
+<td>User</td>
+<td>Sent when user is added to project.</td>
+</tr>
+</tbody>
+</table>
+<h3>Group events</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Notification for group access expired <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/12704">introduced</a> in GitLab 16.3.</li>
+<li>Notification for group access tokens expiring soon <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367705">introduced</a> in GitLab 16.4.</li>
+<li>Notification for group scheduled for deletion <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/522883">introduced</a> in GitLab 17.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Group notification events:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Sent to</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Group access expired</td>
+<td>Group members</td>
+<td>Sent when user's access to a group expires in seven days.</td>
+</tr>
+<tr>
+<td>Group access tokens expiring soon</td>
+<td>Direct Group Owners</td>
+<td>Security email, always sent.</td>
+</tr>
+<tr>
+<td>Group scheduled for deletion</td>
+<td>Group Owners</td>
+<td>Sent when group is scheduled for deletion.</td>
+</tr>
+<tr>
+<td>User added to group</td>
+<td>User</td>
+<td>Sent when user is added to group.</td>
+</tr>
+<tr>
+<td>New SAML/SCIM user provisioned</td>
+<td>User</td>
+<td>Sent when a user is provisioned through SAML/SCIM.</td>
+</tr>
+</tbody>
+</table>
+<h3>Issue, merge request, and epic events</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Notifications for merge requests you're eligible to approve <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/12855">introduced</a> in GitLab 16.7 and <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/465347">renamed</a> in GitLab 17.11.</li>
+<li>Service account pipeline notifications <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/178740">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Events generate notifications based on the <a href="#notification-levels">notification level</a> selected.
+Some notifications can be optionally enabled by selecting the <strong>Custom</strong> notification level, and selecting the desired events. You can also manually <a href="#subscribe-to-notifications-for-a-specific-issue-merge-request-or-epic">subscribe to notifications</a>
+for and epic, issue, or merge request.</p>
+<p>By default, you don't receive notifications for issues, merge requests, or epics you create.
+You can turn on <a href="#global-notification-settings">notifications about your own activity</a>.</p>
+<p>Epic event notifications are sent for the following notification levels:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Watch</th>
+<th>Participate</th>
+<th>On Mention</th>
+<th>Subscribed</th>
+<th>Custom</th>
+<th>Additional details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Closed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>New epic</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>Sent when someone is mentioned by username in the description.</td>
+</tr>
+<tr>
+<td>New comment</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>If <strong>Comment is added</strong> is selected</td>
+<td>Also sent when someone is mentioned by username in the comment.</td>
+</tr>
+<tr>
+<td>Reopened</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Issue event notifications are sent for the following notification levels:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Watch</th>
+<th>Participate</th>
+<th>On Mention</th>
+<th>Subscribed</th>
+<th>Custom</th>
+<th>Additional details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Closed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Issue is closed</strong> is selected</td>
+<td></td>
+</tr>
+<tr>
+<td>Due tomorrow</td>
+<td></td>
+<td>Yes</td>
+<td></td>
+<td></td>
+<td>If <strong>Issue is due tomorrow</strong> is selected</td>
+<td>The notification is sent at 00:50 in the server's time zone (UTC for GitLab.com) for open issues with a due date of the next calendar day.</td>
+</tr>
+<tr>
+<td>Milestone changed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Milestone removed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>New issue</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>If <strong>Issue is created</strong> is selected</td>
+<td>Also sent when someone is mentioned by username in the description.</td>
+</tr>
+<tr>
+<td>New comment</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>If <strong>Comment is added</strong> is selected</td>
+<td>Also sent when someone is mentioned by username in the comment.</td>
+</tr>
+<tr>
+<td>Title or description changed</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td></td>
+<td></td>
+<td>Any new mentions by username.</td>
+</tr>
+<tr>
+<td>Reassigned</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Issue is reassigned</strong> is selected</td>
+<td>Also sent to the previous assignee.</td>
+</tr>
+<tr>
+<td>Reopened</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Issue is reopened</strong> is selected</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<!-- For issue due timing source, see 'issue_due_scheduler_worker' in https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/initializers/1_settings.rb -->
+
+<p>Merge request notifications are sent for the following notification levels:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Watch</th>
+<th>Participate</th>
+<th>On Mention</th>
+<th>Subscribed</th>
+<th>Custom</th>
+<th>Additional details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Closed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Merge request is closed</strong> is selected</td>
+<td></td>
+</tr>
+<tr>
+<td>Conflict</td>
+<td>Yes</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Author and any user that has set the merge request to auto-merge.</td>
+</tr>
+<tr>
+<td><a href="../project/merge_requests/drafts.html">Marked as ready</a></td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td></td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Merged</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Merge request is merged</strong> is selected</td>
+<td></td>
+</tr>
+<tr>
+<td>Set to auto-merge</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Merge request is set to auto-merge</strong> is selected</td>
+<td>Custom notification level is ignored for author, watcher, and subscribers.</td>
+</tr>
+<tr>
+<td>Milestone changed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Milestone removed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>New merge request</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>If <strong>Merge request is created</strong> is selected</td>
+<td>Anyone mentioned by username in the description.</td>
+</tr>
+<tr>
+<td>New comment</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>If <strong>Comment is added</strong> is selected</td>
+<td>Anyone mentioned by username in the comment.</td>
+</tr>
+<tr>
+<td>New push</td>
+<td></td>
+<td>Yes</td>
+<td></td>
+<td></td>
+<td>If <strong>Merge request receives a push</strong> is selected</td>
+<td></td>
+</tr>
+<tr>
+<td>Reassigned</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Merge request is reassigned</strong> is selected</td>
+<td>Also sent to the previous assignee.</td>
+</tr>
+<tr>
+<td>Reviewers are changed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Merge request reviewers are changed</strong> is selected</td>
+<td>Also sent to the previous reviewer.</td>
+</tr>
+<tr>
+<td>Reopened</td>
+<td>Yes</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Merge request is reopened</strong> is selected</td>
+<td></td>
+</tr>
+<tr>
+<td>Title or description changed</td>
+<td>Yes</td>
+<td></td>
+<td>Yes</td>
+<td></td>
+<td></td>
+<td>Any new mentions by username.</td>
+</tr>
+<tr>
+<td>New merge request you're eligible to approve.</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>If <strong>Merge request you're eligible to approve is created</strong> is selected</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Pipeline event notifications are sent for the following notification levels:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Watch</th>
+<th>Pipeline author</th>
+<th>Custom</th>
+<th>Additional Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Failed</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>If <strong>Pipeline fails</strong> is selected</td>
+<td></td>
+</tr>
+<tr>
+<td>Fixed</td>
+<td></td>
+<td>Yes</td>
+<td>If <strong>Pipeline is fixed</strong> is selected</td>
+<td></td>
+</tr>
+<tr>
+<td>Successful</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>If <strong>Pipeline is successful</strong> is selected</td>
+<td>If the pipeline failed previously, a "Fixed pipeline" message is sent for the first successful pipeline after the failure, and then a "Successful pipeline" message for any further successful pipelines.</td>
+</tr>
+</tbody>
+</table>
+<p>Service account pipeline event notifications are sent for the following notification levels:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Watch</th>
+<th>Custom</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Failed</td>
+<td>Yes</td>
+<td>If <strong>Pipeline by Service Account fails</strong> is selected</td>
+</tr>
+<tr>
+<td>Fixed</td>
+<td></td>
+<td>If <strong>Pipeline by Service Account is fixed</strong> is selected</td>
+</tr>
+<tr>
+<td>Successful</td>
+<td>Yes</td>
+<td>If <strong>Pipeline by Service Account is successful</strong> is selected</td>
+</tr>
+</tbody>
+</table>
+<p>Issue <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/501083">501083</a> tracks adding all events
+to the <strong>Watch</strong> level.</p>
+<h4>Subscribe to notifications for a specific issue, merge request, or epic</h4>
+<p>To toggle notifications on a specific issue, merge request, or epic:</p>
+<ol>
+<li>At the top of the right sidebar, select:</li>
+<li><strong>Notifications on</strong> ({{&lt; icon name="notifications" &gt;}}) to enable notifications.</li>
+<li><strong>Notifications off</strong> ({{&lt; icon name="notifications-off" &gt;}}) to disable notifications.</li>
+</ol>
+<h4>Moved notifications</h4>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/132678">Introduced</a> in GitLab 16.5 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>notifications_todos_buttons</code>. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag. For more information, see the history. Enabling this feature flag moves the notifications and to-do item buttons to the upper-right corner of the page.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>When you <strong>turn on</strong> notifications, you start receiving notifications on each update, even if you
+haven't participated in the discussion.
+When you turn notifications on in an epic, you aren't automatically subscribed to the issues linked
+to the epic.</p>
+<p>When you <strong>turn off</strong> notifications, you stop receiving notifications for updates.
+Turning this toggle off only unsubscribes you from updates related to this issue, merge request, or epic.
+Learn how to <a href="#opt-out-of-all-gitlab-emails">opt out of all emails from GitLab</a>.</p>
+<h3>Disable specific events</h3>
+<p>To disable <code>always sent</code> security emails on GitLab Self-Managed and GitLab Dedicated,
+an instance administrator can disable individual <a href="../../administration/maintenance_mode/_index.md#background-jobs">background jobs</a>.</p>
+<p>For example:</p>
+<ul>
+<li><code>personal_access_tokens_expiring_worker</code></li>
+<li><code>personal_access_tokens_expired_notification_worker</code></li>
+<li><code>ssh_keys_expiring_soon_notification_worker</code></li>
+<li><code>ssh_keys_expired_notification_worker</code></li>
+<li><code>send_recurring_notifications_worker</code></li>
+<li><code>deploy_tokens_expiring_worker</code></li>
+<li><code>members_expiring_worker</code></li>
+</ul>
+<h2>Notifications for unknown sign-ins</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Listing the full name and username of the signed-in user <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/225183">introduced</a> in GitLab 15.10.</li>
+<li>Geographic location <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/296128">added</a> in GitLab 17.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>This feature is enabled by default for GitLab Self-Managed instances. Administrators may disable this feature
+through the <a href="../../administration/settings/sign_in_restrictions.md#email-notification-for-unknown-sign-ins">Sign-in restrictions</a> section of the UI.
+The feature is always enabled on GitLab.com.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>When a user successfully signs in from a previously unknown IP address or device,
+GitLab notifies the user by email. In this way, GitLab proactively alerts users of potentially
+malicious or unauthorized sign-ins. This notification email includes the:</p>
+<ul>
+<li>Hostname.</li>
+<li>User's name and username.</li>
+<li>IP address.</li>
+<li>Geographic location.</li>
+<li>Date and time of sign-in.</li>
+</ul>
+<p>GitLab uses several methods to identify a known sign-in. All methods must fail for a notification email to be sent.</p>
+<ul>
+<li>Last sign-in IP: The current sign-in IP address is checked against the last sign-in
+  IP address.</li>
+<li>Current active sessions: If the user has an existing active session from the
+  same IP address. See <a href="active_sessions.html">Active sessions</a>.</li>
+<li>Cookie: After successful sign in, an encrypted cookie is stored in the browser.
+  This cookie is set to expire 14 days after the last successful sign in.</li>
+</ul>
+<h2>Notifications for attempted sign-ins using incorrect verification codes</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/374740">Introduced</a> in GitLab 15.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab sends you an email notification if it detects an attempt to sign in to your account using a wrong two-factor
+authentication (2FA) code. This can help you detect that a bad actor gained access to your username and password, and is trying
+to brute force 2FA.</p>
+<h2>Notifications on designs</h2>
+<p>Email notifications are sent to the participants when someone comments on a design.</p>
+<p>The participants are:</p>
+<ul>
+<li>Authors of the design (can be multiple people if different authors have uploaded different versions of the design).</li>
+<li>Authors of comments on the design.</li>
+<li>Anyone that is <a href="../discussions/_index.md#mentions">mentioned</a> in a comment on the design.</li>
+</ul>
+<h2>Notifications on group or project access expiration</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/12704">Introduced</a> in GitLab 16.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab sends an email notification if a user's access to a group or project expires in seven days.
+This reminds group or project members to extend their access duration if they want to.</p>
+<h2>Opt out of all GitLab emails</h2>
+<p>If you no longer wish to receive any email notifications:</p>
+<ol>
+<li>In the upper-right corner, select your avatar.</li>
+<li>Select <strong>Preferences</strong>.</li>
+<li>On the left sidebar, select <strong>Notifications</strong>.</li>
+<li>Set your <strong>Global notification level</strong> to <strong>Disabled</strong>.</li>
+<li>Clear the <strong>Receive notifications about your own activity</strong> checkbox.</li>
+<li>If you belong to any groups or projects, set their notification setting to <strong>Global</strong> or
+   <strong>Disabled</strong>.</li>
+</ol>
+<p>On GitLab Self-Managed and Dedicated instances, even after doing this, certain event notifications are still sent:</p>
+<ul>
+<li>Your instance administrator <a href="../../administration/email_from_gitlab.html">can still email you</a></li>
+<li><a href="#notification-events">Notification events</a> that are <code>always sent</code></li>
+</ul>
+<h2>Unsubscribe from notification emails</h2>
+<p>You can unsubscribe from notification emails from GitLab on a per-resource basis (for example a specific issue).</p>
+<h3>Using the unsubscribe link</h3>
+<p>Every notification email from GitLab contains an unsubscribe link at the bottom.</p>
+<p>To unsubscribe:</p>
+<ol>
+<li>Select the unsubscribe link in the email.</li>
+<li>If you are signed in to GitLab in your browser, you are unsubscribed immediately.</li>
+<li>If you are not signed in, you need to confirm the action.</li>
+</ol>
+<h3>Using an email client or other software</h3>
+<p>Your email client might show an <strong>Unsubscribe</strong> button when you view an email from GitLab.
+To unsubscribe, select this button.</p>
+<p>Notification emails from GitLab contain special headers.
+These headers allow supported email clients and other software
+to unsubscribe users automatically. Here's an example:</p>
+<pre><code class="language-plaintext">List-Unsubscribe: &lt;https://gitlab.com/-/sent_notifications/[REDACTED]/unsubscribe&gt;,&lt;mailto:incoming+[REDACTED]-unsubscribe@incoming.gitlab.com&gt;
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+</code></pre>
+<p>The <code>List-Unsubscribe</code> header has two entries:</p>
+<ul>
+<li>A link for software to send a <code>POST</code> request.
+  This action directly unsubscribes the user from the resource.
+  Sending a <code>GET</code> request to this link shows a confirmation dialog instead of unsubscribing.</li>
+<li>An email address for software to send an unsubscribe email.
+  The content of the email is ignored.</li>
+</ul>
+<p>Unsubscribing by email is subject to the same two year
+<a href="../../administration/reply_by_email.md#retention-policy-for-notifications">retention policy</a> as replying by email.</p>
+<h2>Email headers you can use to filter email</h2>
+<p>Notification email messages include GitLab-specific headers. To better manage your notifications,
+you can filter the notification emails based on the content of these headers.</p>
+<p>For example, you could filter all emails from a specific project where you are being assigned a
+merge request or an issue.</p>
+<p>The following table lists all GitLab-specific email headers:</p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>List-Id</code></td>
+<td>The path of the project in an RFC 2919 mailing list identifier. You can use it for email organization with filters.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-(Resource)-ID</code></td>
+<td>The ID of the resource the notification is for. The resource, for example, can be <code>Issue</code>, <code>MergeRequest</code>, <code>Commit</code>, or another such resource.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-(Resource)-State</code></td>
+<td>The state of the resource the notification is for. The resource can be, for example, <code>Issue</code> or <code>MergeRequest</code>. The value can be <code>opened</code>, <code>closed</code>, <code>merged</code>, or <code>locked</code>. <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/130967">Introduced</a> in GitLab 16.4.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-ConfidentialIssue</code></td>
+<td>The boolean value indicating issue confidentiality for notifications. <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/222908">Introduced</a> in GitLab 16.0.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-Discussion-ID</code></td>
+<td>The ID of the thread the comment belongs to, in notification emails for comments.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-Group-Id</code></td>
+<td>The group's ID. Only present on notification emails for <a href="../group/epics/_index.html">epics</a>.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-Group-Path</code></td>
+<td>The group's path. Only present on notification emails for <a href="../group/epics/_index.html">epics</a>.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-NotificationReason</code></td>
+<td>The reason for the notification. <a href="#x-gitlab-notificationreason">See possible values</a>.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-Pipeline-Id</code></td>
+<td>The ID of the pipeline the notification is for, in notification emails for pipelines.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-Project-Id</code></td>
+<td>The project's ID.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-Project-Path</code></td>
+<td>The project's path.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-Project</code></td>
+<td>The name of the project the notification belongs to.</td>
+</tr>
+<tr>
+<td><code>X-GitLab-Reply-Key</code></td>
+<td>A unique token to support reply by email.</td>
+</tr>
+</tbody>
+</table>
+<h3>X-GitLab-NotificationReason</h3>
+<p>The <code>X-GitLab-NotificationReason</code> header contains the reason for the notification.
+The value is one of the following, in order of priority:</p>
+<ul>
+<li><code>own_activity</code></li>
+<li><code>assigned</code></li>
+<li><code>review_requested</code></li>
+<li><code>mentioned</code></li>
+<li><code>subscribed</code></li>
+</ul>
+<p>The reason for the notification is also included in the footer of the notification email.
+For example, an email with the reason <code>assigned</code> has this sentence in the footer:</p>
+<pre><code class="language-plaintext">You are receiving this email because you have been assigned an item on &lt;configured GitLab hostname&gt;.
+</code></pre>
+<h4>On-call alerts notifications</h4>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>An <a href="../../operations/incident_management/oncall_schedules.html">on-call alert</a>
+notification email can have one of <a href="../../operations/incident_management/alerts.html">the alert's</a> statuses:</p>
+<ul>
+<li><code>alert_triggered</code></li>
+<li><code>alert_acknowledged</code></li>
+<li><code>alert_resolved</code></li>
+<li><code>alert_ignored</code></li>
+</ul>
+<h4>Incident escalation notifications</h4>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>An <a href="../../operations/incident_management/escalation_policies.html">incident escalation</a>
+notification email can have one of <a href="../../operations/incident_management/incidents.html">the incident's</a> status:</p>
+<ul>
+<li><code>incident_triggered</code></li>
+<li><code>incident_acknowledged</code></li>
+<li><code>incident_resolved</code></li>
+<li><code>incident_ignored</code></li>
+</ul>
+<p>Expanding the list of events included in the <code>X-GitLab-NotificationReason</code> header is tracked in
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/20689">issue 20689</a>.</p>
+<h2>Troubleshooting</h2>
+<h3>Pull a list of recipients for notifications</h3>
+<p>If you want to pull a list of recipients to receive notifications from a project
+(mainly used for troubleshooting custom notifications),
+in a Rails console, run <code>sudo gitlab-rails c</code> and be sure to update the project name:</p>
+<pre><code class="language-plaintext">project = Project.find_by_full_path '&lt;project_name&gt;'
+merge_request = project.merge_requests.find_by(iid: 1)
+current_user = User.first
+recipients = NotificationRecipients::BuildService.build_recipients(merge_request, current_user, action: &quot;push_to&quot;); recipients.count
+recipients.each { |notify| puts notify.user.username }
+</code></pre>
+<h3>Notifications about failed pipeline that doesn't exist</h3>
+<p>If you receive notifications (through email or Slack) regarding a failed pipeline that no longer
+exists, double-check to see if you have any duplicate GitLab instances that could have triggered the
+message.</p>
+<h3>Email notifications are enabled, but not received</h3>
+<p>If you've enabled email notifications in GitLab, but users aren't receiving notifications as expected, ensure that
+your email provider isn't blocking emails from your GitLab instance. Many email providers (like Outlook) block emails
+coming from lesser-known self-managed mail server IP addresses. To verify, attempt to send an email
+directly from the SMTP server for your instance. For example, a test email from Sendmail might look something like:</p>
+<pre><code class="language-plaintext"># (echo subject: test; echo) | $(which sendmail) -v -Am -i &lt;valid email address&gt;
+</code></pre>
+<p>If your email provider is blocking the message, you might get output like the following (depending on your email provider and SMTP server):</p>
+<pre><code class="language-plaintext">Diagnostic-Code: smtp; 550 5.7.1 Unfortunately, messages from [xx.xx.xx.xx]
+weren't sent. For more information, please go to
+http://go.microsoft.com/fwlink/?LinkID=526655 (http://go.microsoft.com/fwlink/?LinkID=526655) AS(900)
+</code></pre>
+<p>Usually this issue can be resolved by adding the IP address of your SMTP server to your
+mail provider's allowlist. Check your mail provider's documentation for instructions.</p></code></pre>
+</body>
+</html>

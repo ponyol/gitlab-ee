@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Agent Foundations
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Developer Flow</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Introduced as <a href="../../../../policy/development_stages_support.html">a beta</a> in GitLab 18.3 <a href="../../../../administration/feature_flags/_index.html">with a flag</a> named <code>duo_workflow_in_ci</code>. Disabled by default, but can be enabled for the instance or a user.</li>
+<li>Renamed from <code>Issue to MR</code> to the <code>Developer Flow</code> with a flag named <code>duo_developer_button</code> in 18.6. Disabled by default, but can be enabled for the instance or a user.</li>
+<li>The <code>duo_workflow</code> flag must also be enabled, but it is enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>The Developer Flow streamlines the process of converting issues into actionable merge requests. This flow:</p>
+<ul>
+<li>Analyzes the issue description and requirements.</li>
+<li>Opens a draft merge request that's linked to the original issue.</li>
+<li>Creates a development plan based on the issue details.</li>
+<li>Creates code structure or implementation.</li>
+<li>Updates the merge request with the code changes.</li>
+</ul>
+<p>This flow is available in the GitLab UI only.</p>
+<h2>Prerequisites</h2>
+<p>To create a merge request from an issue, you must:</p>
+<ul>
+<li>Have an existing GitLab issue with clear requirements.</li>
+<li>Have at least the Developer role in the project.</li>
+<li>Meet <a href="../../../duo_agent_platform/_index.md#prerequisites">the other prerequisites</a>.</li>
+<li><a href="../../troubleshooting.md#session-is-stuck-in-created-state">Ensure the GitLab Duo service account can create commits and branches</a>.</li>
+</ul>
+<h2>Use the flow</h2>
+<p>To convert your issue to a merge request:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>.</li>
+<li>Select the issue you want to create a merge request for.</li>
+<li>Below the issue header, select <strong>Generate MR with GitLab Duo</strong>.</li>
+<li>Monitor progress by selecting <strong>Automate</strong> &gt; <strong>Sessions</strong>.</li>
+<li>When the pipeline has successfully executed, a link to the merge request
+   is displayed in the issue's activity section.</li>
+<li>Review the merge request and make changes as needed.</li>
+</ol>
+<h2>Best practices</h2>
+<ul>
+<li>Keep the issues well-scoped. Break down complex tasks into smaller, focused, and action-oriented requests.</li>
+<li>Specify exact file paths.</li>
+<li>Write specific acceptance criteria.</li>
+<li>Include code examples of existing patterns to maintain consistency.</li>
+</ul>
+<h2>Example</h2>
+<p>This example shows a well-crafted issue that can be used to generate a merge request.</p>
+<pre><code class="language-plaintext">## Description
+The users endpoint currently returns all users at once,
+which will cause performance issues as the user base grows.
+Implement cursor-based pagination for the `/api/users` endpoint
+to handle large datasets efficiently.
+
+## Implementation plan
+Add pagination to GET /users API endpoint.
+Include pagination metadata in /users API response (per_page, page).
+Add query parameters for per page size limit (default 5, max 20).
+
+#### Files to modify
+- `src/api/users.py` - Add pagination parameters and logic.
+- `src/models/user.py` - Add pagination query method.
+- `tests/api/test_users_api.py` - Add pagination tests.
+
+## Acceptance criteria
+- Accepts page and per_page query parameters (default: page=5, per_page=10).
+- Limits per_page to a maximum of 20 users.
+- Maintains existing response format for user objects in data array.
+</code></pre></code></pre>
+</body>
+</html>

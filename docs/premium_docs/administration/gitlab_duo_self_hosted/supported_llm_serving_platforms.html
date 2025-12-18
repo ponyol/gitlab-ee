@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># For self-hosted model deployments</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Custom Models
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Supported LLM Serving Platforms.
+title: GitLab Duo Self-Hosted supported platforms</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Enterprise</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/12972">Introduced</a> in GitLab 17.1 <a href="../feature_flags/_index.html">with a flag</a> named <code>ai_custom_model</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15176">Enabled on GitLab Self-Managed</a> in GitLab 17.6.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6 and later.</li>
+<li>Feature flag <code>ai_custom_model</code> removed in GitLab 17.8.</li>
+<li>Generally available in GitLab 17.9.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>There are multiple platforms available to host your self-hosted Large Language Models (LLMs). Each platform has unique features and benefits that can cater to different needs. The following documentation summarises the currently supported options. If the platform you want to use is not in this documentation, provide feedback in the <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/526144">platform request issue (issue 526144)</a>.</p>
+<h2>For self-hosted model deployments</h2>
+<h3>vLLM</h3>
+<p><a href="https://docs.vllm.ai/en/latest/index.html">vLLM</a> is a high-performance inference server optimized for serving LLMs with memory efficiency. It supports model parallelism and integrates easily with existing workflows.</p>
+<p>To install vLLM, see the <a href="https://docs.vllm.ai/en/latest/getting_started/installation.html">vLLM Installation Guide</a>. You should install <a href="https://github.com/vllm-project/vllm/releases/tag/v0.6.4.post1">version v0.6.4.post1</a> or later.</p>
+<h4>Endpoint Configuration</h4>
+<p>When configuring the endpoint URL for any OpenAI API compatible platforms (such as vLLM) in GitLab:</p>
+<ul>
+<li>The URL must be suffixed with <code>/v1</code></li>
+<li>If using the default vLLM configuration, the endpoint URL would be <code>https://&lt;hostname&gt;:8000/v1</code></li>
+<li>If your server is configured behind a proxy or load balancer, you might not need to specify the port, in which case the URL would be <code>https://&lt;hostname&gt;/v1</code></li>
+</ul>
+<h4>Find the model name</h4>
+<p>After the model has been deployed, to get the model name for the model identifier field in GitLab, query the vLLM server's <code>/v1/models</code> endpoint:</p>
+<pre><code class="language-shell">curl \
+  --header &quot;Authorization: Bearer API_KEY&quot; \
+  --header &quot;Content-Type: application/json&quot; \
+  http://your-vllm-server:8000/v1/models
+</code></pre>
+<p>The model name is the value of the <code>data.id</code> field in the response.</p>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;object&quot;: &quot;list&quot;,
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;Mixtral-8x22B-Instruct-v0.1&quot;,
+      &quot;object&quot;: &quot;model&quot;,
+      &quot;created&quot;: 1739421415,
+      &quot;owned_by&quot;: &quot;vllm&quot;,
+      &quot;root&quot;: &quot;mistralai/Mixtral-8x22B-Instruct-v0.1&quot;,
+      // Additional fields removed for readability
+    }
+  ]
+}
+</code></pre>
+<p>In this example, if the model's <code>id</code> is <code>Mixtral-8x22B-Instruct-v0.1</code>, you would set the model identifier in GitLab as <code>custom_openai/Mixtral-8x22B-Instruct-v0.1</code>.</p>
+<p>For more information on:</p>
+<ul>
+<li>vLLM supported models, see the <a href="https://docs.vllm.ai/en/latest/models/supported_models.html">vLLM Supported Models documentation</a>.</li>
+<li>Available options when using vLLM to run a model, see the <a href="https://docs.vllm.ai/en/stable/configuration/engine_args.html">vLLM documentation on engine arguments</a>.</li>
+<li>The hardware needed for the models, see the <a href="supported_models_and_hardware_requirements.html">Supported models and Hardware requirements documentation</a>.</li>
+</ul>
+<p>Examples:</p>
+<h4>Mistral-7B-Instruct-v0.2</h4>
+<ol>
+<li>Download the model from HuggingFace:</li>
+</ol>
+<p><code>shell
+   git clone https://&lt;your-hugging-face-username&gt;:&lt;your-hugging-face-token&gt;@huggingface.co/mistralai/Mistral-7B-Instruct-v0.3</code></p>
+<ol>
+<li>Run the server:</li>
+</ol>
+<p><code>shell
+   vllm serve &lt;path-to-model&gt;/Mistral-7B-Instruct-v0.3 \
+      --served_model_name &lt;choose-a-name-for-the-model&gt;  \
+      --tokenizer_mode mistral \
+      --tensor_parallel_size &lt;number-of-gpus&gt; \
+      --load_format mistral \
+      --config_format mistral \
+      --tokenizer &lt;path-to-model&gt;/Mistral-7B-Instruct-v0.3</code></p>
+<h4>Mixtral-8x7B-Instruct-v0.1</h4>
+<ol>
+<li>Download the model from HuggingFace:</li>
+</ol>
+<p><code>shell
+   git clone https://&lt;your-hugging-face-username&gt;:&lt;your-hugging-face-token&gt;@huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1</code></p>
+<ol>
+<li>Rename the token config:</li>
+</ol>
+<p><code>shell
+   cd &lt;path-to-model&gt;/Mixtral-8x7B-Instruct-v0.1
+   cp tokenizer.model tokenizer.model.v3</code></p>
+<ol>
+<li>Run the model:</li>
+</ol>
+<p><code>shell
+   vllm serve &lt;path-to-model&gt;/Mixtral-8x7B-Instruct-v0.1 \
+     --tensor_parallel_size 4 \
+     --served_model_name &lt;choose-a-name-for-the-model&gt; \
+     --tokenizer_mode mistral \
+     --load_format safetensors \
+     --tokenizer &lt;path-to-model&gt;/Mixtral-8x7B-Instruct-v0.1</code></p>
+<h4>Disable request logging to reduce latency</h4>
+<p>When running vLLM in production, you can significantly reduce latency by using the <code>--disable-log-requests</code> flag to disable request logging.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Use this flag only when you do not need detailed request logging.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Disabling request logging minimizes the overhead introduced by verbose logs, especially under high load, and can help improve performance levels.</p>
+<pre><code class="language-shell">vllm serve &lt;path-to-model&gt;/&lt;model-version&gt; \
+--served_model_name &lt;choose-a-name-for-the-model&gt;  \
+--disable-log-requests
+</code></pre>
+<p>This change has been observed to notably improve response times in internal benchmarks.</p>
+<h2>For cloud-hosted model deployments</h2>
+<h3>AWS Bedrock</h3>
+<p><a href="https://aws.amazon.com/bedrock/">AWS Bedrock</a> is a fully managed service that
+allows developers to build and scale generative AI applications using pre-trained
+models from leading AI companies. It seamlessly integrates with other AWS services
+and offers a pay-as-you-go pricing model.</p>
+<p>To access AWS Bedrock models:</p>
+<ol>
+<li>
+<p>Configure IAM credentials to access Bedrock with the appropriate AWS IAM
+   permissions:</p>
+</li>
+<li>
+<p>Make sure that the IAM role has the <code>AmazonBedrockFullAccess</code> policy to allow
+   <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonBedrockFullAccess">access to Amazon Bedrock</a>. You cannot do this in
+   the GitLab Duo Self-Hosted UI.</p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html">Use the AWS console to request access to the models</a> that you want to use.</p>
+</li>
+<li>
+<p>Authenticate your AI Gateway instance by exporting the appropriate AWS SDK
+   environment variables such as <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html"><code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> and <code>AWS_REGION_NAME</code></a> when starting
+   the Docker container.</p>
+</li>
+</ol>
+<p>For more information, see the <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/security-iam.html">AWS Identity and Access Management (IAM) Guide</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Temporary credentials are not supported by AI Gateway at this time. For more information on adding support for Bedrock to use instance profile or temporary credentials, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/542389">issue 542389</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ol>
+<li>Optional. To set up a private Bedrock endpoint operating in a virtual private cloud (VPC),
+   make sure the <code>AWS_BEDROCK_RUNTIME_ENDPOINT</code> environment variable is configured
+   with your internal URL when launching the AI Gateway container.</li>
+</ol>
+<p>An example configuration: <code>AWS_BEDROCK_RUNTIME_ENDPOINT = https://bedrock-runtime.{aws_region_name}.amazonaws.com</code></p>
+<p>For VPC endpoints, the URL format may be different, such as <code>https://vpce-{vpc-endpoint-id}-{service-name}.{aws_region_name}.vpce.amazonaws.com</code></p>
+<p>For more information, see <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html">supported foundation models in Amazon Bedrock</a>.</p>
+<h3>Azure OpenAI</h3>
+<p><a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/">Azure OpenAI</a> provides
+access to OpenAI's powerful models, enabling developers to integrate advanced AI
+capabilities into their applications with robust security and scalable infrastructure.</p>
+<p>For more information, see:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/working-with-models?tabs=powershell">Working with Azure OpenAI models</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=python-secure%2Cglobal-standard%2Cstandard-chat-completions">Azure OpenAI Service models</a></li>
+</ul>
+<h2>Use multiple models and platforms</h2>
+<p>With GitLab Duo Self-Hosted, you can use multiple models and platforms in the same GitLab instance.</p>
+<p>For example, you can configure one feature to use Azure OpenAI, and another feature to use AWS Bedrock or self-hosted models served with vLLM.</p>
+<p>This setup gives you flexibility to choose the best model and platform for each use case. Models must be supported and served through a compatible platform.</p>
+<p>For more information on setting up different providers, see:</p>
+<ul>
+<li><a href="configure_duo_features.html">Configure GitLab Duo Self-Hosted features</a></li>
+<li><a href="supported_models_and_hardware_requirements.html">Supported GitLab Duo Self-Hosted models and hardware requirements</a></li>
+</ul></code></pre>
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># List issues for an epic</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Product Planning
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Epic Issues API (deprecated)</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>The Epics REST API was <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/460668">deprecated</a> in GitLab 17.0
+and is planned for removal in v5 of the API.
+From GitLab 17.4 to 18.0, if <a href="../user/group/epics/_index.md#epics-as-work-items">the new look for epics</a> is enabled, and in GitLab 18.1 and later, use the
+Work Items API instead. For more information, see <a href="graphql/epic_work_items_api_migration_guide.html">migrate epic APIs to work items</a>.
+This change is a breaking change.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Every API call to the epic issues API endpoint must be authenticated.</p>
+<p>If a user is not a member of a group and the group is private, a <code>GET</code> request on that group
+results in a <code>404</code> status code.</p>
+<p>Epics are available only in GitLab <a href="https://about.gitlab.com/pricing/">Premium and Ultimate</a>.
+If the Epics feature is not available, a <code>403</code> status code is returned.</p>
+<h2>List issues for an epic</h2>
+<p>Lists all issues that are assigned to an epic and the authenticated user has access to.</p>
+<p>Responses are <a href="rest/_index.md#pagination">paginated</a> and return 20 results by default.</p>
+<pre><code class="language-plaintext">GET /groups/:id/epics/:epic_iid/issues
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group</td>
+</tr>
+<tr>
+<td><code>epic_iid</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The internal ID of the epic.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/epics/5/issues&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 76,
+    &quot;iid&quot;: 6,
+    &quot;project_id&quot;: 8,
+    &quot;title&quot; : &quot;Consequatur vero maxime deserunt laboriosam est voluptas dolorem.&quot;,
+    &quot;description&quot; : &quot;Ratione dolores corrupti mollitia soluta quia.&quot;,
+    &quot;state&quot;: &quot;opened&quot;,
+    &quot;created_at&quot;: &quot;2017-11-15T13:39:24.670Z&quot;,
+    &quot;updated_at&quot;: &quot;2018-01-04T10:49:19.506Z&quot;,
+    &quot;closed_at&quot;: null,
+    &quot;labels&quot;: [],
+    &quot;milestone&quot;: {
+      &quot;id&quot;: 38,
+      &quot;iid&quot;: 3,
+      &quot;project_id&quot;: 8,
+      &quot;title&quot;: &quot;v2.0&quot;,
+      &quot;description&quot;: &quot;In tempore culpa inventore quo accusantium.&quot;,
+      &quot;state&quot;: &quot;closed&quot;,
+      &quot;created_at&quot;: &quot;2017-11-15T13:39:13.825Z&quot;,
+      &quot;updated_at&quot;: &quot;2017-11-15T13:39:13.825Z&quot;,
+      &quot;due_date&quot;: null,
+      &quot;start_date&quot;: null
+    },
+    &quot;assignees&quot;: [{
+      &quot;id&quot;: 7,
+      &quot;name&quot;: &quot;Pamella Huel&quot;,
+      &quot;username&quot;: &quot;arnita&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/a2f5c6fcef64c9c69cb8779cb292be1b?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/arnita&quot;
+    }],
+    &quot;assignee&quot;: {
+      &quot;id&quot;: 7,
+      &quot;name&quot;: &quot;Pamella Huel&quot;,
+      &quot;username&quot;: &quot;arnita&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/a2f5c6fcef64c9c69cb8779cb292be1b?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/arnita&quot;
+    },
+    &quot;author&quot;: {
+      &quot;id&quot;: 13,
+      &quot;name&quot;: &quot;Michell Johns&quot;,
+      &quot;username&quot;: &quot;chris_hahn&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/30e3b2122ccd6b8e45e8e14a3ffb58fc?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/chris_hahn&quot;
+    },
+    &quot;user_notes_count&quot;: 8,
+    &quot;upvotes&quot;: 0,
+    &quot;downvotes&quot;: 0,
+    &quot;due_date&quot;: null,
+    &quot;confidential&quot;: false,
+    &quot;weight&quot;: null,
+    &quot;discussion_locked&quot;: null,
+    &quot;web_url&quot;: &quot;http://localhost:3001/h5bp/html5-boilerplate/issues/6&quot;,
+    &quot;time_stats&quot;: {
+      &quot;time_estimate&quot;: 0,
+      &quot;total_time_spent&quot;: 0,
+      &quot;human_time_estimate&quot;: null,
+      &quot;human_total_time_spent&quot;: null
+    },
+    &quot;_links&quot;:{
+      &quot;self&quot;: &quot;http://localhost:3001/api/v4/projects/8/issues/6&quot;,
+      &quot;notes&quot;: &quot;http://localhost:3001/api/v4/projects/8/issues/6/notes&quot;,
+      &quot;award_emoji&quot;: &quot;http://localhost:3001/api/v4/projects/8/issues/6/award_emoji&quot;,
+      &quot;project&quot;: &quot;http://localhost:3001/api/v4/projects/8&quot;
+    },
+    &quot;epic_issue_id&quot;: 2
+  }
+]
+</code></pre>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The <code>assignee</code> column is deprecated. It is now a single-sized <code>assignees</code> array.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Assign an issue to the epic</h2>
+<p>Creates an epic - issue association. If the issue in question belongs to another epic it is unassigned from that epic.</p>
+<pre><code class="language-plaintext">POST /groups/:id/epics/:epic_iid/issues/:issue_id
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group</td>
+</tr>
+<tr>
+<td><code>epic_iid</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The internal ID of the epic.</td>
+</tr>
+<tr>
+<td><code>issue_id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID of the issue.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/epics/5/issues/55&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 11,
+  &quot;epic&quot;: {
+    &quot;id&quot;: 30,
+    &quot;iid&quot;: 5,
+    &quot;title&quot;: &quot;Ea cupiditate dolores ut vero consequatur quasi veniam voluptatem et non.&quot;,
+    &quot;description&quot;: &quot;Molestias dolorem eos vitae expedita impedit necessitatibus quo voluptatum.&quot;,
+    &quot;author&quot;: {
+      &quot;id&quot;: 7,
+      &quot;name&quot;: &quot;Pamella Huel&quot;,
+      &quot;username&quot;: &quot;arnita&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/a2f5c6fcef64c9c69cb8779cb292be1b?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/arnita&quot;
+    },
+    &quot;start_date&quot;: null,
+    &quot;end_date&quot;: null
+  },
+  &quot;issue&quot;: {
+    &quot;id&quot;: 55,
+    &quot;iid&quot;: 13,
+    &quot;project_id&quot;: 8,
+    &quot;title&quot;: &quot;Beatae laborum voluptatem voluptate eligendi ex accusamus.&quot;,
+    &quot;description&quot;: &quot;Quam veritatis debitis omnis aliquam sit.&quot;,
+    &quot;state&quot;: &quot;opened&quot;,
+    &quot;created_at&quot;: &quot;2017-11-05T13:59:12.782Z&quot;,
+    &quot;updated_at&quot;: &quot;2018-01-05T10:33:03.900Z&quot;,
+    &quot;closed_at&quot;: null,
+    &quot;labels&quot;: [],
+    &quot;milestone&quot;: {
+      &quot;id&quot;: 48,
+      &quot;iid&quot;: 6,
+      &quot;project_id&quot;: 8,
+      &quot;title&quot;: &quot;Sprint - Sed sed maxime temporibus ipsa ullam qui sit.&quot;,
+      &quot;description&quot;: &quot;Quos veritatis qui expedita sunt deleniti accusamus.&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;created_at&quot;: &quot;2017-11-05T13:59:12.445Z&quot;,
+      &quot;updated_at&quot;: &quot;2017-11-05T13:59:12.445Z&quot;,
+      &quot;due_date&quot;: &quot;2017-11-13&quot;,
+      &quot;start_date&quot;: &quot;2017-11-05&quot;
+    },
+    &quot;assignees&quot;: [{
+      &quot;id&quot;: 10,
+      &quot;name&quot;: &quot;Lu Mayer&quot;,
+      &quot;username&quot;: &quot;kam&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/018729e129a6f31c80a6327a30196823?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/kam&quot;
+    }],
+    &quot;assignee&quot;: {
+      &quot;id&quot;: 10,
+      &quot;name&quot;: &quot;Lu Mayer&quot;,
+      &quot;username&quot;: &quot;kam&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/018729e129a6f31c80a6327a30196823?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/kam&quot;
+    },
+    &quot;author&quot;: {
+      &quot;id&quot;: 25,
+      &quot;name&quot;: &quot;User 3&quot;,
+      &quot;username&quot;: &quot;user3&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/97d6d9441ff85fdc730e02a6068d267b?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/user3&quot;
+    },
+    &quot;user_notes_count&quot;: 0,
+    &quot;upvotes&quot;: 0,
+    &quot;downvotes&quot;: 0,
+    &quot;due_date&quot;: null,
+    &quot;confidential&quot;: false,
+    &quot;weight&quot;: null,
+    &quot;discussion_locked&quot;: null,
+    &quot;web_url&quot;: &quot;http://localhost:3001/h5bp/html5-boilerplate/issues/13&quot;,
+    &quot;time_stats&quot;: {
+      &quot;time_estimate&quot;: 0,
+      &quot;total_time_spent&quot;: 0,
+      &quot;human_time_estimate&quot;: null,
+      &quot;human_total_time_spent&quot;: null
+    }
+  }
+}
+</code></pre>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The <code>assignee</code> column is deprecated. It is now a single-sized <code>assignees</code> array.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Remove an issue from the epic</h2>
+<p>Removes an epic - issue association.</p>
+<pre><code class="language-plaintext">DELETE /groups/:id/epics/:epic_iid/issues/:epic_issue_id
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group</td>
+</tr>
+<tr>
+<td><code>epic_iid</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The internal ID of the epic.</td>
+</tr>
+<tr>
+<td><code>epic_issue_id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID of the issue - epic association.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request DELETE \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/epics/5/issues/11&quot;
+
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 11,
+  &quot;epic&quot;: {
+    &quot;id&quot;: 30,
+    &quot;iid&quot;: 5,
+    &quot;title&quot;: &quot;Ea cupiditate dolores ut vero consequatur quasi veniam voluptatem et non.&quot;,
+    &quot;description&quot;: &quot;Molestias dolorem eos vitae expedita impedit necessitatibus quo voluptatum.&quot;,
+    &quot;author&quot;: {
+      &quot;id&quot;: 7,
+      &quot;name&quot;: &quot;Pamella Huel&quot;,
+      &quot;username&quot;: &quot;arnita&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/a2f5c6fcef64c9c69cb8779cb292be1b?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/arnita&quot;
+    },
+    &quot;start_date&quot;: null,
+    &quot;end_date&quot;: null
+  },
+  &quot;issue&quot;: {
+    &quot;id&quot;: 223,
+    &quot;iid&quot;: 13,
+    &quot;project_id&quot;: 8,
+    &quot;title&quot;: &quot;Beatae laborum voluptatem voluptate eligendi ex accusamus.&quot;,
+    &quot;description&quot;: &quot;Quam veritatis debitis omnis aliquam sit.&quot;,
+    &quot;state&quot;: &quot;opened&quot;,
+    &quot;created_at&quot;: &quot;2017-11-05T13:59:12.782Z&quot;,
+    &quot;updated_at&quot;: &quot;2018-01-05T10:33:03.900Z&quot;,
+    &quot;closed_at&quot;: null,
+    &quot;labels&quot;: [],
+    &quot;milestone&quot;: {
+      &quot;id&quot;: 48,
+      &quot;iid&quot;: 6,
+      &quot;project_id&quot;: 8,
+      &quot;title&quot;: &quot;Sprint - Sed sed maxime temporibus ipsa ullam qui sit.&quot;,
+      &quot;description&quot;: &quot;Quos veritatis qui expedita sunt deleniti accusamus.&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;created_at&quot;: &quot;2017-11-05T13:59:12.445Z&quot;,
+      &quot;updated_at&quot;: &quot;2017-11-05T13:59:12.445Z&quot;,
+      &quot;due_date&quot;: &quot;2017-11-13&quot;,
+      &quot;start_date&quot;: &quot;2017-11-05&quot;
+    },
+    &quot;assignees&quot;: [{
+      &quot;id&quot;: 10,
+      &quot;name&quot;: &quot;Lu Mayer&quot;,
+      &quot;username&quot;: &quot;kam&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/018729e129a6f31c80a6327a30196823?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/kam&quot;
+    }],
+    &quot;assignee&quot;: {
+      &quot;id&quot;: 10,
+      &quot;name&quot;: &quot;Lu Mayer&quot;,
+      &quot;username&quot;: &quot;kam&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/018729e129a6f31c80a6327a30196823?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/kam&quot;
+    },
+    &quot;author&quot;: {
+      &quot;id&quot;: 25,
+      &quot;name&quot;: &quot;User 3&quot;,
+      &quot;username&quot;: &quot;user3&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/97d6d9441ff85fdc730e02a6068d267b?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/user3&quot;
+    },
+    &quot;user_notes_count&quot;: 0,
+    &quot;upvotes&quot;: 0,
+    &quot;downvotes&quot;: 0,
+    &quot;due_date&quot;: null,
+    &quot;confidential&quot;: false,
+    &quot;weight&quot;: null,
+    &quot;discussion_locked&quot;: null,
+    &quot;web_url&quot;: &quot;http://localhost:3001/h5bp/html5-boilerplate/issues/13&quot;,
+    &quot;time_stats&quot;: {
+      &quot;time_estimate&quot;: 0,
+      &quot;total_time_spent&quot;: 0,
+      &quot;human_time_estimate&quot;: null,
+      &quot;human_total_time_spent&quot;: null
+    }
+  }
+}
+</code></pre>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The <code>assignee</code> column is deprecated. It is now a single-sized <code>assignees</code> array.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Update epic - issue association</h2>
+<p>Updates an epic - issue association.</p>
+<pre><code class="language-plaintext">PUT /groups/:id/epics/:epic_iid/issues/:epic_issue_id
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group</td>
+</tr>
+<tr>
+<td><code>epic_iid</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The internal ID of the epic.</td>
+</tr>
+<tr>
+<td><code>epic_issue_id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID of the issue - epic association.</td>
+</tr>
+<tr>
+<td><code>move_before_id</code></td>
+<td>integer or string</td>
+<td>no</td>
+<td>The ID of the issue - epic association that should be placed before the link in the question.</td>
+</tr>
+<tr>
+<td><code>move_after_id</code></td>
+<td>integer or string</td>
+<td>no</td>
+<td>The ID of the issue - epic association that should be placed after the link in the question.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request PUT \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/epics/5/issues/11?move_before_id=20&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 30,
+    &quot;iid&quot;: 6,
+    &quot;project_id&quot;: 8,
+    &quot;title&quot; : &quot;Consequatur vero maxime deserunt laboriosam est voluptas dolorem.&quot;,
+    &quot;description&quot; : &quot;Ratione dolores corrupti mollitia soluta quia.&quot;,
+    &quot;state&quot;: &quot;opened&quot;,
+    &quot;created_at&quot;: &quot;2017-11-15T13:39:24.670Z&quot;,
+    &quot;updated_at&quot;: &quot;2018-01-04T10:49:19.506Z&quot;,
+    &quot;closed_at&quot;: null,
+    &quot;labels&quot;: [],
+    &quot;milestone&quot;: {
+      &quot;id&quot;: 38,
+      &quot;iid&quot;: 3,
+      &quot;project_id&quot;: 8,
+      &quot;title&quot;: &quot;v2.0&quot;,
+      &quot;description&quot;: &quot;In tempore culpa inventore quo accusantium.&quot;,
+      &quot;state&quot;: &quot;closed&quot;,
+      &quot;created_at&quot;: &quot;2017-11-15T13:39:13.825Z&quot;,
+      &quot;updated_at&quot;: &quot;2017-11-15T13:39:13.825Z&quot;,
+      &quot;due_date&quot;: null,
+      &quot;start_date&quot;: null
+    },
+    &quot;assignees&quot;: [{
+      &quot;id&quot;: 7,
+      &quot;name&quot;: &quot;Pamella Huel&quot;,
+      &quot;username&quot;: &quot;arnita&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/a2f5c6fcef64c9c69cb8779cb292be1b?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/arnita&quot;
+    }],
+    &quot;assignee&quot;: {
+      &quot;id&quot;: 7,
+      &quot;name&quot;: &quot;Pamella Huel&quot;,
+      &quot;username&quot;: &quot;arnita&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/a2f5c6fcef64c9c69cb8779cb292be1b?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/arnita&quot;
+    },
+    &quot;author&quot;: {
+      &quot;id&quot;: 13,
+      &quot;name&quot;: &quot;Michell Johns&quot;,
+      &quot;username&quot;: &quot;chris_hahn&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/30e3b2122ccd6b8e45e8e14a3ffb58fc?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost:3001/chris_hahn&quot;
+    },
+    &quot;user_notes_count&quot;: 8,
+    &quot;upvotes&quot;: 0,
+    &quot;downvotes&quot;: 0,
+    &quot;due_date&quot;: null,
+    &quot;confidential&quot;: false,
+    &quot;weight&quot;: null,
+    &quot;discussion_locked&quot;: null,
+    &quot;web_url&quot;: &quot;http://localhost:3001/h5bp/html5-boilerplate/issues/6&quot;,
+    &quot;time_stats&quot;: {
+      &quot;time_estimate&quot;: 0,
+      &quot;total_time_spent&quot;: 0,
+      &quot;human_time_estimate&quot;: null,
+      &quot;human_total_time_spent&quot;: null
+    },
+    &quot;_links&quot;:{
+      &quot;self&quot;: &quot;http://localhost:3001/api/v4/projects/8/issues/6&quot;,
+      &quot;notes&quot;: &quot;http://localhost:3001/api/v4/projects/8/issues/6/notes&quot;,
+      &quot;award_emoji&quot;: &quot;http://localhost:3001/api/v4/projects/8/issues/6/award_emoji&quot;,
+      &quot;project&quot;: &quot;http://localhost:3001/api/v4/projects/8&quot;
+    },
+    &quot;subscribed&quot;: true,
+    &quot;epic_issue_id&quot;: 11,
+    &quot;relative_position&quot;: 55
+  }
+]
+</code></pre></code></pre>
+</body>
+</html>

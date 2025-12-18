@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># List all group SSH certificates</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Group SSH certificates API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/421915">Introduced</a> in GitLab 16.4 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>ssh_certificates_rest_endpoints</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/424501">Enabled on GitLab.com</a> in GitLab 16.9.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/424501">Generally available</a> in GitLab 17.7. Feature flag <code>ssh_certificates_rest_endpoints</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use this API to manage <a href="../user/group/ssh_certificates.html">SSH certificates for groups</a>.
+Only top-level groups can store SSH certificates.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an Owner for a top-level group.</li>
+</ul>
+<h2>List all group SSH certificates</h2>
+<p>Lists all SSH certificates in a specified group.</p>
+<pre><code class="language-plaintext">GET /groups/:id/ssh_certificates
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of the group.</td>
+</tr>
+</tbody>
+</table>
+<p>By default, <code>GET</code> requests return 20 results at a time because the API results are paginated.
+Read more on <a href="rest/_index.md#pagination">pagination</a>.</p>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://primary.example.com/api/v4/groups/90/ssh_certificates&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 12345,
+    &quot;title&quot;: &quot;SSH Title 1&quot;,
+    &quot;key&quot;: &quot;ssh-rsa AAAAB3NzaC1ea2dAAAADAQABAAAAgQDGbLkF44ScxRQi2FfA7VsHgGqptguSbmW26jkJhEiRZpGS4/+UzaaSqc8Psw2OhSsKc5QwfrB/ANpO4LhOjDzhf2FuD8ACkv3R7XtaJ+rN6PlyzoBfLAiSyzxhEoMFDBprTgaiZKgg2yQ9dRH55w3f6XMZ4hnaUae53nQgfQLxFw== example@gitlab.com&quot;,
+    &quot;created_at&quot;: &quot;2023-09-08T12:39:00.172Z&quot;
+  },
+  {
+    &quot;id&quot;:12346,
+    &quot;title&quot;:&quot;SSH Title 2&quot;,
+    &quot;key&quot;: &quot;ssh-rsa AAAAB3NzaC1ac2EAAAADAQABAAAAgQDTl/hHfu1F/KlR+QfgM2wUmyxcN5YeiaWluEGIrfXUeJuI+bK6xjpE3+2afHDYtE9VQkeL32KRjefX2d72Jeoa68ewt87Vn8CcGkUTOTpHNzeL8pHMKFs3m7ArSBxNg5vTdgAsq5dbDGNtat7b2WCHTNvtWoON1Jetne30uW2EwQ== example@gitlab.com&quot;,
+    &quot;created_at&quot;: &quot;2023-09-08T12:39:00.244Z&quot;
+  }
+]
+</code></pre>
+<h2>Add a group SSH certificate</h2>
+<p>Add an SSH certificate in a specified group.</p>
+<pre><code class="language-plaintext">POST /groups/:id/ssh_certificates
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of the group.</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The public key of the SSH certificate.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The title of the SSH certificate.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/5/ssh_certificates?title=newtitle&amp;key=ssh-rsa+REDACTED+example%40gitlab.com&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 54321,
+  &quot;title&quot;: &quot;newtitle&quot;,
+  &quot;key&quot;: &quot;ssh-rsa ssh-rsa AAAAB3NzaC1ea2dAAAADAQABAAAAgQDGbLkF44ScxRQi2FfA7VsHgGqptguSbmW26jkJhEiRZpGS4/+UzaaSqc8Psw2OhSsKc5QwfrB/ANpO4LhOjDzhf2FuD8ACkv3R7XtaJ+rN6PlyzoBfLAiSyzxhEoMFDBprTgaiZKgg2yQ9dRH55w3f6XMZ4hnaUae53nQgfQLxFw== example@gitlab.com&quot;,
+  &quot;created_at&quot;: &quot;2023-09-08T12:39:00.172Z&quot;
+}
+</code></pre>
+<h2>Delete a group SSH certificate</h2>
+<p>Delete an SSH certificate from a specified group.</p>
+<pre><code class="language-plaintext">DELETE /groups/:id/ssh_certificate/:id
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of the group</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of the SSH certificate</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request DELETE \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/5/ssh_certificates/12345&quot;
+</code></pre></code></pre>
+</body>
+</html>

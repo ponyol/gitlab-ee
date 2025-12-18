@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Compliance
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Compliance frameworks GraphQL API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Manage compliance frameworks for top-level groups by using a GraphQL API.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>To create, edit, and delete compliance frameworks, users either:</li>
+<li>Have the Owner role for the top-level group.</li>
+<li>Be assigned a <a href="../../user/custom_roles/_index.html">custom role</a> with the <code>admin_compliance_framework</code>
+    <a href="../../user/custom_roles/abilities.md#compliance-management">custom permission</a>.</li>
+</ul>
+<h2>Create a compliance framework</h2>
+<p>Create a new compliance framework for a top-level group.</p>
+<p>To create a compliance framework, use the <code>createComplianceFramework</code> mutation:</p>
+<pre><code class="language-graphql">mutation {
+  createComplianceFramework(input: {
+    namespacePath: &quot;my-group&quot;,
+    params: {
+      name: &quot;SOX Compliance&quot;,
+      description: &quot;Sarbanes-Oxley compliance framework for financial reporting&quot;,
+      color: &quot;#1f75cb&quot;,
+      default: false
+    }
+  }) {
+    errors
+    framework {
+      id
+      name
+      description
+      color
+      default
+      namespace {
+        name
+      }
+    }
+  }
+}
+</code></pre>
+<p>The framework is created if:</p>
+<ul>
+<li>The returned <code>errors</code> object is empty.</li>
+<li>The API responds with <code>200 OK</code>.</li>
+</ul>
+<h3>Create a framework with requirements</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can create frameworks with specific requirements and controls:</p>
+<pre><code class="language-graphql">mutation {
+  createComplianceFramework(input: {
+    namespacePath: &quot;my-group&quot;,
+    params: {
+      name: &quot;Security Framework&quot;,
+      description: &quot;Security compliance framework with SAST and dependency scanning&quot;,
+      color: &quot;#e24329&quot;,
+      default: false
+    }
+  }) {
+    errors
+    framework {
+      id
+      name
+      description
+      color
+      default
+      namespace {
+        name
+      }
+    }
+  }
+}
+</code></pre>
+<p>After creating the framework, you can add requirements by using the framework ID returned by the creation mutation.</p>
+<h2>List compliance frameworks</h2>
+<p>List all compliance frameworks for a top-level group.</p>
+<p>You can view a list of compliance frameworks for a top-level group by using the <code>group</code> query:</p>
+<pre><code class="language-graphql">query {
+  group(fullPath: &quot;my-group&quot;) {
+    id
+    complianceFrameworks {
+      nodes {
+        id
+        name
+        description
+        color
+        default
+        pipelineConfigurationFullPath
+      }
+    }
+  }
+}
+</code></pre>
+<p>If the resulting list is empty, then no compliance frameworks exist for that group.</p>
+<h2>Update a compliance framework</h2>
+<p>Update an existing compliance framework for a top-level group.</p>
+<p>To update a compliance framework, use the <code>updateComplianceFramework</code> mutation. You can retrieve the framework ID
+by <a href="#list-compliance-frameworks">listing all compliance frameworks</a> for the group.</p>
+<pre><code class="language-graphql">mutation {
+  updateComplianceFramework(input: {
+    id: &quot;gid://gitlab/ComplianceManagement::Framework/1&quot;,
+    params: {
+      name: &quot;Updated SOX Compliance&quot;,
+      description: &quot;Updated Sarbanes-Oxley compliance framework&quot;,
+      color: &quot;#6b4fbb&quot;,
+      default: true
+    }
+  }) {
+    errors
+    framework {
+      id
+      name
+      description
+      color
+      default
+      namespace {
+        name
+      }
+    }
+  }
+}
+</code></pre>
+<p>The framework is updated if:</p>
+<ul>
+<li>The returned <code>errors</code> object is empty.</li>
+<li>The API responds with <code>200 OK</code>.</li>
+</ul>
+<h2>Delete a compliance framework</h2>
+<p>Delete a compliance framework from a top-level group.</p>
+<p>To delete a compliance framework, use the <code>destroyComplianceFramework</code> mutation. You can retrieve the framework ID
+by <a href="#list-compliance-frameworks">listing all compliance frameworks</a> for the group.</p>
+<pre><code class="language-graphql">mutation {
+  destroyComplianceFramework(input: {
+    id: &quot;gid://gitlab/ComplianceManagement::Framework/1&quot;
+  }) {
+    errors
+  }
+}
+</code></pre>
+<p>The framework is deleted if:</p>
+<ul>
+<li>The returned <code>errors</code> object is empty.</li>
+<li>The API responds with <code>200 OK</code>.</li>
+</ul>
+<h2>Apply compliance frameworks to projects</h2>
+<p>Apply one or more compliance frameworks to projects.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>Maintainer or Owner role for the project.</li>
+<li>The project must belong to a group that has compliance frameworks.</li>
+</ul>
+<p>To apply compliance frameworks to a project, use the <code>projectUpdateComplianceFrameworks</code> mutation:</p>
+<pre><code class="language-graphql">mutation {
+  projectUpdateComplianceFrameworks(input: {
+    projectId: &quot;gid://gitlab/Project/1&quot;,
+    complianceFrameworkIds: [
+      &quot;gid://gitlab/ComplianceManagement::Framework/1&quot;,
+      &quot;gid://gitlab/ComplianceManagement::Framework/2&quot;
+    ]
+  }) {
+    errors
+    project {
+      id
+      complianceFrameworks {
+        nodes {
+          id
+          name
+          color
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p>The frameworks are applied if:</p>
+<ul>
+<li>The returned <code>errors</code> object is empty.</li>
+<li>The API responds with <code>200 OK</code>.</li>
+</ul>
+<h3>Remove compliance frameworks from projects</h3>
+<p>To remove all compliance frameworks from a project, pass an empty array:</p>
+<pre><code class="language-graphql">mutation {
+  projectUpdateComplianceFrameworks(input: {
+    projectId: &quot;gid://gitlab/Project/1&quot;,
+    complianceFrameworkIds: []
+  }) {
+    errors
+    project {
+      id
+      complianceFrameworks {
+        nodes {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h2>Working with requirements and controls</h2>
+<p>You can manage requirements and controls for compliance frameworks by using GraphQL.</p>
+<h3>Query framework requirements</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To view requirements and controls for a compliance framework:</p>
+<pre><code class="language-graphql">query {
+  group(fullPath: &quot;my-group&quot;) {
+    complianceFrameworks {
+      nodes {
+        id
+        name
+        requirements {
+          nodes {
+            id
+            name
+            description
+            controls {
+              nodes {
+                id
+                name
+                controlId
+                controlType
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h3>Add requirements to a framework</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To add a requirement with GitLab compliance controls to an existing framework:</p>
+<pre><code class="language-graphql">mutation {
+  complianceFrameworkRequirementCreate(input: {
+    frameworkId: &quot;gid://gitlab/ComplianceManagement::Framework/1&quot;,
+    name: &quot;Security Scanning Requirement&quot;,
+    description: &quot;Ensure security scanning is enabled for all projects&quot;,
+    controlIds: [
+      &quot;scanner_sast_running&quot;,
+      &quot;scanner_dep_scanning_running&quot;,
+      &quot;scanner_secret_detection_running&quot;
+    ]
+  }) {
+    errors
+    requirement {
+      id
+      name
+      description
+      controls {
+        nodes {
+          id
+          name
+          controlId
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h3>Add external controls</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To add a requirement with external controls:</p>
+<pre><code class="language-graphql">mutation {
+  complianceFrameworkRequirementCreate(input: {
+    frameworkId: &quot;gid://gitlab/ComplianceManagement::Framework/1&quot;,
+    name: &quot;External Approval Requirement&quot;,
+    description: &quot;Require external system approval for deployments&quot;,
+    externalControls: [{
+      name: &quot;ServiceNow Approval&quot;,
+      externalUrl: &quot;https://mycompany.service-now.com/api/approval&quot;,
+      hmacSharedSecret: &quot;my-secret-key&quot;
+    }]
+  }) {
+    errors
+    requirement {
+      id
+      name
+      description
+      controls {
+        nodes {
+          id
+          name
+          controlType
+          externalUrl
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h3>Update requirements</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To update an existing requirement:</p>
+<pre><code class="language-graphql">mutation {
+  complianceFrameworkRequirementUpdate(input: {
+    id: &quot;gid://gitlab/ComplianceManagement::Requirement/1&quot;,
+    name: &quot;Updated Security Requirement&quot;,
+    description: &quot;Updated security scanning requirement with additional controls&quot;,
+    controlIds: [
+      &quot;scanner_sast_running&quot;,
+      &quot;scanner_dep_scanning_running&quot;,
+      &quot;scanner_secret_detection_running&quot;,
+      &quot;scanner_container_scanning_running&quot;
+    ]
+  }) {
+    errors
+    requirement {
+      id
+      name
+      description
+      controls {
+        nodes {
+          id
+          name
+          controlId
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h3>Delete requirements</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To delete a requirement from a framework:</p>
+<pre><code class="language-graphql">mutation {
+  complianceFrameworkRequirementDestroy(input: {
+    id: &quot;gid://gitlab/ComplianceManagement::Requirement/1&quot;
+  }) {
+    errors
+  }
+}
+</code></pre>
+<h2>Error handling</h2>
+<p>When working with compliance frameworks via GraphQL, you may encounter the following common errors:</p>
+<ul>
+<li><strong>Framework name already exists</strong>: Each framework name must be unique within a group.</li>
+<li><strong>Invalid color format</strong>: Colors must be in hexadecimal format (for example, <code>#1f75cb</code>).</li>
+<li><strong>Insufficient permissions</strong>: Only group owners or users with the <code>admin_compliance_framework</code> permission can manage frameworks.</li>
+<li><strong>Invalid control ID</strong>: Control IDs must match the supported <a href="../../user/compliance/compliance_frameworks/_index.md#gitlab-compliance-controls">GitLab compliance controls</a>.</li>
+</ul>
+<p>Always check the <code>errors</code> field in the response to handle any issues that occur during mutations.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../../user/compliance/compliance_frameworks/_index.html">Compliance frameworks</a></li>
+<li><a href="../../user/compliance/compliance_center/_index.html">Compliance center</a></li>
+<li><a href="reference/_index.html">GraphQL API reference</a></li>
+</ul></code></pre>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># View tags for a project</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Use Git tags to mark important points in a repository's history, and trigger CI/CD pipelines.
+title: Tags</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>In Git, a tag marks an important point in a repository's history.
+Git supports two types of tags:</p>
+<ul>
+<li>Lightweight tags point to specific commits, and contain no other information.
+  Also known as soft tags. Create or remove them as needed.</li>
+<li>Annotated tags contain metadata, can be signed for verification purposes,
+  and can't be changed.</li>
+</ul>
+<p>The creation or deletion of a tag can be used as a trigger for automation, including:</p>
+<ul>
+<li>Using a <a href="../../integrations/webhook_events.md#tag-events">webhook</a> to automate actions
+  like Slack notifications.</li>
+<li>Signaling a <a href="../mirror/_index.html">repository mirror</a> to update.</li>
+<li>Running a CI/CD pipeline with <a href="../../../../ci/jobs/job_rules.md#common-if-clauses-with-predefined-variables"><code>if: $CI_COMMIT_TAG</code></a>.</li>
+</ul>
+<p>When you <a href="../../releases/_index.html">create a release</a>,
+GitLab also creates a tag to mark the release point.
+Many projects combine an annotated release tag with a stable branch. Consider
+setting deployment or release tags automatically.</p>
+<p>In the GitLab UI, each tag displays:</p>
+<p><img alt="Example of a single tag" src="img/tag-display_v18_3.png" /></p>
+<ul>
+<li>The tag name ({{&lt; icon name="tag" &gt;}})</li>
+<li>Copy the tag name ({{&lt; icon name="copy-to-clipboard" &gt;}}).</li>
+<li>Optional. If the tag is <a href="../../protected_tags.html">protected</a>, a <strong>protected</strong> badge.</li>
+<li>The commit SHA ({{&lt; icon name="commit" &gt;}}), linked to the commit's contents.</li>
+<li>The commit's title and creation date.</li>
+<li>Optional. A link to the release ({{&lt; icon name="rocket" &gt;}}).</li>
+<li>Optional. If a pipeline has been run, the current pipeline status.</li>
+<li>Download links to the source code and artifacts linked to the tag.</li>
+<li>A <a href="../../releases/_index.md#create-a-release"><strong>Create release</strong></a> ({{&lt; icon name="pencil" &gt;}}) link.</li>
+<li>A link to delete the tag.</li>
+</ul>
+<h2>View tags for a project</h2>
+<p>To view all existing tags for a project:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Tags</strong>.</li>
+</ol>
+<h2>View tagged commits in the commits list</h2>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Commits</strong>.</li>
+<li>Commits with a tag are labeled with a tag icon ({{&lt; icon name="tag" &gt;}}) and the name of the tag.
+   This example shows a commit tagged <code>v1.26.0</code>:</li>
+</ol>
+<p><img alt="A tagged commit in the Commits view" src="img/tags_commits_view_v15_10.png" /></p>
+<p>To view the list of commits in this tag, select the tag name.</p>
+<h2>Create a tag</h2>
+<p>Tags can be created from the command line, or the GitLab UI.</p>
+<h3>From the command line</h3>
+<p>To create either a lightweight or annotated tag from the command line, and push it upstream:</p>
+<ol>
+<li>To create a lightweight tag, run the command <code>git tag TAG_NAME</code>, changing
+   <code>TAG_NAME</code> to your desired tag name.</li>
+<li>To create an annotated tag, run one of the versions of <code>git tag</code> from the command line:</li>
+</ol>
+<p>```shell
+   # In this short version, the annotated tag's name is "v1.0",
+   # and the message is "Version 1.0".
+   git tag -a v1.0 -m "Version 1.0"</p>
+<p># Use this version to write a longer tag message
+   # for annotated tag "v1.0" in your text editor.
+   git tag -a v1.0
+   ```</p>
+<ol>
+<li>Push your tags upstream with <code>git push origin --tags</code>.</li>
+</ol>
+<h3>From the UI</h3>
+<p>To create a tag from the GitLab UI:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Tags</strong>.</li>
+<li>Select <strong>New tag</strong>.</li>
+<li>Provide a <strong>Tag name</strong>.</li>
+<li>For <strong>Create from</strong>, select an existing branch name, tag, or commit SHA.</li>
+<li>Optional. Add a <strong>Message</strong> to create an annotated tag, or leave blank to
+   create a lightweight tag.</li>
+<li>Select <strong>Create tag</strong>.</li>
+</ol>
+<h2>Name your tag</h2>
+<p>Git enforces <a href="https://git-scm.com/docs/git-check-ref-format">tag name rules</a>
+to help ensure tag names remain compatible with other tools. GitLab
+adds extra requirements for tag names, and provides benefits for well-structured tag names.</p>
+<p>GitLab enforces these additional rules on all tags:</p>
+<ul>
+<li>No spaces are allowed in tag names.</li>
+<li>Tag names starting with 40 or 64 hexadecimal characters are prohibited, because they are similar to Git commit hashes.</li>
+<li>Tag names cannot start with <code>-</code>, <code>refs/heads/</code>, <code>refs/tags/</code>, or <code>refs/remotes/</code></li>
+<li>Tag names are case-sensitive.</li>
+</ul>
+<h2>Copy a tag name</h2>
+<p>To copy a tag name to your clipboard:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Tags</strong>.</li>
+<li>Next to the tag name, select <strong>Copy tag name</strong> ({{&lt; icon name="copy-to-clipboard" &gt;}}).</li>
+</ol>
+<h2>Prevent tag deletion</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To prevent users from removing a tag with <code>git push</code>, create a <a href="../push_rules.html">push rule</a>.</p>
+<h2>Trigger pipelines from a tag</h2>
+<p>GitLab CI/CD provides a predefined variable, <a href="../../../../ci/variables/predefined_variables.html"><code>CI_COMMIT_TAG</code></a>,
+to identify tags in your pipeline configurations.
+You can use this variable in job rules and workflow rules to test if a pipeline was triggered by a tag.</p>
+<p>By default, if your CI/CD jobs don't have specific rules in place,
+they are included in a tag pipeline for any newly created tag.
+Tag pipelines are only created when a tag targets a commit.</p>
+<p>In your <code>.gitlab-ci.yml</code> file for the CI/CD pipeline configuration of your project,
+you can use the <code>CI_COMMIT_TAG</code> variable to control pipelines for new tags:</p>
+<ul>
+<li>At the job level with <a href="../../../../ci/yaml/_index.md#rulesif"><code>rules:if</code></a>.</li>
+<li>At the pipeline level with the <a href="../../../../ci/yaml/workflow.html"><code>workflow</code></a> keyword.</li>
+</ul>
+<h2>Trigger security scans in tag pipelines</h2>
+<p>By default, scan execution policies only run on branches, not tags. However, you can
+configure pipeline execution policies to run security scans on tags.</p>
+<p>To run security scans on tags:</p>
+<ol>
+<li>Create a CI/CD configuration YAML file with custom jobs that extend the security scanner
+   templates and include rules to run on tags.</li>
+<li>Create a pipeline execution policy that injects this configuration into your pipelines.</li>
+</ol>
+<h3>Example pipeline execution policy</h3>
+<p>This example shows how to create a pipeline execution policy that runs dependency scanning
+and SAST scans on tags:</p>
+<pre><code class="language-yaml">pipeline_execution_policy:
+- name: Pipeline Execution Policy
+  description: Run security scans on tags
+  enabled: true
+  pipeline_config_strategy: inject_policy
+  content:
+    include:
+    - project: &lt;Project path to YAML&gt;
+      file: tag-security-scans.yml
+  skip_ci:
+    allowed: false
+</code></pre>
+<h3>Example CI/CD configuration</h3>
+<p>This example shows how to extend security scanner jobs to run on tags:</p>
+<pre><code class="language-yaml">include:
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+
+# Extend dependency scanning to run on tags
+gemnasium-python-dependency_scanning_tags:
+  extends: gemnasium-python-dependency_scanning
+  rules:
+    - if: $CI_COMMIT_TAG
+
+# Extend SAST scanning to run on tags
+semgrep-sast_tags:
+  extends: semgrep-sast
+  rules:
+    - if: $CI_COMMIT_TAG
+
+# Example of a custom job that runs only on tags
+policy_job_for_tags:
+  script:
+    - echo &quot;This job runs only on tags&quot;
+  rules:
+    - if: $CI_COMMIT_TAG
+
+# Example of a job that runs on all pipelines
+policy_job_always:
+  script:
+    - echo &quot;This policy job runs always.&quot;
+</code></pre>
+<h2>Related topics</h2>
+<ul>
+<li><a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging">Tagging (Git reference page)</a></li>
+<li><a href="../../protected_tags.html">Protected tags</a></li>
+<li><a href="../compare_revisions.html">Compare revisions</a></li>
+<li><a href="../../../../api/tags.html">Tags API</a></li>
+</ul></code></pre>
+</body>
+</html>

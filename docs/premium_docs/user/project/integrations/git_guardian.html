@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Create a GitGuardian API token</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Integrate GitLab with GitGuardian to get alerts for policy violations and security issues before they can be exploited.
+title: GitGuardian</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/435706">Introduced</a> in GitLab 16.9 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>git_guardian_integration</code>. Enabled by default. Disabled on GitLab.com.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/438695#note_2226917025">Enabled on GitLab.com</a> in GitLab 17.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/176391">Generally available</a> in GitLab 17.8. Feature flag <code>git_guardian_integration</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><a href="https://www.gitguardian.com/">GitGuardian</a> is a cybersecurity service that detects sensitive data such as API keys
+and passwords in source code repositories.
+It scans Git repositories, alerts on policy violations, and helps organizations
+fix security issues before hackers can exploit them.</p>
+<p>You can configure GitLab to reject commits based on GitGuardian policies.</p>
+<p>To set up the GitGuardian integration:</p>
+<ol>
+<li><a href="#create-a-gitguardian-api-token">Create a GitGuardian API token</a>.</li>
+<li><a href="#set-up-the-gitguardian-integration-for-your-project">Set up the GitGuardian integration for your project</a>.</li>
+</ol>
+<h2>Create a GitGuardian API token</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have a GitGuardian account.</li>
+</ul>
+<p>To create an API token:</p>
+<ol>
+<li>Sign in to your GitGuardian account.</li>
+<li>Go to the <strong>API</strong> section in the sidebar.</li>
+<li>In the API section sidebar go to <strong>Personal access tokens</strong> page.</li>
+<li>Select <strong>Create token</strong>. The token creation dialog opens.</li>
+<li>Provide your token information:</li>
+<li>Give your API token a meaningful name to identify its purpose.
+     For example, <code>GitLab integration token</code>.</li>
+<li>Select an appropriate expiration.</li>
+<li>Select the <strong>scan scope</strong> checkbox.
+     It is the only one needed for the integration.</li>
+<li>Select <strong>Create token</strong>.</li>
+<li>After you've generated a token, copy it to your clipboard.
+   This token is sensitive information, so keep it secure.</li>
+</ol>
+<p>Now you have successfully created a GitGuardian API token that you can use to for our integration.</p>
+<h2>Set up the GitGuardian integration for your project</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>After you have created and copied your API token, configure GitLab to reject commits:</p>
+<p>To enable the integration for your project:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Integrations</strong>.</li>
+<li>Select <strong>GitGuardian</strong>.</li>
+<li>In <strong>Enable integration</strong>, select the <strong>Active</strong> checkbox.</li>
+<li>In <strong>API token</strong>, <a href="#create-a-gitguardian-api-token">paste the token value from GitGuardian</a>.</li>
+<li>Optional. Select <strong>Test settings</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>GitLab is now ready to reject commits based on GitGuardian policies.</p>
+<h2>Skip secret detection</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/152064">Introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can skip GitGuardian secret detection, if needed. The options to skip
+secret detection for all commits in a push are identical to the options for
+<a href="../../application_security/secret_detection/secret_push_protection/_index.md#skip-secret-push-protection">Native Secret Detection</a>. Either:</p>
+<ul>
+<li>Add <code>[skip secret push protection]</code> to one of the commit messages.</li>
+<li>Use the <code>secret_push_protection.skip_all</code> <a href="../../../topics/git/commit.md#push-options-for-gitguardian-integration">push option</a>.</li>
+</ul>
+<h2>Known issues</h2>
+<ul>
+<li>Pushes can be delayed or can time out. With the GitGuardian integration:</li>
+<li>Pushes are sent to a third-party.</li>
+<li>GitLab has no control over the connection with GitGuardian or the GitGuardian process.</li>
+<li>Due to a <a href="https://api.gitguardian.com/docs#operation/multiple_scan">GitGuardian API limitation</a>, the integration ignores files over the size of 1 MB. They are not scanned.</li>
+<li>If a pushed file has a name over 256 characters, the push fails.</li>
+<li>For more information, see <a href="https://api.gitguardian.com/docs#operation/multiple_scan">GitGuardian API documentation</a>.</li>
+</ul>
+<p>Troubleshooting steps below show how to mitigate some of these problems.</p>
+<h2>Troubleshooting</h2>
+<p>When working with the GitGuardian integration, you might encounter the following issues.</p>
+<h3><code>500</code> HTTP errors</h3>
+<p>You might get an HTTP <code>500</code> error.</p>
+<p>This issue occurs for when requests time out for commits with a lot of changed files.</p>
+<p>If this issue happens when you change more than 50 files in a commit:</p>
+<ol>
+<li>Split your changes into smaller commits.</li>
+<li>Push the smaller commits one by one.</li>
+</ol>
+<h3>Error: <code>Filename: ensure this value has at most 256 characters</code></h3>
+<p>You might get an HTTP <code>400</code> error that states <code>Filename: ensure this value has at most 256 characters</code>.</p>
+<p>This issue occurs when some of the changed files you are pushing in that commit have the filename (not the path) longer then 256 characters.</p>
+<p>The workaround is to shorten the filename if possible.
+For example, if the filename cannot be shortened because it was automatically
+generated by a framework, disable the integration and try to push again.
+Don't forget to re-enable the integration afterwards if needed.</p></code></pre>
+</body>
+</html>

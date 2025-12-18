@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Add a group README</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Organizations
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Manage groups</p>
+<hr />
+<p>Use groups to manage one or more related projects at the same time.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>On GitLab Self-Managed, if you want to see an overview of your entire organization, you should create one top-level group.
+For more information about efforts to create an organization view of all groups,
+<a href="https://gitlab.com/groups/gitlab-org/-/epics/9266">see epic 9266</a>.
+A top-level group offers insights in your entire organization through a complete
+<a href="../application_security/security_dashboard/_index.html">Security Dashboard and Center</a>,
+<a href="../application_security/vulnerability_report/_index.html">Vulnerability report</a>,
+<a href="../compliance/compliance_center/_index.html">compliance center</a>, and
+<a href="value_stream_analytics/_index.html">value stream analytics</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Add a group README</h2>
+<p>You can add a README file to provide information about your team and invite users to contribute to your projects.
+The README displays on the group overview page. All group members can view and edit the README.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>To create the README from the group settings, you must have the Owner role for the group.</li>
+</ul>
+<p>To add a group README:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>In the <strong>Group README</strong> section, select <strong>Add README</strong>. This action creates a new project <code>gitlab-profile</code> that contains the <code>README.md</code> file.</li>
+<li>On the prompt for creating a README, select <strong>Create and add README</strong>. You're redirected to the Web IDE, where a README file is created.</li>
+<li>In the Web IDE, edit and commit the <code>README.md</code> file.</li>
+</ol>
+<h2>Change the Owner of a group</h2>
+<p>You can change the Owner of a group. Each group must always have at least one
+member with the Owner role.</p>
+<ul>
+<li>As an administrator:</li>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Members</strong>.</li>
+<li>Give a different member the Owner role.</li>
+<li>Refresh the page. You can now remove the Owner role from the original Owner.</li>
+<li>As the current group's Owner:</li>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Members</strong>.</li>
+<li>Give a different member the Owner role.</li>
+<li>Have the new Owner sign in and remove the Owner role from you.</li>
+</ul>
+<h2>Change a group's path</h2>
+<p>Changing a group's path (group URL) can have unintended side effects. Read how redirects behave
+for <a href="../project/repository/_index.md#repository-path-changes">projects</a>
+and in the <a href="../../api/rest/_index.md#redirects">API</a>
+before you proceed.</p>
+<p>If you are changing the path so it can be claimed by another group or user,
+you must rename the group too. Both names and paths must
+be unique.</p>
+<p>To retain ownership of the original namespace and protect the URL redirects,
+create a new group and transfer projects to it instead.</p>
+<p>To change your group path (group URL):</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Advanced</strong> section.</li>
+<li>Under <strong>Change group URL</strong>, enter a new name.</li>
+<li>Select <strong>Change group URL</strong>.</li>
+</ol>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>It is not possible to rename a namespace if it contains a
+project with <a href="../packages/container_registry/_index.html">Container Registry</a> tags,
+because the project cannot be moved.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>To ensure that groups with thousands of subgroups get processed correctly, you should test the path change in a test environment.
+Consider increasing the <a href="../../administration/operations/puma.md#change-the-worker-timeout">Puma worker timeout</a> temporarily.
+For more information about our solution to mitigate this timeout risk, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/432065">issue 432065</a>.
+{{&lt; /alert &gt;}}</p>
+<h2>Change the default branch protection of a group</h2>
+<p>The administrator of a GitLab instance can configure default branch protections for
+<a href="../project/repository/branches/default.md#for-all-projects-in-an-instance">all projects in an instance</a>.
+Groups in that instance inherit the branch protection set at the global level. Group owners can
+<a href="../project/repository/branches/default.md#for-all-projects-in-a-group">override the instance settings</a>
+for projects in a group. In <a href="https://about.gitlab.com/pricing/">GitLab Premium or Ultimate</a>, the administrator
+of the instance can disable this privilege.</p>
+<h2>Use a custom name for the initial branch</h2>
+<p>When you create a new project in GitLab, a default branch is created with the
+first push. The group Owner can
+<a href="../project/repository/branches/default.md#change-the-default-branch-name-for-new-projects-in-a-group">customize the initial branch</a>
+for the group's projects to meet your group's needs.</p>
+<h2>Archive a group</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15019">Introduced</a> in GitLab 18.3 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>archive_group</code>. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.
+This feature is available for testing, but not ready for production use.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Archive a group and all of its subgroups and projects. When archived, a group and its contents become read-only, and group data is preserved for future reference.</p>
+<p>Additionally, archived groups:</p>
+<ul>
+<li>Display an <code>Archived</code> badge on the group page</li>
+<li>Appear in the <strong>Inactive</strong> tab on the <strong>Your work</strong> page, and <strong>Explore</strong> page</li>
+<li>Cannot be transferred to another namespace</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator or have the Owner role for the group.</li>
+</ul>
+<p>To archive a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Advanced</strong>.</li>
+<li>In the <strong>Archive group</strong> section, select <strong>Archive</strong>.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Archiving a group automatically archives all its subgroups and projects. Individual subgroups or projects within an archived group cannot be unarchived separately.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>To archive a group from the <strong>Your work</strong> list view directly:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong>.</li>
+<li>Select <strong>View all my groups</strong>.</li>
+<li>In the <strong>Member</strong> tab, find the group you want to archive and select ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Archive</strong>.</li>
+</ol>
+<p>This action is also available on other list pages.</p>
+<h3>Unarchive a group</h3>
+<p>Unarchive a group and all of its subgroups and projects. When you unarchive a group:</p>
+<ul>
+<li>Read-only restrictions are removed from the group and its contents.</li>
+<li>The group and its subgroups and projects return to the <strong>Active</strong> or <strong>Member</strong> tabs in group lists.</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator or have the Owner role for the group.</li>
+</ul>
+<p>To unarchive a group:</p>
+<ol>
+<li>Find the archived group.</li>
+<li>On the top bar, select <strong>Search or go to</strong>.</li>
+<li>Select <strong>View all my groups</strong>.</li>
+<li>In the <strong>Inactive</strong> tab, select your group.</li>
+<li>On the left sidebar, select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Under <strong>Advanced</strong>, select <strong>Expand</strong>.</li>
+<li>In the <strong>Unarchive group</strong> section, select <strong>Unarchive</strong>.</li>
+</ol>
+<p>To unarchive a group from the <strong>Your work</strong> list view directly:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong>.</li>
+<li>Select <strong>View all my groups</strong>.</li>
+<li>In the <strong>Inactive</strong> tab, find the group you want to unarchive and select ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Unarchive</strong>.</li>
+</ol>
+<p>This action is also available on other list pages.</p>
+<h2>Transfer a group</h2>
+<p>Transferring groups moves them from one place to another in the same GitLab instance. You can:</p>
+<ul>
+<li>Transfer a subgroup to a new parent group.</li>
+<li>Convert a top-level group into a subgroup by transferring it to the desired group.</li>
+<li>Convert a subgroup into a top-level group by transferring it out of its current group.</li>
+</ul>
+<p>If you need to copy a group to a different GitLab instance,
+<a href="import/_index.html">migrate the group by direct transfer</a>.</p>
+<p>When transferring groups, note:</p>
+<ul>
+<li>Changing a group's parent can have unintended side effects. See <a href="../project/repository/_index.md#repository-path-changes">what happens when a repository path changes</a>.</li>
+<li>You must update your local repositories to point to the new location.</li>
+<li>If the immediate parent group's visibility is lower than the group's current visibility, visibility levels for subgroups and projects change to match the new parent group's visibility.</li>
+<li>Only explicit group membership is transferred, not inherited membership. If the group's Owners have only inherited membership, this leaves the group without an Owner. In this case, the user transferring the group becomes the group's Owner.</li>
+<li>Transfers fail if the group is a top-level group and <a href="../packages/npm_registry/_index.html">npm packages</a> following the <a href="../packages/npm_registry/_index.md#naming-convention">naming convention</a> exist in any of the projects in the group, or in any of its subgroups.</li>
+<li><code>container_registry</code> images in the archived projects must be deleted before the transfer. For more information, see the <a href="troubleshooting.md#missing-or-insufficient-permission-delete-button-disabled">troubleshooting section</a>.</li>
+<li>Existing packages that use a group-level endpoint (Maven, NuGet, PyPI, Composer, and Debian) need to be updated per the package's steps for setting up the group-level endpoint.</li>
+<li>Existing package names must be updated if the package uses an instance-level endpoint (<a href="../packages/maven_repository/_index.md#naming-convention">Maven</a>, <a href="../packages/npm_registry/_index.md#naming-convention">npm</a>, <a href="../packages/conan_1_repository/_index.md#package-recipe-naming-convention-for-instance-remotes">Conan 1</a>) and the group was moved to another top-level group.</li>
+<li>Top-level groups that have a subscription on GitLab.com cannot be transferred. To make the transfer possible, the top-level group's subscription must be removed first. Then the top-level group can be transferred as a subgroup to another top-level group.</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role for the source and target group.</li>
+</ul>
+<p>To transfer a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Advanced</strong> section.</li>
+<li>Select <strong>Transfer group</strong>.</li>
+<li>Select the group name in the drop down menu.</li>
+<li>Select <strong>Transfer group</strong>.</li>
+</ol>
+<h2>Disable email notifications</h2>
+<p>You can disable all email notifications related to the group, which includes its subgroups and projects.</p>
+<p>To disable email notifications:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Permissions and group features</strong> section.</li>
+<li>Clear the <strong>Enable email notifications</strong> checkbox.</li>
+</ol>
+<h3>Disable diff previews in email notifications</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/24733">Introduced</a> in GitLab 15.6 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>diff_preview_in_email</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/382055">Generally available</a> in GitLab 17.1. Feature flag <code>diff_preview_in_email</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you comment on code in a merge request, GitLab
+includes a few lines of the diff in the email notification to participants.
+Some organizational policies treat email as a less secure system, or might not
+control their own infrastructure for email. This can present risks to IP or
+access control of source code.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role for the group.</li>
+</ul>
+<p>To disable diff previews for all projects in a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Permissions and group features</strong>.</li>
+<li>Clear <strong>Include diff previews</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Expiry emails for group and project access tokens</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Notifications to inherited group members <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/463016">introduced</a> in GitLab 17.7 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>pat_expiry_inherited_members_notification</code>. Disabled by default.</li>
+<li>Feature flag <code>pat_expiry_inherited_members_notification</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/393772">enabled by default in GitLab 17.10</a>.</li>
+<li>Feature flag <code>pat_expiry_inherited_members_notification</code> removed in GitLab <code>17.11</code></li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>The following group and project members receive notification emails about access tokens that are expiring soon:</p>
+<ul>
+<li>For group access tokens:</li>
+<li>Members with the Owner role.</li>
+<li>In GitLab 17.7 and later, members who inherit the Owner role for the group, if that group or its parent group has the appropriate setting configured.</li>
+<li>For project access tokens:</li>
+<li>Members of the project with at least the Maintainer role.</li>
+<li>In GitLab 17.7 and later, project members who have inherited the Owner or Maintainer role due to the project belonging to a group, if that group or its parent group has the appropriate setting configured.</li>
+</ul>
+<p>You can enable notifications to inherited members of a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Permissions and group features</strong>.</li>
+<li>Under <strong>Expiry notification emails about group and project access tokens within this group should be sent to:</strong>, select <strong>All direct and inherited members of the group or project</strong>.</li>
+<li>Optional. Check the <strong>Enforce for all subgroups</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>For more information, see:</p>
+<ul>
+<li>For groups, the <a href="settings/group_access_tokens.md#group-access-token-expiry-emails">group access tokens documentation</a>.</li>
+<li>For projects, the <a href="../project/settings/project_access_tokens.md#project-access-token-expiry-emails">project access tokens documentation</a>.</li>
+</ul>
+<h2>Add additional webhook triggers for group access token expiration</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/499732">Introduced</a> 60- and 30-day triggers to project and group access token webhooks in GitLab 17.9 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>extended_expiry_webhook_execution_setting</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/513684">Generally available</a> in GitLab 17.10. Feature flag <code>extended_expiry_webhook_execution_setting</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab sends multiple <a href="settings/group_access_tokens.md#group-access-token-expiry-emails">expiry emails</a>
+and triggers a related <a href="../project/integrations/webhook_events.md#project-and-group-access-token-events">webhook</a>
+before a group token expires. By default, these webhooks trigger 7 days before a token expires.</p>
+<p>To configure these webhooks to also trigger 60 days and 30 days before a token expires:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Permissions and group features</strong> section.</li>
+<li>Select the <strong>Add additional webhook triggers for group access token expiration</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Disable group mentions</h2>
+<p>You can prevent users from being added to a conversation and getting notified when
+anyone <a href="../discussions/_index.md#mentions">mentions a group</a>
+in which those users are members.</p>
+<p>Groups with disabled mentions are visualized accordingly in the autocompletion dropdown list.</p>
+<p>These visual cues are particularly helpful for groups with many users.</p>
+<p>To disable group mentions:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Permissions and group features</strong> section.</li>
+<li>Select <strong>Group mentions are disabled</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Prevent invitations to a group</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/189898">Introduced</a> in GitLab 18.0. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>On GitLab.com, you can remove the ability for users to invite new members to subgroups or projects in a top-level
+group. This also stops group Owners from sending invites. You must disable this setting before you
+can invite users again.</p>
+<p>On GitLab Self-Managed and GitLab Dedicated instances, you can prevent user invitations for the entire instance.
+For more information, see <a href="../../administration/settings/visibility_and_access_controls.md#prevent-invitations-to-groups-and-projects">prevent invitations to a groups and projects</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Features such as <a href="../project/members/sharing_projects_groups.html">sharing</a> or <a href="../import/_index.html">migrations</a> can still allow access to these subgroups and projects.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role for the group.</li>
+</ul>
+<p>To prevent invitations to a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Permissions and group features</strong> section.</li>
+<li>Select <strong>Disable Group/Project members invitation</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Export members as CSV</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can export a list of members in a group or subgroup as a CSV.</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group or subgroup.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Members</strong>.</li>
+<li>Select <strong>Export as CSV</strong>.</li>
+<li>After the CSV file has been generated, it is emailed as an attachment to the user that requested it.</li>
+</ol>
+<p>The output lists direct members and members inherited from the ancestor groups.
+For members with <code>Minimal Access</code> in the selected group, their <code>Max Role</code> and <code>Source</code> are derived from their membership in subgroups.
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/390358">Issue 390358</a> tracks the discussion about the group members CSV export list not matching the UI members list.</p>
+<h2>Restricted access</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/442718">Introduced</a> in GitLab 17.5.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/523468">Generally available</a> in GitLab 18.0.</li>
+<li>Group sharing settings <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/488451">changed</a> in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use restricted access to prevent overage fees.
+Overage fees occur when you exceed the number of seats in your subscription,
+and must be paid at the next <a href="../../subscriptions/quarterly_reconciliation.html">quarterly reconciliation</a>.</p>
+<p>When you turn on restricted access, groups cannot add new billable users when there are no seats
+left in the subscription.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If <a href="#user-cap-for-groups">user cap</a> is enabled for a group that has pending members, when you enable restricted access all pending members are automatically removed from the group.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Turn on restricted access</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role for the group.</li>
+<li>The group or one of its subgroups or projects must not be shared externally.</li>
+</ul>
+<p>To turn on restricted access:</p>
+<ol>
+<li>On the left sidebar, select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Permissions and group features</strong>.</li>
+<li>Under <strong>Seat control</strong>, select <strong>Restricted access</strong>.</li>
+</ol>
+<p>When you turn on restricted access, the setting to
+<a href="../project/members/sharing_projects_groups.md#prevent-inviting-groups-outside-the-group-hierarchy">prevent inviting groups outside the group hierarchy</a>
+is automatically turned on.</p>
+<p>You can still independently configure <a href="../project/members/sharing_projects_groups.md#prevent-a-project-from-being-shared-with-groups">project sharing for the group and its subgroups</a> as needed.</p>
+<h3>Known issues</h3>
+<p>When you turn on restricted access, the following known issues might occur and result in overages:</p>
+<ul>
+<li>The number of seats can still be exceeded if:</li>
+<li>You use SAML, SCIM, or LDAP to add new members, and have exceeded the number of seats in the subscription.</li>
+<li>Multiple users with the Owner role add members simultaneously.</li>
+<li>New billable members delay accepting an invitation.</li>
+<li>You change from using the user cap to restricted access, and have members pending approval
+    from before you changed to restricted access. In this case, those members remain in a pending state. If
+    pending members are approved while using restricted access, you might exceed the number of seats in your subscription.</li>
+<li>If you renew your subscription through the GitLab Sales Team for fewer users than your current
+  subscription, you will incur an overage fee. To avoid this fee, remove additional users before your
+  renewal starts. For example, if you have 20 users and renew your subscription for 15 users,
+  you will be charged overages for the five additional users.</li>
+</ul>
+<p>Additionally, restricted access might block the standard non-overage flows:</p>
+<ul>
+<li>Service bots that are updated or added to a billable role are incorrectly blocked.</li>
+<li>Inviting or updating existing billable users through email is blocked unexpectedly.</li>
+</ul>
+<h2>User cap for groups</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/9263">Enabled on GitLab.com</a> in GitLab 16.3.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/421693">Generally available</a> in GitLab 17.1 Feature flag <code>saas_user_caps</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>For more information about user caps for GitLab Self-Managed, see <a href="../../administration/settings/sign_up_restrictions.md#user-cap">User cap</a>.</p>
+<p>When the number of billable members reaches the user cap, the group Owner must approve new members.</p>
+<p>Groups with the user cap feature enabled have <a href="../project/members/sharing_projects_groups.md#invite-a-group-to-a-group">group sharing</a>
+disabled for the group and its subgroups.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>When you specify a user cap, any members added through group sharing lose access to the group.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Set a user cap for a group</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be assigned the Owner role for the group.</li>
+</ul>
+<p>To set a user cap:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.
+   You can set a cap on the top-level group only.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Permissions and group features</strong>.</li>
+<li>From <strong>Seat control</strong>, select the <strong>Set user cap</strong> checkbox and enter the number of users in the field.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>If you already have more users in the group than the user cap value, users
+are not removed. However, you can't add more without approval.</p>
+<p>Increasing the user cap does not approve pending members.</p>
+<h3>Remove the user cap for a group</h3>
+<p>You can remove the user cap, so there is no limit on the number of members you can add to a group.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be assigned the Owner role for the group.</li>
+</ul>
+<p>To remove the user cap:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Permissions and group features</strong>.</li>
+<li>From <strong>Seat control</strong>, select <strong>Open access</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>Decreasing the user cap does not approve pending members.</p>
+<h3>Approve pending members for a group</h3>
+<p>When the number of billable users reaches the user cap, any new member is put in a pending state
+and must be approved.</p>
+<p>Pending members do not count as billable. Members count as billable only after they have been approved and are no longer in a pending state.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be assigned the Owner role for the group.</li>
+</ul>
+<p>To approve members that are pending because they've exceeded the user cap:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Usage quotas</strong>.</li>
+<li>On the <strong>Seats</strong> tab, under the alert, select <strong>View pending approvals</strong>.</li>
+<li>For each member you want to approve, select <strong>Approve</strong>.</li>
+</ol>
+<h3>Known issues</h3>
+<p>The user cap cannot be enabled if a group, subgroup, or project is shared externally. If a group, subgroup,
+or project is shared externally, it is shared outside of the namespace hierarchy, regardless of its level
+in the hierarchy.</p>
+<p>To ensure that the user cap applies when groups, subgroups, or projects are shared externally,
+<a href="../../user/project/members/sharing_projects_groups.md#prevent-inviting-groups-outside-the-group-hierarchy">restrict group sharing only in the top-level namespace</a>.
+A top-level namespace restriction allows invitations in the same namespace and prevents new user (seat) additions from external shares.</p>
+<p>GitLab.com Ultimate has a <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/441504">known issue</a> where you cannot add guest users to a group when billable users exceed the user cap. For example, suppose you have a user cap of 5, with 3 developers, and 2 guests. After you add 2 more developers, you cannot add any more users, even if they are guest users that don't consume a billable seat.</p>
+<h2>Group file templates</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use group file templates to share a set of templates for common file
+types with every project in a group. It is analogous to the
+<a href="../../administration/settings/instance_template_repository.html">instance template repository</a>.
+The selected project should follow the same naming conventions as
+are documented on that page.</p>
+<p>You can only choose projects in the group as the template source.
+This includes projects shared with the group, but it <strong>excludes</strong> projects in
+subgroups or parent groups of the group being configured.</p>
+<p>You can configure this feature for both subgroups and immediate parent groups. A project
+in a subgroup has access to the templates for that subgroup and
+any immediate parent groups.</p>
+<p>To learn how to create templates for issues and merge requests, see
+<a href="../project/description_templates.html">description templates</a>.</p>
+<p>Define project templates at a group level by setting a group as the template source.
+For more information, see <a href="custom_project_templates.html">group-level project templates</a>.</p>
+<h3>Enable group file template</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To enable group file templates:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Templates</strong> section.</li>
+<li>Choose a project to act as the template repository.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Group merge checks settings</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/372040">Introduced</a> in GitLab 15.9 <a href="../../administration/feature_flags/_index.html">with a flag</a> name <code>support_group_level_merge_checks_setting</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/142708">Generally available</a> in GitLab 16.9. Feature flag <code>support_group_level_merge_checks_setting</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Group Owners can set up merge request checks on a top-level group, which apply to all subgroups and projects.</p>
+<p>If the settings are inherited by a subgroup or project, they cannot be changed in the subgroup or project
+that inherited them.</p>
+<h3>Require a successful pipeline for merge</h3>
+<p>You can configure all child projects in your group to require a complete and successful pipeline before
+merge.</p>
+<p>See also <a href="../project/merge_requests/auto_merge.md#require-a-successful-pipeline-for-merge">the project-level setting</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be the Owner of the group.</li>
+</ul>
+<p>To enable this setting:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Merge requests</strong>.</li>
+<li>Under <strong>Merge checks</strong>, select <strong>Pipelines must succeed</strong>.
+   This setting also prevents merge requests from being merged if there is no pipeline.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h4>Allow merge after skipped pipelines</h4>
+<p>You can configure <a href="../../ci/pipelines/_index.md#skip-a-pipeline">skipped pipelines</a> from preventing merge requests from being merged.</p>
+<p>See also <a href="../project/merge_requests/auto_merge.md#allow-merge-after-skipped-pipelines">the project-level setting</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be the Owner of the group.</li>
+</ul>
+<p>To change this behavior:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Merge requests</strong>.</li>
+<li>Under <strong>Merge checks</strong>:</li>
+<li>Select <strong>Pipelines must succeed</strong>.</li>
+<li>Select <strong>Skipped pipelines are considered successful</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Prevent merge unless all threads are resolved</h3>
+<p>You can prevent merge requests from being merged until all threads are resolved. When this setting is enabled, child projects in your group display open thread counts in orange on merge requests with at least one open thread.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be the Owner of the group.</li>
+</ul>
+<p>To enable this setting:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Merge requests</strong>.</li>
+<li>Under <strong>Merge checks</strong>, select <strong>All threads must be resolved</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Group merge request approval settings</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Group approval settings manage <a href="../project/merge_requests/approvals/settings.html">project merge request approval settings</a>
+for all projects in a top-level group. These settings <a href="../project/merge_requests/approvals/settings.md#cascade-settings-from-the-instance-or-top-level-group">cascade to all projects</a>
+that belong to the group.</p>
+<p>To view the merge request approval settings for a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Merge request approvals</strong> section.</li>
+<li>Select the settings you want.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>Approval settings should not be confused with <a href="../project/merge_requests/approvals/rules.html">approval rules</a>. Support
+for the ability to set merge request approval rules for groups is tracked in
+<a href="https://gitlab.com/groups/gitlab-org/-/epics/4367">epic 4367</a>.</p>
+<h2>Group activity analytics</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>For a group, you can view how many merge requests, issues, and members were created in the last 90 days.</p>
+<p>Changes to <a href="../project/wiki/group.html">group wikis</a> do not appear in group activity analytics.</p>
+<h3>View group activity</h3>
+<p>You can view the most recent actions taken in a group, either in your browser or in an RSS feed:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Activity</strong>.</li>
+</ol>
+<p>To view the activity feed in Atom format, select the
+<strong>RSS</strong> ({{&lt; icon name="rss" &gt;}}) icon.</p></code></pre>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Architecture</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Solutions Architecture
+group: Solutions Architecture
+info: This page is owned by the Solutions Architecture team.
+title: Jira to GitLab VSA Integration</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>GitLab <a href="../../user/group/value_stream_analytics/_index.html">Value Stream Analytics (VSA)</a> provides powerful insights into your development workflow, tracking key metrics such as:</p>
+<ul>
+<li><strong>Lead time</strong>: Time from issue creation to completion</li>
+<li><strong>Issues created</strong>: Number of new issues in a given time period</li>
+<li><strong>Issues closed</strong>: Number of resolved issues in a given time period</li>
+</ul>
+<p>For teams using Jira for issue tracking while leveraging GitLab for development, this integration enables automatic replication of Jira issues to GitLab in real-time. This ensures accurate VSA metrics without requiring teams to change their existing Jira workflows.</p>
+<p>The integration also populates the GitLab <strong>Value Streams Dashboard</strong> (Ultimate only), which provides an overview of key DevSecOps metrics and can be found under <strong>Analyze</strong> &gt; <strong>Analytics dashboards</strong> in your GitLab project or group.</p>
+<p><strong>NOTE</strong>: A similar integration exists for incident replication to generate specific DORA metrics (Change Failure Rate and Time to Restore Service). If you're interested in incident replication, refer to the <a href="jira_dora.html">Jira Incident Replicator</a>.</p>
+<h2>Architecture</h2>
+<p>We will create 2 automation workflows using Jira automation:</p>
+<ol>
+<li>Create GitLab issues when they are created in Jira</li>
+<li>Close GitLab issues when they are resolved in Jira</li>
+</ol>
+<h3>Issue Creation</h3>
+<p>When a new issue is created in Jira, the automation workflow sends a POST request to the GitLab Issues API to create a corresponding issue in the specified GitLab project.</p>
+<h3>Issue Resolution</h3>
+<p>When a Jira issue transitions to a resolved state (Closed, Done, Resolved), the automation workflow sends a PUT request to close the corresponding GitLab issue.</p>
+<h2>Setup</h2>
+<h3>Pre-requisites</h3>
+<p>This walkthrough assumes that you have:</p>
+<ul>
+<li>A GitLab project where you want VSA analytics to be generated</li>
+<li>A Jira project to replicate issues from</li>
+<li>GitLab Ultimate or Premium license (for Value Stream Analytics features)</li>
+</ul>
+<p>Jira places <a href="https://www.atlassian.com/software/jira/pricing">limits</a> on the frequency of Automation runs depending on your Jira license:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Tier</strong></th>
+<th><strong>Limit</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Free</td>
+<td>100 runs per month</td>
+</tr>
+<tr>
+<td>Standard</td>
+<td>1700 runs per month</td>
+</tr>
+<tr>
+<td>Premium</td>
+<td>1000 runs per user per month</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Unlimited runs</td>
+</tr>
+</tbody>
+</table>
+<p>Each issue creation counts as 1 run, and each issue resolution counts as 1 run.</p>
+<h3>GitLab Project Access Token</h3>
+<p>First, we need to create a GitLab project access token with the necessary permissions to create and update issues via the API.</p>
+<ol>
+<li>Navigate to your GitLab project where you want Jira issues to be replicated. From the sidebar, go to <strong>Settings</strong> &gt; <strong>Access Tokens</strong>.</li>
+<li>Click <strong>Add new token</strong>.</li>
+<li>Set the following configuration:</li>
+<li><strong>Token name</strong>: <code>Jira VSA Integration</code> (or any descriptive name)</li>
+<li><strong>Expiration date</strong>: Set according to your security policies</li>
+<li><strong>Role</strong>: <code>Owner</code> (This is required to set custom issue IDs)</li>
+<li><strong>Scopes</strong>: Check <code>api</code> (full API access)</li>
+</ol>
+<p><strong>Important</strong>: An <strong>Owner</strong> level access token is required because the integration needs to force-set custom issue IDs when creating issues in GitLab. This ensures that when Jira issues are closed, the automation can identify and close the corresponding GitLab issue using the same ID mapping. Without the Owner role, the GitLab API will not allow setting custom issue IDs, breaking the synchronization between Jira issue closure and GitLab issue closure.</p>
+<ol>
+<li>Click <strong>Create project access token</strong> and save the generated token securely - you'll need it for the Jira automation setup.</li>
+</ol>
+<h3>Jira Issue Creation Workflow</h3>
+<p>To automatically create GitLab issues when Jira issues are created, we'll use <a href="https://community.atlassian.com/t5/Jira-articles/Automation-for-Jira-Send-web-request-using-Jira-REST-API/ba-p/1443828">Jira automation</a>.</p>
+<ol>
+<li>Navigate to your Jira project. From the sidebar, head to <strong>Project settings</strong> &gt; <strong>Automation</strong>.</li>
+<li>Click <strong>Create rule</strong> in the upper right.</li>
+<li>For your trigger, search for and select <strong>Issue created</strong>. Click <strong>Save</strong>.</li>
+<li><em>Optional</em>: Add conditions to filter which issues should be replicated. For example, you might want to add an <strong>Issue fields condition</strong> to only replicate issues of certain types or with specific labels.</li>
+<li>Select <strong>THEN: Add an action</strong>. Search for and select <strong>Send web request</strong>.</li>
+<li>Configure the web request:</li>
+<li><strong>Web request URL</strong>: <code>https://gitlab.com/api/v4/projects/&lt;GITLAB_PROJECT_ID&gt;/issues</code> (replace <code>gitlab.com</code> with your GitLab instance URL if self-hosted, and <code>&lt;GITLAB_PROJECT_ID&gt;</code> with your GitLab project's numerical ID, e.g., <code>42718690</code>)</li>
+<li><strong>HTTP method</strong>: <strong>POST</strong></li>
+<li><strong>Web request body</strong>: <strong>Custom data</strong></li>
+<li>
+<p>Add the following headers:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authorization</td>
+<td>Bearer <code>&lt;YOUR_GITLAB_TOKEN&gt;</code></td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td><code>application/json</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<p>Set the Authorization header to "Hidden" for security.</p>
+<ol>
+<li>In the <strong>Custom data</strong> field, enter:</li>
+</ol>
+<p><code>json
+   {
+     "title": "{{issue.summary}}",
+     "iid": {{issue.key.replace("VSA-", "1000")}}
+   }</code></p>
+<p>Replace <code>"VSA-"</code> with your Jira project prefix (e.g., if your Jira issues are numbered <code>PROJ-123</code>, use <code>"PROJ-"</code>). The <code>1000</code> is a base number that gets added to ensure no conflict with issues that may have been created directly within GitLab itself via the UI - you can adjust this value as needed.</p>
+<ol>
+<li>Click <strong>Save</strong>, give your automation a descriptive name (e.g., <code>Jira to GitLab Issue Creation</code>), and click <strong>Turn it on</strong>.</li>
+</ol>
+<h3>Jira Issue Resolution Workflow</h3>
+<p>Create a second automation workflow to close GitLab issues when Jira issues are resolved:</p>
+<ol>
+<li>Follow steps 1-2 from the creation workflow to start a new rule.</li>
+<li>Set the trigger to <strong>Issue transitioned</strong>:</li>
+<li>Leave "From status" field blank</li>
+<li>Set "To status" to resolved statuses: <code>Closed</code>, <code>Done</code>, <code>Resolved</code> (adjust based on your Jira workflow)</li>
+<li>Skip conditions (or add custom ones if needed).</li>
+<li>Add a <strong>Send web request</strong> action with:</li>
+<li><strong>Web request URL</strong>: <code>https://gitlab.com/api/v4/projects/&lt;GITLAB_PROJECT_ID&gt;/issues/{{issue.key.replace("&lt;JIRA_PROJECT_PREFIX&gt;-", "1000").urlEncode}}</code> (replace <code>gitlab.com</code> with your GitLab instance URL if self-hosted, <code>&lt;GITLAB_PROJECT_ID&gt;</code> with your GitLab project's numerical ID, and <code>&lt;JIRA_PROJECT_PREFIX&gt;</code> with your Jira project prefix like <code>VSA</code> or <code>PROJ</code>)</li>
+<li><strong>HTTP method</strong>: <strong>PUT</strong></li>
+<li><strong>Web request body</strong>: <strong>Custom data</strong></li>
+<li>Use the same headers as the creation workflow.</li>
+<li>In the <strong>Custom data</strong> field, enter:</li>
+</ol>
+<p><code>json
+   {
+     "state_event": "close"
+   }</code></p>
+<ol>
+<li>Save and enable the automation rule with a descriptive name (e.g., <code>Jira to GitLab Issue Closer</code>).</li>
+</ol>
+<h2>Value Stream Analytics Configuration</h2>
+<p>Once your automation workflows are active, GitLab will begin receiving issue data. Here's how to access your analytics:</p>
+<h3>Value Streams Dashboard (Automatic - Ultimate Only)</h3>
+<p>The <strong>Value Streams Dashboard</strong> is automatically populated with metrics from your replicated issues and is available with GitLab Ultimate:</p>
+<ol>
+<li>In your GitLab project or group, navigate to <strong>Analyze</strong> &gt; <strong>Analytics dashboards</strong></li>
+<li>Click on <strong>Value Streams Dashboard</strong></li>
+<li>You'll see metrics including Issues created, Issues closed, Lead time, and Cycle time</li>
+</ol>
+<h3>Value Stream Analytics (Requires Setup - Premium and Ultimate)</h3>
+<p>For more detailed analytics and custom value streams (available with GitLab Premium and Ultimate):</p>
+<ol>
+<li>Navigate to <strong>Analyze</strong> &gt; <strong>Value stream analytics</strong> in your GitLab project or group</li>
+<li>Click <strong>New value stream</strong> to create a custom value stream</li>
+<li>Configure stages and workflows according to your development process</li>
+<li>Metrics like lead time and new issues count will be automatically generated and displayed next to the stages you create</li>
+<li>Refer to the <a href="../../user/group/value_stream_analytics/_index.md#create-a-value-stream">GitLab Value Stream Analytics documentation</a> for detailed setup instructions</li>
+</ol>
+<h2>Multi-Project Considerations</h2>
+<p>If you want to replicate issues from multiple Jira projects using a single set of automation rules, consider using a timestamp-based approach for generating unique issue IDs instead of the project prefix method:</p>
+<p>Replace the <code>iid</code> value in your custom data with:</p>
+<pre><code class="language-json">&quot;iid&quot;: {{issue.created.replace(&quot;-&quot;,&quot;&quot;).replace(&quot;T&quot;,&quot;&quot;).replace(&quot;:&quot;,&quot;&quot;).replace(&quot;.&quot;,&quot;&quot;).replace(&quot;+&quot;,&quot;&quot;)}}
+</code></pre>
+<p>This converts the creation timestamp (format: <code>2025-02-15T09:45:32.7+0000</code>) into a numeric value. Note that this approach may result in very long issue IDs and has a small risk of conflicts if two issues are created at exactly the same time.</p>
+<h2>Resources</h2>
+<ul>
+<li><a href="../../user/group/value_stream_analytics/_index.html">GitLab Value Stream Analytics</a></li>
+<li><a href="../../user/group/value_stream_analytics/_index.md#create-a-value-stream">Create a Value Stream</a></li>
+<li><a href="../../user/analytics/value_streams_dashboard.html">GitLab Value Streams Dashboard</a></li>
+<li><a href="../../api/issues.html">GitLab Issues API</a></li>
+<li><a href="../../api/issues.md#new-issue">Create new issue</a></li>
+<li><a href="../../api/issues.md#edit-an-issue">Edit issue</a></li>
+<li><a href="../../user/project/settings/project_access_tokens.html">GitLab Project Access Tokens</a></li>
+<li><a href="https://community.atlassian.com/t5/Jira-articles/Automation-for-Jira-Send-web-request-using-Jira-REST-API/ba-p/1443828">Jira automation with web requests</a></li>
+</ul></code></pre>
+</body>
+</html>

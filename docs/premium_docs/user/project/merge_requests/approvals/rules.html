@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Add an approval rule</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Use approval rules to define the users or groups who should approve merge requests. Approvers can be optional or required.
+title: Merge request approval rules</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Approval rules define how many <a href="_index.html">approvals</a> a merge request must receive before it can
+be merged, and which users should do the approving. They can be used in conjunction
+with <a href="#code-owners-as-approvers">code owners</a> to ensure that changes are
+reviewed both by the group maintaining the feature, and any groups responsible
+for specific areas of oversight.</p>
+<p>You can define approval rules:</p>
+<ul>
+<li><a href="#add-an-approval-rule">As project defaults</a>.</li>
+<li><a href="#edit-or-override-merge-request-approval-rules">Per merge request</a>.</li>
+</ul>
+<p>You can configure approval rules:</p>
+<ul>
+<li><a href="../../../../administration/merge_requests_approvals.html">For the entire instance</a>.</li>
+</ul>
+<p>If you don't define a <a href="#add-an-approval-rule">default approval rule</a>,
+any user can approve a merge request. Even if you don't define a rule, you can still
+enforce a <a href="settings.html">minimum number of required approvers</a> in the project's settings.</p>
+<p>Merge requests that target a different project, such as from a fork to the upstream project,
+use the default approval rules from the target (upstream) project, not the source (fork).</p>
+<p>Merge request approvals can be configured globally to apply across all (or a subset) projects with <a href="../../../application_security/policies/_index.html">policies</a>. <a href="../../../application_security/policies/merge_request_approval_policies.html">Merge request approval policies</a> also provide additional flexibility with more granular configuration options.</p>
+<h2>Add an approval rule</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+<li>To add a group as an approver in GitLab.com, you must be a member of the group or the
+  group must be public.</li>
+</ul>
+<p>To add a merge request approval rule:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, in the <strong>Approval rules</strong> section, select
+   <strong>Add approval rule</strong>.</li>
+<li>On the right sidebar, complete the fields:</li>
+<li>In <strong>Approvals required</strong>, a value of <code>0</code> makes
+     <a href="#configure-optional-approval-rules">the rule optional</a>, and any number greater than <code>0</code>
+     creates a required rule.
+     Maximum number of required approvals is <code>100</code>.</li>
+<li>From <strong>Add approvers</strong>, select users or groups that are
+     <a href="#eligible-approvers">eligible to approve</a>.
+     GitLab suggests approvers based on previous authors of the files changed by the merge request.</li>
+<li>Select <strong>Save changes</strong>. You can add <a href="#multiple-approval-rules">multiple approval rules</a>.</li>
+</ol>
+<p>Your configuration for approval rule overrides determines if the new rule is applied
+to existing merge requests:</p>
+<ul>
+<li>If <a href="settings.md#prevent-editing-approval-rules-in-merge-requests">approval rule overrides</a> are allowed,
+  changes to these default rules are not applied to existing merge requests, except for
+  changes to the <a href="#approvals-for-protected-branches">target branch</a> of the rule.</li>
+<li>If approval rule overrides are not allowed, all changes to default rules
+  are applied to existing merge requests. Any approval rules that were previously
+  manually <a href="#edit-or-override-merge-request-approval-rules">overridden</a> during the
+  period when approval rule overrides where allowed, are not modified.</li>
+</ul>
+<h2>Edit an approval rule</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+<li>To add a group as an approver in GitLab.com, you must be a member of the group or the
+  group must be public.</li>
+</ul>
+<p>To edit a merge request approval rule:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, in the <strong>Approval rules</strong> section, next to the rule you want to edit, select <strong>Edit</strong>.</li>
+<li>On the right sidebar, edit the fields:</li>
+<li>In <strong>Approvals required</strong>, a value of <code>0</code> makes
+     <a href="#configure-optional-approval-rules">the rule optional</a>, and any number greater than <code>0</code>
+     creates a required rule.
+     Maximum number of required approvals is <code>100</code>.</li>
+<li>To remove users or groups, identify the group or user to remove, and select <strong>Remove</strong>
+     ({{&lt; icon name="remove" &gt;}}).</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Delete an approval rule</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To delete a merge request approval rule:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, next to the rule you want to delete, select the trash can ({{&lt; icon name="remove" &gt;}}).</li>
+<li>Select <strong>Remove approvers</strong>.</li>
+</ol>
+<h2>Multiple approval rules</h2>
+<p>To enforce multiple approval rules on a merge request, add multiple default approval rules for a project.</p>
+<p>When an <a href="#eligible-approvers">eligible approver</a> approves a merge request, it
+reduces the number of approvals left (the <strong>Approvals</strong> column) for all rules that the approver belongs to:</p>
+<p><img alt="Merge request approvals widget" src="img/mr_approvals_widget_v16_0.png" /></p>
+<p><i class="fa-youtube-play" aria-hidden="true"></i>
+For an overview, see <a href="https://www.youtube.com/watch?v=8JQJ5821FrA">Multiple Approvers</a>.</p>
+<h2>Get notified about all merge requests you can approve</h2>
+<p>To get email notifications every time a merge request you're eligible to approve is created:</p>
+<ul>
+<li><a href="../../../profile/notifications.md#edit-notification-settings">Set your notification level</a> to <strong>Custom</strong>
+  and select the <strong>Merge request you're eligible to approve is created</strong> event.</li>
+</ul>
+<h2>Edit or override merge request approval rules</h2>
+<p>You can override the merge request approval rules for a project by either:</p>
+<ul>
+<li>Editing an existing merge request.</li>
+<li>Creating a new merge request.</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>The project setting <a href="settings.md#prevent-editing-approval-rules-in-merge-requests">Prevent editing approval rules</a>
+  is disabled.</li>
+<li>One of the following must be true:</li>
+<li>You have administrator access.</li>
+<li>You are the author of the merge request, and have at least the Developer role in the project.</li>
+<li>You have at least the Maintainer role for the project.</li>
+</ul>
+<p>To override approvers of a merge request:</p>
+<ol>
+<li>When <a href="../creating_merge_requests.html">creating a new merge request</a>, scroll to the <strong>Approval Rules</strong> section,
+   and add or remove your desired approval rules before selecting <strong>Create merge request</strong>.</li>
+<li>When viewing an existing merge request:</li>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Merge requests</strong> and find your merge request.</li>
+<li>Select <strong>Edit</strong>.</li>
+<li>Scroll to the <strong>Approval Rules</strong> section.</li>
+<li>Add or remove your desired approval rules.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>Administrators can change the <a href="settings.md#prevent-editing-approval-rules-in-merge-requests">merge request approvals settings</a>
+to prevent users from overriding approval rules for merge requests.</p>
+<h2>Require multiple approvals for a rule</h2>
+<p>To create an approval rule which requires more than one approval:</p>
+<ul>
+<li>When you <a href="#add-an-approval-rule">create</a> or <a href="#edit-an-approval-rule">edit</a> a rule, set <strong>Approvals required</strong> to <code>2</code> or more.</li>
+</ul>
+<p>To require multiple approvals for a rule, you can also
+<a href="../../../../api/merge_request_approvals.md#update-an-approval-rule-for-a-project">use the API</a>
+to set the <code>approvals_required</code> attribute to <code>2</code> or more.</p>
+<h2>Configure optional approval rules</h2>
+<p>Merge request approvals can be optional for projects where approvals are
+appreciated, but not required. To make an approval rule optional:</p>
+<ul>
+<li>When you <a href="#edit-an-approval-rule">create or edit a rule</a>, set <strong>Approvals required</strong> to <code>0</code>.</li>
+</ul>
+<p>To make an approval rule optional, you can also use the API to
+<a href="../../../../api/merge_request_approvals.md#update-an-approval-rule-for-a-project">update an approval rule for a project</a>,
+and set the <code>approvals_required</code> attribute to <code>0</code>.</p>
+<h2>Approvals for protected branches</h2>
+<p>Approval rules are often relevant only to specific branches, like your
+<a href="../../repository/branches/default.html">default branch</a>. To configure an
+approval rule for certain branches:</p>
+<ol>
+<li><a href="#add-an-approval-rule">Create an approval rule</a>.</li>
+<li>Go to your project and select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, scroll to <strong>Approval rules</strong>.</li>
+<li>For <strong>Target branch</strong>:</li>
+<li>To apply the rule to all protected branches, select <strong>All protected branches</strong>.</li>
+<li>To apply the rule to a specific branch, select it from the list.</li>
+<li>To enable this configuration, follow
+   <a href="../../repository/branches/protected.md#require-code-owner-approval">Require Code Owner approval on a protected branch</a>.</li>
+</ol>
+<h2>Enable approval permissions for additional users</h2>
+<p>Before users with the Planner or Reporter role can merge to a protected branch, you have to grant them
+permission to approve merge requests.
+Some users (like managers) might not need permission to push or merge code, but still need
+oversight on proposed work.</p>
+<p>Users with the Planner or Reporter role can approve merge requests only through regular approval rules.
+Code owner approval rules require users to have at least the Developer role. For more information,
+see <a href="#eligible-approvers">Eligible approvers</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must select a specific branch, as this method does not work with <code>All Branches</code> or <code>All protected branches</code> settings.</li>
+<li>The shared group must be added to an approval rule and not individual users, even when the added user is part of the group.</li>
+</ul>
+<p>To enable approval permissions for these users without granting them push access:</p>
+<ol>
+<li><a href="../../repository/branches/protected.html">Create a protected branch</a></li>
+<li><a href="../../../group/_index.md#create-a-group">Create a new group</a> for the users with the
+   Planner or Reporter role that need approval permissions.</li>
+<li><a href="../../../group/_index.md#add-users-to-a-group">Add the users to the group</a>.
+   The users must have at least the Planner role.</li>
+<li><a href="../../members/sharing_projects_groups.md#invite-a-group-to-a-project">Share the project with your group</a>,
+   with at least the Reporter role.</li>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, in the <strong>Approval rules</strong> section:</li>
+<li>For a new rule, select <strong>Add approval rule</strong> and target the protected branch.</li>
+<li>For an existing rule, select <strong>Edit</strong> and target the protected branch.</li>
+<li>On the right sidebar, in <strong>Add approvers</strong>, select the group you created.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Security Approvals</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Bot comment for approvals <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/411656">introduced</a> in GitLab 16.2 <a href="../../../../administration/feature_flags/_index.html">with a flag</a> named <code>security_policy_approval_notification</code>. Enabled by default.</li>
+<li>Bot comment for approvals <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/130827">generally available</a> in GitLab 16.3. Feature flag <code>security_policy_approval_notification</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can use <a href="../../../application_security/policies/merge_request_approval_policies.md#merge-request-approval-policy-editor">merge request approval policies</a> to define security approvals based on the status of vulnerabilities in the merge request and the default branch.
+Details for each security policy is shown in the Security Approvals section of your Merge Request configuration.</p>
+<p>The security approval rules are applied to all merge requests until the pipeline is complete. The application of the
+security approval rules prevents users from merging in code before the security scans run. After the pipeline is
+complete, the security approval rules are checked to determine if the security approvals are still required.
+In case the scanners in the pipeline identify an issue and security approvals are required, a bot comment is generated
+on the merge request to indicate which steps are needed to proceed.</p>
+<p><img alt="Security Approvals" src="img/security_approvals_v15_0.png" /></p>
+<p>These policies are both created and edited in the <a href="../../../application_security/policies/_index.md#policy-editor">security policy editor</a>.</p>
+<h2>Eligible approvers</h2>
+<p>To be eligible as an approver for your project, a user must be a direct member of at least one of the following:</p>
+<ul>
+<li>Your project.</li>
+<li>Your project's group.</li>
+<li>Any of your project's group's parent groups.</li>
+<li>Another group that has been <a href="../../members/sharing_projects_groups.md#sharing-projects">shared with your project</a>.</li>
+<li>Another group that has been <a href="../../members/sharing_projects_groups.md#sharing-groups">shared with your project's group or any of the group's parents</a>.</li>
+<li>A <a href="#group-approvers">group added as approvers</a>.</li>
+</ul>
+<p>Users with the Developer role can approve merge requests if one of the following is true:</p>
+<ul>
+<li>Users added as approvers at the project or merge request level.</li>
+<li>Users who are <a href="#code-owners-as-approvers">Code owners</a> of the files
+  changed in the merge request.</li>
+</ul>
+<p>Users with the Planner or Reporter role can approve only if all of the following are true:</p>
+<ul>
+<li>The users are part of a group that has been <a href="../../members/sharing_projects_groups.html">shared</a> with the project.
+  The group must have at least the Reporter role.</li>
+<li>Approval permissions for users with the Planner and Reporter role <a href="#enable-approval-permissions-for-additional-users">are enabled</a>.</li>
+</ul>
+<p>To show who has participated in the merge request review, the Approvals widget in
+a merge request displays a <strong>Commented by</strong> column. This column lists eligible approvers
+who commented on the merge request. It helps authors and reviewers identify who to
+contact with questions about the merge request's content.</p>
+<p>If the number of required approvals is greater than the number of assigned approvers,
+approvals from other users with at least the Developer role
+in the project count toward meeting the required number of approvals, even if the
+users were not explicitly listed in the approval rules.</p>
+<h3>Code owners as approvers</h3>
+<p>If you add <a href="../../codeowners/_index.html">code owners</a> to your repository, the owners of files
+become eligible approvers in the project. To enable this merge request approval rule:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>Merge request approvals</strong> section, in the <strong>Approval rules</strong> section, locate the <strong>All eligible users</strong> rule.</li>
+<li>In the <strong>Approvals required</strong> column, enter the number of approvals required.</li>
+</ol>
+<p>You can also
+<a href="../../repository/branches/protected.md#require-code-owner-approval">require code owner approval</a>
+for protected branches.</p>
+<h3>Approver by membership type</h3>
+<p>The following tables show how membership type affects eligibility for both approval rules and
+Code Owners.</p>
+<h4>User eligibility</h4>
+<p>When you assign individual users as approvers for approval rules or reference users in <code>CODEOWNERS</code>
+files, like <code>@username</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Membership type</th>
+<th>Approval rules</th>
+<th>Code Owners</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct member of the project</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td>Direct member of the project's group</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td>Inherited member of the project's group</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td>Direct member of a <a href="../../members/sharing_projects_groups.md#sharing-projects">group invited to the project</a></td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td>Inherited member of a group invited to the project</td>
+<td>{{&lt; no &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+<tr>
+<td>Direct member of a <a href="../../members/sharing_projects_groups.md#sharing-groups">group invited to the project's group</a></td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td>Inherited member of a group invited to the project's group</td>
+<td>{{&lt; no &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+<tr>
+<td>Direct member of a group invited to the project's group's parent groups</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td>Inherited member of a group invited to the project's group's parent groups</td>
+<td>{{&lt; no &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+</tbody>
+</table>
+<h4>Group eligibility</h4>
+<p>When you assign groups as approvers for approval rules or reference groups in <code>CODEOWNERS</code> files,
+like <code>@group-name</code>, only direct members of eligible groups can provide approvals:</p>
+<table>
+<thead>
+<tr>
+<th>Group type</th>
+<th>Approval rules</th>
+<th>Code Owners</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../members/sharing_projects_groups.md#sharing-projects">Groups invited to the project</a></td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td><a href="../../members/sharing_projects_groups.md#sharing-groups">Groups invited to the project's group</a></td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+<tr>
+<td>Groups invited to a parent of the project's group</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+<tr>
+<td>The project's group</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td>A parent of the project's group</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+</tbody>
+</table>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>For group-based approvals, only direct members of the group can approve merge requests.
+Inherited members of the eligible groups cannot provide approvals.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Group approvers</h3>
+<p>You can add a group of users as approvers. All direct members of this group
+can approve the rule. Inherited members cannot approve the rule.</p>
+<p>Typically the group is a subgroup in your top-level namespace, unless you are
+collaborating with an external group. If you are collaborating with another group
+and want to use members of that group as approvers, you can either:</p>
+<ul>
+<li><a href="../../members/sharing_projects_groups.md#sharing-projects">Share access to the project</a>.</li>
+<li><a href="../../members/sharing_projects_groups.md#sharing-groups">Share access to your project's group</a>,
+  which gives the external group approval access to all projects in your project's group.</li>
+</ul>
+<p>A user's membership in an approver group determines their individual approval permissions
+in the following ways:</p>
+<ul>
+<li>Inherited members are not considered approvers. Only direct members can approve merge requests.</li>
+<li>A user from a group approver group who is later also added as an individual approver
+  counts as one approver, not two.</li>
+<li>Merge request authors do not count as eligible approvers on their own merge requests by default.
+  To change this behavior, disable the
+  <a href="settings.md#prevent-approval-by-merge-request-creator"><strong>Prevent merge request creator approval</strong></a>
+  project setting.</li>
+<li>By default, committers to merge requests can approve a merge request. To change this behavior, enable
+  the <a href="settings.md#prevent-approvals-by-users-who-add-commits"><strong>Prevent committers approval</strong></a>
+  project setting.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Approval rule name can't be blank</h3>
+<p>As a workaround for this validation error, you can delete the approval rule through
+the API.</p>
+<ol>
+<li><a href="../../../../api/merge_request_approvals.md#list-all-approval-rules-for-a-project">List all approval rules for the project</a>.</li>
+<li><a href="../../../../api/merge_request_approvals.md#delete-an-approval-rule-for-a-project">DELETE the rule</a>.</li>
+</ol>
+<p>For more information about this validation error, read
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/285129">issue 285129</a>.</p>
+<h3>Groups need explicit or inherited Developer role on a project</h3>
+<p>A group created to handle approvals may be created in a different area of the
+project hierarchy than the project requiring review. If this happens, members of the
+group may not have permission to approve the merge request as they do not have access to it.</p>
+<p>For example:</p>
+<p>In the group structure below, project 1 belongs to subgroup 1 and subgroup 4 has users.</p>
+<p><img alt="Example scenario - project and group hierarchy" src="img/group_access_example_01_v16_8.png" /></p>
+<p>Project 1 has configured an approval rule for the project, which assigns subgroup 4 as approvers.
+When a merge request is created, approvers from subgroup 4 appear in the eligible approvers list.
+However, as users from subgroup 4 do not have permission to view the merge request, the <code>404</code> error is returned.
+To grant membership, the group must be invited as a project member. It is now possible for users from subgroup 4 to approve.</p>
+<p><img alt="Project members page showing subgroup 4 as a member" src="img/group_access_example_02_v16_8.png" /></p></code></pre>
+</body>
+</html>

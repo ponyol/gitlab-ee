@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Find certificate-based clusters</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Runner Core
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Migrate to the GitLab agent for Kubernetes</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To connect your Kubernetes cluster with GitLab, you can use:</p>
+<ul>
+<li><a href="../../clusters/agent/gitops.html">A GitOps workflow</a>.</li>
+<li><a href="../../clusters/agent/ci_cd_workflow.html">A GitLab CI/CD workflow</a>.</li>
+<li><a href="_index.html">A certificate-based integration</a>.</li>
+</ul>
+<p>The certificate-based integration is
+<a href="https://about.gitlab.com/blog/2021/11/15/deprecating-the-cert-based-kubernetes-integration/"><strong>deprecated</strong></a>
+in GitLab 14.5. The sunsetting plans are described:</p>
+<ul>
+<li>for <a href="../../../update/deprecations.md#gitlabcom-certificate-based-integration-with-kubernetes">GitLab.com customers</a>.</li>
+<li>for <a href="../../../update/deprecations.md#gitlab-self-managed-certificate-based-integration-with-kubernetes">GitLab Self-Managed customers</a>.</li>
+</ul>
+<p>If you are using the certificate-based integration, you should move to another workflow as soon as possible.</p>
+<p>As a general rule, to migrate clusters that rely on GitLab CI/CD,
+you can use the <a href="../../clusters/agent/ci_cd_workflow.html">CI/CD workflow</a>.
+This workflow uses an agent to connect to your cluster. The agent:</p>
+<ul>
+<li>Is not exposed to the internet.</li>
+<li>Does not require full <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles"><code>cluster-admin</code></a> access to GitLab.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The certificate-based integration was used for popular GitLab features like
+GitLab-managed Apps, GitLab-managed clusters, and Auto DevOps.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Find certificate-based clusters</h2>
+<p>You can find all the certificate-based clusters within a GitLab instance or group, including subgroups and projects, using <a href="../../../api/cluster_discovery.md#discover-certificate-based-clusters">a dedicated API</a>. Querying the API with a group ID returns all the certificate-based clusters defined at or below the provided group.</p>
+<p>Clusters defined in parent groups are not returned in this case. This behavior helps group Owners find all the clusters they need to migrate.</p>
+<p>Disabled clusters are returned as well to avoid accidentally leaving clusters behind.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The cluster discovery API does not work for personal namespaces.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Migrate generic deployments</h2>
+<p>To migrate generic deployments:</p>
+<ol>
+<li>Install the <a href="../../clusters/agent/install/_index.html">GitLab agent for Kubernetes</a>.</li>
+<li>Follow the CI/CD workflow to <a href="../../clusters/agent/ci_cd_workflow.md#authorize-agent-access">authorize the agent to access</a> groups and projects, or to <a href="../../clusters/agent/ci_cd_workflow.md#restrict-project-and-group-access-by-using-impersonation">secure access with impersonation</a>.</li>
+<li>On the left sidebar, select <strong>Operate</strong> &gt; <strong>Kubernetes clusters</strong>.</li>
+<li>From the certificate-based clusters section, open the cluster that serves the same environment scope.</li>
+<li>Select the <strong>Details</strong> tab and turn off the cluster.</li>
+</ol>
+<h2>Migrate from GitLab-managed clusters to Kubernetes resources</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>With GitLab-managed clusters, GitLab creates separate service accounts and namespaces for every branch and deploys by using these resources.</p>
+<p>Now, you can use <a href="../../clusters/agent/managed_kubernetes_resources.html">GitLab-managed Kubernetes resources</a> to self-serve resources with enhanced security controls.</p>
+<p>With GitLab-managed Kubernetes resources, you can:</p>
+<ul>
+<li>Set up environments securely without manual intervention.</li>
+<li>Control resource creation and access without giving developers administrative cluster permissions.</li>
+<li>Provide self-service capabilities for developers when they create a new project or environment.</li>
+<li>Allow developers to deploy testing and development versions in dedicated or shared namespaces.</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>Install the <a href="../../clusters/agent/install/_index.html">GitLab agent for Kubernetes</a>.</li>
+<li><a href="../../clusters/agent/ci_cd_workflow.md#authorize-agent-access">Authorize the agent</a> to access relevant projects or groups.</li>
+<li>Check the status of the <strong>Namespace per environment</strong> checkbox in your certificate-based cluster integration page.</li>
+</ul>
+<p>To migrate from GitLab-managed clusters to GitLab-managed Kubernetes resources:</p>
+<ol>
+<li>If you're migrating an existing environment, configure an agent for the environment either through the <a href="../../../ci/environments/kubernetes_dashboard.md#configure-a-dashboard">dashboard for Kubernetes</a> or the <a href="../../../api/environments.html">Environments API</a>.</li>
+<li>Configure the agent to turn on resource management in your agent configuration file:</li>
+</ol>
+<p><code>yaml
+   ci_access:
+      projects:
+        - id: &lt;your_group/your_project&gt;
+          access_as:
+            ci_job: {}
+          resource_management:
+            enabled: true
+      groups:
+        - id: &lt;your_other_group&gt;
+          access_as:
+            ci_job: {}
+          resource_management:
+            enabled: true</code></p>
+<ol>
+<li>Create an environment template under <code>.gitlab/agents/&lt;agent-name&gt;/environment_templates/default.yaml</code>. Check the status of the <strong>Namespace per environment</strong> checkbox in your certificate-based cluster integration page.</li>
+</ol>
+<p>If <strong>Namespace per environment</strong> was checked, use the following template:</p>
+<p><code>yaml
+   objects:
+     - apiVersion: v1
+       kind: Namespace
+       metadata:
+         # the `.legacy_namespace` produces something like:
+         # '{{ .project.slug }}-{{ .project.id }}-{{ .environment.slug }}'
+         # that is compatible with what the certificate-based cluster integration
+         # would have generated.
+         name: '{{ .legacy_namespace }}'
+     - apiVersion: rbac.authorization.k8s.io/v1
+       kind: RoleBinding
+       metadata:
+         name: 'bind-{{ .agent.id }}-{{ .project.id }}-{{ .environment.slug }}'
+         namespace: '{{ .legacy_namespace }}'
+       subjects:
+         - kind: Group
+           apiGroup: rbac.authorization.k8s.io
+           name: 'gitlab:project_env:{{ .project.id }}:{{ .environment.slug }}'
+       roleRef:
+         apiGroup: rbac.authorization.k8s.io
+         kind: ClusterRole
+         name: admin</code></p>
+<p>If <strong>Namespace per environment</strong> was unchecked, use the following template:</p>
+<p><code>yaml
+   objects:
+     - apiVersion: v1
+       kind: Namespace
+       metadata:
+         name: '{{ .project.slug | slugify }}-{{ .project.id }}'
+     - apiVersion: rbac.authorization.k8s.io/v1
+       kind: RoleBinding
+       metadata:
+         name: 'bind-{{ .agent.id }}-{{ .project.id }}-{{ .environment.slug }}'
+         namespace: '{{ .project.slug | slugify }}-{{ .project.id }}'
+       subjects:
+         - kind: Group
+           apiGroup: rbac.authorization.k8s.io
+           name: 'gitlab:project_env:{{ .project.id }}:{{ .environment.slug }}'
+       roleRef:
+         apiGroup: rbac.authorization.k8s.io
+         kind: ClusterRole
+         name: admin</code></p>
+<ol>
+<li>In your CI/CD configuration, use the agent with the <code>environment.kubernetes.agent: &lt;path/to/agent/project:agent-name&gt;</code> syntax.</li>
+<li>On the left sidebar, select <strong>Operate</strong> &gt; <strong>Kubernetes clusters</strong>.</li>
+<li>From the certificate-based clusters section, open the cluster that serves the same environment scope.</li>
+<li>Select the <strong>Details</strong> tab and turn off the cluster.</li>
+</ol>
+<h2>Migrate from Auto DevOps</h2>
+<p>In your Auto DevOps project, you can use the GitLab agent for Kubernetes to connect with your Kubernetes cluster.</p>
+<p>Prerequisites</p>
+<ul>
+<li>Install the <a href="../../clusters/agent/install/_index.html">GitLab agent for Kubernetes</a>.</li>
+<li><a href="../../clusters/agent/ci_cd_workflow.md#authorize-agent-access">Authorize the agent</a> to access relevant projects or groups.</li>
+</ul>
+<p>To migrate from Auto DevOps:</p>
+<ol>
+<li>In GitLab, go to the project where you use Auto DevOps.</li>
+<li>Add three variables. On the left sidebar, select <strong>Settings</strong> &gt; <strong>CI/CD</strong> and expand <strong>Variables</strong>.</li>
+<li>Add a key called <code>KUBE_INGRESS_BASE_DOMAIN</code> with the application deployment domain as the value.</li>
+<li>
+<p>Add a key called <code>KUBE_CONTEXT</code> with a value like <code>path/to/agent/project:agent-name</code>.
+     Select the environment scope of your choice.
+     If you are not sure what your agent's context is, edit your <code>.gitlab-ci.yml</code> file and add a job to see the available contexts:</p>
+<p><code>yaml
+ deploy:
+   image: debian:13-slim
+   variables:
+     KUBECTL_VERSION: v1.34
+     DEBIAN_FRONTEND: noninteractive
+   script:
+     # Follows https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management
+     - apt-get update
+     - apt-get install -y --no-install-recommends apt-transport-https ca-certificates curl gnupg
+     - curl --fail --silent --show-error --location "https://pkgs.k8s.io/core:/stable:/${KUBECTL_VERSION}/deb/Release.key" | gpg --dearmor --output /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+     - chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+     - echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/${KUBECTL_VERSION}/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
+     - chmod 644 /etc/apt/sources.list.d/kubernetes.list
+     - apt-get update
+     - apt-get install -y --no-install-recommends kubectl
+     - kubectl config get-contexts</code></p>
+</li>
+<li>
+<p>Add a key called <code>KUBE_NAMESPACE</code> with a value of the Kubernetes namespace for your deployments to target. Set the same environment scope.</p>
+</li>
+<li>Select <strong>Add variable</strong>.</li>
+<li>On the left sidebar, select <strong>Operate</strong> &gt; <strong>Kubernetes clusters</strong>.</li>
+<li>From the certificate-based clusters section, open the cluster that serves the same environment scope.</li>
+<li>Select the <strong>Details</strong> tab and disable the cluster.</li>
+<li>Edit your <code>.gitlab-ci.yml</code> file and ensure it's using the Auto DevOps template. For example:</li>
+</ol>
+<p>```yaml
+   include:
+     template: Auto-DevOps.gitlab-ci.yml</p>
+<p>variables:
+     KUBE_INGRESS_BASE_DOMAIN: 74.220.23.215.nip.io
+     KUBE_CONTEXT: "gitlab-examples/ops/gitops-demo/k8s-agents:demo-agent"
+     KUBE_NAMESPACE: "demo-agent"
+   ```</p>
+<ol>
+<li>To test your pipeline, on the left sidebar, select <strong>Build</strong> &gt; <strong>Pipelines</strong> and then <strong>New pipeline</strong>.</li>
+</ol>
+<p>For an example, <a href="https://gitlab.com/gitlab-examples/ops/gitops-demo/hello-world-service">view this project</a>.</p>
+<h2>Migrate from GitLab-managed applications</h2>
+<p>GitLab-managed Apps (GMA) were deprecated in GitLab 14.0, and removed in GitLab 15.0.
+The agent for Kubernetes does not support them. To migrate from GMA to the
+agent, go through the following steps:</p>
+<ol>
+<li><a href="../../clusters/migrating_from_gma_to_project_template.html">Migrate from GitLab-managed Apps to a cluster management project</a>.</li>
+<li><a href="../../clusters/management_project_template.html">Migrate the cluster management project to use the agent</a>.</li>
+</ol>
+<h2>Migrate a cluster management project</h2>
+<p>See <a href="../../clusters/management_project_template.html">how to use a cluster management project with the GitLab agent for Kubernetes</a>.</p>
+<h2>Migrate cluster monitoring features</h2>
+<p>Once you connect a Kubernetes cluster to GitLab using the agent for Kubernetes, you can use <a href="../../../ci/environments/kubernetes_dashboard.html">the dashboard for Kubernetes</a> after enabling <a href="../../clusters/agent/user_access.html">user access</a>.</p></code></pre>
+</body>
+</html>

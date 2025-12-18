@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Validate your CODEOWNERS file</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Use Code Owners to define experts for your codebase, and set review requirements based on file type or location.
+title: Troubleshooting Code Owners</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When working with Code Owners, you might encounter the following issues.</p>
+<p>For more information about how the Code Owners feature handles errors, see <a href="advanced.md#error-handling">Error handling</a>.</p>
+<h2>Validate your CODEOWNERS file</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15598">Introduced</a> in GitLab 17.11 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>accessible_code_owners_validation</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/524437">Enabled on GitLab.com</a> in GitLab 18.1.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/549626">Generally available</a> in GitLab 18.2. Feature flag <code>accessible_code_owners_validation</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>When viewing a <a href="_index.md#codeowners-file"><code>CODEOWNERS</code> file</a>, GitLab runs
+validations to help you find syntax and permission issues. If no syntax issues
+are found, GitLab:</p>
+<ul>
+<li>Does not run more validators against the file.</li>
+<li>Runs more permissions validations against the first 200 unique user and group references found in the file.</li>
+</ul>
+<p>How this works:</p>
+<ol>
+<li>Find all references that can access the project. If a user or group reference is
+   added, but does not have project access, show an error.</li>
+<li>For each valid user reference, check that the user has permission to approve
+   merge requests in the project. If the user does not have that permission, show an error.</li>
+<li>For each valid group reference, check that the maximum role value is Developer or higher.
+   For each group reference that has a value lower than Developer, show an error.</li>
+<li>For each valid group reference, check that they group contains at least one user with
+   permission to approve merge requests. For any group reference containing zero users with
+   permission to approve merge requests, show an error.</li>
+</ol>
+<h2>Approvals do not show</h2>
+<p>The <a href="_index.md#codeowners-file"><code>CODEOWNERS</code> file</a> must be present in the target branch before the
+merge request is created.</p>
+<p>Code Owner approval rules only update when the merge request is created.
+If you update the <code>CODEOWNERS</code> file, close the merge request and create a new one.</p>
+<h2>Approvals shown as optional</h2>
+<p>A Code Owner approval rule is optional if any of these conditions are true:</p>
+<ul>
+<li>The user or group is not a member of the project.
+  Code Owners <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/288851/">cannot inherit members from parent groups</a>.</li>
+<li>The user or group is <a href="advanced.md#malformed-owners">malformed or inaccessible</a>.</li>
+<li><a href="../repository/branches/protected.md#require-code-owner-approval">Code Owner approval on a protected branch</a> has not been set up.</li>
+<li>The section is <a href="reference.md#optional-sections">marked as optional</a>.</li>
+<li>No eligible code owners are available to approve the merge request due to conflicts
+  with other <a href="../merge_requests/approvals/settings.html">merge request approval settings</a>.</li>
+</ul>
+<h2>User not shown as possible approver</h2>
+<p>A user might not show as an approver on the Code Owner merge request approval rules
+if any of these conditions are true:</p>
+<ul>
+<li>A rule prevents the specific user from approving the merge request.
+  Check the project <a href="../merge_requests/approvals/settings.md#edit-merge-request-approval-settings">merge request approval</a> settings.</li>
+<li>A Code Owner group has a visibility of private, and the current user is not a
+  member of the Code Owner group.</li>
+<li>The specific username is spelled incorrectly or
+  <a href="advanced.md#malformed-owners">malformed in the <code>CODEOWNERS</code> file</a>.</li>
+<li>Current user is an external user who does not have permission to the internal Code Owner group.</li>
+</ul>
+<h2>Approval rule is invalid</h2>
+<p>You might get an error that states:</p>
+<pre><code class="language-plaintext">Approval rule is invalid.
+GitLab has approved this rule automatically to unblock the merge request.
+</code></pre>
+<p>This issue occurs when an approval rule uses a Code Owner that is not a direct member of the project.</p>
+<p>The workaround is to check that the group or user has been invited to the project.</p>
+<h2><code>CODEOWNERS</code> not updated when user or group names change</h2>
+<p>When a user or group change their names, the <code>CODEOWNERS</code> isn't automatically updated with the new names.
+To enter the new names, you must edit the file.</p>
+<p>Organizations using SAML SSO can <a href="../../../integration/saml.md#set-a-username">set usernames</a> to
+prevent users from changing their usernames.</p>
+<h2>Incompatibility with Global group memberships locks</h2>
+<p>The Code Owners feature requires direct group memberships to projects.
+When Global group memberships locks are enabled, they prevent groups from being invited as direct members to projects.
+This creates an incompatibility between the two features.</p>
+<p>When the Global <a href="../../group/saml_sso/group_sync.md#global-saml-group-memberships-lock">SAML</a> or <a href="../../../administration/auth/ldap/ldap_synchronization.md#global-ldap-group-memberships-lock">LDAP</a> group memberships lock is enabled, you can't use groups or subgroups as Code Owners.</p>
+<p>If you enabled either Global SAML or LDAP group memberships lock, you have the following options:</p>
+<ul>
+<li>Use individual users as Code Owners instead of groups.</li>
+<li>If using group-based Code Owners is a higher priority, disable the Global group memberships lock.</li>
+</ul>
+<p>Support for inherited group members is proposed in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/288851">issue 288851</a>.</p></code></pre>
+</body>
+</html>

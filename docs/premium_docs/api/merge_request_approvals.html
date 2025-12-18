@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Approve merge request</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Code Review
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Documentation for the REST API for merge request approvals in GitLab.
+title: Merge request approvals API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Endpoint <code>/approvals</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/353097">removed</a> in GitLab 16.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use this API to manage <a href="../user/project/merge_requests/approvals/_index.html">merge request approvals</a>.</p>
+<p>All endpoints require authentication.</p>
+<h2>Approve merge request</h2>
+<p>Approves the specified merge request. The currently authenticated user must be an
+<a href="../user/project/merge_requests/approvals/rules.md#eligible-approvers">eligible approver</a>.</p>
+<p>The <code>sha</code> parameter ensures you're approving the current version of the merge request. If defined, the
+value must match the merge request's HEAD commit SHA. A mismatch returns a <code>409 Conflict</code> response.
+This matches the behavior <a href="merge_requests.md#merge-a-merge-request">accepting a merge request</a>.</p>
+<pre><code class="language-plaintext">POST /projects/:id/merge_requests/:merge_request_iid/approve
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approval_password</code></td>
+<td>string</td>
+<td>No</td>
+<td>Current user's password. Required if <a href="../user/project/merge_requests/approvals/settings.md#require-user-re-authentication-to-approve"><strong>Require user re-authentication to approve</strong></a> is enabled in the project settings. Always fails if the group or GitLab Self-Managed instance is configured to force SAML authentication.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of the merge request.</td>
+</tr>
+<tr>
+<td><code>sha</code></td>
+<td>string</td>
+<td>No</td>
+<td>The <code>HEAD</code> of the merge request.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;id&quot;: 5,
+  &quot;iid&quot;: 5,
+  &quot;project_id&quot;: 1,
+  &quot;title&quot;: &quot;Approvals API&quot;,
+  &quot;description&quot;: &quot;Test&quot;,
+  &quot;state&quot;: &quot;opened&quot;,
+  &quot;created_at&quot;: &quot;2016-06-08T00:19:52.638Z&quot;,
+  &quot;updated_at&quot;: &quot;2016-06-09T21:32:14.105Z&quot;,
+  &quot;merge_status&quot;: &quot;can_be_merged&quot;,
+  &quot;approvals_required&quot;: 2,
+  &quot;approvals_left&quot;: 0,
+  &quot;approved_by&quot;: [
+    {
+      &quot;user&quot;: {
+        &quot;name&quot;: &quot;Administrator&quot;,
+        &quot;username&quot;: &quot;root&quot;,
+        &quot;id&quot;: 1,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80\u0026d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost:3000/root&quot;
+      },
+      &quot;approved_at&quot;: &quot;2016-06-10T04:21:41.050Z&quot;
+    },
+    {
+      &quot;user&quot;: {
+        &quot;name&quot;: &quot;Nico Cartwright&quot;,
+        &quot;username&quot;: &quot;ryley&quot;,
+        &quot;id&quot;: 2,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/cf7ad14b34162a76d593e3affca2adca?s=80\u0026d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost:3000/ryley&quot;
+      },
+      &quot;approved_at&quot;: &quot;2016-06-10T09:17:13.520Z&quot;
+    }
+  ]
+}
+</code></pre>
+<h3>Approvals for automated merge requests</h3>
+<p>If you use the API to create and immediately approve a merge request, your automation
+might approve the merge request before the commit is fully processed. By default, adding
+a new commit to a merge request
+<a href="../user/project/merge_requests/approvals/settings.md#remove-all-approvals-when-commits-are-added-to-the-source-branch">resets any existing approvals</a>.
+When this happens, the <strong>Activity</strong> area of the merge request shows a sequence of
+messages like this:</p>
+<ul>
+<li><code>(botname)</code> approved this merge request 5 minutes ago</li>
+<li><code>(botname)</code> added 1 commit 5 minutes ago</li>
+<li><code>(botname)</code> reset approvals from <code>(botname)</code> by pushing to the branch 5 minutes ago</li>
+</ul>
+<p>To ensure automated approvals are not applied before commit processing is complete,
+your automation should add a wait (or <code>sleep</code>) function until:</p>
+<ul>
+<li>The <code>detailed_merge_status</code> attribute is not in either the <code>checking</code> or <code>approvals_syncing</code> states.</li>
+<li>The merge request diff contains a <code>patch_id_sha</code> that is not NULL.</li>
+</ul>
+<h2>Unapprove a merge request</h2>
+<p>Removes the approval for the currently authenticated user from a specified merge request.</p>
+<pre><code class="language-plaintext">POST /projects/:id/merge_requests/:merge_request_iid/unapprove
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of a merge request.</td>
+</tr>
+</tbody>
+</table>
+<h2>Reset approvals for a merge request</h2>
+<p>Resets all approvals for a specified merge request.</p>
+<p>Available only to <a href="../user/project/settings/project_access_tokens.md#bot-users-for-projects">bot users</a> with a valid project or group token. Human users receive a <code>401 Unauthorized</code> response.</p>
+<pre><code class="language-plaintext">PUT /projects/:id/merge_requests/:merge_request_iid/reset_approvals
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the project.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The internal ID of the merge request.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request PUT \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/76/merge_requests/1/reset_approvals&quot;
+</code></pre>
+<h2>Approval rules for projects</h2>
+<p>These endpoints apply to projects and their approval rules. All endpoints require authentication.</p>
+<h3>Retrieve approval configuration for a project</h3>
+<p>Retrieves the approval configuration for a project.</p>
+<pre><code class="language-plaintext">GET /projects/:id/approvals
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;approvers&quot;: [], // Deprecated in GitLab 12.3, always returns empty
+  &quot;approver_groups&quot;: [], // Deprecated in GitLab 12.3, always returns empty
+  &quot;approvals_before_merge&quot;: 2, // Deprecated in GitLab 12.3, use Approval Rules instead
+  &quot;reset_approvals_on_push&quot;: true,
+  &quot;selective_code_owner_removals&quot;: false,
+  &quot;disable_overriding_approvers_per_merge_request&quot;: false,
+  &quot;merge_requests_author_approval&quot;: true,
+  &quot;merge_requests_disable_committers_approval&quot;: false,
+  &quot;require_password_to_approve&quot;: true, // Deprecated in 16.9, use require_reauthentication_to_approve instead
+  &quot;require_reauthentication_to_approve&quot;: true
+}
+</code></pre>
+<h3>Update approval configuration for a project</h3>
+<p>Updates the approval configuration for a project. The currently authenticated user must be an
+<a href="../user/project/merge_requests/approvals/rules.md#eligible-approvers">eligible approver</a>.</p>
+<pre><code class="language-plaintext">POST /projects/:id/approvals
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approvals_before_merge</code> (deprecated)</td>
+<td>integer</td>
+<td>No</td>
+<td>The number of required approvals before a merge request can merge. <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/11132">Deprecated</a> in GitLab 12.3. <a href="#create-an-approval-rule-for-a-project">Create an approval rule</a> instead. <!-- Do not remove line until field is actually removed --></td>
+</tr>
+<tr>
+<td><code>disable_overriding_approvers_per_merge_request</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, prevents overrides of approvers in a merge request.</td>
+</tr>
+<tr>
+<td><code>merge_requests_author_approval</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, authors can self-approve their own merge requests.</td>
+</tr>
+<tr>
+<td><code>merge_requests_disable_committers_approval</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, users who commit on a merge request cannot approve it.</td>
+</tr>
+<tr>
+<td><code>require_password_to_approve</code> (deprecated)</td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, require approvers to authenticate with a password before adding the approval. <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/431346">Deprecated</a> in GitLab 16.9. Use <code>require_reauthentication_to_approve</code> instead.</td>
+</tr>
+<tr>
+<td><code>require_reauthentication_to_approve</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, requires approver to authenticate before adding the approval. <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/431346">Introduced</a> in GitLab 17.1.</td>
+</tr>
+<tr>
+<td><code>reset_approvals_on_push</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, approvals are reset on push.</td>
+</tr>
+<tr>
+<td><code>selective_code_owner_removals</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, resets approvals from Code Owners if their files change. To use this field, <code>reset_approvals_on_push</code> must be <code>false</code>.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;approvals_before_merge&quot;: 2, // Use Approval Rules instead
+  &quot;reset_approvals_on_push&quot;: true,
+  &quot;selective_code_owner_removals&quot;: false,
+  &quot;disable_overriding_approvers_per_merge_request&quot;: false,
+  &quot;merge_requests_author_approval&quot;: false,
+  &quot;merge_requests_disable_committers_approval&quot;: false,
+  &quot;require_password_to_approve&quot;: true,
+  &quot;require_reauthentication_to_approve&quot;: true
+}
+</code></pre>
+<h3>List all approval rules for a project</h3>
+<p>Lists all approval rules and any associated details for a specified project.</p>
+<pre><code class="language-plaintext">GET /projects/:id/approval_rules
+</code></pre>
+<p>To restrict the list of approval rules, use the <code>page</code> and <code>per_page</code>
+<a href="rest/_index.md#offset-based-pagination">pagination</a> parameters.</p>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;security&quot;,
+    &quot;rule_type&quot;: &quot;regular&quot;,
+    &quot;report_type&quot;: null,
+    &quot;eligible_approvers&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;username&quot;: &quot;jdoe&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+      },
+      {
+        &quot;id&quot;: 50,
+        &quot;name&quot;: &quot;Group Member 1&quot;,
+        &quot;username&quot;: &quot;group_member_1&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+      }
+    ],
+    &quot;approvals_required&quot;: 3,
+    &quot;users&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;username&quot;: &quot;jdoe&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+      }
+    ],
+    &quot;groups&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;group1&quot;,
+        &quot;path&quot;: &quot;group1&quot;,
+        &quot;description&quot;: &quot;&quot;,
+        &quot;visibility&quot;: &quot;public&quot;,
+        &quot;lfs_enabled&quot;: false,
+        &quot;avatar_url&quot;: null,
+        &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+        &quot;request_access_enabled&quot;: false,
+        &quot;full_name&quot;: &quot;group1&quot;,
+        &quot;full_path&quot;: &quot;group1&quot;,
+        &quot;parent_id&quot;: null,
+        &quot;ldap_cn&quot;: null,
+        &quot;ldap_access&quot;: null
+      }
+    ],
+    &quot;applies_to_all_protected_branches&quot;: false,
+    &quot;protected_branches&quot;: [
+      {
+        &quot;id&quot;: 1,
+        &quot;name&quot;: &quot;main&quot;,
+        &quot;push_access_levels&quot;: [
+          {
+            &quot;access_level&quot;: 30,
+            &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+          }
+        ],
+        &quot;merge_access_levels&quot;: [
+          {
+            &quot;access_level&quot;: 30,
+            &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+          }
+        ],
+        &quot;unprotect_access_levels&quot;: [
+          {
+            &quot;access_level&quot;: 40,
+            &quot;access_level_description&quot;: &quot;Maintainers&quot;
+          }
+        ],
+        &quot;code_owner_approval_required&quot;: &quot;false&quot;
+      }
+    ],
+    &quot;contains_hidden_groups&quot;: false,
+  },
+  {
+    &quot;id&quot;: 2,
+    &quot;name&quot;: &quot;Coverage-Check&quot;,
+    &quot;rule_type&quot;: &quot;report_approver&quot;,
+    &quot;report_type&quot;: &quot;code_coverage&quot;,
+    &quot;eligible_approvers&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;username&quot;: &quot;jdoe&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+      },
+      {
+        &quot;id&quot;: 50,
+        &quot;name&quot;: &quot;Group Member 1&quot;,
+        &quot;username&quot;: &quot;group_member_1&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+      }
+    ],
+    &quot;approvals_required&quot;: 3,
+    &quot;users&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;username&quot;: &quot;jdoe&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+      }
+    ],
+    &quot;groups&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;group1&quot;,
+        &quot;path&quot;: &quot;group1&quot;,
+        &quot;description&quot;: &quot;&quot;,
+        &quot;visibility&quot;: &quot;public&quot;,
+        &quot;lfs_enabled&quot;: false,
+        &quot;avatar_url&quot;: null,
+        &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+        &quot;request_access_enabled&quot;: false,
+        &quot;full_name&quot;: &quot;group1&quot;,
+        &quot;full_path&quot;: &quot;group1&quot;,
+        &quot;parent_id&quot;: null,
+        &quot;ldap_cn&quot;: null,
+        &quot;ldap_access&quot;: null
+      }
+    ],
+    &quot;applies_to_all_protected_branches&quot;: false,
+    &quot;protected_branches&quot;: [
+      {
+        &quot;id&quot;: 1,
+        &quot;name&quot;: &quot;main&quot;,
+        &quot;push_access_levels&quot;: [
+          {
+            &quot;access_level&quot;: 30,
+            &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+          }
+        ],
+        &quot;merge_access_levels&quot;: [
+          {
+            &quot;access_level&quot;: 30,
+            &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+          }
+        ],
+        &quot;unprotect_access_levels&quot;: [
+          {
+            &quot;access_level&quot;: 40,
+            &quot;access_level_description&quot;: &quot;Maintainers&quot;
+          }
+        ],
+        &quot;code_owner_approval_required&quot;: &quot;false&quot;
+      }
+    ],
+    &quot;contains_hidden_groups&quot;: false,
+  }
+]
+</code></pre>
+<h3>Retrieve an approval rule for a project</h3>
+<p>Retrieves information about a specified approval rule for a project.</p>
+<pre><code class="language-plaintext">GET /projects/:id/approval_rules/:approval_rule_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approval_rule_id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of a approval rule.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;security&quot;,
+  &quot;rule_type&quot;: &quot;regular&quot;,
+  &quot;report_type&quot;: null,
+  &quot;eligible_approvers&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    },
+    {
+      &quot;id&quot;: 50,
+      &quot;name&quot;: &quot;Group Member 1&quot;,
+      &quot;username&quot;: &quot;group_member_1&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+    }
+  ],
+  &quot;approvals_required&quot;: 3,
+  &quot;users&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    }
+  ],
+  &quot;groups&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;group1&quot;,
+      &quot;path&quot;: &quot;group1&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;visibility&quot;: &quot;public&quot;,
+      &quot;lfs_enabled&quot;: false,
+      &quot;avatar_url&quot;: null,
+      &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+      &quot;request_access_enabled&quot;: false,
+      &quot;full_name&quot;: &quot;group1&quot;,
+      &quot;full_path&quot;: &quot;group1&quot;,
+      &quot;parent_id&quot;: null,
+      &quot;ldap_cn&quot;: null,
+      &quot;ldap_access&quot;: null
+    }
+  ],
+  &quot;applies_to_all_protected_branches&quot;: false,
+  &quot;protected_branches&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;main&quot;,
+      &quot;push_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 30,
+          &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+        }
+      ],
+      &quot;merge_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 30,
+          &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+        }
+      ],
+      &quot;unprotect_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 40,
+          &quot;access_level_description&quot;: &quot;Maintainers&quot;
+        }
+      ],
+      &quot;code_owner_approval_required&quot;: &quot;false&quot;
+    }
+  ],
+  &quot;contains_hidden_groups&quot;: false
+}
+</code></pre>
+<h3>Create an approval rule for a project</h3>
+<p>Creates an approval rule for a project.</p>
+<p>The <code>rule_type</code> field supports these rule types:</p>
+<ul>
+<li><code>any_approver</code>: A pre-configured default rule with <code>approvals_required</code> set to <code>0</code>.</li>
+<li><code>regular</code>: Used for regular <a href="../user/project/merge_requests/approvals/rules.html">merge request approval rules</a>.</li>
+<li><code>report_approver</code>: Used when GitLab creates an approval rule from configured and enabled
+  <a href="../user/application_security/policies/merge_request_approval_policies.html">merge request approval policies</a>.
+  Do not use this value when creating approval rules with this API.</li>
+</ul>
+<pre><code class="language-plaintext">POST /projects/:id/approval_rules
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approvals_required</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The number of required approvals for this rule.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The name of the approval rule. Limited to 1024 characters.</td>
+</tr>
+<tr>
+<td><code>applies_to_all_protected_branches</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, applies the rule to all protected branches and ignores the <code>protected_branch_ids</code> attribute.</td>
+</tr>
+<tr>
+<td><code>group_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of groups as approvers.</td>
+</tr>
+<tr>
+<td><code>protected_branch_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of protected branches to scope the rule by. To identify the ID, use the <a href="protected_branches.md#list-protected-branches">List protected branches</a> API.</td>
+</tr>
+<tr>
+<td><code>report_type</code></td>
+<td>string</td>
+<td>No</td>
+<td>The report type. Required when the rule type is <code>report_approver</code>. The supported report types are <code>license_scanning</code> <a href="../update/deprecations.md#license-check-and-the-policies-tab-on-the-license-compliance-page">(Deprecated in GitLab 15.9)</a> and <code>code_coverage</code>. <!-- Do not remove line until field is actually removed --></td>
+</tr>
+<tr>
+<td><code>rule_type</code></td>
+<td>string</td>
+<td>No</td>
+<td>The rule type. Supported values include <code>any_approver</code>, <code>regular</code>, and <code>report_approver</code>.</td>
+</tr>
+<tr>
+<td><code>user_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of users as approvers. If used with <code>usernames</code>, adds both lists of users.</td>
+</tr>
+<tr>
+<td><code>usernames</code></td>
+<td>string array</td>
+<td>No</td>
+<td>The usernames of approvers. If used with <code>user_ids</code>, adds both lists of users.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;security&quot;,
+  &quot;rule_type&quot;: &quot;regular&quot;,
+  &quot;eligible_approvers&quot;: [
+    {
+      &quot;id&quot;: 2,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    },
+    {
+      &quot;id&quot;: 50,
+      &quot;name&quot;: &quot;Group Member 1&quot;,
+      &quot;username&quot;: &quot;group_member_1&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+    }
+  ],
+  &quot;approvals_required&quot;: 1,
+  &quot;users&quot;: [
+    {
+      &quot;id&quot;: 2,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    }
+  ],
+  &quot;groups&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;group1&quot;,
+      &quot;path&quot;: &quot;group1&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;visibility&quot;: &quot;public&quot;,
+      &quot;lfs_enabled&quot;: false,
+      &quot;avatar_url&quot;: null,
+      &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+      &quot;request_access_enabled&quot;: false,
+      &quot;full_name&quot;: &quot;group1&quot;,
+      &quot;full_path&quot;: &quot;group1&quot;,
+      &quot;parent_id&quot;: null,
+      &quot;ldap_cn&quot;: null,
+      &quot;ldap_access&quot;: null
+    }
+  ],
+  &quot;applies_to_all_protected_branches&quot;: false,
+  &quot;protected_branches&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;main&quot;,
+      &quot;push_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 30,
+          &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+        }
+      ],
+      &quot;merge_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 30,
+          &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+        }
+      ],
+      &quot;unprotect_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 40,
+          &quot;access_level_description&quot;: &quot;Maintainers&quot;
+        }
+      ],
+      &quot;code_owner_approval_required&quot;: &quot;false&quot;
+    }
+  ],
+  &quot;contains_hidden_groups&quot;: false
+}
+</code></pre>
+<p>To increase the default number of 0 required approvers:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --header 'Content-Type: application/json' \
+  --data '{&quot;name&quot;: &quot;Any name&quot;, &quot;rule_type&quot;: &quot;any_approver&quot;, &quot;approvals_required&quot;: 2}' \
+  --url &quot;https://gitlab.example.com/api/v4/projects/&lt;project_id&gt;/approval_rules&quot;
+</code></pre>
+<p>Another example is to create a user-specific rule:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --header 'Content-Type: application/json' \
+  --data '{&quot;name&quot;: &quot;Name of your rule&quot;, &quot;approvals_required&quot;: 3, &quot;user_ids&quot;: [123, 456, 789]}' \
+  --url &quot;https://gitlab.example.com/api/v4/projects/&lt;project_id&gt;/approval_rules&quot;
+</code></pre>
+<h3>Update an approval rule for a project</h3>
+<p>Updates a specified approval rule for a project. This endpoint removes any approvers and groups
+not defined in the <code>group_ids</code>, <code>user_ids</code>, or <code>usernames</code> attributes.</p>
+<p>Hidden groups (private groups the user doesn't have permission to view) that are not in the <code>users</code>
+or <code>groups</code> parameters are preserved by default. To remove them, set <code>remove_hidden_groups</code> to <code>true</code>.
+This ensures hidden groups are not removed unintentionally when a user updates an approval rule.</p>
+<pre><code class="language-plaintext">PUT /projects/:id/approval_rules/:approval_rule_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>approval_rule_id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of a approval rule.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>applies_to_all_protected_branches</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, applies the rule to all protected branches and ignores the <code>protected_branch_ids</code> attribute.</td>
+</tr>
+<tr>
+<td><code>approvals_required</code></td>
+<td>integer</td>
+<td>No</td>
+<td>The number of required approvals for this rule.</td>
+</tr>
+<tr>
+<td><code>group_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of groups as approvers.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>No</td>
+<td>The name of the approval rule. Limited to 1024 characters.</td>
+</tr>
+<tr>
+<td><code>protected_branch_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of protected branches to scope the rule by. To identify the ID, use the <a href="protected_branches.md#list-protected-branches">List protected branches</a> API.</td>
+</tr>
+<tr>
+<td><code>remove_hidden_groups</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, removes hidden groups from the approval rule.</td>
+</tr>
+<tr>
+<td><code>user_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of users as approvers. If used with <code>usernames</code>, adds both lists of users.</td>
+</tr>
+<tr>
+<td><code>usernames</code></td>
+<td>string array</td>
+<td>No</td>
+<td>The usernames of approvers. If used with <code>user_ids</code>, adds both lists of users.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;security&quot;,
+  &quot;rule_type&quot;: &quot;regular&quot;,
+  &quot;eligible_approvers&quot;: [
+    {
+      &quot;id&quot;: 2,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    },
+    {
+      &quot;id&quot;: 50,
+      &quot;name&quot;: &quot;Group Member 1&quot;,
+      &quot;username&quot;: &quot;group_member_1&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+    }
+  ],
+  &quot;approvals_required&quot;: 1,
+  &quot;users&quot;: [
+    {
+      &quot;id&quot;: 2,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    }
+  ],
+  &quot;groups&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;group1&quot;,
+      &quot;path&quot;: &quot;group1&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;visibility&quot;: &quot;public&quot;,
+      &quot;lfs_enabled&quot;: false,
+      &quot;avatar_url&quot;: null,
+      &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+      &quot;request_access_enabled&quot;: false,
+      &quot;full_name&quot;: &quot;group1&quot;,
+      &quot;full_path&quot;: &quot;group1&quot;,
+      &quot;parent_id&quot;: null,
+      &quot;ldap_cn&quot;: null,
+      &quot;ldap_access&quot;: null
+    }
+  ],
+  &quot;applies_to_all_protected_branches&quot;: false,
+  &quot;protected_branches&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;main&quot;,
+      &quot;push_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 30,
+          &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+        }
+      ],
+      &quot;merge_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 30,
+          &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+        }
+      ],
+      &quot;unprotect_access_levels&quot;: [
+        {
+          &quot;access_level&quot;: 40,
+          &quot;access_level_description&quot;: &quot;Maintainers&quot;
+        }
+      ],
+      &quot;code_owner_approval_required&quot;: &quot;false&quot;
+    }
+  ],
+  &quot;contains_hidden_groups&quot;: false
+}
+</code></pre>
+<h3>Delete an approval rule for a project</h3>
+<p>Deletes an approval rule for a specified project.</p>
+<pre><code class="language-plaintext">DELETE /projects/:id/approval_rules/:approval_rule_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approval_rule_id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of a approval rule.</td>
+</tr>
+</tbody>
+</table>
+<h2>Approval rules for a merge request</h2>
+<p>These endpoints apply to individual merge requests. All endpoints require authentication.</p>
+<h3>Retrieve approval state for a merge request</h3>
+<p>Retrieves the approval state for a specified merge request.</p>
+<p>In the response, <code>approved_by</code> contains information about all approvers of the merge request,
+regardless of whether those approvals satisfy any approval rule. For more detailed information about
+the approval rules in a merge request, and whether the approvals received satisfy those rules, see
+the <a href="#retrieve-approval-details-for-a-merge-request"><code>/approval_state</code> endpoint</a>.</p>
+<pre><code class="language-plaintext">GET /projects/:id/merge_requests/:merge_request_iid/approvals
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of the merge request.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;id&quot;: 5,
+  &quot;iid&quot;: 5,
+  &quot;project_id&quot;: 1,
+  &quot;title&quot;: &quot;Approvals API&quot;,
+  &quot;description&quot;: &quot;Test&quot;,
+  &quot;state&quot;: &quot;opened&quot;,
+  &quot;created_at&quot;: &quot;2016-06-08T00:19:52.638Z&quot;,
+  &quot;updated_at&quot;: &quot;2016-06-08T21:20:42.470Z&quot;,
+  &quot;merge_status&quot;: &quot;cannot_be_merged&quot;,
+  &quot;approvals_required&quot;: 2,
+  &quot;approvals_left&quot;: 1,
+  &quot;approved_by&quot;: [
+    {
+      &quot;user&quot;: {
+        &quot;name&quot;: &quot;Administrator&quot;,
+        &quot;username&quot;: &quot;root&quot;,
+        &quot;id&quot;: 1,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;http://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80\u0026d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost:3000/root&quot;
+      },
+      &quot;approved_at&quot;: &quot;2016-06-09T01:45:21.720Z&quot;
+    }
+  ]
+}
+</code></pre>
+<h3>Retrieve approval details for a merge request</h3>
+<p>Retrieves approval details for a specified merge request.</p>
+<p>If a user has modified the approval rules for the merge request, the response includes:</p>
+<ul>
+<li><code>approval_rules_overwritten</code>: If <code>true</code>, indicates the default approval rules were modified.</li>
+<li><code>approved</code>: If <code>true</code>, indicates that the associated approval rule was approved.</li>
+<li><code>approved_by</code>: If defined, indicates the details of the user that approved the associated approval rule.
+  Users not matching an approval rule are not returned. To return all approving users, see the
+  <a href="#retrieve-approval-state-for-a-merge-request"><code>/approvals</code> endpoint</a>.</li>
+</ul>
+<pre><code class="language-plaintext">GET /projects/:id/merge_requests/:merge_request_iid/approval_state
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of the merge request.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;approval_rules_overwritten&quot;: true,
+  &quot;rules&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Ruby&quot;,
+      &quot;rule_type&quot;: &quot;regular&quot;,
+      &quot;eligible_approvers&quot;: [
+        {
+          &quot;id&quot;: 4,
+          &quot;name&quot;: &quot;John Doe&quot;,
+          &quot;username&quot;: &quot;jdoe&quot;,
+          &quot;state&quot;: &quot;active&quot;,
+          &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+          &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+        }
+      ],
+      &quot;approvals_required&quot;: 2,
+      &quot;users&quot;: [
+        {
+          &quot;id&quot;: 4,
+          &quot;name&quot;: &quot;John Doe&quot;,
+          &quot;username&quot;: &quot;jdoe&quot;,
+          &quot;state&quot;: &quot;active&quot;,
+          &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+          &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+        }
+      ],
+      &quot;groups&quot;: [],
+      &quot;contains_hidden_groups&quot;: false,
+      &quot;approved_by&quot;: [
+        {
+          &quot;id&quot;: 4,
+          &quot;name&quot;: &quot;John Doe&quot;,
+          &quot;username&quot;: &quot;jdoe&quot;,
+          &quot;state&quot;: &quot;active&quot;,
+          &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+          &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+        }
+      ],
+      &quot;source_rule&quot;: null,
+      &quot;approved&quot;: true,
+      &quot;overridden&quot;: false
+    }
+  ]
+}
+</code></pre>
+<h3>List all approval rules for a merge request</h3>
+<p>Lists all approval rules and any associated details for a specified merge request.</p>
+<p>Use the <code>page</code> and <code>per_page</code> <a href="rest/_index.md#offset-based-pagination">pagination</a> parameters to
+restrict the list of approval rules.</p>
+<pre><code class="language-plaintext">GET /projects/:id/merge_requests/:merge_request_iid/approval_rules
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of the merge request.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;security&quot;,
+    &quot;rule_type&quot;: &quot;regular&quot;,
+    &quot;report_type&quot;: null,
+    &quot;eligible_approvers&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;username&quot;: &quot;jdoe&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+      },
+      {
+        &quot;id&quot;: 50,
+        &quot;name&quot;: &quot;Group Member 1&quot;,
+        &quot;username&quot;: &quot;group_member_1&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+      }
+    ],
+    &quot;approvals_required&quot;: 3,
+    &quot;source_rule&quot;: null,
+    &quot;users&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;username&quot;: &quot;jdoe&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+      }
+    ],
+    &quot;groups&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;group1&quot;,
+        &quot;path&quot;: &quot;group1&quot;,
+        &quot;description&quot;: &quot;&quot;,
+        &quot;visibility&quot;: &quot;public&quot;,
+        &quot;lfs_enabled&quot;: false,
+        &quot;avatar_url&quot;: null,
+        &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+        &quot;request_access_enabled&quot;: false,
+        &quot;full_name&quot;: &quot;group1&quot;,
+        &quot;full_path&quot;: &quot;group1&quot;,
+        &quot;parent_id&quot;: null,
+        &quot;ldap_cn&quot;: null,
+        &quot;ldap_access&quot;: null
+      }
+    ],
+    &quot;contains_hidden_groups&quot;: false,
+    &quot;overridden&quot;: false
+  },
+  {
+    &quot;id&quot;: 2,
+    &quot;name&quot;: &quot;Coverage-Check&quot;,
+    &quot;rule_type&quot;: &quot;report_approver&quot;,
+    &quot;report_type&quot;: &quot;code_coverage&quot;,
+    &quot;eligible_approvers&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;username&quot;: &quot;jdoe&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+      },
+      {
+        &quot;id&quot;: 50,
+        &quot;name&quot;: &quot;Group Member 1&quot;,
+        &quot;username&quot;: &quot;group_member_1&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+      }
+    ],
+    &quot;approvals_required&quot;: 3,
+    &quot;source_rule&quot;: null,
+    &quot;users&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;John Doe&quot;,
+        &quot;username&quot;: &quot;jdoe&quot;,
+        &quot;state&quot;: &quot;active&quot;,
+        &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+        &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+      }
+    ],
+    &quot;groups&quot;: [
+      {
+        &quot;id&quot;: 5,
+        &quot;name&quot;: &quot;group1&quot;,
+        &quot;path&quot;: &quot;group1&quot;,
+        &quot;description&quot;: &quot;&quot;,
+        &quot;visibility&quot;: &quot;public&quot;,
+        &quot;lfs_enabled&quot;: false,
+        &quot;avatar_url&quot;: null,
+        &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+        &quot;request_access_enabled&quot;: false,
+        &quot;full_name&quot;: &quot;group1&quot;,
+        &quot;full_path&quot;: &quot;group1&quot;,
+        &quot;parent_id&quot;: null,
+        &quot;ldap_cn&quot;: null,
+        &quot;ldap_access&quot;: null
+      }
+    ],
+    &quot;contains_hidden_groups&quot;: false,
+    &quot;overridden&quot;: false
+  }
+]
+</code></pre>
+<h3>Retrieve an approval rule for a specific merge request</h3>
+<p>Retrieves information about an approval rule for a specific merge request.</p>
+<pre><code class="language-plaintext">GET /projects/:id/merge_requests/:merge_request_iid/approval_rules/:approval_rule_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approval_rule_id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of an approval rule.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of a merge request.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;security&quot;,
+  &quot;rule_type&quot;: &quot;regular&quot;,
+  &quot;report_type&quot;: null,
+  &quot;eligible_approvers&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    },
+    {
+      &quot;id&quot;: 50,
+      &quot;name&quot;: &quot;Group Member 1&quot;,
+      &quot;username&quot;: &quot;group_member_1&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+    }
+  ],
+  &quot;approvals_required&quot;: 3,
+  &quot;source_rule&quot;: null,
+  &quot;users&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    }
+  ],
+  &quot;groups&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;group1&quot;,
+      &quot;path&quot;: &quot;group1&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;visibility&quot;: &quot;public&quot;,
+      &quot;lfs_enabled&quot;: false,
+      &quot;avatar_url&quot;: null,
+      &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+      &quot;request_access_enabled&quot;: false,
+      &quot;full_name&quot;: &quot;group1&quot;,
+      &quot;full_path&quot;: &quot;group1&quot;,
+      &quot;parent_id&quot;: null,
+      &quot;ldap_cn&quot;: null,
+      &quot;ldap_access&quot;: null
+    }
+  ],
+  &quot;contains_hidden_groups&quot;: false,
+  &quot;overridden&quot;: false
+}
+</code></pre>
+<h3>Create an approval rule for a merge request</h3>
+<p>Creates an approval rule for a specific merge request. If <code>approval_project_rule_id</code>
+is set with the ID of an existing approval rule from the project, this endpoint:</p>
+<ul>
+<li>Copies the values for <code>name</code>, <code>users</code>, and <code>groups</code> from the project's rule.</li>
+<li>Uses the <code>approvals_required</code> value you specify.</li>
+</ul>
+<pre><code class="language-plaintext">POST /projects/:id/merge_requests/:merge_request_iid/approval_rules
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approvals_required</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The number of required approvals for this rule.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of the merge request.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The name of the approval rule. Limited to 1024 characters.</td>
+</tr>
+<tr>
+<td><code>approval_project_rule_id</code></td>
+<td>integer</td>
+<td>No</td>
+<td>The ID of a project's approval rule.</td>
+</tr>
+<tr>
+<td><code>group_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of groups as approvers.</td>
+</tr>
+<tr>
+<td><code>user_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of users as approvers. If used with <code>usernames</code>, adds both lists of users.</td>
+</tr>
+<tr>
+<td><code>usernames</code></td>
+<td>string array</td>
+<td>No</td>
+<td>The usernames of approvers. If used with <code>user_ids</code>, adds both lists of users.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;security&quot;,
+  &quot;rule_type&quot;: &quot;regular&quot;,
+  &quot;eligible_approvers&quot;: [
+    {
+      &quot;id&quot;: 2,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    },
+    {
+      &quot;id&quot;: 50,
+      &quot;name&quot;: &quot;Group Member 1&quot;,
+      &quot;username&quot;: &quot;group_member_1&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+    }
+  ],
+  &quot;approvals_required&quot;: 1,
+  &quot;source_rule&quot;: null,
+  &quot;users&quot;: [
+    {
+      &quot;id&quot;: 2,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    }
+  ],
+  &quot;groups&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;group1&quot;,
+      &quot;path&quot;: &quot;group1&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;visibility&quot;: &quot;public&quot;,
+      &quot;lfs_enabled&quot;: false,
+      &quot;avatar_url&quot;: null,
+      &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+      &quot;request_access_enabled&quot;: false,
+      &quot;full_name&quot;: &quot;group1&quot;,
+      &quot;full_path&quot;: &quot;group1&quot;,
+      &quot;parent_id&quot;: null,
+      &quot;ldap_cn&quot;: null,
+      &quot;ldap_access&quot;: null
+    }
+  ],
+  &quot;contains_hidden_groups&quot;: false,
+  &quot;overridden&quot;: false
+}
+</code></pre>
+<h3>Update an approval rule for a merge request</h3>
+<p>Updates a specified approval rule for a merge request. This endpoint removes any approvers and groups
+not included in the <code>group_ids</code>, <code>user_ids</code>, or <code>usernames</code> attributes.</p>
+<p>The <code>report_approver</code> or <code>code_owner</code> rules are system-generated, and you cannot edit them.</p>
+<pre><code class="language-plaintext">PUT /projects/:id/merge_requests/:merge_request_iid/approval_rules/:approval_rule_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approval_rule_id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of an approval rule.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of a merge request.</td>
+</tr>
+<tr>
+<td><code>approvals_required</code></td>
+<td>integer</td>
+<td>No</td>
+<td>The number of required approvals for this rule.</td>
+</tr>
+<tr>
+<td><code>group_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of groups as approvers.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>No</td>
+<td>The name of the approval rule. Limited to 1024 characters.</td>
+</tr>
+<tr>
+<td><code>remove_hidden_groups</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, removes hidden groups.</td>
+</tr>
+<tr>
+<td><code>user_ids</code></td>
+<td>Array</td>
+<td>No</td>
+<td>The IDs of users as approvers. If used with <code>usernames</code>, adds both lists of users.</td>
+</tr>
+<tr>
+<td><code>usernames</code></td>
+<td>string array</td>
+<td>No</td>
+<td>The usernames of approvers. If used with <code>user_ids</code>, adds both lists of users.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;security&quot;,
+  &quot;rule_type&quot;: &quot;regular&quot;,
+  &quot;eligible_approvers&quot;: [
+    {
+      &quot;id&quot;: 2,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    },
+    {
+      &quot;id&quot;: 50,
+      &quot;name&quot;: &quot;Group Member 1&quot;,
+      &quot;username&quot;: &quot;group_member_1&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/group_member_1&quot;
+    }
+  ],
+  &quot;approvals_required&quot;: 1,
+  &quot;source_rule&quot;: null,
+  &quot;users&quot;: [
+    {
+      &quot;id&quot;: 2,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;username&quot;: &quot;jdoe&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/0?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://localhost/jdoe&quot;
+    }
+  ],
+  &quot;groups&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;group1&quot;,
+      &quot;path&quot;: &quot;group1&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;visibility&quot;: &quot;public&quot;,
+      &quot;lfs_enabled&quot;: false,
+      &quot;avatar_url&quot;: null,
+      &quot;web_url&quot;: &quot;http://localhost/groups/group1&quot;,
+      &quot;request_access_enabled&quot;: false,
+      &quot;full_name&quot;: &quot;group1&quot;,
+      &quot;full_path&quot;: &quot;group1&quot;,
+      &quot;parent_id&quot;: null,
+      &quot;ldap_cn&quot;: null,
+      &quot;ldap_access&quot;: null
+    }
+  ],
+  &quot;contains_hidden_groups&quot;: false,
+  &quot;overridden&quot;: false
+}
+</code></pre>
+<h3>Delete an approval rule for a merge request</h3>
+<p>Deletes an approval rule for a specified merge request.</p>
+<pre><code class="language-plaintext">DELETE /projects/:id/merge_requests/:merge_request_iid/approval_rules/:approval_rule_id
+</code></pre>
+<p>The <code>report_approver</code> or <code>code_owner</code> rules are system-generated, and you cannot edit them.</p>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+<tr>
+<td><code>approval_rule_id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of an approval rule.</td>
+</tr>
+<tr>
+<td><code>merge_request_iid</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The IID of the merge request.</td>
+</tr>
+</tbody>
+</table>
+<h2>Approval rules for groups</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/428051">Introduced</a> in GitLab 16.7 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>approval_group_rules</code>. Disabled by default. This feature is an <a href="../policy/development_stages_support.html">experiment</a>.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>On GitLab Self-Managed, by default this feature is not available. To make it available, an administrator can <a href="../administration/feature_flags/_index.html">enable the feature flag</a> named <code>approval_group_rules</code>.
+On GitLab.com and GitLab Dedicated, this feature is not available.
+This feature is not ready for production use.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Group approval rules apply to all protected branches of projects belonging to the group.</p>
+<h3>List all approval rules for a group</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/440638">Introduced</a> in GitLab 16.10.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Lists all approval rules and any associated details for a specified group. Restricted to group administrators.</p>
+<p>Use the <code>page</code> and <code>per_page</code> <a href="rest/_index.md#offset-based-pagination">pagination</a> parameters to
+restrict the list of approval rules.</p>
+<pre><code class="language-plaintext">GET /groups/:id/approval_rules
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a project.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request GET \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/29/approval_rules&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 2,
+    &quot;name&quot;: &quot;rule1&quot;,
+    &quot;rule_type&quot;: &quot;any_approver&quot;,
+    &quot;report_type&quot;: null,
+    &quot;eligible_approvers&quot;: [],
+    &quot;approvals_required&quot;: 3,
+    &quot;users&quot;: [],
+    &quot;groups&quot;: [],
+    &quot;contains_hidden_groups&quot;: false,
+    &quot;protected_branches&quot;: [],
+    &quot;applies_to_all_protected_branches&quot;: true
+  },
+  {
+    &quot;id&quot;: 3,
+    &quot;name&quot;: &quot;rule2&quot;,
+    &quot;rule_type&quot;: &quot;code_owner&quot;,
+    &quot;report_type&quot;: null,
+    &quot;eligible_approvers&quot;: [],
+    &quot;approvals_required&quot;: 2,
+    &quot;users&quot;: [],
+    &quot;groups&quot;: [],
+    &quot;contains_hidden_groups&quot;: false,
+    &quot;protected_branches&quot;: [],
+    &quot;applies_to_all_protected_branches&quot;: true
+  },
+  {
+    &quot;id&quot;: 4,
+    &quot;name&quot;: &quot;rule2&quot;,
+    &quot;rule_type&quot;: &quot;report_approver&quot;,
+    &quot;report_type&quot;: &quot;code_coverage&quot;,
+    &quot;eligible_approvers&quot;: [],
+    &quot;approvals_required&quot;: 2,
+    &quot;users&quot;: [],
+    &quot;groups&quot;: [],
+    &quot;contains_hidden_groups&quot;: false,
+    &quot;protected_branches&quot;: [],
+    &quot;applies_to_all_protected_branches&quot;: true
+  }
+]
+
+</code></pre>
+<h3>Create an approval rule for a group</h3>
+<p>Creates an approval rule for a group. Restricted to group administrators.</p>
+<p>Don't use the <code>rule_type</code> field when building approval rules from the API. The field supports these rule types:</p>
+<ul>
+<li><code>any_approver</code>: A pre-configured default rule with <code>approvals_required</code> set to <code>0</code>.</li>
+<li><code>regular</code>: Used for regular <a href="../user/project/merge_requests/approvals/rules.html">merge request approval rules</a>.</li>
+<li><code>report_approver</code>: Used when GitLab creates an approval rule from configured and enabled
+  <a href="../user/application_security/policies/merge_request_approval_policies.html">merge request approval policies</a>.</li>
+</ul>
+<pre><code class="language-plaintext">POST /groups/:id/approval_rules
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of a group</a>.</td>
+</tr>
+<tr>
+<td><code>approvals_required</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The number of required approvals for this rule.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The name of the approval rule. Limited to 1024 characters.</td>
+</tr>
+<tr>
+<td><code>group_ids</code></td>
+<td>array</td>
+<td>No</td>
+<td>The IDs of groups as approvers.</td>
+</tr>
+<tr>
+<td><code>rule_type</code></td>
+<td>string</td>
+<td>No</td>
+<td>The rule type. Supported values include <code>any_approver</code>, <code>regular</code>, and <code>report_approver</code>.</td>
+</tr>
+<tr>
+<td><code>user_ids</code></td>
+<td>array</td>
+<td>No</td>
+<td>The IDs of users as approvers.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/29/approval_rules?name=security&amp;approvals_required=2&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 5,
+  &quot;name&quot;: &quot;security&quot;,
+  &quot;rule_type&quot;: &quot;any_approver&quot;,
+  &quot;eligible_approvers&quot;: [],
+  &quot;approvals_required&quot;: 2,
+  &quot;users&quot;: [],
+  &quot;groups&quot;: [],
+  &quot;contains_hidden_groups&quot;: false,
+  &quot;protected_branches&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;master&quot;,
+      &quot;push_access_levels&quot;: [
+        {
+          &quot;id&quot;: 5,
+          &quot;access_level&quot;: 40,
+          &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+          &quot;deploy_key_id&quot;: null,
+          &quot;user_id&quot;: null,
+          &quot;group_id&quot;: null
+        }
+      ],
+      &quot;merge_access_levels&quot;: [
+        {
+          &quot;id&quot;: 5,
+          &quot;access_level&quot;: 40,
+          &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+          &quot;user_id&quot;: null,
+          &quot;group_id&quot;: null
+        }
+      ],
+      &quot;allow_force_push&quot;: false,
+      &quot;unprotect_access_levels&quot;: [],
+      &quot;code_owner_approval_required&quot;: false,
+      &quot;inherited&quot;: false
+    }
+  ],
+  &quot;applies_to_all_protected_branches&quot;: true
+}
+</code></pre>
+<h3>Update an approval rule for a group</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/440639">Introduced</a> in GitLab 16.10.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Updates an approval rule for a group. Restricted to group administrators.</p>
+<p>Don't use the <code>rule_type</code> field when building approval rules from the API. The field supports these rule types:</p>
+<ul>
+<li><code>any_approver</code>: A pre-configured default rule with <code>approvals_required</code> set to <code>0</code>.</li>
+<li><code>regular</code>: Used for regular <a href="../user/project/merge_requests/approvals/rules.html">merge request approval rules</a>.</li>
+<li><code>report_approver</code>: Used when GitLab creates an approval rule from configured and enabled
+  <a href="../user/application_security/policies/merge_request_approval_policies.html">merge request approval policies</a>.</li>
+</ul>
+<pre><code class="language-shell">PUT /groups/:id/approval_rules/:approval_rule_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>approval_rule_id</code></td>
+<td>integer</td>
+<td>Yes</td>
+<td>The ID of the approval rule.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of a group</a>.</td>
+</tr>
+<tr>
+<td><code>approvals_required</code></td>
+<td>string</td>
+<td>No</td>
+<td>The number of required approvals for this rule.</td>
+</tr>
+<tr>
+<td><code>group_ids</code></td>
+<td>integer</td>
+<td>No</td>
+<td>The IDs of users as approvers.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>No</td>
+<td>The name of the approval rule. Limited to 1024 characters.</td>
+</tr>
+<tr>
+<td><code>rule_type</code></td>
+<td>array</td>
+<td>No</td>
+<td>The rule type. Supported values include <code>any_approver</code>, <code>regular</code>, and <code>report_approver</code>.</td>
+</tr>
+<tr>
+<td><code>user_ids</code></td>
+<td>array</td>
+<td>No</td>
+<td>The IDs of groups as approvers.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request PUT \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/29/approval_rules/5?name=security2&amp;approvals_required=1&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 5,
+  &quot;name&quot;: &quot;security2&quot;,
+  &quot;rule_type&quot;: &quot;any_approver&quot;,
+  &quot;eligible_approvers&quot;: [],
+  &quot;approvals_required&quot;: 1,
+  &quot;users&quot;: [],
+  &quot;groups&quot;: [],
+  &quot;contains_hidden_groups&quot;: false,
+  &quot;protected_branches&quot;: [
+    {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;master&quot;,
+      &quot;push_access_levels&quot;: [
+        {
+          &quot;id&quot;: 5,
+          &quot;access_level&quot;: 40,
+          &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+          &quot;deploy_key_id&quot;: null,
+          &quot;user_id&quot;: null,
+          &quot;group_id&quot;: null
+        }
+      ],
+      &quot;merge_access_levels&quot;: [
+        {
+          &quot;id&quot;: 5,
+          &quot;access_level&quot;: 40,
+          &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+          &quot;user_id&quot;: null,
+          &quot;group_id&quot;: null
+        }
+      ],
+      &quot;allow_force_push&quot;: false,
+      &quot;unprotect_access_levels&quot;: [],
+      &quot;code_owner_approval_required&quot;: false,
+      &quot;inherited&quot;: false
+    }
+  ],
+  &quot;applies_to_all_protected_branches&quot;: true
+}
+</code></pre></code></pre>
+</body>
+</html>

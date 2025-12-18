@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># How pull mirroring works</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Create a pull mirror to pull changes from a remote repository into GitLab, and keep your copy of it up-to-date.
+title: Pull from a remote repository</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Moved to GitLab Premium in 13.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can use the GitLab interface to browse the content and activity of a repository,
+even if it isn't hosted on GitLab. Create a pull <a href="_index.html">mirror</a> to copy the
+branches, tags, and commits from an upstream repository to yours.</p>
+<p>Unlike <a href="push.html">push mirrors</a>, pull mirrors retrieve changes from an upstream (remote)
+repository on a scheduled basis. To prevent the mirror from diverging from the upstream
+repository, don't push commits directly to the downstream mirror. Push commits to
+the upstream repository instead. Changes in the remote repository are pulled into the GitLab repository:</p>
+<ul>
+<li>Automatically, 30 minutes after a previous pull. This cannot be disabled.</li>
+<li>When an administrator <a href="_index.md#force-an-update">force-updates the mirror</a>.</li>
+<li>When an <a href="#trigger-an-update-by-using-the-api">API call triggers an update</a>.</li>
+</ul>
+<p>UI and API updates are subject to default
+<a href="../../../../administration/instance_limits.md#pull-mirroring-interval">pull mirroring intervals</a>
+of 5 minutes. This interval can be configured on GitLab Self-Managed instances.</p>
+<p>By default, if any branch or tag on the downstream pull mirror diverges from the
+local repository, GitLab stops updating the branch. This prevents data loss.
+Deleted branches and tags in the upstream repository are not reflected in the
+downstream repository.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Items deleted from the downstream pull mirror repository, but still in the upstream repository,
+are restored upon the next pull. For example: a branch deleted only in the mirrored repository
+reappears after the next pull.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>How pull mirroring works</h2>
+<p>After you configure a GitLab repository as a pull mirror:</p>
+<ol>
+<li>GitLab adds the repository to a queue.</li>
+<li>Once per minute, a Sidekiq cron job schedules repository mirrors to update, based on:</li>
+<li>Available capacity, determined by Sidekiq settings. For GitLab.com, read
+     <a href="../../../gitlab_com/_index.md#sidekiq">GitLab.com Sidekiq settings</a>.</li>
+<li>How many mirrors are already in the queue and due for updates. Being due depends
+     on when the repository mirror was last updated, and how many times updates have been retried.</li>
+<li>Sidekiq becomes available to process updates, mirrors are updated. If the update process:</li>
+<li>Succeeds: An update is enqueued again with at least a 30 minute wait.</li>
+<li>Fails: The update is attempted again later. After 14 failures, a mirror is marked as a
+     <a href="#fix-hard-failures-when-mirroring">hard failure</a> and is no longer enqueued for updates. A branch diverging
+     from its upstream counterpart can cause failures. To prevent branches from
+     diverging, configure <a href="#overwrite-diverged-branches">Overwrite diverged branches</a> when
+     you create your mirror.</li>
+</ol>
+<h2>Configure pull mirroring</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>If your remote repository is on GitHub and you have
+  <a href="https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa">two-factor authentication (2FA) configured</a>,
+  create a <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">personal access token for GitHub</a>
+  with the <code>repo</code> scope. If 2FA is enabled, this personal access
+  token serves as your GitHub password.</li>
+<li>
+<p><a href="../../../../administration/silent_mode/_index.html">GitLab Silent Mode</a> is not enabled.</p>
+</li>
+<li>
+<p>On the top bar, select <strong>Search or go to</strong> and find your project.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand <strong>Mirroring repositories</strong>.</li>
+<li>Enter the <strong>Git repository URL</strong>.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>To mirror the <code>gitlab</code> repository, use <code>gitlab.com:gitlab-org/gitlab.git</code>
+   or <code>https://gitlab.com/gitlab-org/gitlab.git</code>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ol>
+<li>In <strong>Mirror direction</strong>, select <strong>Pull</strong>.</li>
+<li>In <strong>Authentication method</strong>, select your authentication method. For more information, see
+   <a href="_index.md#authentication-methods-for-mirrors">Authentication methods for mirrors</a>.</li>
+<li>Select any of the options you need:</li>
+<li><a href="#overwrite-diverged-branches"><strong>Overwrite diverged branches</strong></a></li>
+<li><a href="#trigger-pipelines-for-mirror-updates"><strong>Trigger pipelines for mirror updates</strong></a></li>
+<li><strong>Only mirror protected branches</strong></li>
+<li>To save the configuration, select <strong>Mirror repository</strong>.</li>
+</ol>
+<h3>Overwrite diverged branches</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Moved to GitLab Premium in 13.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To always update your local branches with remote versions, even if they have
+diverged from the remote, select <strong>Overwrite diverged branches</strong> when you
+create a mirror.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>For mirrored branches, enabling this option results in the loss of local changes.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Trigger pipelines for mirror updates</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Moved to GitLab Premium in 13.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can configure your mirror to automatically trigger pipelines when
+the remote repository updates branches or tags. Before you enable this feature:</p>
+<ul>
+<li>Ensure your CI runners can handle the additional load from the remote repository activity.</li>
+<li>Consider the security risks, because the pipelines use the credentials of the user that set up the pull mirroring. For example, a malicious maintainer could:</li>
+<li>Make an update to the remote repository that attempts to fetch stored CI/CD variable values when the pipeline runs.</li>
+<li>Could push commits to your mirrored project if the <a href="../../../../ci/jobs/ci_job_token.md#allow-git-push-requests-to-your-project-repository"><strong>Allow Git push requests to the repository</strong></a> setting is enabled.</li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Only enable this feature for your own projects or those with trusted maintainers.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Trigger an update by using the API</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>moved to GitLab Premium in 13.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Pull mirroring uses polling to detect new branches and commits added upstream,
+often minutes afterwards. You can notify GitLab using an
+<a href="../../../../api/project_pull_mirroring.md#start-the-pull-mirroring-process-for-a-project">API call</a>,
+but the <a href="_index.md#force-an-update">minimum interval for pull mirroring limits</a> is still enforced.</p>
+<p>For more information, read
+<a href="../../../../api/project_pull_mirroring.md#start-the-pull-mirroring-process-for-a-project">Start the pull mirroring process for a project</a>.</p>
+<h2>Fix hard failures when mirroring</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Moved to GitLab Premium in 13.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>After 14 consecutive unsuccessful retries, the mirroring process is marked as a hard failure
+and mirroring attempts stop. This failure is visible in either the:</p>
+<ul>
+<li>Project's main dashboard.</li>
+<li>Pull mirror settings page.</li>
+</ul>
+<p>To resume project mirroring, <a href="_index.md#force-an-update">force an update</a>.</p>
+<p>If multiple projects are affected by this problem, such as after a long network or
+server outage, you can use the <a href="../../../../administration/operations/rails_console.html">Rails console</a>
+to identify and update all affected projects with this command:</p>
+<pre><code class="language-ruby">Project.find_each do |p|
+  if p.import_state &amp;&amp; p.import_state.retry_count &gt;= 14
+    puts &quot;Resetting mirroring operation for #{p.full_path}&quot;
+    p.import_state.reset_retry_count
+    p.import_state.set_next_execution_to_now(prioritized: true)
+    p.import_state.save!
+  end
+end
+</code></pre>
+<h2>Related topics</h2>
+<ul>
+<li><a href="troubleshooting.html">Troubleshooting</a> for repository mirroring.</li>
+<li><a href="../../../../administration/instance_limits.md#pull-mirroring-interval">Pull mirroring intervals</a></li>
+<li><a href="../../../../api/project_pull_mirroring.md#configure-pull-mirroring-for-a-project">Project pull mirroring API</a></li>
+</ul></code></pre>
+</body>
+</html>

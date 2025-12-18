@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Alert list</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Analytics
+group: Platform Insights
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Understand and manage alerts in GitLab, including viewing alert lists, changing statuses, assigning alerts, triggering actions, and responding to on-call notifications.
+title: Alerts</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Alerts are a critical entity in your incident management workflow. They represent a notable event that might indicate a service outage or disruption. GitLab provides a list view for triage and detail view for deeper investigation of what happened.</p>
+<h2>Alert list</h2>
+<p>Users with at least the Developer role can access the Alert list at <strong>Monitor</strong> &gt; <strong>Alerts</strong> in your project's sidebar. The Alert list displays alerts sorted by start time, but you can change the sort order by selecting the headers in the Alert list.</p>
+<p>The alert list displays the following information:</p>
+<p><img alt="The alert list showing details about open alerts" src="img/alert_list_v13_1.png" /></p>
+<ul>
+<li><strong>Search</strong>: The alert list supports a simple free text search on the title,
+  description, monitoring tool, and service fields.</li>
+<li><strong>Severity</strong>: The current importance of a alert and how much attention it
+  should receive. For a listing of all statuses, read <a href="#alert-severity">Alert Management severity</a>.</li>
+<li><strong>Start time</strong>: How long ago the alert fired. This field uses the standard
+  GitLab pattern of <code>X time ago</code>, but is supported by a granular date/time
+  tooltip depending on the user's locale.</li>
+<li><strong>Alert description</strong>: The description of the alert, which attempts to
+  capture the most meaningful data.</li>
+<li><strong>Event count</strong>: The number of times that an alert has fired.</li>
+<li><strong>Issue</strong>: A link to the incident issue that has been created for the alert.</li>
+<li><strong>Status</strong>: The current status of the alert:</li>
+<li><strong>Triggered</strong>: Investigation has not started.</li>
+<li><strong>Acknowledged</strong>: Someone is actively investigating the problem.</li>
+<li><strong>Resolved</strong>: No further work is required.</li>
+<li><strong>Ignored</strong>: No action is taken on the alert.</li>
+</ul>
+<h2>Alert severity</h2>
+<p>Each level of alert contains a uniquely shaped and color-coded icon to help you identify the severity of a particular alert. These severity icons help you immediately identify which alerts you should prioritize investigating:</p>
+<p><img alt="Alert severity icons showing different colors and shapes for critical, high, medium, low, info, and unknown levels" src="img/alert_management_severity_v13_0.png" /></p>
+<p>Alerts contain one of the following icons:</p>
+<!-- vale gitlab_base.SubstitutionWarning = NO -->
+
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Icon</th>
+<th>Color (hexadecimal)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>{{&lt; icon name="severity-critical" &gt;}}</td>
+<td><code>#8b2615</code></td>
+</tr>
+<tr>
+<td>High</td>
+<td>{{&lt; icon name="severity-high" &gt;}}</td>
+<td><code>#c0341d</code></td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>{{&lt; icon name="severity-medium" &gt;}}</td>
+<td><code>#fca429</code></td>
+</tr>
+<tr>
+<td>Low</td>
+<td>{{&lt; icon name="severity-low" &gt;}}</td>
+<td><code>#fdbc60</code></td>
+</tr>
+<tr>
+<td>Info</td>
+<td>{{&lt; icon name="severity-info" &gt;}}</td>
+<td><code>#418cd8</code></td>
+</tr>
+<tr>
+<td>Unknown</td>
+<td>{{&lt; icon name="severity-unknown" &gt;}}</td>
+<td><code>#bababa</code></td>
+</tr>
+</tbody>
+</table>
+<!-- vale gitlab_base.SubstitutionWarning = YES -->
+
+<h2>Alert details page</h2>
+<p>Go to the Alert details view by visiting the <a href="#alert-list">Alert list</a> and selecting an alert from the list. You need at least the Developer role to access alerts. Select any alert in the list to examine its alert details page.</p>
+<p>Alerts provide <strong>Overview</strong> and <strong>Alert details</strong> tabs to give you the right amount of information you need.</p>
+<h3>Alert details tab</h3>
+<p>The <strong>Alert details</strong> tab has two sections. The top section provides a short list of critical details such as the severity, start time, number of events, and originating monitoring tool. The second section displays the full alert payload.</p>
+<h3>Metrics tab</h3>
+<p>In many cases, alerts are associated to metrics. You can upload screenshots of metric charts in the <strong>Metrics</strong> tab.</p>
+<p>To do so, either:</p>
+<ul>
+<li>Select <strong>upload</strong> and then select an image from your file browser.</li>
+<li>Drag a file from your file browser and drop it in the drop zone.</li>
+</ul>
+<p>When you upload an image, you can add text to the image and link it to the original graph.</p>
+<p><img alt="An incident metrics tab with an option to add a text link" src="img/incident_metrics_tab_text_link_modal_v14_9.png" /></p>
+<p>If you add a link, it is shown above the uploaded image.</p>
+<h3>Activity feed tab</h3>
+<p>The <strong>Activity feed</strong> tab is a log of activity on the alert. When you take action on an alert, this is logged as a system note. This gives you a linear timeline of the alert's investigation and assignment history.</p>
+<p>The following actions result in a system note:</p>
+<ul>
+<li><a href="#change-an-alerts-status">Updating the status of an alert</a></li>
+<li><a href="manage_incidents.md#from-an-alert">Creating an incident based on an alert</a></li>
+<li><a href="#assign-an-alert">Assignment of an alert to a user</a></li>
+<li><a href="paging.md#escalating-an-alert">Escalation of an alert to on-call responders</a></li>
+</ul>
+<p><img alt="GitLab alert activity feed showing three system notes" src="img/alert_detail_activity_feed_v13_5.png" /></p>
+<h2>Alert actions</h2>
+<p>There are different actions available in GitLab to help triage and respond to alerts.</p>
+<h3>Change an alert's status</h3>
+<p>You can change the status of an alert.</p>
+<p>The available statuses are:</p>
+<ul>
+<li>Triggered (default for new alerts)</li>
+<li>Acknowledged</li>
+<li>Resolved</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Developer role.</li>
+</ul>
+<p>To change an alert's status:</p>
+<ul>
+<li>
+<p>From the <a href="#alert-list">alert list</a>:</p>
+</li>
+<li>
+<p>In the <strong>Status</strong> column, next to an alert, select the status dropdown list.</p>
+</li>
+<li>
+<p>Select a status.</p>
+</li>
+<li>
+<p>From the <a href="#alert-details-page">alert details page</a>:</p>
+</li>
+<li>
+<p>On the right sidebar, select <strong>Edit</strong>.</p>
+</li>
+<li>Select a status.</li>
+</ul>
+<p>To stop email notifications for alert recurrences in projects with <a href="paging.md#email-notifications-for-alerts">email notifications enabled</a>, change the alert's status away from <strong>Triggered</strong>.</p>
+<h4>Resolve an alert by closing the linked incident</h4>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role.</li>
+</ul>
+<p>When you <a href="manage_incidents.md#close-an-incident">close an incident</a> that is linked to an alert, GitLab <a href="#change-an-alerts-status">changes the alert's status</a> to <strong>Resolved</strong>. You are then credited with the alert's status change.</p>
+<h4>As an on-call responder</h4>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>On-call responders can respond to <a href="paging.md#escalating-an-alert">alert pages</a> by changing the alert status.</p>
+<p>Changing the status has the following effects:</p>
+<ul>
+<li>To <strong>Acknowledged</strong>: limits on-call pages based on the project's <a href="escalation_policies.html">escalation policy</a>.</li>
+<li>To <strong>Resolved</strong>: silences all on-call pages for the alert.</li>
+<li>From <strong>Resolved</strong> to <strong>Triggered</strong>: restarts the alert escalating.</li>
+</ul>
+<p>In GitLab 15.1 and earlier, updating the status of an <a href="manage_incidents.md#from-an-alert">alert with an associated incident</a> also updates the incident status. In <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/356057">GitLab 15.2 and later</a>, the incident status is independent and does not update when the alert status changes.</p>
+<h3>Assign an alert</h3>
+<p>In large teams, where there is shared ownership of an alert, it can be difficult to track who is investigating and working on it. Assigning alerts eases collaboration and delegation by indicating which user is owning the alert. GitLab supports only a single assignee per alert.</p>
+<p>To assign an alert:</p>
+<ol>
+<li>
+<p>Display the list of current alerts:</p>
+</li>
+<li>
+<p>On the top bar, select <strong>Search or go to</strong> and find your project.</p>
+</li>
+<li>
+<p>Select <strong>Monitor</strong> &gt; <strong>Alerts</strong>.</p>
+</li>
+<li>
+<p>Select your desired alert to display its details.</p>
+</li>
+</ol>
+<p><img alt="Alert details page with the right sidebar expanded, showing the Assignee dropdown list for assigning or unassigning users" src="img/alert_details_assignees_v13_1.png" /></p>
+<ol>
+<li>
+<p>If the right sidebar is not expanded, select
+   <strong>Expand sidebar</strong> ({{&lt; icon name="chevron-double-lg-right" &gt;}}) to expand it.</p>
+</li>
+<li>
+<p>On the right sidebar, locate the <strong>Assignee</strong>, and then select <strong>Edit</strong>.
+   From the list, select each user you want to assign to the alert.
+   GitLab creates a <a href="../../user/todos.html">to-do item</a> for each user.</p>
+</li>
+</ol>
+<p>After completing their portion of investigating or fixing the alert, users can unassign themselves from the alert. To remove an assignee, select <strong>Edit</strong> next to the <strong>Assignee</strong> dropdown list and clear the user from the list of assignees, or select <strong>Unassigned</strong>.</p>
+<h3>Create a to-do item from an alert</h3>
+<p>You can manually create a <a href="../../user/todos.html">to-do item</a> for yourself from an alert, and view it later on your <strong>To-Do List</strong>.</p>
+<p>To add a to-do item, on the right sidebar, select <strong>Add a to-do item</strong>.</p>
+<h3>Trigger actions from alerts</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Turn on creating <a href="incidents.html">incidents</a> automatically whenever an alert is triggered.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To configure the actions:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Monitor</strong>.</li>
+<li>Expand the <strong>Alerts</strong> section, then select the <strong>Alert settings</strong> tab.</li>
+<li>Select the <strong>Create an incident</strong> checkbox.</li>
+<li>Optional. To customize the incident, from the <strong>Incident template</strong>, select a template to be
+   appended to the <a href="incidents.md#summary">incident summary</a>.
+   If the dropdown list is empty,
+   <a href="../../user/project/description_templates.md#create-a-description-template">create an issue template</a> first.</li>
+<li>Optional. To send <a href="paging.md#email-notifications-for-alerts">an email notification</a>, select the
+   <strong>Send a single email notification to Owners and Maintainers for new alerts</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

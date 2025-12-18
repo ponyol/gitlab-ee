@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Tracking</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Optimize
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Contribution analytics</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Contribution analytics provide an overview of the
+<a href="../../profile/contributions_calendar.md#user-contribution-events">contribution events</a>
+your group's members made in the last week, month, or three months.
+Interactive bar charts and a detailed table show contribution events
+(push events, issues, and merge requests) by group member.</p>
+<p><img alt="Contribution analytics bar graphs" src="img/contribution_analytics_push_v17_7.png" /></p>
+<p>Use contribution analytics to get insights into team activity and individual performance, and use this information for:</p>
+<ul>
+<li>Workload balancing: Analyze your group's contributions over a period of time, and identify group members who are high performers or may benefit from additional support.</li>
+<li>Team collaboration: Evaluate the balance of contributions, such as code pushes versus reviews or approvals, to ensure collaborative development practices.</li>
+<li>Training opportunities: Identify areas where team members may benefit from mentorship or training, such as low merge request approval or issue resolution rates.</li>
+<li>Retrospective evaluation: Incorporate contribution analytics into retrospectives to assess how effectively the team met objectives and where adjustments may be needed.</li>
+</ul>
+<h2>Tracking</h2>
+<p>Contribution analytics are based on push events, because they provide a more reliable view of contributions than unique commits.
+Counting unique commits may lead to duplication when commits are pushed across multiple branches.
+By tracking push events instead, GitLab ensures that every contribution is counted accurately.</p>
+<p>For example, a user pushes three commits to branch A in one push.
+Later, the user pushes two of those commits from branch A to branch B.
+GitLab records five commits, though the user made three unique commits.</p>
+<h2>View contribution analytics</h2>
+<p>To view contribution analytics:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Analyze</strong> &gt; <strong>Contribution analytics</strong>.</li>
+<li>
+<p>Optional. Filter the results:</p>
+</li>
+<li>
+<p>To view contribution analytics for last week, month, or three months, select one of the three tabs.
+   The selected time period applies to all charts and the table.</p>
+</li>
+<li>To zoom in on a bar chart to display only a subset of group members,
+   select the sliders ({{&lt; icon name="status-paused" &gt;}}) below the chart and slide them along the axis.</li>
+<li>
+<p>To sort the contributions table by a column, select the column header or the chevron
+   ({{&lt; icon name="chevron-lg-down" &gt;}} for descending order, {{&lt; icon name="chevron-lg-up" &gt;}} for ascending order).</p>
+</li>
+<li>
+<p>Optional. To view a group member's contributions, either:</p>
+</li>
+<li>
+<p>On the <strong>Contribution analytics</strong> bar charts, hover over the bar with the member's name.</p>
+</li>
+<li>In the <strong>Contributions per group member</strong> table, select the member's name.
+   The member's GitLab profile is displayed, and you can explore their <a href="../../profile/contributions_calendar.html">contributions calendar</a>.</li>
+</ol>
+<p>To retrieve metrics for user contributions, you can also use the <a href="../../../api/graphql/reference/_index.md#groupcontributions">GraphQL API</a>.</p>
+<h2>Contribution analytics with ClickHouse</h2>
+<p>On GitLab.com, contribution analytics run through the ClickHouse Cloud cluster.
+On GitLab Self-Managed, when you configure the ClickHouse integration, the ClickHouse <code>events</code> table is automatically populated from the PostgreSQL <code>events</code> table. This process might take some time for large installations. After the table is fully synchronized, new events become available in ClickHouse with a delay of about three minutes.</p>
+<p>For more information, see:</p>
+<ul>
+<li><a href="../../../integration/clickhouse.html">ClickHouse integration guidelines</a></li>
+<li><a href="https://handbook.gitlab.com/handbook/engineering/architecture/design-documents/clickhouse_usage/">ClickHouse usage at GitLab</a></li>
+</ul></code></pre>
+</body>
+</html>

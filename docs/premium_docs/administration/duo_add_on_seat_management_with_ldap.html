@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Seat management workflow</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Fulfillment
+group: Seat Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: GitLab Duo add-on seat management with LDAP
+description: Automate the assignment and removal of GitLab Duo add-on seats by synchronizing seat status with user membership in specified LDAP groups.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/175101">Introduced</a> in GitLab 17.8.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab administrators can configure automatic GitLab Duo add-on seat assignment based on LDAP group membership. When enabled, GitLab will automatically assign or remove add-on seats for users when they sign in, depending on their LDAP group memberships.</p>
+<h2>Seat management workflow</h2>
+<ol>
+<li><strong>Configuration</strong>: Administrators specify LDAP groups in the <code>duo_add_on_groups</code> <a href="#configure-gitlab-duo-add-on-seat-management">configuration settings</a>.</li>
+<li><strong>Seat synchronization</strong>: GitLab checks LDAP group memberships in two ways:</li>
+<li><strong>On user sign-in</strong>: When a user signs in through LDAP, GitLab immediately checks their group memberships.</li>
+<li><strong>Scheduled sync</strong>: GitLab automatically syncs all LDAP users daily at 02:00 AM to ensure seat assignments are up to date even without user sign-ins.</li>
+<li><strong>Seat assignment</strong>:</li>
+<li>If the user belongs to any group listed in <code>duo_add_on_groups</code>, they are assigned an add-on seat (if not already assigned).</li>
+<li>If the user doesn't belong to any listed group, their add-on seat is removed (if previously assigned).</li>
+<li><strong>Async processing</strong>: The seat assignment and removal is handled async to ensure the main sign-in flow is not interrupted.</li>
+</ol>
+<p>The following diagram illustrates the workflow:</p>
+<pre><code class="language-mermaid">%%{init: { &quot;fontFamily&quot;: &quot;GitLab Sans&quot; }}%%
+sequenceDiagram
+    accTitle: Workflow of GitLab Duo add-on seat management with LDAP
+    accDescr: Sequence diagram showing automatic GitLab Duo add-on seat management based on LDAP group membership. Users sign in, GitLab authenticates them, then enqueues a background job to sync seat assignment based on their group membership.
+
+    participant User
+    participant GitLab
+    participant LDAP
+    participant Background Job
+
+    User-&gt;&gt;GitLab: Sign in with LDAP credentials
+    GitLab-&gt;&gt;LDAP: Authenticate user
+    LDAP--&gt;&gt;GitLab: User authenticated
+    GitLab-&gt;&gt;Background Job: Enqueue 'LdapAddOnSeatSyncWorker' seat sync job
+    GitLab--&gt;&gt;User: Sign-in complete
+    Background Job-&gt;&gt;Background Job: Start
+    Background Job-&gt;&gt;LDAP: Check user's groups against duo_add_on_groups
+    LDAP--&gt;&gt;Background Job: Return membership of groups
+    alt User member of any duo_add_on_groups?
+        Background Job-&gt;&gt;GitLab: Assign Duo Add-on seat
+    else User not in duo_add_on_groups
+        Background Job-&gt;&gt;GitLab: Remove Duo Add-on seat (if assigned)
+    end
+    Background Job--&gt;&gt;Background Job: Complete
+
+    Note over GitLab, Background Job: Additionally, LdapAllAddOnSeatSyncWorker runs daily at 2 AM to sync all LDAP users
+</code></pre>
+<h2>Configure GitLab Duo add-on seat management</h2>
+<p>To turn on add-on seat management with LDAP:</p>
+<ol>
+<li>Open the GitLab configuration file you have edited for the <a href="auth/ldap/ldap_synchronization.md#gitlab-duo-add-on-for-groups">installation</a>.</li>
+<li>Add the <code>duo_add_on_groups</code> setting to your LDAP server configuration.</li>
+<li>Specify an array of LDAP group names that should have GitLab Duo add-on seats.</li>
+</ol>
+<p>The following example is a <code>gitlab.rb</code> configuration for Linux package installations:</p>
+<pre><code class="language-ruby">gitlab_rails['ldap_servers'] = {
+  'main' =&gt; {
+    # Additional LDAP settings removed for readability
+    'duo_add_on_groups' =&gt; ['duo_users', 'admins'],
+  }
+}
+</code></pre></code></pre>
+</body>
+</html>

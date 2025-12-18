@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Schedules</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Analytics
+group: Platform Insights
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Manage on-call schedules and rotations for responders, including creating, editing, and deleting schedules and rotations for incident response.
+title: On-call Schedule Management</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use on-call schedule management to create schedules for responders to rotate on-call
+responsibilities. Maintain the availability of your software services by putting your teams on-call.
+With <a href="escalation_policies.html">escalation policies</a> and on-call schedules, your team is notified immediately
+when things go wrong so they can quickly respond to service outages and disruptions.</p>
+<p>To use on-call schedules:</p>
+<ol>
+<li><a href="#schedules">Create a schedule</a>.</li>
+<li><a href="#rotations">Add a rotation to the schedule</a>.</li>
+</ol>
+<h2>Schedules</h2>
+<p>Set up an on-call schedule for your team to add rotations to.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role.</li>
+</ul>
+<p>To create an on-call schedule:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>On-call Schedules</strong>.</li>
+<li>Select <strong>Add a schedule</strong>.</li>
+<li>Enter the schedule's name and description and select a time zone.</li>
+<li>Select <strong>Add schedule</strong>.</li>
+</ol>
+<p>You now have an empty schedule with no rotations. This renders as an empty state, prompting you to
+create <a href="#rotations">rotations</a> for your schedule.</p>
+<p><img alt="Schedule Empty Grid" src="img/oncall_schedule_empty_grid_v13_10.png" /></p>
+<h3>Edit a schedule</h3>
+<p>To update a schedule:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>On-call Schedules</strong>.</li>
+<li>Select <strong>Edit schedule</strong> ({{&lt; icon name="pencil" &gt;}}).</li>
+<li>Edit the information.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>If you change the schedule's time zone, GitLab automatically updates the rotation's restricted time
+interval (if one is set) to the corresponding times in the new time zone.</p>
+<h3>Delete a schedule</h3>
+<p>To delete a schedule:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>On-call Schedules</strong>.</li>
+<li>Select <strong>Delete escalation policy</strong> ({{&lt; icon name="remove" &gt;}}).</li>
+<li>On the confirmation dialog, select <strong>Delete schedule</strong>.</li>
+</ol>
+<h2>Rotations</h2>
+<p>Add rotations to an existing schedule to put your team members on-call.</p>
+<p>To create a rotation:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>On-call Schedules</strong>.</li>
+<li>Select the <strong>Add a rotation</strong> link.</li>
+<li>
+<p>Enter the following information:</p>
+</li>
+<li>
+<p><strong>Name</strong>: Your rotation's name.</p>
+</li>
+<li><strong>Participants</strong>: The people you want in the rotation.</li>
+<li><strong>Rotation length</strong>: The rotation's duration.</li>
+<li><strong>Starts on</strong>: The date and time the rotation begins.</li>
+<li><strong>Enable end date</strong>: With the toggle on, you can select the date and time your rotation
+     ends.</li>
+<li><strong>Restrict to time intervals</strong>: With the toggle on, you can restrict your rotation to the
+     time period you select.</li>
+</ol>
+<h3>Edit a rotation</h3>
+<p>To edit a rotation:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>On-call Schedules</strong>.</li>
+<li>In the <strong>Rotations</strong> section, select <strong>Edit rotation</strong> ({{&lt; icon name="pencil" &gt;}}).</li>
+<li>Edit the information.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Delete a rotation</h3>
+<p>To delete a rotation:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>On-call Schedules</strong>.</li>
+<li>In the <strong>Rotations</strong> section, select <strong>Delete rotation</strong> ({{&lt; icon name="remove" &gt;}}).</li>
+<li>On the confirmation dialog, select <strong>Delete rotation</strong>.</li>
+</ol>
+<h2>View schedule rotations</h2>
+<p>You can view the on-call schedules of a single day or two weeks. To switch between these time
+periods, select the <strong>1 day</strong> or <strong>2 weeks</strong> buttons on the schedule. Two weeks is the default view.</p>
+<p>Hover over any rotation shift participants in the schedule to view their individual shift details.</p>
+<p><img alt="1 Day Grid View" src="img/oncall_schedule_day_grid_v13_10.png" /></p>
+<h2>Page an on-call responder</h2>
+<p>See <a href="paging.md#paging">Paging</a> for more details.</p>
+<h2>Removal or deletion of on-call user</h2>
+<p>If an on-call user is removed from the project or group, or their account is deleted, the
+confirmation modal displays the list of that user's on-call schedules. If the user's removal or
+deletion is confirmed, GitLab recalculates the on-call rotation and sends an email to the project
+owners and the rotation's participants.</p></code></pre>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Removing an inactive replication slot</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Troubleshooting Geo PostgreSQL replication</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>The following sections outline troubleshooting steps for fixing replication error messages (indicated by <code>Database replication working? ... no</code> in the
+<a href="common.md#health-check-rake-task"><code>geo:check</code> output</a>.
+The instructions present here mostly assume a single-node Geo Linux package deployment, and might need to be adapted to different environments.</p>
+<h2>Removing an inactive replication slot</h2>
+<p>Replication slots are marked as 'inactive' when the replication client (a secondary site) connected to the slot disconnects.
+Inactive replication slots cause WAL files to be retained, because they are sent to the client when it reconnects and the slot becomes active once more.
+If the secondary site is not able to reconnect, use the following steps to remove its corresponding inactive replication slot:</p>
+<ol>
+<li><a href="https://docs.gitlab.com/omnibus/settings/database.html#connecting-to-the-postgresql-database">Start a PostgreSQL console session</a> on the Geo primary site's database node:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-psql -d gitlabhq_production</code></p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Using <code>gitlab-rails dbconsole</code> does not work, because managing replication slots requires superuser permissions.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ol>
+<li>View the replication slots and remove them if they are inactive:</li>
+</ol>
+<p><code>sql
+   SELECT * FROM pg_replication_slots;</code></p>
+<p>Slots where <code>active</code> is <code>f</code> are inactive.</p>
+<ul>
+<li>If this slot should be active, because you have a <strong>secondary</strong> site configured using that slot:</li>
+<li>Look for the <a href="../../../logs/_index.md#postgresql-logs">PostgreSQL logs</a> for the <strong>secondary</strong> site,
+     to view why the replication is not running.</li>
+<li>
+<p>If the secondary site is no longer able to reconnect:</p>
+<ol>
+<li>Remove the slot using the PostgreSQL console session:</li>
+</ol>
+<p><code>sql
+   SELECT pg_drop_replication_slot('&lt;name_of_inactive_slot&gt;');</code></p>
+<ol>
+<li><a href="../../setup/database.md#step-3-initiate-the-replication-process">Re-initiate the replication process</a>,
+   which recreates the replication slot correctly.</li>
+</ol>
+</li>
+<li>
+<p>If you are no longer using the slot (for example, you no longer have Geo enabled), follow the steps <a href="../remove_geo_site.html">to remove that Geo site</a>.</p>
+</li>
+</ul>
+<h2>Message: <code>WARNING: oldest xmin is far in the past</code> and <code>pg_wal</code> size growing</h2>
+<p>If a replication slot is inactive,
+the <code>pg_wal</code> logs corresponding to the slot are reserved forever
+(or until the slot is active again). This causes continuous disk usage growth
+and the following messages appear repeatedly in the
+<a href="../../../logs/_index.md#postgresql-logs">PostgreSQL logs</a>:</p>
+<pre><code class="language-plaintext">WARNING: oldest xmin is far in the past
+HINT: Close open transactions soon to avoid wraparound problems.
+You might also need to commit or roll back old prepared transactions, or drop stale replication slots.
+</code></pre>
+<p>To fix this, you should <a href="#removing-an-inactive-replication-slot">remove the inactive replication slot</a> and re-initiate the replication.</p>
+<h2>Message: <code>ERROR:  replication slots can only be used if max_replication_slots &gt; 0</code>?</h2>
+<p>This means that the <code>max_replication_slots</code> PostgreSQL variable needs to
+be set on the <strong>primary</strong> database. This setting defaults to 1. You may need to
+increase this value if you have more <strong>secondary</strong> sites.</p>
+<p>Be sure to restart PostgreSQL for this to take effect. See the
+<a href="../../setup/database.md#postgresql-replication">PostgreSQL replication setup</a> guide for more details.</p>
+<h2>Message: <code>replication slot "geo_secondary_my_domain_com" does not exist</code></h2>
+<p>This error occurs when PostgreSQL does not have a replication slot for the
+<strong>secondary</strong> site by that name:</p>
+<pre><code class="language-plaintext">FATAL:  could not start WAL streaming: ERROR:  replication slot &quot;geo_secondary_my_domain_com&quot; does not exist
+</code></pre>
+<p>You may want to rerun the <a href="../../setup/database.html">replication process</a> on the <strong>secondary</strong> site .</p>
+<h2>Message: <code>Command exceeded allowed execution time</code> when setting up replication?</h2>
+<p>This may happen while <a href="../../setup/database.md#step-3-initiate-the-replication-process">initiating the replication process</a> on the <strong>secondary</strong> site,
+and indicates your initial dataset is too large to be replicated in the default timeout (30 minutes).</p>
+<p>Re-run <code>gitlab-ctl replicate-geo-database</code>, but include a larger value for
+<code>--backup-timeout</code>:</p>
+<pre><code class="language-shell">sudo gitlab-ctl \
+   replicate-geo-database \
+   --host=&lt;primary_node_hostname&gt; \
+   --slot-name=&lt;secondary_slot_name&gt; \
+   --backup-timeout=21600
+</code></pre>
+<p>This gives the initial replication up to six hours to complete, rather than
+the default 30 minutes. Adjust as required for your installation.</p>
+<h2>Message: <code>PANIC: could not write to file 'pg_xlog/xlogtemp.123': No space left on device</code></h2>
+<p>Determine if you have any unused replication slots in the <strong>primary</strong> database. This can cause large amounts of
+log data to build up in <code>pg_xlog</code>.</p>
+<p><a href="#removing-an-inactive-replication-slot">Removing the inactive slots</a> can reduce the amount of space used in the <code>pg_xlog</code>.</p>
+<h2>Message: <code>ERROR: canceling statement due to conflict with recovery</code></h2>
+<p>This error message occurs infrequently under typical usage, and the system is resilient
+enough to recover.</p>
+<p>However, under certain conditions, some database queries on secondaries may run
+excessively long, which increases the frequency of this error message. This can lead to a situation
+where some queries never complete due to being canceled on every replication.</p>
+<p>These long-running queries are
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/34269">planned to be removed in the future</a>,
+but as a workaround, we recommend enabling
+<a href="https://www.postgresql.org/docs/16/hot-standby.html#HOT-STANDBY-CONFLICT"><code>hot_standby_feedback</code></a>.
+This increases the likelihood of bloat on the <strong>primary</strong> site as it prevents
+<code>VACUUM</code> from removing recently-dead rows. However, it has been used
+successfully in production on GitLab.com.</p>
+<p>To enable <code>hot_standby_feedback</code>, add the following to <code>/etc/gitlab/gitlab.rb</code>
+on the <strong>secondary</strong> site:</p>
+<pre><code class="language-ruby">postgresql['hot_standby_feedback'] = 'on'
+</code></pre>
+<p>Then reconfigure GitLab:</p>
+<pre><code class="language-shell">sudo gitlab-ctl reconfigure
+</code></pre>
+<p>To help us resolve this problem, consider commenting on
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/4489">the issue</a>.</p>
+<h2>Message: <code>server certificate for "PostgreSQL" does not match host name</code></h2>
+<p>If you see this error:</p>
+<pre><code class="language-plaintext">FATAL:  could not connect to the primary server: server certificate for &quot;PostgreSQL&quot; does not match host name
+</code></pre>
+<p>This happens because the PostgreSQL certificate that the Linux package automatically creates contains
+the Common Name <code>PostgreSQL</code>, but the replication is connecting to a different host and GitLab attempts to use
+the <code>verify-full</code> SSL mode by default.</p>
+<p>To fix this issue, you can either:</p>
+<ul>
+<li>Use the <code>--sslmode=verify-ca</code> argument with the <code>replicate-geo-database</code> command.</li>
+<li>For an already replicated database, change <code>sslmode=verify-full</code> to <code>sslmode=verify-ca</code>
+  in <code>/var/opt/gitlab/postgresql/data/gitlab-geo.conf</code> and run <code>gitlab-ctl restart postgresql</code>.</li>
+<li><a href="https://docs.gitlab.com/omnibus/settings/database.html#configuring-ssl">Configure SSL for PostgreSQL</a>
+  with a custom certificate (including the host name that's used to connect to the database in the CN or SAN)
+  instead of using the automatically generated certificate.</li>
+</ul>
+<h2>Message: <code>LOG:  invalid CIDR mask in address</code></h2>
+<p>This happens on wrongly-formatted addresses in <code>postgresql['md5_auth_cidr_addresses']</code>.</p>
+<pre><code class="language-plaintext">2020-03-20_23:59:57.60499 LOG:  invalid CIDR mask in address &quot;***&quot;
+2020-03-20_23:59:57.60501 CONTEXT:  line 74 of configuration file &quot;/var/opt/gitlab/postgresql/data/pg_hba.conf&quot;
+</code></pre>
+<p>To fix this, update the IP addresses in <code>/etc/gitlab/gitlab.rb</code> under <code>postgresql['md5_auth_cidr_addresses']</code>
+to respect the CIDR format (for example, <code>10.0.0.1/32</code>).</p>
+<h2>Message: <code>LOG:  invalid IP mask "md5": Name or service not known</code></h2>
+<p>This happens when you have added IP addresses without a subnet mask in <code>postgresql['md5_auth_cidr_addresses']</code>.</p>
+<pre><code class="language-plaintext">2020-03-21_00:23:01.97353 LOG:  invalid IP mask &quot;md5&quot;: Name or service not known
+2020-03-21_00:23:01.97354 CONTEXT:  line 75 of configuration file &quot;/var/opt/gitlab/postgresql/data/pg_hba.conf&quot;
+</code></pre>
+<p>To fix this, add the subnet mask in <code>/etc/gitlab/gitlab.rb</code> under <code>postgresql['md5_auth_cidr_addresses']</code>
+to respect the CIDR format (for example, <code>10.0.0.1/32</code>).</p>
+<h2>Message: <code>Found data in the gitlabhq_production database</code></h2>
+<p>If you receive the error <code>Found data in the gitlabhq_production database!</code> when running
+<code>gitlab-ctl replicate-geo-database</code>, data was detected in the <code>projects</code> table. When one or more projects are detected, the operation
+is aborted to prevent accidental data loss. To bypass this message, pass the <code>--force</code> option to the command.</p>
+<h2>Message: <code>FATAL:  could not map anonymous shared memory: Cannot allocate memory</code></h2>
+<p>If you see this message, it means that the secondary site's PostgreSQL tries to request memory that is higher than the available memory. There is an <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/381585">issue</a> that tracks this problem.</p>
+<p>Example error message in Patroni logs (located at <code>/var/log/gitlab/patroni/current</code> for Linux package installations):</p>
+<pre><code class="language-plaintext">2023-11-21_23:55:18.63727 FATAL:  could not map anonymous shared memory: Cannot allocate memory
+2023-11-21_23:55:18.63729 HINT:  This error usually means that PostgreSQL's request for a shared memory segment exceeded available memory, swap space, or huge pages. To reduce the request size (currently 17035526144 bytes), reduce PostgreSQL's shared memory usage, perhaps by reducing shared_buffers or max_connections.
+</code></pre>
+<p>The workaround is to increase the memory available to the secondary site's PostgreSQL nodes to match the memory requirements of the primary site's PostgreSQL nodes.</p>
+<h2>Message: <code>could not open certificate file "/root/.postgresql/postgresql.crt"</code></h2>
+<p>If you see this error:</p>
+<pre><code class="language-plaintext">sql: error: connection to server at &quot;x.x.x.x&quot;, port 5432 failed:
+could not open certificate file &quot;/root/.postgresql/postgresql.crt&quot;: Permission denied...
+</code></pre>
+<p>This error happens because PostgreSQL clients, such as <code>psql</code> or applications using <code>libpq</code>,
+look for client SSL certificates in specific default locations like <code>/root/.postgresql/postgresql.crt</code>.
+However, this error message can be misleading. It often appears when authentication fails for other
+reasons, such as using an incorrect password for the GitLab replicator user. Before you troubleshoot
+SSL certificate issues, first confirm your authentication credentials are correct.</p>
+<h2>Investigate causes of database replication lag</h2>
+<p>If the output of <code>sudo gitlab-rake geo:status</code> shows that <code>Database replication lag</code> remains significantly high over time, the primary node in database replication can be checked to determine the status of lag for
+different parts of the database replication process. These values are known as <code>write_lag</code>, <code>flush_lag</code>, and <code>replay_lag</code>. For more information, see
+<a href="https://www.postgresql.org/docs/16/monitoring-stats.html#MONITORING-PG-STAT-REPLICATION-VIEW">the official PostgreSQL documentation</a>.</p>
+<p>Run the following command from the primary Geo node's database to provide relevant output:</p>
+<pre><code class="language-shell">gitlab-psql -xc 'SELECT write_lag,flush_lag,replay_lag FROM pg_stat_replication;'
+
+-[ RECORD 1 ]---------------
+write_lag  | 00:00:00.072392
+flush_lag  | 00:00:00.108168
+replay_lag | 00:00:00.108283
+</code></pre>
+<p>If one or more of these values is significantly high, this could indicate a problem and should be investigated further. When determining the cause, consider that:</p>
+<ul>
+<li><code>write_lag</code> indicates the time since when WAL bytes have been sent by the primary, then received to the secondary, but not yet flushed or applied.</li>
+<li>A high <code>write_lag</code> value may indicate degraded network performance or insufficient network speed between the primary and secondary nodes.</li>
+<li>A high <code>flush_lag</code> value may indicate degraded or sub-optimal disk I/O performance with the secondary node's storage device.</li>
+<li>A high <code>replay_lag</code> value may indicate long running transactions in PostgreSQL, or the saturation of a needed resource like the CPU.</li>
+<li>The difference in time between <code>write_lag</code> and <code>flush_lag</code> indicates that WAL bytes have been sent to the underlying storage system, but it has not reported that they were flushed.
+  This data is most likely not fully written to a persistent storage, and likely held in some kind of volatile write cache.</li>
+<li>The difference between <code>flush_lag</code> and <code>replay_lag</code> indicates WAL bytes that have been successfully persisted to storage, but could not be replayed by the database system.</li>
+</ul>
+<h2>Stuck at <code>Message: pg_basebackup: initiating base backup, waiting for checkpoint to complete</code></h2>
+<p>If the initial replication is stuck at <code>Message: pg_basebackup: initiating base backup, waiting for checkpoint to complete</code>, this means that the primary Geo site
+is not actively used. This mostly happens on a non-production GitLab server or on a brand new GitLab installation.</p>
+<p>The workaround is to cause some database writes. For example, you can sign in to the primary site and create some issues and comments.</p>
+<p>An alternative workaround is to run the SQL query <code>CHECKPOINT;</code> on the database of the primary site:</p>
+<pre><code class="language-shell">sudo gitlab-psql -xc 'CHECKPOINT;'
+</code></pre></code></pre>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Features per tier</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Application Security Testing
+group: Static Analysis
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Code Quality</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Code Quality identifies maintainability issues before they become technical debt.
+The automated feedback that occurs during code reviews can help your team write better code.
+The findings appear directly in merge requests, making problems visible when they're most cost-effective to fix.</p>
+<p>Code Quality works with multiple programming languages and integrates with common linters, style
+checkers, and complexity analyzers. Your existing tools can feed into the Code Quality workflow,
+preserving your team's preferences while standardizing how results are displayed.</p>
+<h2>Features per tier</h2>
+<p>Different features are available in different <a href="https://about.gitlab.com/pricing/">GitLab tiers</a>,
+as shown in the following table:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">In Free</th>
+<th style="text-align: left;">In Premium</th>
+<th style="text-align: left;">In Ultimate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="#import-code-quality-results-from-a-cicd-job">Import Code Quality results from CI/CD jobs</a></td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#use-the-built-in-code-quality-cicd-template-deprecated">Use CodeClimate-based scanning</a></td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#merge-request-widget">See findings in a merge request widget</a></td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#pipeline-details-view">See findings in a pipeline report</a></td>
+<td style="text-align: left;">{{&lt; no &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#merge-request-changes-view">See findings in the merge request changes view</a></td>
+<td style="text-align: left;">{{&lt; no &gt;}}</td>
+<td style="text-align: left;">{{&lt; no &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="#project-quality-view">Analyze overall health in a project quality summary view</a></td>
+<td style="text-align: left;">{{&lt; no &gt;}}</td>
+<td style="text-align: left;">{{&lt; no &gt;}}</td>
+<td style="text-align: left;">{{&lt; yes &gt;}}</td>
+</tr>
+</tbody>
+</table>
+<h2>Scan code for quality violations</h2>
+<p>Code Quality is an open system that supports importing results from many scanning tools.
+To find violations and surface them, you can:</p>
+<ul>
+<li>Directly use a scanning tool and <a href="#import-code-quality-results-from-a-cicd-job">import its results</a>. <em>(Preferred.)</em></li>
+<li><a href="#use-the-built-in-code-quality-cicd-template-deprecated">Use a built-in CI/CD template</a> to enable scanning. The template uses the CodeClimate engine, which wraps common open source tools. <em>(Deprecated.)</em></li>
+</ul>
+<p>You can capture results from multiple tools in a single pipeline.
+For example, you can run a code linter to scan your code along with a language linter to scan your documentation, or you can use a standalone tool along with CodeClimate-based scanning.
+Code Quality combines all of the reports so you see all of them when you <a href="#view-code-quality-results">view results</a>.</p>
+<h3>Import Code Quality results from a CI/CD job</h3>
+<p>Many development teams already use linters, style checkers, or other tools in their CI/CD pipelines to automatically detect violations of coding standards.
+You can make the findings from these tools easier to see and fix by integrating them with Code Quality.</p>
+<p>To see if your tool already has a documented integration, see <a href="#integrate-common-tools-with-code-quality">Integrate common tools with Code Quality</a>.</p>
+<p>To integrate a different tool with Code Quality:</p>
+<ol>
+<li>Add the tool to your CI/CD pipeline.</li>
+<li>Configure the tool to output a report as a file.</li>
+<li>This file must use a <a href="#code-quality-report-format">specific JSON format</a>.</li>
+<li>Many tools support this output format natively. They may call it a "CodeClimate report", "GitLab Code Quality report", or another similar name.</li>
+<li>Other tools can sometimes create JSON output using a custom JSON format or template. Because the <a href="#code-quality-report-format">report format</a> has only a few required fields, you may be able to use this output type to create a report for Code Quality.</li>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that matches this file.</li>
+</ol>
+<p>Now, after the pipeline runs, the quality tool's results are <a href="#view-code-quality-results">processed and displayed</a>.</p>
+<h3>Use the built-in Code Quality CI/CD template (deprecated)</h3>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>This feature was <a href="../../update/deprecations.md#codeclimate-based-code-quality-scanning-will-be-removed">deprecated</a> in GitLab 17.3 and is planned for removal in 19.0.
+<a href="#import-code-quality-results-from-a-cicd-job">Integrate the results from a supported tool directly</a> instead.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Code Quality also includes a built-in CI/CD template, <code>Code-Quality.gitlab-ci.yaml</code>.
+This template runs a scan based on the open source CodeClimate scanning engine.</p>
+<p>The CodeClimate engine runs:</p>
+<ul>
+<li>Basic maintainability checks for a <a href="https://docs.codeclimate.com/docs/supported-languages-for-maintainability">set of supported languages</a>.</li>
+<li>A configurable set of <a href="https://docs.codeclimate.com/docs/list-of-engines">plugins</a>, which wrap open source scanners, to analyze your source code.</li>
+</ul>
+<p>For more details, see <a href="code_quality_codeclimate_scanning.html">Configure CodeClimate-based Code Quality scanning</a>.</p>
+<h4>Migrate from CodeClimate-based scanning</h4>
+<p>The CodeClimate engine uses a customizable set of <a href="code_quality_codeclimate_scanning.md#configure-codeclimate-analysis-plugins">analysis plugins</a>.
+Some are on by default; others must be explicitly enabled.
+The following integrations are available to replace the built-in plugins:</p>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>On by default</th>
+<th>Replacement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Duplication</td>
+<td>{{&lt; yes &gt;}}</td>
+<td><a href="#pmd-copypaste-detector">Integrate PMD Copy/Paste Detector</a>.</td>
+</tr>
+<tr>
+<td>ESLint</td>
+<td>{{&lt; yes &gt;}}</td>
+<td><a href="#eslint">Integrate ESLint</a>.</td>
+</tr>
+<tr>
+<td>gofmt</td>
+<td>{{&lt; no &gt;}}</td>
+<td><a href="#golangci-lint">Integrate golangci-lint</a> and enable the <a href="https://golangci-lint.run/usage/linters#gofmt">gofmt linter</a>.</td>
+</tr>
+<tr>
+<td>golint</td>
+<td>{{&lt; no &gt;}}</td>
+<td><a href="#golangci-lint">Integrate golangci-lint</a> and enable one of the included linters that replaces golint. golint is <a href="https://github.com/golang/go/issues/38968">deprecated and frozen</a>.</td>
+</tr>
+<tr>
+<td>govet</td>
+<td>{{&lt; no &gt;}}</td>
+<td><a href="#golangci-lint">Integrate golangci-lint</a>. golangci-lint <a href="https://golangci-lint.run/usage/linters#enabled-by-default">includes govet by default</a>.</td>
+</tr>
+<tr>
+<td>markdownlint</td>
+<td>{{&lt; no &gt;}} (community-supported)</td>
+<td><a href="#markdownlint-cli2">Integrate markdownlint-cli2</a>.</td>
+</tr>
+<tr>
+<td>pep8</td>
+<td>{{&lt; no &gt;}}</td>
+<td>Integrate an alternative Python linter like <a href="#flake8">Flake8</a>, <a href="#pylint">Pylint</a>, or <a href="#ruff">Ruff</a>.</td>
+</tr>
+<tr>
+<td>RuboCop</td>
+<td>{{&lt; yes &gt;}}</td>
+<td><a href="#rubocop">Integrate RuboCop</a>.</td>
+</tr>
+<tr>
+<td>SonarPython</td>
+<td>{{&lt; no &gt;}}</td>
+<td>Integrate an alternative Python linter like <a href="#flake8">Flake8</a>, <a href="#pylint">Pylint</a>, or <a href="#ruff">Ruff</a>.</td>
+</tr>
+<tr>
+<td>Stylelint</td>
+<td>{{&lt; no &gt;}} (community-supported)</td>
+<td><a href="#stylelint">Integrate Stylelint</a>.</td>
+</tr>
+<tr>
+<td>SwiftLint</td>
+<td>{{&lt; no &gt;}}</td>
+<td><a href="#swiftlint">Integrate SwiftLint</a>.</td>
+</tr>
+</tbody>
+</table>
+<h2>View Code Quality results</h2>
+<p>Code Quality results are shown in the:</p>
+<ul>
+<li><a href="#merge-request-widget">Merge request widget</a></li>
+<li><a href="#merge-request-changes-view">Merge request changes view</a></li>
+<li><a href="#pipeline-details-view">Pipeline details view</a></li>
+<li><a href="#project-quality-view">Project quality view</a></li>
+</ul>
+<h3>Merge request widget</h3>
+<p>Code Quality analysis results display in the merge request widget area if a report from the target
+branch is available for comparison. The merge request widget displays Code Quality findings and resolutions that
+were introduced by the changes made in the merge request. Multiple Code Quality findings with identical
+fingerprints display as a single entry in the merge request widget. Each individual finding is available in the
+full report available in the <strong>Pipeline</strong> details view.</p>
+<p><img alt="List of code quality issues in the merge request, ordered by decreasing severity" src="img/code_quality_merge_request_widget_v18_2.png" /></p>
+<h3>Merge request changes view</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Code Quality results display in the merge request <strong>Changes</strong> view. Lines containing Code Quality
+issues are marked by a symbol beside the gutter. Select the symbol to see the list of issues, then select an issue to see its details.</p>
+<p><img alt="Lines in a merge request's changes tab marked with a symbol to indicate code quality issues" src="img/code_quality_changes_view_v18_2.png" /></p>
+<h3>Pipeline details view</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>The full list of Code Quality violations generated by a pipeline is shown in the <strong>Code Quality</strong>
+tab of the pipeline's details page. The pipeline details view displays all Code Quality findings
+that were found on the branch it was run on.</p>
+<p><img alt="List of all issues in the branch, ordered by decreasing severity" src="img/code_quality_pipeline_details_view_v18_2.png" /></p>
+<h3>Project quality view</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/72724">Introduced</a> in GitLab 14.5 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>project_quality_summary_page</code>. This feature is in <a href="../../policy/development_stages_support.html">beta</a>. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>The project quality view displays an overview of the code quality findings. The view can be found under <strong>Analyze</strong> &gt; <strong>CI/CD analytics</strong>, and requires <a href="../../administration/feature_flags/_index.html"><code>project_quality_summary_page</code></a> feature flag to be enabled for this particular project.</p>
+<p><img alt="Total number of issues, called violations, followed by the number of issues of each severity" src="img/code_quality_summary_v15_9.png" /></p>
+<h2>Code Quality report format</h2>
+<p>You can <a href="#import-code-quality-results-from-a-cicd-job">import Code Quality results</a> from any tool that can output a report in the following format.
+This format is a version of the <a href="https://github.com/codeclimate/platform/blob/master/spec/analyzers/SPEC.md#data-types">CodeClimate report format</a> that includes a smaller number of fields.</p>
+<p>The file you provide as <a href="../yaml/artifacts_reports.md#artifactsreportscodequality">Code Quality report artifact</a> must contain a single JSON array.
+Each object in that array must have at least the following properties:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>description</code></td>
+<td>String</td>
+<td>A human-readable description of the code quality violation.</td>
+</tr>
+<tr>
+<td><code>check_name</code></td>
+<td>String</td>
+<td>A unique name representing the check, or rule, associated with this violation.</td>
+</tr>
+<tr>
+<td><code>fingerprint</code></td>
+<td>String</td>
+<td>A unique fingerprint to identify this specific code quality violation, such as a hash of its contents.</td>
+</tr>
+<tr>
+<td><code>location.path</code></td>
+<td>String</td>
+<td>The file containing the code quality violation, expressed as a relative path in the repository. Do not prefix with <code>./</code>.</td>
+</tr>
+<tr>
+<td><code>location.lines.begin</code> or <code>location.positions.begin.line</code></td>
+<td>Integer</td>
+<td>The line on which the code quality violation occurred.</td>
+</tr>
+<tr>
+<td><code>severity</code></td>
+<td>String</td>
+<td>The severity of the violation, can be one of <code>info</code>, <code>minor</code>, <code>major</code>, <code>critical</code>, or <code>blocker</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The format is different from the <a href="https://github.com/codeclimate/platform/blob/master/spec/analyzers/SPEC.md#data-types">CodeClimate report format</a> in the following ways:</p>
+<ul>
+<li>Although the <a href="https://github.com/codeclimate/platform/blob/master/spec/analyzers/SPEC.md#data-types">CodeClimate report format</a> supports more properties, Code Quality only processes the fields listed previously.</li>
+<li>The GitLab parser does not allow a <a href="https://en.wikipedia.org/wiki/Byte_order_mark">byte order mark</a> at the beginning of the file.</li>
+</ul>
+<p>For example, this is a compliant report:</p>
+<pre><code class="language-json">[
+  {
+    &quot;description&quot;: &quot;'unused' is assigned a value but never used.&quot;,
+    &quot;check_name&quot;: &quot;no-unused-vars&quot;,
+    &quot;fingerprint&quot;: &quot;7815696ecbf1c96e6894b779456d330e&quot;,
+    &quot;severity&quot;: &quot;minor&quot;,
+    &quot;location&quot;: {
+      &quot;path&quot;: &quot;lib/index.js&quot;,
+      &quot;lines&quot;: {
+        &quot;begin&quot;: 42
+      }
+    }
+  }
+]
+</code></pre>
+<h2>Integrate common tools with Code Quality</h2>
+<p>Many tools natively support the required <a href="#code-quality-report-format">report format</a> to integrate their results with Code Quality.
+They may call it a "CodeClimate report", "GitLab Code Quality report", or another similar name.</p>
+<p>Other tools can be configured to create JSON output by providing a custom template or format specification.
+Because the <a href="#code-quality-report-format">report format</a> has only a few required fields, you may be able to use this output type to create a report for Code Quality.</p>
+<p>If you already use a tool in your CI/CD pipeline, you should adapt the existing job to add a Code Quality report.
+Adapting the existing job prevents you from running a separate job that may confuse developers and make your pipelines take longer to run.</p>
+<p>If you don't already use a tool, you can write a CI/CD job from scratch or adopt the tool by using a component from <a href="../components/_index.md#cicd-catalog">the CI/CD Catalog</a>.</p>
+<h3>Code scanning tools</h3>
+<h4>ESLint</h4>
+<p>If you already have an <a href="https://eslint.org/">ESLint</a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>Add <a href="https://www.npmjs.com/package/eslint-formatter-gitlab"><code>eslint-formatter-gitlab</code></a> as a development dependency in your project.</li>
+<li>Add the <code>--format gitlab</code> option to the command you use to run ESLint.</li>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.</li>
+<li>By default, the formatter reads your CI/CD configuration and infers the filename where it should save the report.
+     If the formatter can't infer the filename you used in your artifact declaration, set the CI/CD variable <code>ESLINT_CODE_QUALITY_REPORT</code> to the filename specified for your artifact, such as <code>gl-code-quality-report.json</code>.</li>
+</ol>
+<p>You can also use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">ESLint CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>Stylelint</h4>
+<p>If you already have a <a href="https://stylelint.io/">Stylelint</a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>Add <a href="https://www.npmjs.com/package/@studiometa/stylelint-formatter-gitlab"><code>@studiometa/stylelint-formatter-gitlab</code></a> as a development dependency in your project.</li>
+<li>Add the <code>--custom-formatter=@studiometa/stylelint-formatter-gitlab</code> option to the command you use to run Stylelint.</li>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.</li>
+<li>By default, the formatter reads your CI/CD configuration and infers the filename where it should save the report.
+     If the formatter can't infer the filename you used in your artifact declaration, set the CI/CD variable <code>STYLELINT_CODE_QUALITY_REPORT</code> to the filename specified for your artifact, such as <code>gl-code-quality-report.json</code>.</li>
+</ol>
+<p>For more details and an example CI/CD job definition, see the <a href="https://www.npmjs.com/package/@studiometa/stylelint-formatter-gitlab#usage">documentation for <code>@studiometa/stylelint-formatter-gitlab</code></a>.</p>
+<h4>MyPy</h4>
+<p>If you already have a <a href="https://mypy-lang.org/">MyPy</a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>Install <a href="https://pypi.org/project/mypy-gitlab-code-quality/"><code>mypy-gitlab-code-quality</code></a> as a dependency in your project.</li>
+<li>Change your <code>mypy</code> command to send its output to a file.</li>
+<li>Add a step to your job <code>script</code> to reprocess the file into the required format by using <code>mypy-gitlab-code-quality</code>. For example:</li>
+</ol>
+<p><code>yaml
+   - mypy $(find -type f -name "*.py" ! -path "**/.venv/**") --no-error-summary &gt; mypy-out.txt || true  # "|| true" is used for preventing job failure when mypy find errors
+   - mypy-gitlab-code-quality &lt; mypy-out.txt &gt; gl-code-quality-report.json</code></p>
+<ol>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.</li>
+</ol>
+<p>You can also use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">MyPy CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>Flake8</h4>
+<p>If you already have a <a href="https://flake8.pycqa.org/">Flake8</a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>Install <a href="https://github.com/awelzel/flake8-gl-codeclimate"><code>flake8-gl-codeclimate</code></a> as a dependency in your project.</li>
+<li>Add the arguments <code>--format gl-codeclimate --output-file gl-code-quality-report.json</code> to the command you use to run Flake8.</li>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.</li>
+</ol>
+<p>You can also use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">Flake8 CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>Pylint</h4>
+<p>If you already have a <a href="https://pypi.org/project/pylint/">Pylint</a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>Install <a href="https://pypi.org/project/pylint-gitlab/"><code>pylint-gitlab</code></a> as a dependency in your project.</li>
+<li>Add the argument <code>--output-format=pylint_gitlab.GitlabCodeClimateReporter</code> to the command you use to run Pylint.</li>
+<li>Change your <code>pylint</code> command to send its output to a file.</li>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.</li>
+</ol>
+<p>You can also use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">Pylint CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>Ruff</h4>
+<p>If you already have a <a href="https://docs.astral.sh/ruff/">Ruff</a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>Add the argument <code>--output-format=gitlab</code> to the command you use to run Ruff.</li>
+<li>Change your <code>ruff check</code> command to send its output to a file.</li>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.</li>
+</ol>
+<p>You can also use or adapt the <a href="https://docs.astral.sh/ruff/integrations/#gitlab-cicd">documented Ruff GitLab CI/CD integration</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>golangci-lint</h4>
+<p>If you already have a <a href="https://golangci-lint.run/"><code>golangci-lint</code></a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>
+<p>Add the arguments to the command you use to run <code>golangci-lint</code>.</p>
+</li>
+<li>
+<p>For v1 add <code>--out-format code-climate:gl-code-quality-report.json,line-number</code>.</p>
+</li>
+<li>
+<p>For v2 add <code>--output.code-climate.path=gl-code-quality-report.json</code>.</p>
+</li>
+<li>
+<p>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.</p>
+</li>
+</ol>
+<p>You can also use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">golangci-lint CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>PMD Copy/Paste Detector</h4>
+<p>The <a href="https://pmd.github.io/pmd/pmd_userdocs_cpd.html">PMD Copy/Paste Detector (CPD)</a> requires additional configuration because its default output doesn't conform to the required format.</p>
+<p>You can use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">PMD CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>SwiftLint</h4>
+<p>Using <a href="https://realm.github.io/SwiftLint/">SwiftLint</a> requires additional configuration because its default output doesn't conform to the required format.</p>
+<p>You can use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">Swiftlint CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>RuboCop</h4>
+<p>Using <a href="https://rubocop.org/">RuboCop</a> requires additional configuration because its default output doesn't conform to the required format.</p>
+<p>You can use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">RuboCop CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h4>Roslynator</h4>
+<p>Using <a href="https://josefpihrt.github.io/docs/roslynator/">Roslynator</a> requires additional configuration because its default output doesn't conform to the required format.</p>
+<p>You can use or adapt the <a href="https://gitlab.com/explore/catalog/components/code-quality-oss/codequality-os-scanners-integration">Roslynator CI/CD component</a> to run the scan and integrate its output with Code Quality.</p>
+<h3>Documentation scanning tools</h3>
+<p>You can use Code Quality to scan any file stored in a repository, even if it isn't code.</p>
+<h4>Vale</h4>
+<p>If you already have a <a href="https://vale.sh/">Vale</a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>Create a Vale template file in your repository that defines the required format.</li>
+<li>You can copy the open source <a href="https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/.vale/vale-json.tmpl">template used to check GitLab documentation</a>.</li>
+<li>You can also use another open source variant like the one used in the community <a href="https://gitlab.com/gitlab-ci-utils/container-images/vale/-/blob/main/vale/vale-glcq.tmpl"><code>gitlab-ci-utils</code> Vale project</a>. This community project also provides <a href="https://gitlab.com/gitlab-ci-utils/container-images/vale">a pre-made container image</a> that includes the same template so you can use it directly in your pipelines.</li>
+<li>Add the arguments <code>--output="$VALE_TEMPLATE_PATH" --no-exit</code> to the command you use to run Vale.</li>
+<li>Change your <code>vale</code> command to send its output to a file.</li>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.</li>
+</ol>
+<p>You can also use or adapt an open source job definition to run the scan and integrate its output with Code Quality, for example:</p>
+<ul>
+<li>The <a href="https://gitlab.com/gitlab-org/gitlab/-/blob/94f870b8e4b965a41dd2ad576d50f7eeb271f117/.gitlab/ci/docs.gitlab-ci.yml#L71-87">Vale linting step</a> used to check GitLab documentation.</li>
+<li>The community <a href="https://gitlab.com/gitlab-ci-utils/container-images/vale#usage"><code>gitlab-ci-utils</code> Vale project</a>.</li>
+</ul>
+<h4>markdownlint-cli2</h4>
+<p>If you already have a <a href="https://github.com/DavidAnson/markdownlint-cli2">markdownlint-cli2</a> job in your CI/CD pipelines, you should add a report to send its output to Code Quality.
+To integrate its output:</p>
+<ol>
+<li>Add <a href="https://www.npmjs.com/package/markdownlint-cli2-formatter-codequality"><code>markdownlint-cli2-formatter-codequality</code></a> as a development dependency in your project.</li>
+<li>If you don't already have one, create a <code>.markdownlint-cli2.jsonc</code> file at the top level of your repository.</li>
+<li>Add an <code>outputFormatters</code> directive to <code>.markdownlint-cli2.jsonc</code>:</li>
+</ol>
+<p><code>json
+   {
+     "outputFormatters": [
+       [ "markdownlint-cli2-formatter-codequality" ]
+     ]
+   }</code></p>
+<ol>
+<li>Declare a <a href="../yaml/artifacts_reports.md#artifactsreportscodequality"><code>codequality</code> report artifact</a> that points to the location of the report file.
+   By default, the report file is named <code>markdownlint-cli2-codequality.json</code>.</li>
+<li>Recommended. Add the report's filename to the repository's <code>.gitignore</code> file.</li>
+</ol>
+<p>For more details and an example CI/CD job definition, see the <a href="https://www.npmjs.com/package/markdownlint-cli2-formatter-codequality">documentation for <code>markdownlint-cli2-formatter-codequality</code></a>.</p></code></pre>
+</body>
+</html>

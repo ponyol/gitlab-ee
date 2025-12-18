@@ -1,0 +1,3853 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Roles</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Authorization
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Roles and permissions
+description: Understand the permissions and capabilities available to each user role in GitLab.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Roles define a user's permissions in a group or project.</p>
+<p>Users with <a href="../administration/_index.html">administrator access</a> have all permissions and can
+perform any action.</p>
+<h2>Roles</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Planner role <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/482733">introduced</a> in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you add a user to a group or project, you assign them a role.
+The role determines their permissions. Assign either a <a href="#default-roles">default role</a>
+or a <a href="custom_roles/_index.html">custom role</a>.</p>
+<p>A user can have different roles for each group and project. Users always retain the
+permissions for their highest role. For example, if a user has:</p>
+<ul>
+<li>The Maintainer role for a parent group</li>
+<li>The Developer role for a project in that group</li>
+</ul>
+<p>The user inherits the permissions for their Maintainer role in the project.</p>
+<p>To view assigned roles, go to the <strong>Members</strong> page for a
+<a href="group/_index.md#view-group-members">group</a> or
+<a href="project/members/_index.md#view-project-members">project</a>.</p>
+<h3>Default roles</h3>
+<p>The following default roles are available:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimal Access</td>
+<td>View limited group information without access to projects. For more information, see <a href="#users-with-minimal-access">Users with Minimal Access</a>.</td>
+</tr>
+<tr>
+<td>Guest</td>
+<td>View and comment on issues and epics. Cannot push code or access repository. This role applies to <a href="public_access.html">private and internal projects</a> only.</td>
+</tr>
+<tr>
+<td>Planner</td>
+<td>Create and manage issues, epics, milestones, and iterations. Focused on project planning and tracking with the ability to view and collaborate on code changes.</td>
+</tr>
+<tr>
+<td>Reporter</td>
+<td>View code, create issues, and generate reports. Cannot push code or manage protected branches.</td>
+</tr>
+<tr>
+<td>Developer</td>
+<td>Push code to non-protected branches, create merge requests, and run CI/CD pipelines. Cannot manage project settings.</td>
+</tr>
+<tr>
+<td>Maintainer</td>
+<td>Manage branches, merge requests, CI/CD settings, and project members. Cannot delete the project.</td>
+</tr>
+<tr>
+<td>Owner</td>
+<td>Full control over the project or group, including deletion and visibility settings.</td>
+</tr>
+</tbody>
+</table>
+<p>By default, all users can create top-level groups and change their usernames.
+Users with <a href="../administration/user_settings.html">administrator access</a> can change this behavior.</p>
+<!--
+Sort these permissions according the following rules in order:
+1. By minimum role.
+2. By the object being accessed (for example, issue, security dashboard, or pipeline)
+3. By the action: view, create, change, edit, manage, run, delete, all others
+4. Alphabetically.
+
+List only one action (for example, view, create, or delete) per line.
+It's okay to list multiple related objects per line (for example, "View pipelines and pipeline details").
+-->
+
+<h2>Group permissions</h2>
+<p>Any user can remove themselves from a group, unless they are the only Owner of
+the group.</p>
+<p>The following table lists group permissions available for each role:</p>
+<h3>Groups</h3>
+<p>Group permissions for <a href="group/_index.html">group features</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browse group</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> projects in group</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View group <a href="compliance/audit_events.html">audit events</a> <sup>1</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create project in group <sup>2</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create subgroup <sup>3</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change custom settings for <a href="project/integrations/_index.html">project integrations</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit <a href="group/epics/_index.html">epic</a> comments (posted by any user)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Fork project into a group</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="../subscriptions/manage_subscription.md#view-subscription">Billing</a> <sup>4</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View group <a href="storage_usage_quotas.html">Usage quotas</a> page <sup>4</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="group/import/_index.html">Migrate group</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Archive group</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete group</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Transfer group</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="../subscriptions/manage_users_and_seats.md#gitlabcom-billing-and-usage">subscriptions, storage, and compute minutes</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="group/settings/group_access_tokens.html">group access tokens</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change group visibility level</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit group settings</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Configure project templates</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Configure <a href="group/saml_sso/_index.html">SAML SSO</a> <sup>4</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Disable notification emails</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Import <a href="project/settings/import_export.html">project</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Developers and Maintainers can view events based on their individual actions only. For more
+   information, see the <a href="compliance/audit_events.md#prerequisites">prerequisites</a>.</li>
+<li>Developers, Maintainers and Owners: Only if the project creation role is set
+   <a href="../administration/settings/visibility_and_access_controls.md#define-which-roles-can-create-projects">for the instance</a>
+    or <a href="group/_index.md#specify-who-can-add-projects-to-a-group">for the group</a>.
+   <br>Developers: Developers can push commits to the default branch of a new project only
+   if the <a href="group/manage.md#change-the-default-branch-protection-of-a-group">default branch protection</a>
+   is set to "Partially protected" or "Not protected".</li>
+<li>Maintainers: Only if users with the Maintainer role <a href="group/subgroups/_index.md#change-who-can-create-subgroups">can create subgroups</a>.</li>
+<li>Does not apply to subgroups.</li>
+</ol>
+<h3>Group analytics</h3>
+<p>Group permission for <a href="analytics/_index.html">analytics</a> features including value streams, product analytics, and insights:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View <a href="project/insights/_index.html">insights</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="project/insights/_index.html">insights</a> charts</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="group/issues_analytics/_index.html">issue analytics</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View contribution analytics</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View value stream analytics</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="analytics/productivity_analytics.html">productivity analytics</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="group/devops_adoption/_index.html">group DevOps adoption</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View metrics dashboard annotations</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage metrics dashboard annotations</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Group application security</h3>
+<p>Group permissions for <a href="application_security/secure_your_application.html">Application Security</a> features including dependency management, security analyzers, security policies, and vulnerability management.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View <a href="application_security/dependency_list/_index.html">dependency list</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="application_security/vulnerability_report/_index.html">vulnerability report</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="application_security/security_dashboard/_index.html">security dashboard</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="application_security/policies/_index.html">security policy project</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Assign <a href="application_security/policies/_index.html">security policy project</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Group CI/CD</h3>
+<p>Group permissions for <a href="../ci/_index.html">CI/CD</a> features including runners, variables, and protected environments:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View instance runner</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View group runners</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage group-level Kubernetes cluster</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage group runners</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage group level CI/CD variables</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage group protected environments</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Group compliance</h3>
+<p>Group permissions for <a href="compliance/_index.html">compliance</a> features including compliance center, audit events, compliance frameworks, and licenses.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View <a href="compliance/audit_events.html">audit events</a> <sup>1</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View licenses in <a href="application_security/dependency_list/_index.html">dependency list</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="compliance/compliance_center/_index.html">compliance center</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="compliance/compliance_frameworks/_index.html">compliance frameworks</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Assign <a href="compliance/compliance_frameworks/_index.html">compliance frameworks</a> to projects</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="compliance/audit_event_streaming.html">audit streams</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Users can view events based on their individual actions only. For more details, see the <a href="compliance/audit_events.md#prerequisites">prerequisites</a>.</li>
+</ol>
+<h3>Group GitLab Duo</h3>
+<p>Group permissions for <a href="gitlab_duo/_index.html">GitLab Duo</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Non-member</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Use GitLab Duo features <sup>1</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Configure <a href="gitlab_duo/turn_on_off.md#for-a-group-or-subgroup">GitLab Duo feature availability</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Configure <a href="../administration/gitlab_duo_self_hosted/configure_duo_features.html">GitLab Duo Self Hosted</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Enable <a href="gitlab_duo/turn_on_off.md#turn-on-beta-and-experimental-features">beta and experimental features</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Purchase <a href="../subscriptions/subscription-add-ons.md#purchase-additional-gitlab-duo-seats">GitLab Duo seats</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>If the user has GitLab Duo Pro or Enterprise, the
+   <a href="../subscriptions/subscription-add-ons.md#assign-gitlab-duo-seats">user must be assigned a seat to gain access to that GitLab Duo add-on</a>.
+   If the user has GitLab Duo Core, there are no other requirements.</li>
+</ol>
+<h3>Group packages and registries</h3>
+<p>Group permissions for the <a href="packages/_index.html">package and container registry</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pull container registry images <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Pull container images with the dependency proxy</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete container registry images</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Configure a virtual registry</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Pull an artifact from a virtual registry</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Guests can only view events based on their individual actions.</li>
+</ol>
+<p>Group permissions for <a href="packages/_index.html">package registry</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pull packages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Publish packages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete packages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage package settings</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage dependency proxy cleanup policies</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Enable dependency proxy</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Disable dependency proxy</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Purge the group dependency proxy</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Enable package request forwarding</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Disable package request forwarding</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Group planning</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View epic</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> epics <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add issues to an <a href="group/epics/_index.html">epic</a> <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add <a href="group/epics/manage_epics.md#multi-level-child-epics">child epics</a> <sup>3</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add parent epic <sup>4</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add internal notes</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create epics</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Update epic details</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="group/epics/epic_boards.html">epic boards</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete epics</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>You must have permission to <a href="group/epics/manage_epics.md#who-can-view-an-epic">view the epic</a>.</li>
+<li>You must have permission to <a href="group/epics/manage_epics.md#who-can-view-an-epic">view the epic</a> and edit the issue.</li>
+<li>You must have permission to <a href="group/epics/manage_epics.md#who-can-view-an-epic">view</a> the parent and child epics.</li>
+<li>You must have permission to <a href="group/epics/manage_epics.md#who-can-view-an-epic">view</a> the parent epic.</li>
+</ol>
+<p>Group permissions for <a href="project/wiki/group.html">wikis</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View group wiki <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> group wikis <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create group wiki pages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit group wiki pages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete group wiki pages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Guests: In addition, if your group is public or internal, all users who can see the group can also see group wiki pages.</li>
+<li>Guests: In addition, if your group is public or internal, all users who can see the group can also search group wiki pages.</li>
+</ol>
+<h3>Group repositories</h3>
+<p>Group permissions for <a href="project/repository/_index.html">repository</a> features including merge requests, push rules, and deploy tokens.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manage <a href="project/deploy_tokens/_index.html">deploy tokens</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="group/manage.md#group-merge-request-approval-settings">merge request settings</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="group/access_and_permissions.md#group-push-rules">push rules</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Group user management</h3>
+<p>Group permissions for user management:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View 2FA status of members</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Filter members by 2FA status</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage group members</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage group-level custom roles</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Share (invite) groups to groups</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Group workspaces</h3>
+<p>Groups permissions for workspaces:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View workspace cluster agents mapped to a group</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Map or unmap workspace cluster agents to and from a group</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h2>Project permissions</h2>
+<p>A user's role determines what permissions they have on a project. The Owner role provides all permissions but is
+available only:</p>
+<ul>
+<li>For group and project Owners.</li>
+<li>For Administrators.</li>
+</ul>
+<p>Personal <a href="namespace/_index.html">namespace</a> owners:</p>
+<ul>
+<li>Are displayed as having the Maintainer role on projects in the namespace, but have the same permissions as a user with the Owner role.</li>
+<li>For new projects in the namespace, are displayed as having the Owner role.</li>
+</ul>
+<p>When you configure <a href="project/repository/branches/protection_rules.html">protected branch settings</a>,
+selecting a role grants access to users with that role and all higher roles. For example, if you select
+<strong>Maintainers</strong> in the protected branch settings, users with both the Maintainer and Owner roles
+can perform the action.</p>
+<p>For more information about how to manage project members, see
+<a href="project/members/_index.html">members of a project</a>.</p>
+<p>The following tables list the project permissions available for each role.</p>
+<h3>Projects</h3>
+<p>Project permissions for <a href="project/organize_work_with_projects.html">project features</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Download project <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Leave comments</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Reposition comments on images (posted by any user) <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="project/insights/_index.html">insights</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="project/requirements/_index.html">requirements</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="project/time_tracking.html">time tracking</a> reports <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="snippets.html">snippets</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> <a href="snippets.html">snippets</a> and comments</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="../api/project_statistics.html">project traffic statistics</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="snippets.html">snippets</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="project/releases/_index.html">releases</a> <sup>3</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/releases/_index.html">releases</a> <sup>4</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Configure <a href="project/integrations/webhooks.html">webhooks</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/settings/project_access_tokens.html">project access tokens</a> <sup>5</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="project/settings/import_export.html">Export project</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Rename project</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit project badges</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit project settings</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change <a href="public_access.html">project features visibility</a> level <sup>6</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change custom settings for <a href="project/integrations/_index.html">project integrations</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit comments posted by other users</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add <a href="project/deploy_keys/_index.html">deploy keys</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="../operations/_index.html">project operations</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="storage_usage_quotas.html">Usage quotas</a> page</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Globally delete <a href="snippets.html">snippets</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Globally edit <a href="snippets.html">snippets</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Archive project</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change project visibility level</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete project</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Disable notification emails</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Transfer project</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<!-- Disable ordered list rule https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md029---ordered-list-item-prefix -->
+<!-- markdownlint-disable MD029 -->
+
+<ol>
+<li>On GitLab Self-Managed, users with the Guest role are able to perform this action only on
+   public and internal projects (not on private projects). <a href="../administration/external_users.html">External users</a>
+   must be given explicit access (at least the <strong>Reporter</strong> role) even if the project is internal.
+   Users with the Guest role on GitLab.com are only able to perform this action on public projects
+   because internal visibility is not available.</li>
+<li>Applies only to comments on <a href="project/issues/design_management.html">Design Management</a> designs.</li>
+<li>Guest users can access GitLab <a href="project/releases/_index.html"><strong>Releases</strong></a> for downloading
+   assets but are not allowed to download the source code nor see
+   <a href="project/releases/_index.md#view-a-release-and-download-assets">repository information like commits and release evidence</a>.</li>
+<li>If the <a href="project/protected_tags.html">tag is protected</a>, this depends on the access given to
+   Developers and Maintainers.</li>
+<li>For GitLab Self-Managed, project access tokens are available in all tiers. For GitLab.com,
+   project access tokens are supported in the Premium and Ultimate tier (excluding <a href="https://about.gitlab.com/free-trial/">trial licenses</a>).</li>
+<li>A Maintainer or Owner can't change project features visibility level if
+   <a href="public_access.html">project visibility</a> is set to private.</li>
+</ol>
+<!-- markdownlint-enable MD029 -->
+
+<p>Project permissions for <a href="project/pages/_index.html">GitLab Pages</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View GitLab Pages protected by <a href="project/pages/pages_access_control.html">access control</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage GitLab Pages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage GitLab Pages domain and certificates</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Remove GitLab Pages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Project analytics</h3>
+<p>Project permissions for <a href="analytics/_index.html">analytics</a> features including value streams, usage trends, product analytics, and insights.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View <a href="group/issues_analytics/_index.html">issue analytics</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="group/value_stream_analytics/_index.html">value stream analytics</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="analytics/ci_cd_analytics.html">CI/CD analytics</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="analytics/code_review_analytics.html">code review analytics</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="analytics/ci_cd_analytics.html">DORA metrics</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="analytics/merge_request_analytics.html">merge request analytics</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="analytics/repository_analytics.html">repository analytics</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="analytics/value_streams_dashboard.html">Value Streams Dashboard</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="analytics/duo_and_sdlc_trends.html">GitLab Duo and SDLC trends</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Project application security</h3>
+<p>Project permissions for <a href="application_security/secure_your_application.html">application security</a> features including dependency management, security analyzers, security policies, and vulnerability management.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View <a href="application_security/dependency_list/_index.html">dependency list</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View licenses in <a href="application_security/dependency_list/_index.html">dependency list</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="application_security/security_dashboard/_index.html">security dashboard</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="application_security/vulnerability_report/_index.html">vulnerability report</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="application_security/vulnerability_report/_index.md#manually-add-a-vulnerability">vulnerability manually</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="application_security/vulnerabilities/_index.md#create-a-gitlab-issue-for-a-vulnerability">issue</a> from vulnerability finding</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="application_security/dast/on-demand_scan.html">on-demand DAST scans</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Run <a href="application_security/dast/on-demand_scan.html">on-demand DAST scans</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="application_security/policies/_index.html">individual security policies</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change <a href="application_security/policies/_index.html">individual security policies</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete <a href="application_security/policies/_index.html">individual security policies</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="application_security/cve_id_request.html">CVE ID request</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change vulnerability status <sup>1</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="application_security/policies/_index.html">security policy project</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Assign <a href="application_security/policies/_index.html">security policy project</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="application_security/detect/security_configuration.html">security configurations</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>The <code>admin_vulnerability</code> permission was <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/412693">removed</a> from the Developer role in GitLab 17.0.</li>
+</ol>
+<h3>Project CI/CD</h3>
+<p><a href="../ci/_index.html">GitLab CI/CD</a> permissions for some roles can be modified by these settings:</p>
+<ul>
+<li><a href="../ci/pipelines/settings.md#change-which-users-can-view-your-pipelines">Project-based pipeline visibility</a>:
+  When set to public, gives access to certain CI/CD features to Guest project members.</li>
+<li><a href="../ci/pipelines/settings.md#change-pipeline-visibility-for-non-project-members-in-public-projects">Pipeline visibility</a>:
+  When set to <strong>Everyone with Access</strong>, gives access to certain CI/CD "view" features to non-project members.</li>
+</ul>
+<p>Project Owners can perform any listed action, and can delete pipelines:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Non-member</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View instance runner</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View existing artifacts <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View list of jobs <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View artifacts <sup>3</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Download artifacts <sup>3</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="../ci/environments/_index.html">environments</a> <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View job logs and job details page <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View pipelines and pipeline details pages <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View pipelines tab in MR <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="application_security/detect/security_scanning_results.html">vulnerabilities in a pipeline</a> <sup>4</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Run deployment job for a protected environment <sup>5</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="clusters/agent/_index.html">agents for Kubernetes</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View project <a href="../api/secure_files.html">Secure Files</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Download project <a href="../api/secure_files.html">Secure Files</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View a job with <a href="../ci/variables/variables_troubleshooting.md#enable-debug-logging">debug logging</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="../ci/environments/_index.html">environments</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete <a href="../ci/environments/_index.html">environments</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Stop <a href="../ci/environments/_index.html">environments</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Run, rerun, or retry CI/CD pipeline or job</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Run, rerun, or retry CI/CD pipeline or job for a protected branch <sup>6</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete job logs or job artifacts <sup>7</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Enable <a href="../ci/review_apps/_index.html">review apps</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Cancel jobs <sup>8</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Read <a href="infrastructure/_index.html">Terraform</a> state</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Run <a href="../ci/interactive_web_terminal/_index.html">interactive web terminals</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Use pipeline editor</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View project runners <sup>9</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage project runners <sup>9</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete project runners <sup>10</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="clusters/agent/_index.html">agents for Kubernetes</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage CI/CD settings</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage job triggers</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage project CI/CD variables</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage project protected environments</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage project <a href="../api/secure_files.html">Secure Files</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="infrastructure/_index.html">Terraform</a> state</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add project runners to project <sup>11</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Clear runner caches manually</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Enable instance runners in project</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create pipeline schedules <sup>12</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit own pipeline schedules <sup>12</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete own pipeline schedules</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Run pipeline schedules manually <sup>13</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Take ownership of pipeline schedules</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete others' pipeline schedules</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<!-- Disable ordered list rule https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md029---ordered-list-item-prefix -->
+<!-- markdownlint-disable MD029 -->
+
+<ol>
+<li>Non-members and guests: Only if the project is public.</li>
+<li>Non-members: Only if the project is public and <strong>Project-based pipeline visibility</strong> is enabled.
+   <br>Guests: Only if <strong>Project-based pipeline visibility</strong> is enabled.</li>
+<li>Non-members: Only if the project is public, <strong>Project-based pipeline visibility</strong> is enabled,
+   and <a href="../ci/yaml/_index.md#artifactspublic"><code>artifacts:public: false</code></a> is not set on the job.
+   <br>Guests: Only if <strong>Project-based pipeline visibility</strong> is enabled and
+   <code>artifacts:public: false</code> is not set on the job.<br>Reporters: Only if <code>artifacts:public: false</code>
+   is not set on the job.<br>The <code>artifacts:public</code> setting only affects GitLab UI and API access.
+   CI/CD job tokens can still access artifacts with the runner API.</li>
+<li>Guests: Only if <strong>Project-based pipeline visibility</strong> is enabled.</li>
+<li>Reporters: Only if the user is <a href="../ci/environments/protected_environments.md#deployment-only-access-to-protected-environments">part of a group with access to the protected environment</a>.
+   <br>Developers and maintainers: Only if the user is <a href="../ci/environments/protected_environments.md#protecting-environments">allowed to deploy to the protected environment</a>.</li>
+<li>Developers and maintainers: Only if the user is <a href="../ci/pipelines/_index.md#pipeline-security-on-protected-branches">allowed to merge or push to the protected branch</a>.</li>
+<li>Developers: Only if the job was triggered by the user and runs for a non-protected branch.</li>
+<li>Cancellation permissions can be <a href="../ci/pipelines/settings.md#restrict-roles-that-can-cancel-pipelines-or-jobs">restricted in the pipeline settings</a>.</li>
+<li>Maintainers: Must have the Maintainer role for a project associated with the runner.</li>
+<li>Maintainers: Must have the Maintainer role for <a href="../ci/runners/runners_scope.md#project-runner-ownership">the owner project</a> (first project associated with runner).</li>
+<li>Maintainers: Must have the Maintainer role for the project being added and for a project already associated with the runner.</li>
+<li>Developers: Only for branches where the user has merge permissions.
+    For protected branches, must have merge permissions for the target branch.
+    For protected tags, the user must be allowed to create protected tags.
+    These permission requirements apply when creating or editing schedules, and are checked dynamically as branch protection rules may change over time.</li>
+<li>When running manually, the pipeline executes with the triggering user's permissions instead of the schedule owner's permissions.</li>
+</ol>
+<!-- markdownlint-enable MD029 -->
+
+<p>This table shows granted privileges for jobs triggered by specific roles.</p>
+<p>Project Owners can do any listed action, but no users can push source and LFS together.
+Guest users and members with the Reporter role cannot do any of these actions.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clone source and LFS from current project</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Clone source and LFS from public projects</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Clone source and LFS from internal projects <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Clone source and LFS from private projects <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Pull container images from current project</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Pull container images from public projects</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Pull container images from internal projects <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Pull container images from private projects <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Push container images to current project <sup>3</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Developers and Maintainers: Only if the triggering user is not an external user.</li>
+<li>Only if the triggering user is a member of the project. See also <a href="https://docs.gitlab.com/runner/security/#usage-of-private-docker-images-with-if-not-present-pull-policy">Usage of private Docker images with <code>if-not-present</code> pull policy</a>.</li>
+<li>You cannot push container images to other projects.</li>
+</ol>
+<h3>Project compliance</h3>
+<p>Project permissions for <a href="compliance/_index.html">compliance</a> features including compliance center, audit events, compliance frameworks, and licenses.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View <a href="compliance/license_scanning_of_cyclonedx_files/_index.html">allowed and denied licenses in MR</a> <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="compliance/audit_events.html">audit events</a> <sup>2</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View licenses in <a href="application_security/dependency_list/_index.html">dependency list</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="compliance/audit_event_streaming.html">audit streams</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>On GitLab Self-Managed, users with the Guest role are able to perform this action only on public
+   and internal projects (not on private projects). <a href="../administration/external_users.html">External users</a>
+   must have at least the Reporter role, even if the project is internal. Users with the Guest
+   role on GitLab.com are able to perform this action only on public projects because internal
+   visibility is not available.</li>
+<li>Users can only view events based on their individual actions. For more details, see the <a href="compliance/audit_events.md#prerequisites">prerequisites</a>.</li>
+</ol>
+<h3>Project GitLab Duo</h3>
+<p>Project permissions for <a href="gitlab_duo/_index.html">GitLab Duo</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Non-member</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Use GitLab Duo features <sup>1</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Configure <a href="gitlab_duo/turn_on_off.md#for-a-project">GitLab Duo feature availability</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Code Suggestions requires a <a href="../subscriptions/subscription-add-ons.md#assign-gitlab-duo-seats">user being assigned a seat to gain access to a GitLab Duo add-on</a>.</li>
+</ol>
+<h3>Project merge requests</h3>
+<p>Project permissions for <a href="project/merge_requests/_index.html">merge requests</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="project/merge_requests/_index.md#view-merge-requests">View</a> a merge request <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> merge requests and comments <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="project/merge_requests/approvals/_index.html">Approve</a> merge requests <sup>2</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add internal note</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Comment and add suggestions</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="snippets.html">snippets</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="project/merge_requests/creating_merge_requests.html">merge request</a> <sup>3</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Update merge request details <sup>4</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/merge_requests/approvals/settings.html">merge request settings</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/merge_requests/approvals/rules.html">merge request approval rules</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete merge request</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>On GitLab Self-Managed, users with the Guest role are able to perform this action only on public
+   and internal projects (not on private projects). <a href="../administration/external_users.html">External users</a>
+   must be given explicit access (at least the <strong>Reporter</strong> role) even if the project is internal. Users
+   with the Guest role on GitLab.com are only able to perform this action on public projects because
+   internal visibility is not available.</li>
+<li>Approval from Planner and Reporter roles is available only if
+   <a href="project/merge_requests/approvals/rules.md#enable-approval-permissions-for-additional-users">enabled for the project</a>.</li>
+<li>In projects that accept contributions from external members, users can create, edit, and close their
+   own merge requests. For <strong>private</strong> projects, this excludes the Guest role as those users
+   <a href="public_access.md#private-projects-and-groups">cannot clone private projects</a>. For <strong>internal</strong>
+   projects, includes users with read-only access to the project, as
+   <a href="public_access.md#internal-projects-and-groups">they can clone internal projects</a>.</li>
+<li>In projects that accept contributions from external members, users can create, edit, and close their
+   own merge requests. They cannot edit some fields, like assignees, reviewers, labels, and milestones.</li>
+</ol>
+<h3>Project model registry and experiments</h3>
+<p>Project permissions for <a href="project/ml/model_registry/_index.html">model registry</a> and <a href="project/ml/experiment_tracking/_index.html">model experiments</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View <a href="project/ml/model_registry/_index.html">models and versions</a> <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="project/ml/experiment_tracking/_index.html">model experiments</a> <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create models, versions, and artifacts <sup>3</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit models, versions, and artifacts</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete models, versions, and artifacts</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create experiments and candidates</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit experiments and candidates</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete experiments and candidates</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Non-members can only view models and versions in public projects with the <strong>Everyone with access</strong>
+   visibility level. Non-members can't view internal projects, even if they're logged in.</li>
+<li>Non-members can only view model experiments in public projects with the <strong>Everyone with access</strong>
+   visibility level. Non-members can't view internal projects, even if they're logged in.</li>
+<li>You can also upload and download artifacts with the package registry API, which uses
+   a different set of permissions.</li>
+</ol>
+<h3>Project monitoring</h3>
+<p>Project permissions for monitoring including <a href="../operations/error_tracking.html">error tracking</a> and <a href="../operations/incident_management/_index.html">incident management</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View an <a href="../operations/incident_management/incidents.html">incident</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Assign an <a href="../operations/incident_management/_index.html">incident management</a> alert</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Participate in on-call rotation for <a href="../operations/incident_management/_index.html">Incident Management</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="../operations/incident_management/alerts.html">alerts</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="../operations/error_tracking.html">error tracking</a> list</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="../operations/incident_management/escalation_policies.html">escalation policies</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="../operations/incident_management/oncall_schedules.html">on-call schedules</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="../operations/incident_management/incidents.html">incident</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change <a href="../operations/incident_management/alerts.md#change-an-alerts-status">alert status</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change <a href="../operations/incident_management/manage_incidents.md#change-severity">incident severity</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change <a href="../operations/incident_management/manage_incidents.md#change-status">incident escalation status</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change <a href="../operations/incident_management/manage_incidents.md#change-escalation-policy">incident escalation policy</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="../operations/error_tracking.html">error tracking</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="../operations/incident_management/escalation_policies.html">escalation policies</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="../operations/incident_management/oncall_schedules.html">on-call schedules</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Project packages and registries</h3>
+<p>Project permissions for <a href="packages/_index.html">container registry</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pull container registry images <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Push container registry images</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete container registry images</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage cleanup policies</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="packages/container_registry/protected_container_tags.html">tag protection</a> rules</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="packages/container_registry/immutable_container_tags.html">immutable tag protection</a> rules</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong>:</p>
+<ol>
+<li>Viewing the container registry and pulling images is controlled by <a href="packages/container_registry/_index.md#container-registry-visibility-permissions">container registry visibility permissions</a>. The Guest role does not have viewing or pulling permissions in private projects.</li>
+</ol>
+<p>Project permissions for <a href="packages/_index.html">package registry</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pull packages <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Publish packages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete packages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete files associated with a package</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>On GitLab Self-Managed, users with the Guest role are able to perform this action only on public
+   and internal projects (not on private projects). <a href="../administration/external_users.html">External users</a>
+   must be given explicit access (at least the <strong>Reporter</strong> role) even if the project is internal.
+   Users with the Guest role on GitLab.com are only able to perform this action on public projects
+   because internal visibility is not available.</li>
+</ol>
+<h3>Project planning</h3>
+<p>Project permissions for <a href="project/issues/_index.html">issues</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View issues</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> issues and comments</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create issues</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View <a href="project/issues/confidential_issues.html">confidential issues</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> confidential issues and comments</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit issues, including metadata, item locking, and resolving threads <sup>1</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add internal notes</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Close and reopen issues <sup>2</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/issues/design_management.html">design management</a> files</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/issue_board.html">issue boards</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/milestones/_index.html">milestones</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> milestones</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Archive or reopen <a href="project/requirements/_index.html">requirements</a> <sup>3</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create or edit <a href="project/requirements/_index.html">requirements</a> <sup>4</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Import or export <a href="project/requirements/_index.html">requirements</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Archive <a href="../ci/test_cases/_index.html">test cases</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="../ci/test_cases/_index.html">test cases</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Move <a href="../ci/test_cases/_index.html">test cases</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Reopen <a href="../ci/test_cases/_index.html">test cases</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="project/issues/csv_import.html">Import</a> issues from a CSV file</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="project/issues/csv_export.html">Export</a> issues to a CSV file</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete issues</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="../operations/feature_flags.html">Feature flags</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Metadata includes labels, assignees, milestones, epics, weight, confidentiality, time tracking,
+   and more. Guest users can only set metadata when creating an issue. They cannot change the
+   metadata on existing issues. Guest users can modify the title and description of issues that
+   they authored or are assigned to.</li>
+<li>Guest users can close and reopen issues that they authored or are assigned to.</li>
+<li>Guest users can archive and reopen issues that they authored or are assigned to.</li>
+<li>Guest users can modify the title and description that they authored or are assigned to.</li>
+</ol>
+<p>Project permissions for <a href="tasks.html">tasks</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View tasks</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> tasks</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create tasks</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit tasks, including metadata, item locking, and resolving threads <sup>1</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add a linked item</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Convert to another item type</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Remove from issue</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add internal note</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete tasks <sup>2</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Guest users can modify the title and description that they authored or are assigned to.</li>
+<li>Users who don't have the Planner or Owner role can delete the tasks they authored.</li>
+</ol>
+<p>Project permissions for <a href="okrs.html">OKRs</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View OKRs</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> OKRs</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create OKRs</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit OKRs, including metadata, item locking, and resolving threads</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add a child OKR</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add a linked item</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Convert to another item type</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit OKRs</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Change confidentiality in OKR</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Add internal note</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p>Project permissions for <a href="project/wiki/_index.html">wikis</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View wiki</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> wikis</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create wiki pages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Edit wiki pages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete wiki pages</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<h3>Project repositories</h3>
+<p>Project permissions for <a href="project/repository/_index.html">repository</a> features including source code, branches, push rules, and more:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View project code <sup>1</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> project code <sup>2</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><a href="search/_index.html">Search</a> commits and comments <sup>3</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Pull project code <sup>4</sup></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>View commit status</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create commit status <sup>5</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Update commit status <sup>5</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create <a href="project/repository/tags/_index.html">Git tags</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete <a href="project/repository/tags/_index.html">Git tags</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Create new <a href="project/repository/branches/_index.html">branches</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Push to non-protected branches</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Force push to non-protected branches</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete non-protected branches</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/repository/branches/protected.html">protected branches</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Push to protected branches <sup>5</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Delete protected branches</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/protected_tags.html">protected tags</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/repository/push_rules.html">push rules</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Remove fork relationship</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Force push to protected branches <sup>6</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<!-- Disable ordered list rule https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md029---ordered-list-item-prefix -->
+<!-- markdownlint-disable MD029 -->
+
+<ol>
+<li>On GitLab Self-Managed, users with the Guest role are able to perform this action only on public
+   and internal projects (not on private projects). <a href="../administration/external_users.html">External users</a>
+   must be given explicit access (at least the <strong>Reporter</strong> role) even if the project is internal.
+   Users with the Guest role on GitLab.com are only able to perform this action on public projects because
+   internal visibility is not available. In GitLab 15.9 and later, users with the Guest role and an
+   Ultimate license can view private repository content if an administrator (on GitLab Self-Managed
+   or GitLab Dedicated) or group owner (on GitLab.com) gives those users permission. The administrator
+   or group owner can create a <a href="custom_roles/_index.html">custom role</a> through the API or UI and assign
+   that role to the users. In GitLab 18.7 and later, users with the Planner role can view private repository content.</li>
+<li>On GitLab Self-Managed, users with the Guest role are able to perform this action only on public
+   and internal projects (not on private projects). <a href="../administration/external_users.html">External users</a>
+   must be given explicit access (at least the <strong>Reporter</strong> role) even if the project is internal. Users
+   with the Guest role on GitLab.com are only able to perform this action on public projects because
+   internal visibility is not available. In GitLab 15.9 and later, users with the Guest role and an
+   Ultimate license can search private repository content if an administrator (on GitLab Self-Managed
+   or GitLab Dedicated) or group owner (on GitLab.com) gives those users permission. The administrator
+   or group owner can create a <a href="custom_roles/_index.html">custom role</a> through the API or UI and assign
+   that role to the users.</li>
+<li>On GitLab Self-Managed, users with the Guest role are able to perform this action only on public
+   and internal projects (not on private projects). <a href="../administration/external_users.html">External users</a>
+   must be given explicit access (at least the <strong>Reporter</strong> role) even if the project is internal. Users
+   with the Guest role on GitLab.com are only able to perform this action on public projects because
+   internal visibility is not available.</li>
+<li>If the <a href="project/repository/branches/protected.html">branch is protected</a>, this depends on the
+   access given to Developers and Maintainers.</li>
+<li>On GitLab Self-Managed, users with the Guest role are able to perform this action only on public
+   and internal projects (not on private projects). <a href="../administration/external_users.html">External users</a>
+   must be given explicit access (at least the <strong>Reporter</strong> role) even if the project is internal. Users
+   with the Guest role on GitLab.com are only able to perform this action on public projects because
+   internal visibility is not available. In GitLab 15.9 and later, users with the Guest role and an
+   Ultimate license can view private repository content if an administrator (on GitLab Self-Managed
+   or GitLab Dedicated) or group owner (on GitLab.com) gives those users permission. The administrator
+   or group owner can create a <a href="custom_roles/_index.html">custom role</a> through the API or UI and assign
+   that role to the users.</li>
+<li>Not allowed for Guest, Reporter, Developer, Maintainer, or Owner. See <a href="project/repository/branches/protected.md#allow-force-push">protected branches</a>.</li>
+</ol>
+<!-- markdownlint-enable MD029 -->
+
+<h3>Project user management</h3>
+<p>Project permissions for <a href="project/members/_index.html">user management</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align: center;">Guest</th>
+<th style="text-align: center;">Planner</th>
+<th style="text-align: center;">Reporter</th>
+<th style="text-align: center;">Developer</th>
+<th style="text-align: center;">Maintainer</th>
+<th style="text-align: center;">Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View 2FA status of members</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Manage <a href="project/members/_index.html">project members</a> <sup>1</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Share (invite) projects with groups <sup>2</sup></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong></p>
+<ol>
+<li>Maintainers cannot create, demote, or remove Owners, and they cannot promote users to the Owner role.
+   They also cannot approve Owner role access requests.</li>
+<li>When <a href="project/members/sharing_projects_groups.md#prevent-a-project-from-being-shared-with-groups">Share Group Lock</a>
+   is enabled the project can't be shared with other groups. It does not affect group with group sharing.</li>
+</ol>
+<h2>Subgroup permissions</h2>
+<p>When you add a member to a subgroup, they inherit the membership and
+permission level from the parent groups. This model allows access to
+nested groups if you have membership in one of its parents.</p>
+<p>For more information, see
+<a href="group/subgroups/_index.md#subgroup-membership">subgroup memberships</a>.</p>
+<h2>Users with Minimal Access</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Support for inviting users with Minimal Access role <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/106438">introduced</a> in GitLab 15.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Users with the Minimal Access role do not:</p>
+<ul>
+<li>Automatically have access to projects and subgroups in that top-level group.</li>
+<li>Count as licensed seats on GitLab Self-Managed Ultimate subscriptions or any GitLab.com subscriptions, provided the user has no other role anywhere in the instance or in the GitLab.com namespace.</li>
+</ul>
+<p>Owners must explicitly add these users to the specific subgroups and
+projects.</p>
+<p>You can use the Minimal Access role with <a href="group/saml_sso/_index.html">SAML SSO for GitLab.com groups</a>
+to control access to groups and projects in the group hierarchy. You can set the default role to
+Minimal Access for members automatically added to the top-level group through SSO.</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>SAML SSO</strong>.</li>
+<li>From the <strong>Default membership role</strong> dropdown list, select <strong>Minimal Access</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Minimal access users receive 404 errors</h3>
+<p>Because of an <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/267996">outstanding issue</a>, when a user with the Minimal Access role:</p>
+<ul>
+<li>Signs in with standard web authentication, they receive a <code>404</code> error when accessing the parent group.</li>
+<li>Signs in with Group SSO, they receive a <code>404</code> error immediately because they are redirected to the parent group page.</li>
+</ul>
+<p>To work around the issue, give these users at least the Guest role to any project or subgroup in the parent group. Guest users consume a license seat in the Premium tier but do not in the Ultimate tier.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="project/repository/protect.html">Protect your repository</a></li>
+<li><a href="custom_roles/_index.html">Custom roles</a></li>
+<li><a href="project/members/_index.html">Members</a></li>
+<li>Customize permissions on <a href="project/repository/branches/protected.html">protected branches</a></li>
+<li><a href="group/access_and_permissions.md#manage-group-memberships-with-ldap">LDAP user permissions</a></li>
+<li><a href="group/value_stream_analytics/_index.md#access-permissions">Value stream analytics permissions</a></li>
+<li><a href="project/working_with_projects.md#project-aliases">Project aliases</a></li>
+<li><a href="../administration/auditor_users.html">Auditor users</a></li>
+<li><a href="project/issues/confidential_issues.html">Confidential issues</a></li>
+<li><a href="packages/container_registry/_index.md#container-registry-visibility-permissions">Container registry permissions</a></li>
+<li><a href="project/releases/_index.md#release-permissions">Release permissions</a></li>
+<li><a href="read_only_namespaces.html">Read-only namespaces</a></li>
+</ul></code></pre>
+</body>
+</html>

@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Valid access levels</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Protected branches API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use this API to manage <a href="../user/project/repository/branches/protected.html">protected branches</a>.</p>
+<p>GitLab Premium and GitLab Ultimate support more granular protections for pushing to branches.
+Administrators can grant permission to modify and push to protected branches only to deploy keys,
+instead of specific users.</p>
+<h2>Valid access levels</h2>
+<p>The <code>ProtectedRefAccess.allowed_access_levels</code> method defines the following access levels:</p>
+<ul>
+<li><code>0</code>: No access</li>
+<li><code>30</code>: Developer role</li>
+<li><code>40</code>: Maintainer role</li>
+<li><code>60</code>: Administrator</li>
+</ul>
+<h2>List protected branches</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Deploy key information <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/116846">introduced</a> in GitLab 16.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Get a list of <a href="../user/project/repository/branches/protected.html">protected branches</a> from a project
+as they are defined in the UI. If a wildcard is set, it is returned instead of the exact name
+of the branches that match that wildcard.</p>
+<pre><code class="language-plaintext">GET /projects/:id/protected_branches
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>No</td>
+<td>Name or part of the name of protected branches to search for.</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>200 OK</code></a> and the
+following response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allow_force_push</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, force push is allowed on this branch.</td>
+</tr>
+<tr>
+<td><code>code_owner_approval_required</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, code owner approval is required for pushes to this branch.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>ID of the protected branch.</td>
+</tr>
+<tr>
+<td><code>inherited</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, protection settings are inherited from parent group. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels</code></td>
+<td>array</td>
+<td>Array of merge access level configurations.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for merging.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with merge access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the merge access level configuration.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with merge access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Name of the protected branch.</td>
+</tr>
+<tr>
+<td><code>push_access_levels</code></td>
+<td>array</td>
+<td>Array of push access level configurations.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for pushing.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].deploy_key_id</code></td>
+<td>integer</td>
+<td>ID of the deploy key with push access.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with push access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the push access level configuration.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with push access. Premium and Ultimate only.</td>
+</tr>
+</tbody>
+</table>
+<p>In the following example request, the project ID is <code>5</code>.</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches&quot;
+</code></pre>
+<p>The following example response includes:</p>
+<ul>
+<li>Two protected branches with IDs <code>100</code> and <code>101</code>.</li>
+<li><code>push_access_levels</code> with IDs <code>1001</code>, <code>1002</code>, and <code>1003</code>.</li>
+<li><code>merge_access_levels</code> with IDs <code>2001</code> and <code>2002</code>.</li>
+</ul>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 100,
+    &quot;name&quot;: &quot;main&quot;,
+    &quot;push_access_levels&quot;: [
+      {
+        &quot;id&quot;:  1001,
+        &quot;access_level&quot;: 40,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      },
+      {
+        &quot;id&quot;: 1002,
+        &quot;access_level&quot;: 40,
+        &quot;access_level_description&quot;: &quot;Deploy key&quot;,
+        &quot;deploy_key_id&quot;: 1
+      }
+    ],
+    &quot;merge_access_levels&quot;: [
+      {
+        &quot;id&quot;:  2001,
+        &quot;access_level&quot;: 40,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      }
+    ],
+    &quot;allow_force_push&quot;:false,
+    &quot;code_owner_approval_required&quot;: false
+  },
+  {
+    &quot;id&quot;: 101,
+    &quot;name&quot;: &quot;release/*&quot;,
+    &quot;push_access_levels&quot;: [
+      {
+        &quot;id&quot;:  1003,
+        &quot;access_level&quot;: 40,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      }
+    ],
+    &quot;merge_access_levels&quot;: [
+      {
+        &quot;id&quot;:  2002,
+        &quot;access_level&quot;: 40,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      }
+    ],
+    &quot;allow_force_push&quot;:false,
+    &quot;code_owner_approval_required&quot;: false
+  }
+]
+</code></pre>
+<p>Users on GitLab Premium or Ultimate also see
+the <code>user_id</code>, <code>group_id</code>, and <code>inherited</code> parameters. If the <code>inherited</code> parameter
+exists, the setting was inherited from the project's group.</p>
+<p>The following example response includes:</p>
+<ul>
+<li>One protected branch with ID <code>100</code>.</li>
+<li><code>push_access_levels</code> with IDs <code>1001</code> and <code>1002</code>.</li>
+<li><code>merge_access_levels</code> with ID <code>2001</code>.</li>
+</ul>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 101,
+    &quot;name&quot;: &quot;main&quot;,
+    &quot;push_access_levels&quot;: [
+      {
+        &quot;id&quot;:  1001,
+        &quot;access_level&quot;: 40,
+        &quot;user_id&quot;: null,
+        &quot;group_id&quot;: null,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      },
+      {
+        &quot;id&quot;: 1002,
+        &quot;access_level&quot;: 40,
+        &quot;access_level_description&quot;: &quot;Deploy key&quot;,
+        &quot;deploy_key_id&quot;: 1,
+        &quot;user_id&quot;: null,
+        &quot;group_id&quot;: null
+      }
+    ],
+    &quot;merge_access_levels&quot;: [
+      {
+        &quot;id&quot;:  2001,
+        &quot;access_level&quot;: null,
+        &quot;user_id&quot;: null,
+        &quot;group_id&quot;: 1234,
+        &quot;access_level_description&quot;: &quot;Example Merge Group&quot;
+      }
+    ],
+    &quot;allow_force_push&quot;:false,
+    &quot;code_owner_approval_required&quot;: false,
+    &quot;inherited&quot;: true
+  }
+]
+</code></pre>
+<h2>Get a single protected branch or wildcard protected branch</h2>
+<p>Get a single protected branch or wildcard protected branch.</p>
+<pre><code class="language-plaintext">GET /projects/:id/protected_branches/:name
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Name of the branch or wildcard.</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>200 OK</code></a> and the
+following response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allow_force_push</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, force push is allowed on this branch.</td>
+</tr>
+<tr>
+<td><code>code_owner_approval_required</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, code owner approval is required for pushes to this branch.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>ID of the protected branch.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels</code></td>
+<td>array</td>
+<td>Array of merge access level configurations.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for merging.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with merge access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the merge access level configuration.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with merge access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Name of the protected branch.</td>
+</tr>
+<tr>
+<td><code>push_access_levels</code></td>
+<td>array</td>
+<td>Array of push access level configurations.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for pushing.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with push access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the push access level configuration.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with push access. Premium and Ultimate only.</td>
+</tr>
+</tbody>
+</table>
+<p>In the following example request, the project ID is <code>5</code> and branch name is <code>main</code>:</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches/main&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 101,
+  &quot;name&quot;: &quot;main&quot;,
+  &quot;push_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1001,
+      &quot;access_level&quot;: 40,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;merge_access_levels&quot;: [
+    {
+      &quot;id&quot;:  2001,
+      &quot;access_level&quot;: 40,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;allow_force_push&quot;:false,
+  &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<p>Users on GitLab Premium or Ultimate also see
+the <code>user_id</code> and <code>group_id</code> parameters.</p>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 101,
+  &quot;name&quot;: &quot;main&quot;,
+  &quot;push_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1001,
+      &quot;access_level&quot;: 40,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;merge_access_levels&quot;: [
+    {
+      &quot;id&quot;:  2001,
+      &quot;access_level&quot;: null,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: 1234,
+      &quot;access_level_description&quot;: &quot;Example Merge Group&quot;
+    }
+  ],
+  &quot;allow_force_push&quot;:false,
+  &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<h2>Protect repository branches</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><code>deploy_key_id</code> configuration <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/166598">introduced</a> in GitLab 17.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Protect a single repository branch or several project repository
+branches using a wildcard protected branch.</p>
+<pre><code class="language-plaintext">POST /projects/:id/protected_branches
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Name of the branch or wildcard.</td>
+</tr>
+<tr>
+<td><code>allow_force_push</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, members who can push to this branch can also force push. Default is <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>allowed_to_merge</code></td>
+<td>array</td>
+<td>No</td>
+<td>Array of merge access levels, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, or <code>{access_level: integer}</code>. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>allowed_to_push</code></td>
+<td>array</td>
+<td>No</td>
+<td>Array of push access levels, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, <code>{deploy_key_id: integer}</code>, or <code>{access_level: integer}</code>. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>allowed_to_unprotect</code></td>
+<td>array</td>
+<td>No</td>
+<td>Array of unprotect access levels, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, or <code>{access_level: integer}</code>. Access level <code>No access</code> is not available for this field. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>code_owner_approval_required</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, prevents pushes to this branch if it matches an item in the <a href="../user/project/codeowners/_index.html"><code>CODEOWNERS</code> file</a>. Default is <code>false</code>. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>merge_access_level</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Access levels allowed to merge. Default is <code>40</code> (Maintainer role).</td>
+</tr>
+<tr>
+<td><code>push_access_level</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Access levels allowed to push. Default is <code>40</code> (Maintainer role).</td>
+</tr>
+<tr>
+<td><code>unprotect_access_level</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Access levels allowed to unprotect. Default is <code>40</code> (Maintainer role).</td>
+</tr>
+</tbody>
+</table>
+<p>When you configure access levels:</p>
+<ul>
+<li>You can set multiple access levels simultaneously for <code>allowed_to_push</code> and <code>allowed_to_merge</code>.</li>
+<li>The most permissive access level determines who can perform the action.</li>
+</ul>
+<p>This behavior differs from the UI, which automatically clears other role selections
+when you select <strong>No one</strong> (<code>access_level: 0</code>).</p>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>201 Created</code></a> and the
+following response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allow_force_push</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, force push is allowed on this branch.</td>
+</tr>
+<tr>
+<td><code>code_owner_approval_required</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, code owner approval is required for pushes to this branch.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>ID of the protected branch.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels</code></td>
+<td>array</td>
+<td>Array of merge access level configurations.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for merging.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with merge access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the merge access level configuration.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with merge access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Name of the protected branch.</td>
+</tr>
+<tr>
+<td><code>push_access_levels</code></td>
+<td>array</td>
+<td>Array of push access level configurations.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for pushing.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].deploy_key_id</code></td>
+<td>integer</td>
+<td>ID of the deploy key with push access.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with push access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the push access level configuration.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with push access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels</code></td>
+<td>array</td>
+<td>Array of unprotect access level configurations.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for unprotecting.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with unprotect access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the unprotect access level configuration.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with unprotect access. Premium and Ultimate only.</td>
+</tr>
+</tbody>
+</table>
+<p>In the following example request, the project ID is <code>5</code> and branch name is <code>*-stable</code>.</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches?name=*-stable&amp;push_access_level=30&amp;merge_access_level=30&amp;unprotect_access_level=40&quot;
+</code></pre>
+<p>The example response includes:</p>
+<ul>
+<li>A protected branch with ID <code>101</code>.</li>
+<li><code>push_access_levels</code> with ID <code>1001</code>.</li>
+<li><code>merge_access_levels</code> with ID <code>2001</code>.</li>
+<li><code>unprotect_access_levels</code> with ID <code>3001</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;id&quot;: 101,
+  &quot;name&quot;: &quot;*-stable&quot;,
+  &quot;push_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1001,
+      &quot;access_level&quot;: 30,
+      &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+    }
+  ],
+  &quot;merge_access_levels&quot;: [
+    {
+      &quot;id&quot;:  2001,
+      &quot;access_level&quot;: 30,
+      &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+    }
+  ],
+  &quot;unprotect_access_levels&quot;: [
+    {
+      &quot;id&quot;:  3001,
+      &quot;access_level&quot;: 40,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;allow_force_push&quot;:false,
+  &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<p>Users on GitLab Premium or Ultimate also see
+the <code>user_id</code> and <code>group_id</code> parameters:</p>
+<p>The following example response includes:</p>
+<ul>
+<li>A protected branch with ID <code>101</code>.</li>
+<li><code>push_access_levels</code> with ID <code>1001</code>.</li>
+<li><code>merge_access_levels</code> with ID <code>2001</code>.</li>
+<li><code>unprotect_access_levels</code> with ID <code>3001</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;*-stable&quot;,
+  &quot;push_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1001,
+      &quot;access_level&quot;: 30,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+    }
+  ],
+  &quot;merge_access_levels&quot;: [
+    {
+      &quot;id&quot;:  2001,
+      &quot;access_level&quot;: 30,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+    }
+  ],
+  &quot;unprotect_access_levels&quot;: [
+    {
+      &quot;id&quot;:  3001,
+      &quot;access_level&quot;: 40,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;allow_force_push&quot;:false,
+  &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<h3>Example with user push access and group merge access</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Elements in the <code>allowed_to_push</code> / <code>allowed_to_merge</code> / <code>allowed_to_unprotect</code> array should take the
+form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, or <code>{access_level: integer}</code>.
+Each user must have access to the project and each group must <a href="../user/project/members/sharing_projects_groups.html">have this project shared</a>.
+These access levels allow more granular control over protected branch access.
+For more information, see <a href="../user/project/repository/branches/protected.md#with-group-permissions">configure group permissions</a>.</p>
+<p>The following example request creates a protected branch with user push access and group merge access.
+The <code>user_id</code> is <code>2</code> and the <code>group_id</code> is <code>3</code>.</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches?name=*-stable&amp;allowed_to_push%5B%5D%5Buser_id%5D=2&amp;allowed_to_merge%5B%5D%5Bgroup_id%5D=3&quot;
+</code></pre>
+<p>The following example response includes:</p>
+<ul>
+<li>A protected branch with ID <code>101</code>.</li>
+<li><code>push_access_levels</code> with ID <code>1001</code>.</li>
+<li><code>merge_access_levels</code> with ID <code>2001</code>.</li>
+<li><code>unprotect_access_levels</code> with ID <code>3001</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;id&quot;: 101,
+  &quot;name&quot;: &quot;*-stable&quot;,
+  &quot;push_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1001,
+      &quot;access_level&quot;: null,
+      &quot;user_id&quot;: 2,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Administrator&quot;
+    }
+  ],
+  &quot;merge_access_levels&quot;: [
+    {
+      &quot;id&quot;:  2001,
+      &quot;access_level&quot;: null,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: 3,
+      &quot;access_level_description&quot;: &quot;Example Merge Group&quot;
+    }
+  ],
+  &quot;unprotect_access_levels&quot;: [
+    {
+      &quot;id&quot;:  3001,
+      &quot;access_level&quot;: 40,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;allow_force_push&quot;:false,
+  &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<h3>Example with deploy key access</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/166598">Introduced</a> in GitLab 17.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Elements in the <code>allowed_to_push</code> array should take the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>,
+<code>{deploy_key_id: integer}</code>, or <code>{access_level: integer}</code>.
+The deploy key must be enabled for your project and it must have write access to your project repository.
+For other requirements, see <a href="../user/project/repository/branches/protected.md#enable-deploy-key-access">Allow deploy keys to push to a protected branch</a>.</p>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches?name=*-stable&amp;allowed_to_push[][deploy_key_id]=1&quot;
+</code></pre>
+<p>The following example response includes:</p>
+<ul>
+<li>A protected branch with ID <code>101</code>.</li>
+<li><code>push_access_levels</code> with ID <code>1001</code>.</li>
+<li><code>merge_access_levels</code> with ID <code>2001</code>.</li>
+<li><code>unprotect_access_levels</code> with ID <code>3001</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;id&quot;: 101,
+  &quot;name&quot;: &quot;*-stable&quot;,
+  &quot;push_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1001,
+      &quot;access_level&quot;: null,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;deploy_key_id&quot;: 1,
+      &quot;access_level_description&quot;: &quot;Deploy&quot;
+    }
+  ],
+  &quot;merge_access_levels&quot;: [
+    {
+      &quot;id&quot;:  2001,
+      &quot;access_level&quot;: 40,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;unprotect_access_levels&quot;: [
+    {
+      &quot;id&quot;:  3001,
+      &quot;access_level&quot;: 40,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;allow_force_push&quot;:false,
+  &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<h3>Example with allow to push and allow to merge access</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Moved to GitLab Premium in 13.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --header &quot;Content-Type: application/json&quot; \
+  --data '{
+    &quot;name&quot;: &quot;main&quot;,
+    &quot;allowed_to_push&quot;: [
+      {&quot;access_level&quot;: 30}
+    ],
+    &quot;allowed_to_merge&quot;: [
+      {&quot;access_level&quot;: 30},
+      {&quot;access_level&quot;: 40}
+    ]
+  }' \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches&quot;
+</code></pre>
+<p>The following example response includes:</p>
+<ul>
+<li>A protected branch with ID <code>105</code>.</li>
+<li><code>push_access_levels</code> with ID <code>1001</code>.</li>
+<li><code>merge_access_levels</code> with IDs <code>2001</code> and <code>2002</code>.</li>
+<li><code>unprotect_access_levels</code> with ID <code>3001</code>.</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;id&quot;: 105,
+    &quot;name&quot;: &quot;main&quot;,
+    &quot;push_access_levels&quot;: [
+        {
+            &quot;id&quot;: 1001,
+            &quot;access_level&quot;: 30,
+            &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;,
+            &quot;user_id&quot;: null,
+            &quot;group_id&quot;: null
+        }
+    ],
+    &quot;merge_access_levels&quot;: [
+        {
+            &quot;id&quot;: 2001,
+            &quot;access_level&quot;: 30,
+            &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;,
+            &quot;user_id&quot;: null,
+            &quot;group_id&quot;: null
+        },
+        {
+            &quot;id&quot;: 2002,
+            &quot;access_level&quot;: 40,
+            &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+            &quot;user_id&quot;: null,
+            &quot;group_id&quot;: null
+        }
+    ],
+    &quot;unprotect_access_levels&quot;: [
+        {
+            &quot;id&quot;: 3001,
+            &quot;access_level&quot;: 40,
+            &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+            &quot;user_id&quot;: null,
+            &quot;group_id&quot;: null
+        }
+    ],
+    &quot;allow_force_push&quot;:false,
+    &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<h3>Examples with unprotect access levels</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To create a protected branch where only a specific group can unprotect the branch:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --header &quot;Content-Type: application/json&quot; \
+  --data '{
+    &quot;name&quot;: &quot;production&quot;,
+    &quot;allowed_to_unprotect&quot;: [
+      {&quot;group_id&quot;: 789}
+    ]
+  }' \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches&quot;
+</code></pre>
+<p>To allow multiple types of users to unprotect a branch:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --header &quot;Content-Type: application/json&quot; \
+  --data '{
+    &quot;name&quot;: &quot;main&quot;,
+    &quot;allowed_to_unprotect&quot;: [
+      {&quot;user_id&quot;: 123},
+      {&quot;group_id&quot;: 456},
+      {&quot;access_level&quot;: 40}
+    ]
+  }' \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches&quot;
+</code></pre>
+<p>This configuration allows these users to unprotect the branch:</p>
+<ul>
+<li>The user with ID <code>123</code>.</li>
+<li>Members of the group with ID <code>456</code>.</li>
+<li>Users with at least the Maintainer role (access level 40).</li>
+</ul>
+<h2>Unprotect repository branches</h2>
+<p>Unprotect the given protected branch or wildcard protected branch.</p>
+<pre><code class="language-plaintext">DELETE /projects/:id/protected_branches/:name
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Name of the branch.</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>204 No Content</code></a>.</p>
+<p>In the following example request, the project ID is <code>5</code> and branch name is <code>*-stable</code>:</p>
+<pre><code class="language-shell">curl --request DELETE \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches/*-stable&quot;
+</code></pre>
+<h2>Update a protected branch</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><code>deploy_key_id</code> configuration <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/166598">introduced</a> in GitLab 17.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Update a protected branch.</p>
+<pre><code class="language-plaintext">PATCH /projects/:id/protected_branches/:name
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Name of the branch or wildcard.</td>
+</tr>
+<tr>
+<td><code>allow_force_push</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, members who can push to this branch can also force push.</td>
+</tr>
+<tr>
+<td><code>allowed_to_merge</code></td>
+<td>array</td>
+<td>No</td>
+<td>Array of merge access levels, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, or <code>{access_level: integer}</code>. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>allowed_to_push</code></td>
+<td>array</td>
+<td>No</td>
+<td>Array of push access levels, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, <code>{deploy_key_id: integer}</code>, or <code>{access_level: integer}</code>. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>allowed_to_unprotect</code></td>
+<td>array</td>
+<td>No</td>
+<td>Array of unprotect access levels, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, <code>{access_level: integer}</code>, or <code>{id: integer, _destroy: true}</code> to destroy an existing access level. Access level <code>No access</code> is not available for this field. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>code_owner_approval_required</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, prevents pushes to this branch if it matches an item in the <a href="../user/project/codeowners/_index.html"><code>CODEOWNERS</code> file</a>. Premium and Ultimate only.</td>
+</tr>
+</tbody>
+</table>
+<p>For information about how access levels interact when you set multiple values,
+see <a href="#protect-repository-branches">Protect repository branches</a>.</p>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>200 OK</code></a> and the
+following response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allow_force_push</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, force push is allowed on this branch.</td>
+</tr>
+<tr>
+<td><code>code_owner_approval_required</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, code owner approval is required for pushes to this branch.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>ID of the protected branch.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels</code></td>
+<td>array</td>
+<td>Array of merge access level configurations.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for merging.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with merge access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the merge access level configuration.</td>
+</tr>
+<tr>
+<td><code>merge_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with merge access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Name of the protected branch.</td>
+</tr>
+<tr>
+<td><code>push_access_levels</code></td>
+<td>array</td>
+<td>Array of push access level configurations.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for pushing.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].deploy_key_id</code></td>
+<td>integer</td>
+<td>ID of the deploy key with push access.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with push access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the push access level configuration.</td>
+</tr>
+<tr>
+<td><code>push_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with push access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels</code></td>
+<td>array</td>
+<td>Array of unprotect access level configurations.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].access_level</code></td>
+<td>integer</td>
+<td>Access level for unprotecting.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].access_level_description</code></td>
+<td>string</td>
+<td>Human-readable description of the access level.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].group_id</code></td>
+<td>integer</td>
+<td>ID of the group with unprotect access. Premium and Ultimate only.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].id</code></td>
+<td>integer</td>
+<td>ID of the unprotect access level configuration.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_levels[].user_id</code></td>
+<td>integer</td>
+<td>ID of the user with unprotect access. Premium and Ultimate only.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request PATCH \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches/feature-branch?allow_force_push=true&amp;code_owner_approval_required=true&quot;
+</code></pre>
+<p>Elements in the <code>allowed_to_push</code>, <code>allowed_to_merge</code>, and <code>allowed_to_unprotect</code> arrays should
+be one of <code>user_id</code>, <code>group_id</code>, or <code>access_level</code>, and take the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code> or
+<code>{access_level: integer}</code>.</p>
+<p><code>allowed_to_push</code> includes an extra element, <code>deploy_key_id</code>, that takes the form <code>{deploy_key_id: integer}</code>.</p>
+<p>To update:</p>
+<ul>
+<li><code>user_id</code>: Ensure the updated user has access to the project. You must also pass the
+  <code>id</code> of the <code>access_level</code> in the respective hash.</li>
+<li><code>group_id</code>: Ensure the updated group <a href="../user/project/members/sharing_projects_groups.html">has this project shared</a>.
+  You must also pass the <code>id</code> of the <code>access_level</code> in the respective hash.</li>
+<li><code>deploy_key_id</code>: Ensure the deploy key is enabled for your project and it must have write access to your project repository.</li>
+</ul>
+<p>To delete, you must pass <code>_destroy</code> set to <code>true</code>. See the following examples.</p>
+<h3>Example: create a <code>push_access_level</code> record</h3>
+<pre><code class="language-shell">curl --header 'Content-Type: application/json' --request PATCH \
+  --data '{&quot;allowed_to_push&quot;: [{&quot;access_level&quot;: 40}]}' \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/22034114/protected_branches/main&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+   &quot;name&quot;: &quot;main&quot;,
+   &quot;push_access_levels&quot;: [
+      {
+         &quot;id&quot;: 12,
+         &quot;access_level&quot;: 40,
+         &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+         &quot;user_id&quot;: null,
+         &quot;group_id&quot;: null
+      }
+   ]
+}
+</code></pre>
+<h3>Example: update a <code>push_access_level</code> record</h3>
+<pre><code class="language-shell">curl --header 'Content-Type: application/json' --request PATCH \
+  --data '{&quot;allowed_to_push&quot;: [{&quot;id&quot;: 12, &quot;access_level&quot;: 0}]}' \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/22034114/protected_branches/main&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+   &quot;name&quot;: &quot;main&quot;,
+   &quot;push_access_levels&quot;: [
+      {
+         &quot;id&quot;: 12,
+         &quot;access_level&quot;: 0,
+         &quot;access_level_description&quot;: &quot;No One&quot;,
+         &quot;user_id&quot;: null,
+         &quot;group_id&quot;: null
+      }
+   ]
+}
+</code></pre>
+<h3>Example: delete a <code>push_access_level</code> record</h3>
+<pre><code class="language-shell">curl --header 'Content-Type: application/json' --request PATCH \
+  --data '{&quot;allowed_to_push&quot;: [{&quot;id&quot;: 12, &quot;_destroy&quot;: true}]}' \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/22034114/protected_branches/main&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+   &quot;name&quot;: &quot;main&quot;,
+   &quot;push_access_levels&quot;: []
+}
+</code></pre>
+<h3>Example: update an <code>unprotect_access_level</code> record</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>Users calling this API must be included in the <code>allowed_to_unprotect</code> configuration.</li>
+<li>The user specified by <code>user_id</code> must be a project member.</li>
+<li>Groups specified by <code>group_id</code> must have access to the project.</li>
+</ul>
+<p>To modify who can unprotect an existing protected branch, include the <code>id</code> of the existing access
+level record. For example:</p>
+<pre><code class="language-shell">curl --request PATCH \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --header &quot;Content-Type: application/json&quot; \
+  --data '{
+    &quot;allowed_to_unprotect&quot;: [
+      {&quot;id&quot;: 17486, &quot;user_id&quot;: 3791}
+    ]
+  }' \
+  --url &quot;https://gitlab.example.com/api/v4/projects/5/protected_branches/main&quot;
+</code></pre>
+<p>To remove specific access levels, use <code>_destroy: true</code>.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../user/project/repository/branches/protected.html">Protected branches</a></li>
+<li><a href="../user/project/repository/branches/_index.html">Branches</a></li>
+<li><a href="branches.html">Branches API</a></li>
+</ul></code></pre>
+</body>
+</html>

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Get project push rules</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Project push rules API
+description: Manage project push rules to enforce commit standards, validate messages, prevent secrets, and control repository operations.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use this API to manage project <a href="../user/project/repository/push_rules.html">push rules</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>GitLab uses <a href="https://github.com/google/re2/wiki/Syntax">RE2 syntax</a> for all regular expressions in push rules.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Get project push rules</h2>
+<p>Get the push rules of a project.</p>
+<pre><code class="language-plaintext">GET /projects/:id/push_rule
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>200 OK</code></a> and the following
+response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>author_email_regex</code></td>
+<td>string</td>
+<td>All commit author emails must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>branch_name_regex</code></td>
+<td>string</td>
+<td>All branch names must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_committer_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, users can only push commits to this repository if the committer email is one of their own verified emails.</td>
+</tr>
+<tr>
+<td><code>commit_committer_name_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, users can only push commits to this repository if the commit author name is consistent with their GitLab account name.</td>
+</tr>
+<tr>
+<td><code>commit_message_negative_regex</code></td>
+<td>string</td>
+<td>No commit message is allowed to match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_message_regex</code></td>
+<td>string</td>
+<td>All commit messages must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>string</td>
+<td>Date and time when the push rule was created.</td>
+</tr>
+<tr>
+<td><code>deny_delete_tag</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, denies deleting a tag.</td>
+</tr>
+<tr>
+<td><code>file_name_regex</code></td>
+<td>string</td>
+<td>All committed filenames must not match this regular expression.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>ID of the push rule.</td>
+</tr>
+<tr>
+<td><code>max_file_size</code></td>
+<td>integer</td>
+<td>Maximum file size (MB).</td>
+</tr>
+<tr>
+<td><code>member_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, restricts commits by author (email) to existing GitLab users.</td>
+</tr>
+<tr>
+<td><code>prevent_secrets</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, GitLab rejects any files that are likely to contain secrets.</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td>integer</td>
+<td>ID of the project.</td>
+</tr>
+<tr>
+<td><code>reject_non_dco_commits</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, rejects commits when not DCO certified.</td>
+</tr>
+<tr>
+<td><code>reject_unsigned_commits</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, rejects commits when not signed.</td>
+</tr>
+</tbody>
+</table>
+<p>If push rules were never configured for the project, returns HTTP <code>200 OK</code> with the literal string
+<code>"null"</code> as the response body.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>This differs from the <a href="group_push_rules.md#get-the-push-rules-of-a-group">group push rules API</a>,
+which returns <code>404 Not Found</code> error.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/3/push_rule&quot;
+</code></pre>
+<p>Example response when push rules are configured with all settings disabled:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;project_id&quot;: 3,
+  &quot;created_at&quot;: &quot;2012-10-12T17:04:47Z&quot;,
+  &quot;commit_message_regex&quot;: &quot;Fixes \\d+\\..*&quot;,
+  &quot;commit_message_negative_regex&quot;: &quot;ssh\\:\\/\\/&quot;,
+  &quot;branch_name_regex&quot;: &quot;&quot;,
+  &quot;deny_delete_tag&quot;: false,
+  &quot;member_check&quot;: false,
+  &quot;prevent_secrets&quot;: false,
+  &quot;author_email_regex&quot;: &quot;&quot;,
+  &quot;file_name_regex&quot;: &quot;&quot;,
+  &quot;max_file_size&quot;: 0,
+  &quot;commit_committer_check&quot;: null,
+  &quot;commit_committer_name_check&quot;: false,
+  &quot;reject_unsigned_commits&quot;: null,
+  &quot;reject_non_dco_commits&quot;: null
+}
+</code></pre>
+<p>If the following attributes are disabled, they return <code>null</code> instead of <code>false</code>:</p>
+<ul>
+<li><code>commit_committer_check</code></li>
+<li><code>reject_unsigned_commits</code></li>
+<li><code>reject_non_dco_commits</code></li>
+</ul>
+<p>Example response when push rules were never configured for the project:</p>
+<pre><code class="language-plaintext">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 4
+
+null
+</code></pre>
+<p>This returns the literal string <code>"null"</code> (4 characters), not a JSON <code>null</code> value.</p>
+<h2>Add a project push rule</h2>
+<p>Add a push rule to a specified project.</p>
+<pre><code class="language-plaintext">POST /projects/:id/push_rule
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+<tr>
+<td><code>author_email_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>All commit author emails must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>branch_name_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>All branch names must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_committer_check</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, users can only push commits to this repository if the committer email is one of their own verified emails.</td>
+</tr>
+<tr>
+<td><code>commit_committer_name_check</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, users can only push commits to this repository if the commit author name is consistent with their GitLab account name.</td>
+</tr>
+<tr>
+<td><code>commit_message_negative_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>No commit message is allowed to match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_message_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>All commit messages must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>deny_delete_tag</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, denies deleting a tag.</td>
+</tr>
+<tr>
+<td><code>file_name_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>All committed filenames must not match this regular expression.</td>
+</tr>
+<tr>
+<td><code>max_file_size</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Maximum file size (MB).</td>
+</tr>
+<tr>
+<td><code>member_check</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, restricts commits by author (email) to existing GitLab users.</td>
+</tr>
+<tr>
+<td><code>prevent_secrets</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, GitLab rejects any files that are likely to contain secrets.</td>
+</tr>
+<tr>
+<td><code>reject_non_dco_commits</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, rejects commits when not DCO certified.</td>
+</tr>
+<tr>
+<td><code>reject_unsigned_commits</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, rejects commits when not signed.</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>201 Created</code></a> and the following
+response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>author_email_regex</code></td>
+<td>string</td>
+<td>All commit author emails must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>branch_name_regex</code></td>
+<td>string</td>
+<td>All branch names must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_committer_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, users can only push commits to this repository if the committer email is one of their own verified emails.</td>
+</tr>
+<tr>
+<td><code>commit_committer_name_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, users can only push commits to this repository if the commit author name is consistent with their GitLab account name.</td>
+</tr>
+<tr>
+<td><code>commit_message_negative_regex</code></td>
+<td>string</td>
+<td>No commit message is allowed to match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_message_regex</code></td>
+<td>string</td>
+<td>All commit messages must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>string</td>
+<td>Date and time when the push rule was created.</td>
+</tr>
+<tr>
+<td><code>deny_delete_tag</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, denies deleting a tag.</td>
+</tr>
+<tr>
+<td><code>file_name_regex</code></td>
+<td>string</td>
+<td>All committed filenames must not match this regular expression.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>ID of the push rule.</td>
+</tr>
+<tr>
+<td><code>max_file_size</code></td>
+<td>integer</td>
+<td>Maximum file size (MB).</td>
+</tr>
+<tr>
+<td><code>member_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, restricts commits by author (email) to existing GitLab users.</td>
+</tr>
+<tr>
+<td><code>prevent_secrets</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, GitLab rejects any files that are likely to contain secrets.</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td>integer</td>
+<td>ID of the project.</td>
+</tr>
+<tr>
+<td><code>reject_non_dco_commits</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, rejects commits when not DCO certified.</td>
+</tr>
+<tr>
+<td><code>reject_unsigned_commits</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, rejects commits when not signed.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/3/push_rule&quot; \
+  --data &quot;commit_message_regex=Fixes \\d+\\..*&quot; \
+  --data &quot;deny_delete_tag=false&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;project_id&quot;: 3,
+  &quot;created_at&quot;: &quot;2012-10-12T17:04:47Z&quot;,
+  &quot;commit_message_regex&quot;: &quot;Fixes \\d+\\..*&quot;,
+  &quot;commit_message_negative_regex&quot;: &quot;&quot;,
+  &quot;branch_name_regex&quot;: &quot;&quot;,
+  &quot;deny_delete_tag&quot;: false,
+  &quot;member_check&quot;: false,
+  &quot;prevent_secrets&quot;: false,
+  &quot;author_email_regex&quot;: &quot;&quot;,
+  &quot;file_name_regex&quot;: &quot;&quot;,
+  &quot;max_file_size&quot;: 0,
+  &quot;commit_committer_check&quot;: false,
+  &quot;commit_committer_name_check&quot;: false,
+  &quot;reject_unsigned_commits&quot;: false,
+  &quot;reject_non_dco_commits&quot;: false
+}
+</code></pre>
+<h2>Edit project push rule</h2>
+<p>Edit a push rule for a specified project.</p>
+<pre><code class="language-plaintext">PUT /projects/:id/push_rule
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+<tr>
+<td><code>author_email_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>All commit author emails must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>branch_name_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>All branch names must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_committer_check</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, users can only push commits to this repository if the committer email is one of their own verified emails.</td>
+</tr>
+<tr>
+<td><code>commit_committer_name_check</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, users can only push commits to this repository if the commit author name is consistent with their GitLab account name.</td>
+</tr>
+<tr>
+<td><code>commit_message_negative_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>No commit message is allowed to match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_message_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>All commit messages must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>deny_delete_tag</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, denies deleting a tag.</td>
+</tr>
+<tr>
+<td><code>file_name_regex</code></td>
+<td>string</td>
+<td>No</td>
+<td>All committed filenames must not match this regular expression.</td>
+</tr>
+<tr>
+<td><code>max_file_size</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Maximum file size (MB).</td>
+</tr>
+<tr>
+<td><code>member_check</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, restricts commits by author (email) to existing GitLab users.</td>
+</tr>
+<tr>
+<td><code>prevent_secrets</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, GitLab rejects any files that are likely to contain secrets.</td>
+</tr>
+<tr>
+<td><code>reject_non_dco_commits</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, rejects commits when not DCO certified.</td>
+</tr>
+<tr>
+<td><code>reject_unsigned_commits</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>If <code>true</code>, rejects commits when not signed.</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>200 OK</code></a> and the following
+response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>author_email_regex</code></td>
+<td>string</td>
+<td>All commit author emails must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>branch_name_regex</code></td>
+<td>string</td>
+<td>All branch names must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_committer_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, users can only push commits to this repository if the committer email is one of their own verified emails.</td>
+</tr>
+<tr>
+<td><code>commit_committer_name_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, users can only push commits to this repository if the commit author name is consistent with their GitLab account name.</td>
+</tr>
+<tr>
+<td><code>commit_message_negative_regex</code></td>
+<td>string</td>
+<td>No commit message is allowed to match this regular expression.</td>
+</tr>
+<tr>
+<td><code>commit_message_regex</code></td>
+<td>string</td>
+<td>All commit messages must match this regular expression.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>string</td>
+<td>Date and time when the push rule was created.</td>
+</tr>
+<tr>
+<td><code>deny_delete_tag</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, denies deleting a tag.</td>
+</tr>
+<tr>
+<td><code>file_name_regex</code></td>
+<td>string</td>
+<td>All committed filenames must not match this regular expression.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>ID of the push rule.</td>
+</tr>
+<tr>
+<td><code>max_file_size</code></td>
+<td>integer</td>
+<td>Maximum file size (MB).</td>
+</tr>
+<tr>
+<td><code>member_check</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, restricts commits by author (email) to existing GitLab users.</td>
+</tr>
+<tr>
+<td><code>prevent_secrets</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, GitLab rejects any files that are likely to contain secrets.</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td>integer</td>
+<td>ID of the project.</td>
+</tr>
+<tr>
+<td><code>reject_non_dco_commits</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, rejects commits when not DCO certified.</td>
+</tr>
+<tr>
+<td><code>reject_unsigned_commits</code></td>
+<td>boolean</td>
+<td>If <code>true</code>, rejects commits when not signed.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request PUT \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/3/push_rule&quot; \
+  --data &quot;commit_message_regex=Fixes \\d+\\..*&quot; \
+  --data &quot;deny_delete_tag=true&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;project_id&quot;: 3,
+  &quot;created_at&quot;: &quot;2012-10-12T17:04:47Z&quot;,
+  &quot;commit_message_regex&quot;: &quot;Fixes \\d+\\..*&quot;,
+  &quot;commit_message_negative_regex&quot;: &quot;&quot;,
+  &quot;branch_name_regex&quot;: &quot;&quot;,
+  &quot;deny_delete_tag&quot;: true,
+  &quot;member_check&quot;: false,
+  &quot;prevent_secrets&quot;: false,
+  &quot;author_email_regex&quot;: &quot;&quot;,
+  &quot;file_name_regex&quot;: &quot;&quot;,
+  &quot;max_file_size&quot;: 0,
+  &quot;commit_committer_check&quot;: false,
+  &quot;commit_committer_name_check&quot;: false,
+  &quot;reject_unsigned_commits&quot;: false,
+  &quot;reject_non_dco_commits&quot;: false
+}
+</code></pre>
+<h2>Delete project push rule</h2>
+<p>Delete a push rule from a project.</p>
+<pre><code class="language-plaintext">DELETE /projects/:id/push_rule
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="rest/troubleshooting.md#status-codes"><code>204 No Content</code></a>.</p>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request DELETE \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/projects/3/push_rule&quot;
+</code></pre></code></pre>
+</body>
+</html>

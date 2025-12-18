@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Generate a description by summarizing code changes</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Code Creation
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Use AI-assisted features for relevant information about a merge request.
+title: GitLab Duo in merge requests</p>
+<hr />
+<p>{{&lt; alert type="disclaimer" /&gt;}}</p>
+<p>GitLab Duo is designed to provide contextually relevant information during the lifecycle of a merge request.</p>
+<h2>Generate a description by summarizing code changes</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Model information" &gt;}}</p>
+<ul>
+<li>LLM: Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-4">Claude 4.0 Sonnet</a></li>
+<li>Available on <a href="../../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/10401">Introduced</a> in GitLab 16.2 as an <a href="../../../policy/development_stages_support.md#experiment">experiment</a>.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429882">Changed</a> to beta in GitLab 16.10.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6 and later.</li>
+<li>LLM <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/186862">updated</a> to Claude 3.7 Sonnet in GitLab 17.10</li>
+<li>Feature flag <code>add_ai_summary_for_new_mr</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/186108">enabled by default</a> in GitLab 17.11.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+<li>LLM <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/193208">updated</a> to Claude 4.0 Sonnet in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you create or edit a merge request, use GitLab Duo Merge Request Summary
+to create a merge request description.</p>
+<ol>
+<li><a href="creating_merge_requests.html">Create a new merge request</a>.</li>
+<li>In the <strong>Description</strong> field, put your cursor where you want to insert the description.</li>
+<li>On the toolbar above the text area, select <strong>Summarize code changes</strong> ({{&lt; icon name="tanuki-ai" &gt;}}).</li>
+</ol>
+<p><img alt="Above the text area, a toolbar displays a &quot;Summarize code changes&quot; button." src="img/merge_request_ai_summary_v17_6.png" /></p>
+<p>The description is inserted where your cursor was.</p>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=CKjkVsfyFd8&amp;list=PLFGfElNsQthZGazU1ZdfDpegu0HflunXW">Watch an overview</a></p>
+<p>Provide feedback on this feature in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/443236">issue 443236</a>.</p>
+<p>Data usage: The diff of changes between the source branch's head and the target branch is sent to the large language model.</p>
+<h2>Have GitLab Duo review your code</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Model information" &gt;}}</p>
+<ul>
+<li>LLM: Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-4">Claude 4.0 Sonnet</a></li>
+<li>Available on <a href="../../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/14825">Introduced</a> in GitLab 17.5 as an <a href="../../../policy/development_stages_support.md#experiment">experiment</a> behind two feature flags named <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/456106"><code>ai_review_merge_request</code></a> and <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/508632"><code>duo_code_review_chat</code></a>, both disabled by default.</li>
+<li>Feature flags <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/456106"><code>ai_review_merge_request</code></a> and <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/508632"><code>duo_code_review_chat</code></a> enabled by default on GitLab.com, GitLab Self-Managed, and GitLab Dedicated in 17.10.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/516234">Changed</a> to beta in GitLab 17.10.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+<li>Feature flag <code>ai_review_merge_request</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/190639">removed</a> in GitLab 18.1.</li>
+<li>Feature flag <code>duo_code_review_chat</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/190640">removed</a> in GitLab 18.1.</li>
+<li>Generally available in GitLab 18.1.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/524929">Changed</a> to be available on GitLab Duo with self-hosted models in beta in GitLab 18.3.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/548975">Changed</a> to be generally available on GitLab Duo with self-hosted models in GitLab 18.4.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When your merge request is ready to be reviewed, use GitLab Duo Code Review to perform an initial review:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Merge requests</strong> and find your merge request.</li>
+<li>In a comment box, enter the quick action <code>/assign_reviewer @GitLabDuo</code>, or assign GitLab Duo as reviewer.</li>
+</ol>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=SG3bhD1YjeY&amp;list=PLFGfElNsQthZGazU1ZdfDpegu0HflunXW&amp;index=2">Watch an overview</a></p>
+<p>Learn about the new <a href="../../duo_agent_platform/flows/foundational_flows/code_review.html">GitLab Code Review Flow</a>.</p>
+<p>Provide feedback on this feature in issue <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/517386">517386</a>.</p>
+<p>Data usage: When you use this feature, the following data is sent to the large language model:</p>
+<ul>
+<li>Merge request title</li>
+<li>Merge request description</li>
+<li>File contents before changes applied (for context)</li>
+<li>Merge request diffs</li>
+<li>Filenames</li>
+<li><a href="#customize-instructions-for-gitlab-duo-code-review">Custom instructions</a></li>
+</ul>
+<h3>Interact with GitLab Duo in reviews</h3>
+<p>You can mention <code>@GitLabDuo</code> in comments to interact with GitLab Duo on your merge request. You can ask follow-up questions on its review comments, or ask questions on any discussion thread in your merge request.</p>
+<p>Interactions with GitLab Duo can help to improve the suggestions and feedback as you work to improve your merge request.</p>
+<p>Feedback provided to GitLab Duo does not influence later reviews of other merge requests.
+There is a feature request to add this functionality, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/560116">issue 560116</a>.</p>
+<h3>Automatic reviews from GitLab Duo for a project</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/506537">Changed</a> to a UI setting in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Automatic reviews from GitLab Duo ensure that all merge requests in your project receive an initial review.
+After a merge request is created, GitLab Duo reviews it unless:</p>
+<ul>
+<li>It's marked as draft. For GitLab Duo to review the merge request, mark it ready.</li>
+<li>It contains no changes. For GitLab Duo to review the merge request, add changes to it.</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the <a href="../../permissions.html">Maintainer role</a> in a project.</li>
+</ul>
+<p>To enable <code>@GitLabDuo</code> to automatically review merge requests:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>In the <strong>GitLab Duo Code Review</strong> section, select <strong>Enable automatic reviews by GitLab Duo</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Automatic reviews from GitLab Duo for groups and applications</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/554070">Introduced</a> in GitLab 18.4 as a <a href="../../../policy/development_stages_support.md#beta">beta</a> <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>cascading_auto_duo_code_review_settings</code>. Disabled by default.</li>
+<li>Feature flag <code>cascading_auto_duo_code_review_settings</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/213240">removed</a> in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use group or application settings to enable automatic reviews for multiple projects.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>To turn on automatic reviews for groups, have the Owner role for the group.</li>
+<li>To turn on automatic reviews for all projects, be an administrator.</li>
+</ul>
+<p>To enable automatic reviews for groups:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Merge requests</strong> section.</li>
+<li>In the <strong>GitLab Duo Code Review</strong> section, select <strong>Enable automatic reviews by GitLab Duo</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>To enable automatic reviews for all projects:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>In the <strong>GitLab Duo Code Review</strong> section, select <strong>Enable automatic reviews by GitLab Duo</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>Settings cascade from application to group to project. More specific settings override broader ones.</p>
+<h3>Customize instructions for GitLab Duo Code Review</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/545136">Introduced</a> in GitLab 18.2 as a <a href="../../../policy/development_stages_support.md#beta">beta</a> <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>duo_code_review_custom_instructions</code>. Disabled by default.</li>
+<li>Feature flag <code>duo_code_review_custom_instructions</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/199802">enabled by default</a> in GitLab 18.3.</li>
+<li>Feature flag <code>duo_code_review_custom_instructions</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/202262">removed</a> in GitLab 18.4.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab Duo Code Review can help ensure consistent code review standards in your project.
+Define a glob pattern for files, and create custom instructions for files matching that
+pattern. For example, enforce Ruby style conventions only on Ruby files, and Go style
+conventions on Go files. GitLab Duo appends your custom instructions to its standard review
+criteria, instead of replacing them.</p>
+<p>To configure custom instructions:</p>
+<ol>
+<li>In the root of your repository, create a <code>.gitlab/duo</code> directory if it doesn't already exist.</li>
+<li>In the <code>.gitlab/duo</code> directory, create a file named <code>mr-review-instructions.yaml</code>.</li>
+<li>Add your custom instructions using this format:</li>
+</ol>
+<p><code>yaml
+   instructions:
+     - name: &lt;instruction_group_name&gt;
+       fileFilters:
+         - &lt;glob_pattern_1&gt;
+         - &lt;glob_pattern_2&gt;
+         - !&lt;exclude_pattern&gt;  # Exclude files matching this pattern
+       instructions: |
+         &lt;your_custom_review_instructions&gt;</code></p>
+<p>For example:</p>
+<p>```yaml
+   instructions:
+     - name: Ruby Style Guide
+       fileFilters:
+         - "<em>.rb"           # Ruby files in the root directory
+         - "lib/</em><em>/</em>.rb"    # Ruby files in lib and its subdirectories
+         - "!spec/*<em>/</em>.rb"  # Exclude test files
+       instructions: |
+         1. Ensure all methods have proper documentation
+         2. Follow Ruby style guide conventions
+         3. Prefer symbols over strings for hash keys</p>
+<pre><code> - name: TypeScript Source Files
+   fileFilters:
+     - "**/*.ts"        # Typescript files in any directory
+     - "!**/*.test.ts"  # Exclude test files
+     - "!**/*.spec.ts"  # Exclude spec files
+   instructions: |
+     1. Ensure proper TypeScript types (avoid 'any')
+     2. Follow naming conventions
+     3. Document complex functions
+
+ - name: All Files Except Tests
+   fileFilters:
+     - "!**/*.test.*"   # Exclude all test files
+     - "!**/*.spec.*"   # Exclude all spec files
+     - "!test/**/*"     # Exclude test directories
+     - "!spec/**/*"     # Exclude spec directories
+   instructions: |
+     1. Follow consistent code style
+     2. Add meaningful comments for complex logic
+     3. Ensure proper error handling
+
+ - name: Test Coverage
+   fileFilters:
+     - "spec/**/*_spec.rb" # Ruby test files in spec directory
+   instructions: |
+     1. Test both happy paths and edge cases
+     2. Include error scenarios
+     3. Use shared examples to reduce duplication
+</code></pre>
+<p>```</p>
+<ol>
+<li>Optional: Add a <a href="../codeowners/_index.html">Code Owners</a> entry to protect changes to the <code>mr-review-instructions.yaml</code> file.</li>
+</ol>
+<p><code>markdown
+   [GitLab Duo]
+   .gitlab/duo @default-owner @tech-lead</code></p>
+<ol>
+<li>
+<p><a href="creating_merge_requests.html">Create a merge request</a> to review and merge the changes:</p>
+</li>
+<li>
+<p>Code Review automatically applies your custom instructions when the file patterns match.</p>
+</li>
+<li>Multiple instruction groups can apply to a single file.</li>
+<li>Optional:</li>
+<li>Review the feedback and refine your instructions as needed.</li>
+<li>Test the patterns to ensure they match the intended files.</li>
+</ol>
+<p>For glob syntax examples, see the <a href="#file-pattern-reference-for-custom-mr-reviews">file pattern reference</a>.</p>
+<h4>Best practices</h4>
+<p>When writing custom review instructions, apply the following best practices:</p>
+<ul>
+<li>Be specific and actionable.</li>
+<li>Number your instructions for clarity.</li>
+<li>Focus on the most important standards.</li>
+<li>Explain the "why" when helpful.</li>
+<li>Start with straightforward instructions, and add complexity as needed.</li>
+</ul>
+<p>For example:</p>
+<pre><code class="language-yaml">instructions: |
+  1. All public functions must include docstrings with parameter descriptions
+  2. Use parameterized queries to prevent SQL injection
+  3. Validate user input before processing (check type, length, format)
+  4. Include error handling for all external API calls
+  5. Avoid hardcoded credentials - use environment variables
+</code></pre>
+<p>Avoid vague instructions:</p>
+<pre><code class="language-yaml">instructions: |
+  1. Write clean code
+  2. Be secure
+  3. Make it good
+</code></pre>
+<p>You can ask <a href="../../gitlab_duo_chat/agentic_chat.html">GitLab Duo Agentic Chat</a> to analyze the codebase and documentation, and generate customized review rules. For security reasons, Chat cannot edit <code>.gitlab/duo/mr-review-instructions.yaml</code> directly and requires human copy actions.</p>
+<p>Example prompt:</p>
+<pre><code class="language-plaintext">I need more Duo Code Review custom rules - when you look at the source code, which languages are missing and need to be added to the mr-review-instructions.yaml file?
+</code></pre>
+<p>You can find practical examples for many programming languages in the <a href="#use-case-examples-for-customized-mr-review-rules">use case examples for customized MR review rules section</a>.</p>
+<h3>Customized code review comments</h3>
+<p>When GitLab Duo Code Review generates code review comments based on your custom instructions, they follow this format:</p>
+<pre><code class="language-plaintext">According to custom instructions in '[instruction_name]': [specific feedback]
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-plaintext">According to custom instructions in 'Ruby Style Guide': This method should have proper documentation explaining its purpose and parameters.
+</code></pre>
+<p>The <code>instruction_name</code> value corresponds to the <code>name</code> property from your <code>.gitlab/duo/mr-review-instructions.yaml</code> file. Standard GitLab Duo comments don't use this citation format.</p>
+<h2>Summarize a code review</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Model information" &gt;}}</p>
+<ul>
+<li>LLM: Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-4">Claude 4.0 Sonnet</a></li>
+<li>Available on <a href="../../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/10466">Introduced</a> in GitLab 16.0 as an <a href="../../../policy/development_stages_support.md#experiment">experiment</a>.</li>
+<li>Feature flag <code>summarize_my_code_review</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/182448">enabled by default</a> in GitLab 17.10.</li>
+<li>LLM <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/183873">updated</a> to Claude 3.7 Sonnet in GitLab 17.11.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+<li>LLM <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/193685">updated</a> to Claude 4.0 Sonnet in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you've completed your review of a merge request and are ready to <a href="reviews/_index.md#submit-a-review">submit your review</a>, use GitLab Duo Code Review Summary to generate a summary of your comments.</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Merge requests</strong> and find the merge request you want to review.</li>
+<li>When you are ready to submit your review, select <strong>Finish review</strong>.</li>
+<li>Select <strong>Add Summary</strong>.</li>
+</ol>
+<p>The summary is displayed in the comment box. You can edit and refine the summary before you submit your review.</p>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=Bx6Zajyuy9k">Watch an overview</a></p>
+<p>Provide feedback on this experimental feature in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/408991">issue 408991</a>.</p>
+<p>Data usage: When you use this feature, the following data is sent to the large language model:</p>
+<ul>
+<li>Draft comment's text</li>
+</ul>
+<h2>Generate a merge commit message</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Enterprise, GitLab Duo with Amazon Q</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Model information" &gt;}}</p>
+<ul>
+<li>LLM: Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-4">Claude 4.0 Sonnet</a></li>
+<li>LLM for Amazon Q: Amazon Q Developer</li>
+<li>Available on <a href="../../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/10453">Introduced</a> in GitLab 16.2 as an <a href="../../../policy/development_stages_support.md#experiment">experiment</a> <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>generate_commit_message_flag</code>. Disabled by default.</li>
+<li>Feature flag <code>generate_commit_message_flag</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/158339">enabled by default</a> in GitLab 17.2.</li>
+<li>Feature flag <code>generate_commit_message_flag</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/173262">removed</a> in GitLab 17.7.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+<li>LLM <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/193793">updated</a> to Claude 4.0 Sonnet in GitLab 18.1.</li>
+<li>Changed to support Amazon Q in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When preparing to merge your merge request, edit the proposed merge commit message
+by using GitLab Duo Merge Commit Message Generation.</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Merge requests</strong> and find your merge request.</li>
+<li>Select the <strong>Edit commit message</strong> checkbox on the merge widget.</li>
+<li>Select <strong>Generate commit message</strong>.</li>
+<li>Review the commit message provided and choose <strong>Insert</strong> to add it to the commit.</li>
+</ol>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=fUHPNT4uByQ">Watch an overview</a></p>
+<p>Data usage: When you use this feature, the following data is sent to the large language model:</p>
+<ul>
+<li>Contents of the file</li>
+<li>The filename</li>
+</ul>
+<h2>File pattern reference for custom MR reviews</h2>
+<p>Use glob patterns in <code>fileFilters</code> to target specific files for <a href="#customize-instructions-for-gitlab-duo-code-review">customized MR review rules</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>**/*.rb</code></td>
+<td>All Ruby files in any directory</td>
+</tr>
+<tr>
+<td><code>*.rb</code></td>
+<td>Ruby files in root directory only</td>
+</tr>
+<tr>
+<td><code>lib/**/*.rb</code></td>
+<td>Ruby files in the <code>lib</code> directory and its subdirectories</td>
+</tr>
+<tr>
+<td><code>!**/*.test.rb</code></td>
+<td>Exclude all Ruby test files</td>
+</tr>
+<tr>
+<td><code>!spec/**/*.rb</code></td>
+<td>Exclude all Ruby files in the <code>spec</code> directory and its subdirectories</td>
+</tr>
+<tr>
+<td><code>!tests/**/*</code></td>
+<td>Exclude all files in the <code>tests</code> directory and its subdirectories</td>
+</tr>
+<tr>
+<td><code>**/*.{js,jsx}</code></td>
+<td>JavaScript and JSX files in all directories</td>
+</tr>
+</tbody>
+</table>
+<p>The difference between <code>**/*.rb</code> and <code>*.rb</code> can be illustrated with the following structure:</p>
+<pre><code class="language-plaintext">project/
+├── app.rb              ← matched by both *.rb and **/*.rb
+├── lib/
+│   └── helper.rb       ← matched only by **/*.rb
+└── app/
+    └── models/
+        └── user.rb     ← matched only by **/*.rb
+</code></pre>
+<ul>
+<li><code>*.rb</code> would only match app.rb</li>
+<li><code>**/*.rb</code> would match all three files</li>
+</ul>
+<p>For the <code>mr-review-instructions.yaml</code> file, <code>**/*.rb</code> ensures that review instructions apply to Ruby files anywhere in the project structure, not just the root directory.</p>
+<h2>Use case examples for customized MR review rules</h2>
+<!-- 2025-11-12 Use case examples are maintained by DevRel, @dnsmichi
+Inspired by the reference in https://gitlab.com/gitlab-da/use-cases/ai/gitlab-duo-agent-platform/demo-environments/tanuki-iot-platform/-/blob/main/.gitlab/duo/mr-review-instructions.yaml?ref_type=heads
+-->
+
+<p>Use the following practical examples for <a href="#customize-instructions-for-gitlab-duo-code-review">customized MR review rules</a> to get started faster:</p>
+<p>Example for Assembly style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Assembly Style Guide
+    fileFilters:
+      - &quot;**/*.asm&quot;
+      - &quot;**/*.s&quot;
+      - &quot;**/*.S&quot;
+    instructions: |
+      1. Document the target architecture (x86-64, ARM, RISC-V, AVR, etc.) at the top
+      2. Use meaningful labels and comment all non-obvious instructions
+      3. Document register usage and calling conventions
+      4. Align code sections properly for readability
+      5. Include memory layout and stack usage documentation
+</code></pre>
+<p>Example for C style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: C Style Guide
+    fileFilters:
+      - &quot;**/*.c&quot;
+      - &quot;**/*.h&quot;
+    instructions: |
+      1. goto is not allowed
+      2. Avoid using global variables
+      3. Use meaningful variable names
+      4. Add comments for complex logic
+</code></pre>
+<p>Example for C++ style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: C++ Style Guide
+    fileFilters:
+      - &quot;**/*.cpp&quot;
+      - &quot;**/*.{h,hpp}&quot;
+    instructions: |
+      1. Ensure all methods have proper documentation
+      2. Use smart pointers for dynamic memory management
+      3. Avoid raw pointers
+</code></pre>
+<p>Example for C# style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: C# Style Guide
+    fileFilters:
+      - &quot;**/*.cs&quot;
+    instructions: |
+      1. Follow Microsoft C# coding conventions
+      2. Use XML documentation comments for public APIs
+      3. Prefer async/await for asynchronous operations
+      4. Use nullable reference types appropriately
+      5. Follow .NET naming conventions (PascalCase for public members)
+</code></pre>
+<p>Example for COBOL style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: COBOL Style Guide
+    fileFilters:
+      - &quot;**/*.CBL&quot;
+      - &quot;**/*.cbl&quot;
+      - &quot;**/*.COB&quot;
+      - &quot;**/*.cob&quot;
+    instructions: |
+      1. Use clear and meaningful names for variables and procedures
+      2. Prefer COBOL-85 syntax where possible
+      3. Use proper division structure (IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE)
+      4. Document all paragraphs and sections with meaningful comments
+      5. Use 88-level condition names for boolean flags and status codes
+      6. Avoid GO TO statements, prefer PERFORM for structured programming
+      7. Use proper error handling with declaratives or status code checking
+      8. Define working storage variables with appropriate PICTURE clauses
+      9. Use meaningful paragraph names that describe the operation
+      10. For mainframe integration, document JCL dependencies and file layouts
+</code></pre>
+<p>Example for Go style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Go Style Guide
+    fileFilters:
+      - &quot;**/*.go&quot;
+    instructions: |
+      1. Use idiomatic Go practices
+      2. Ensure all public functions and types have documentation
+      3. Prefer standard library packages over third-party ones when possible
+</code></pre>
+<p>Example for Java style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Java Style Guide
+    fileFilters:
+      - &quot;**/*.java&quot;
+    instructions: |
+      1. Do not modernize Java 8 code to Java 11+ features, unless there is a GitLab issue or task specifically requesting modernization
+      2. All public classes must have Javadoc describing purpose and usage
+      3. All public methods must have Javadoc with @param and @return tags
+      4. Include code examples in main class Javadoc
+      5. All public methods must have at least one test case
+</code></pre>
+<p>Example for JavaScript/TypeScript style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: JavaScript/TypeScript Files
+    fileFilters:
+      - &quot;src/**/*.js&quot;
+      - &quot;src/**/*.jsx&quot;
+      - &quot;src/**/*.ts&quot;
+      - &quot;src/**/*.tsx&quot;
+      - &quot;!**/*.test.js&quot;
+      - &quot;!**/*.test.ts&quot;
+      - &quot;!**/*.spec.js&quot;
+      - &quot;!**/*.spec.ts&quot;
+    instructions: |
+      1. Use const/let instead of var
+      2. Prefer async/await over promise chains
+      3. Add JSDoc comments for complex functions
+      4. Ensure proper error handling in async code
+      5. Avoid any 'any' types in TypeScript
+</code></pre>
+<p>Example for Kotlin style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Kotlin Style Guide
+    fileFilters:
+      - &quot;**/*.kt&quot;
+      - &quot;**/*.kts&quot;
+    instructions: |
+      1. Follow Kotlin coding conventions
+      2. Prefer immutability (val over var)
+      3. Use coroutines for asynchronous operations
+      4. Leverage Kotlin's null safety features
+      5. Document public APIs with KDoc
+</code></pre>
+<p>Example for MATLAB style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: MATLAB Style Guide
+    fileFilters:
+      - &quot;**/*.m&quot;
+    instructions: |
+      1. Use descriptive variable and function names with camelCase convention
+      2. Vectorize operations instead of using loops where possible
+      3. Document functions with H1 line and help text comments
+      4. Preallocate arrays before loops to improve performance
+      5. Use proper error handling with try-catch blocks and error() function
+</code></pre>
+<p>Example for Perl style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Perl Style Guide
+    fileFilters:
+      - &quot;**/*.pl&quot;
+      - &quot;**/*.pm&quot;
+    instructions: |
+      1. Follow idiomatic Perl practices
+      2. Ensure proper module documentation
+      3. Use strict and warnings pragmas
+</code></pre>
+<p>Example for PHP style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: PHP Style Guide
+    fileFilters:
+      - &quot;**/*.php&quot;
+    instructions: |
+      1. Follow PSR-12 coding standard
+      2. Use type declarations for function parameters and return types
+      3. Ensure compatibility with PHP 8+
+      4. Use proper error handling and exceptions
+      5. Document classes and methods with PHPDoc
+</code></pre>
+<p>Example for Python style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Python Source Files
+    fileFilters:
+      - &quot;**/*.py&quot;
+      - &quot;!tests/**/*.py&quot;
+      - &quot;!test_*.py&quot;
+    instructions: |
+      1. All functions must have docstrings with parameters and return types
+      2. Use type hints for function signatures
+      3. Follow PEP 8 style conventions
+      4. Ensure proper exception handling
+      5. Avoid using bare 'except' clauses
+
+  - name: Python Tests
+    fileFilters:
+      - &quot;tests/**/*.py&quot;
+      - &quot;test_*.py&quot;
+    instructions: |
+      1. Use pytest fixtures for common setup
+      2. Test names should clearly describe the scenario being tested
+      3. Include assertions for both expected outcomes and edge cases
+      4. Mock external dependencies appropriately
+</code></pre>
+<p>Example for Ruby style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Ruby Style Guide
+    fileFilters:
+      - &quot;*.rb&quot;
+      - &quot;lib/**/*.rb&quot;
+      - &quot;!spec/**/*.rb&quot;  # Exclude test files
+    instructions: |
+      1. Follow Ruby style guide conventions
+      2. Prefer symbols over strings for hash keys
+      3. Use snake_case for methods/variables, SCREAMING_SNAKE_CASE for constants, CamelCase for classes
+      4. Prefer Ruby 3.0+ features (pattern matching, endless methods) where appropriate
+      5. Use proper error handling - raise exceptions over returning nil for errors
+      6. Write idiomatic Ruby - use blocks, enumerables, and Ruby idioms over procedural patterns
+      7. Use meaningful method names - use ? for predicates, ! for dangerous methods
+      8. Prefer keyword arguments for methods with multiple parameters
+      9. All public methods should have corresponding RSpec/Minitest tests
+      10. Manage dependencies with Gemfile and ensure version compatibility
+      11. Document thread-safe code and use proper synchronization for concurrent operations
+      12. Handle signals (SIGTERM, SIGINT) properly for daemon processes
+</code></pre>
+<p>Example for R style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: R Style Guide
+    fileFilters:
+      - &quot;**/*.r&quot;
+      - &quot;**/*.R&quot;
+    instructions: |
+      1. Follow tidyverse style guide conventions
+      2. Use snake_case for variable and function names
+      3. Document functions with roxygen2 comments
+      4. Prefer vectorized operations over loops
+      5. Use proper error handling with tryCatch and stop()
+</code></pre>
+<p>Example for Rust style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Rust Style Guide
+    fileFilters:
+      - &quot;**/*.rs&quot;
+    instructions: |
+      1. Follow Rust idioms and conventions
+      2. Use proper error handling with Result and Option types
+      3. Avoid unsafe code unless absolutely necessary and well-documented
+      4. Ensure all public items have documentation comments
+</code></pre>
+<p>Example for Scala style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Scala Style Guide
+    fileFilters:
+      - &quot;**/*.scala&quot;
+    instructions: |
+      1. Follow Scala style guide conventions
+      2. Prefer immutable data structures (val over var)
+      3. Use pattern matching effectively for control flow
+      4. Document public APIs with ScalaDoc
+      5. Use proper error handling with Try, Either, or Option types
+</code></pre>
+<p>Example for Shell script style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Shell Script Style Guide
+    fileFilters:
+      - &quot;**/*.sh&quot;
+      - &quot;**/*.bash&quot;
+      - &quot;**/*.zsh&quot;
+      - &quot;**/*.ksh&quot;
+    instructions: |
+      1. Always quote variables to prevent word splitting (&quot;$var&quot; not $var)
+      2. Use proper error handling with set -euo pipefail at script start
+      3. Document script purpose, parameters, and exit codes in header comments
+      4. Prefer [[ ]] over [ ] for conditional tests
+      5. Use meaningful function names and avoid complex one-liners
+</code></pre>
+<p>Example for SQL style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: SQL Style Guide
+    fileFilters:
+      - &quot;**/*.sql&quot;
+    instructions: |
+      1. Use uppercase for SQL keywords (SELECT, FROM, WHERE, JOIN)
+      2. Always specify column names explicitly instead of using SELECT *
+      3. For PostgreSQL use SERIAL/RETURNING, for MySQL use AUTO_INCREMENT, for Oracle use SEQUENCE
+      4. For NoSQL (MongoDB) use proper indexing and aggregation pipelines to avoid N+1 queries
+      5. Document database-specific features and expected performance characteristics
+      6. Use proper indentation for complex queries and subqueries
+</code></pre>
+<p>Example for VHDL style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: VHDL Style Guide
+    fileFilters:
+      - &quot;**/*.vhd&quot;
+      - &quot;**/*.vhdl&quot;
+    instructions: |
+      1. Follow IEEE VHDL coding standards
+      2. Use meaningful signal and entity names with clear prefixes
+      3. Document all entities, architectures, and processes with comments
+      4. Use synchronous design practices with proper clock and reset handling
+      5. Avoid combinational loops and ensure proper timing constraints
+</code></pre>
+<p>Example for configuration files:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Configuration Files
+    fileFilters:
+      - &quot;*.yaml&quot;
+      - &quot;*.yml&quot;
+      - &quot;*.json&quot;
+      - &quot;config/**/*&quot;
+      - &quot;!.gitlab/**/*&quot;
+    instructions: |
+      1. Do not include sensitive data (passwords, API keys)
+      2. Use environment variables for environment-specific values
+      3. Document all configuration options
+      4. Validate configuration schema if possible
+</code></pre>
+<p>Example for Infrastructure-as-Code style guide:</p>
+<pre><code class="language-yaml">instructions:
+  - name: Ansible Style Guide
+    fileFilters:
+      - &quot;*.yaml&quot;
+      - &quot;*.yml&quot;
+      - &quot;playbooks/**/*.yaml&quot;
+      - &quot;roles/**/*.yaml&quot;
+    instructions: |
+      1. Use meaningful play and task names that describe the action
+      2. Prefer modules over shell/command tasks when possible
+      3. Use variables and defaults for reusability across environments
+      4. Implement idempotency - tasks should be safe to run multiple times
+      5. Use handlers for service restarts and notifications
+      6. Document playbook purpose, required variables, and dependencies
+
+  - name: Dockerfile Style Guide
+    fileFilters:
+      - &quot;Dockerfile&quot;
+      - &quot;*.dockerfile&quot;
+      - &quot;Dockerfile.*&quot;
+    instructions: |
+      1. Use specific base image tags, avoid 'latest'
+      2. Minimize layers by combining RUN commands with &amp;&amp; where logical
+      3. Use multi-stage builds to reduce final image size
+      4. Run containers as non-root user for security
+      5. Use .dockerignore to exclude unnecessary files
+      6. Document exposed ports, volumes, and environment variables
+
+  - name: GitLab CI/CD Style Guide
+    fileFilters:
+      - &quot;.gitlab-ci.yml&quot;
+      - &quot;**/.gitlab-ci.yml&quot;
+    instructions: |
+      1. Use job extends instead of YAML anchors for reusability
+      2. Always use rules instead of only/except for job conditions
+      3. Define appropriate caching strategies for dependencies
+      4. Use stages to organize pipeline workflow logically
+      5. Include security scanning templates (SAST, Dependency Scanning, Secret Detection)
+      6. Document job purpose, required variables, and dependencies in comments
+
+  - name: Helm Chart Style Guide
+    fileFilters:
+      - &quot;Chart.yaml&quot;
+      - &quot;values.yaml&quot;
+      - &quot;templates/**/*.yaml&quot;
+    instructions: |
+      1. Use semantic versioning for chart versions
+      2. Provide sensible defaults in values.yaml with comments
+      3. Use template functions for conditional logic and loops
+      4. Include NOTES.txt with post-installation instructions
+      5. Validate charts with helm lint before committing
+      6. Document all configurable values and their purpose
+
+  - name: Kubernetes Style Guide
+    fileFilters:
+      - &quot;*.yaml&quot;
+      - &quot;*.yml&quot;
+      - &quot;k8s/**/*.yaml&quot;
+      - &quot;kubernetes/**/*.yaml&quot;
+    instructions: |
+      1. Use explicit API versions and avoid deprecated APIs
+      2. Always define resource limits and requests for containers
+      3. Use namespaces to organize resources logically
+      4. Define liveness and readiness probes for all deployments
+      5. Use ConfigMaps and Secrets instead of hardcoded values
+      6. Document resource purpose and dependencies in metadata annotations
+
+  - name: Terraform/OpenTofu Style Guide
+    fileFilters:
+      - &quot;*.tf&quot;
+      - &quot;*.tfvars&quot;
+    instructions: |
+      1. Use consistent naming conventions for resources (environment_service_resource)
+      2. Organize code into modules for reusability
+      3. Use variables with descriptions and validation rules
+      4. Define outputs for important resource attributes
+      5. Use remote state with locking for team collaboration
+      6. Document module purpose, inputs, outputs, and provider requirements
+</code></pre>
+<h3>Use case example projects</h3>
+<p>You can learn about more custom review instructions use cases in the following production examples:</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/blob/master/.gitlab/duo/mr-review-instructions.yaml">GitLab development in <code>gitlab-org/gitlab</code></a></li>
+<li><a href="https://gitlab.com/gitlab-com/content-sites/handbook/-/blob/main/.gitlab/duo/mr-review-instructions.yml">GitLab handbook</a></li>
+<li><a href="https://gitlab.com/gitlab-com/marketing/digital-experience/about-gitlab-com/-/blob/main/.gitlab/duo/mr-review-instructions.yaml">GitLab website</a></li>
+<li><a href="https://gitlab.com/gitlab-da/use-cases/ai/gitlab-duo-agent-platform/demo-environments/tanuki-iot-platform/-/blob/main/.gitlab/duo/mr-review-instructions.yaml">Developer Advocacy: Tanuki IoT Platform</a></li>
+</ul>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../../gitlab_duo/turn_on_off.html">Control GitLab Duo availability</a></li>
+<li><a href="../../gitlab_duo/_index.html">All GitLab Duo features</a></li>
+</ul>
+<h2>Troubleshooting</h2>
+<p>When working with GitLab Duo in Merge Requests, you might encounter the following issues.</p>
+<h3>Response not received</h3>
+<p>If you ask GitLab Duo for a review by mentioning or replying to <code>@GitLabDuo</code>,
+and do not receive a response, this might be because you do not have the
+appropriate GitLab Duo add-on.</p>
+<p>To check your GitLab Duo add-on, ask your group Owner to check the group's
+<a href="../../../subscriptions/subscription-add-ons.md#view-assigned-gitlab-duo-users">GitLab Duo seat assignments</a>.</p>
+<p>To change your GitLab Duo add-on, contact your administrator.</p>
+<h3>Unable to assign GitLab Duo to review</h3>
+<p>If you cannot assign GitLab Duo as a reviewer, it might be because you do not
+have the appropriate GitLab Duo add-on.</p>
+<p>To check your GitLab Duo add-on, ask your group Owner to check the group's
+<a href="../../../subscriptions/subscription-add-ons.md#view-assigned-gitlab-duo-users">GitLab Duo seat assignments</a>.</p>
+<p>To change your GitLab Duo add-on, contact your administrator.</p>
+<h3>Error: <code>GitLab Duo Code Review was not automatically added...</code></h3>
+<p>If you try to create a merge request with automatic reviews from GitLab Duo
+turned on, you might get the following error message:</p>
+<pre><code class="language-plaintext">GitLab Duo Code Review was not automatically added because your account requires
+GitLab Duo Enterprise. Contact your administrator to upgrade your account.
+</code></pre>
+<p>Contact your administrator to ask them to
+<a href="../../../subscriptions/subscription-add-ons.md#purchase-gitlab-duo">purchase a GitLab Duo Enterprise seat</a>
+and assign it to you.</p></code></pre>
+</body>
+</html>

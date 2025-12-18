@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Setting up Geo</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>Two (or more) independently working GitLab sites:</li>
+<li>One GitLab site serves as the Geo <strong>primary</strong> site. Use the <a href="../../reference_architectures/_index.html">GitLab reference architectures documentation</a> to set this up. You can use different reference architecture sizes for each Geo site. If you already have a working GitLab instance that is in-use, it can be used as a <strong>primary</strong> site.</li>
+<li>
+<p>The second GitLab site serves as the Geo <strong>secondary</strong> site. Use the <a href="../../reference_architectures/_index.html">GitLab reference architectures documentation</a> to set this up. It's a good idea to sign in and test it. However, be aware that <strong>all of the data on the secondary are lost</strong> as part of the process of replicating from the <strong>primary</strong> site.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Geo supports multiple secondaries. You can follow the same steps and make any changes accordingly.</p>
+<p>{{&lt; /alert &gt;}}</p>
+</li>
+<li>
+<p>Ensure the <strong>primary</strong> site has a <a href="https://about.gitlab.com/pricing/">GitLab Premium or Ultimate</a> subscription to unlock Geo. You only need one license for all the sites.</p>
+</li>
+<li>Confirm the <a href="../_index.md#requirements-for-running-geo">requirements for running Geo</a> are met by all sites. For example, sites must use the same GitLab version, and sites must be able to communicate with each other over certain ports.</li>
+<li>Confirm the <strong>primary</strong> and <strong>secondary</strong> site storage configurations match. If the primary Geo site uses object storage, the secondary Geo site must use it too. For more information, see <a href="../replication/object_storage.html">Geo with Object storage</a>.</li>
+<li>Ensure clocks are synchronized between the <strong>primary</strong> site and the <strong>secondary</strong> site. Synchronized clocks are required for Geo to function correctly. For example, if the clock drift between the <strong>primary</strong> and <strong>secondary</strong> sites exceeds 1 minute, replication fails.</li>
+</ul>
+<h2>Using Linux package installations</h2>
+<p>If you installed GitLab using the Linux package (highly recommended), the process for setting up Geo depends on whether you need to set up
+a single-node Geo site or a multi-node Geo site.</p>
+<h3>Single-node Geo sites</h3>
+<p>If both Geo sites are based on the <a href="../../reference_architectures/1k_users.html">1K reference architecture</a>, follow
+<a href="two_single_node_sites.html">Set up Geo for two single-node sites</a>.</p>
+<p>If using external PostgreSQL services, for example Amazon RDS, follow <a href="two_single_node_external_services.html">Set up Geo for two single-node sites (with external PostgreSQL services)</a>.</p>
+<p>Depending on your GitLab deployment, <a href="#additional-configuration">additional configuration</a> for LDAP, object storage, and the container registry might be required.</p>
+<h3>Multi-node Geo sites</h3>
+<p>If one or more of your sites is using the <a href="../../reference_architectures/2k_users.html">40 RPS / 2,000 user reference architecture</a> or larger, see
+<a href="../replication/multiple_servers.html">Configure Geo for multiple nodes</a>.</p>
+<p>Depending on your GitLab deployment, <a href="#additional-configuration">additional configuration</a> for LDAP, object storage, and the container registry might be required.</p>
+<h3>General steps for reference</h3>
+<ol>
+<li>Set up the database replication based on your choice of PostgreSQL instances (<code>primary (read-write) &lt;-&gt; secondary (read-only)</code> topology):</li>
+<li><a href="database.html">Using Linux package PostgreSQL instances</a> .</li>
+<li><a href="external_database.html">Using external PostgreSQL instances</a></li>
+<li><a href="../replication/configuration.html">Configure GitLab</a> to set the <strong>primary</strong> and <strong>secondary</strong> sites.</li>
+<li>Follow the <a href="../replication/usage.html">Using a Geo Site</a> guide.</li>
+</ol>
+<p>Depending on your GitLab deployment, <a href="#additional-configuration">additional configuration</a> for LDAP, object storage, and the container registry might be required.</p>
+<h3>Additional configuration</h3>
+<p>Depending on how you use GitLab, the following configuration might be required:</p>
+<ul>
+<li>If the <strong>primary</strong> site uses object storage, <a href="../replication/object_storage.html">configure object storage replication</a> for the <strong>secondary</strong> sites.</li>
+<li>If you use LDAP, <a href="../../auth/ldap/_index.html">configure a secondary LDAP server</a> for the <strong>secondary</strong> sites.
+  For more information, see <a href="../replication/single_sign_on.md#ldap">LDAP with Geo</a>.</li>
+<li>If you use the container registry, <a href="../replication/container_registry.html">configure the container registry for replication</a> on the <strong>primary</strong> and <strong>secondary</strong> sites.</li>
+</ul>
+<p>You should <a href="../secondary_proxy/_index.md#set-up-a-unified-url-for-geo-sites">configure unified URLs</a> to use a single, unified URL for all Geo sites.</p>
+<h2>Using GitLab Charts</h2>
+<p><a href="https://docs.gitlab.com/charts/advanced/geo/">Configure the GitLab chart with GitLab Geo</a>.</p>
+<h2>Geo and self-compiled installations</h2>
+<p>Geo is not supported when you use a <a href="../../../install/self_compiled/_index.html">self-compiled GitLab installation</a>.</p>
+<h2>Post-installation documentation</h2>
+<p>After installing GitLab on the <strong>secondary</strong> sites and performing the initial configuration, see the <a href="../_index.md#post-installation-documentation">following documentation for post-installation information</a>.</p></code></pre>
+</body>
+</html>

@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Compliance
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Compliance frameworks</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can create a compliance framework that is a label to identify that your project has certain compliance
+requirements or needs additional oversight.</p>
+<p>In the Ultimate tier, the compliance framework can optionally enforce
+<a href="../compliance_pipelines.html">compliance pipeline configuration</a> and
+<a href="../../application_security/policies/enforcement/_index.md#scope">security policies</a> to the projects on which it is applied.</p>
+<p>Compliance frameworks are created on top-level groups. If a project is moved outside of its existing top-level group,
+its frameworks are removed.</p>
+<p>You can apply up to 20 compliance frameworks to each project.</p>
+<p>For a click-through demo, see <a href="https://gitlab.navattic.com/custom-compliance">Custom Compliance frameworks</a>.</p>
+<!-- Demo published on 2025-10-09 -->
+
+<h2>Prerequisites</h2>
+<ul>
+<li>To create, edit, and delete compliance frameworks, users must have either:</li>
+<li>The Owner role for the top-level group.</li>
+<li>Be assigned a <a href="../../custom_roles/_index.html">custom role</a> with the <code>admin_compliance_framework</code>
+    <a href="../../custom_roles/abilities.md#compliance-management">custom permission</a>.</li>
+<li>To add or remove a compliance framework to or from a project, the group to which the project belongs must have a
+  compliance framework.</li>
+</ul>
+<h2>Create, edit, or delete a compliance framework</h2>
+<p>You can create, edit, or delete a compliance framework by using either a compliance frameworks report or a compliance projects report.</p>
+<p>For more information on using a compliance frameworks report, see:</p>
+<ul>
+<li><a href="../compliance_center/compliance_frameworks_report.md#create-a-new-compliance-framework">Create a new compliance framework</a>.</li>
+<li><a href="../compliance_center/compliance_frameworks_report.md#edit-a-compliance-framework">Edit a compliance framework</a>.</li>
+<li><a href="../compliance_center/compliance_frameworks_report.md#delete-a-compliance-framework">Delete a compliance framework</a>.</li>
+</ul>
+<p>For more information on using a compliance projects report, see:</p>
+<ul>
+<li><a href="../compliance_center/compliance_projects_report.md#create-a-new-compliance-framework">Create a new compliance framework</a>.</li>
+<li><a href="../compliance_center/compliance_projects_report.md#edit-a-compliance-framework">Edit a compliance framework</a>.</li>
+<li><a href="../compliance_center/compliance_projects_report.md#delete-a-compliance-framework">Delete a compliance framework</a>.
+  Subgroups and projects have access to all compliance frameworks created on their top-level group. However, compliance frameworks cannot be created, edited,
+  or deleted by using subgroups or projects. Project owners can choose a framework to apply to their projects.</li>
+</ul>
+<h2>Apply a compliance framework to a project</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Applying multiple compliance frameworks <a href="https://gitlab.com/groups/gitlab-org/-/epics/13294">introduced</a> in GitLab 17.3.</li>
+<li>Applying a compliance framework to a project through a compliance framework <a href="https://gitlab.com/groups/gitlab-org/-/epics/16747">introduced</a> in GitLab 17.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can apply multiple compliance frameworks to a project but cannot apply compliance frameworks to projects in personal namespaces.</p>
+<p>To apply a compliance framework to a project, apply the compliance framework through the
+<a href="../compliance_center/compliance_projects_report.md#apply-a-compliance-framework-to-projects-in-a-group">compliance projects report</a>.</p>
+<p>You can use the <a href="../../../api/graphql/reference/_index.md#mutationprojectupdatecomplianceframeworks">GraphQL API</a> to apply one or many
+compliance frameworks to a project.</p>
+<p>If you create compliance frameworks on subgroups with GraphQL, the framework is created on the root ancestor if the user
+has the correct permissions. The GitLab UI presents a read-only view to discourage this behavior.</p>
+<p>To apply a compliance framework to a project through a compliance framework:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Projects</strong> tab.</li>
+<li>Hover over a compliance framework, select the <strong>Edit Framework</strong> tab.</li>
+<li>Select <strong>Projects</strong> section.</li>
+<li>Select projects from the list.</li>
+<li>Select <strong>Update Framework</strong>.</li>
+</ol>
+<h2>Default compliance frameworks</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/375036">Introduced</a> in GitLab 15.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Group owners can set a default compliance framework. The default framework is applied to all the new and imported
+projects that are created in that group. It does not affect the framework applied to the existing projects. The
+default framework cannot be deleted.</p>
+<p>A compliance framework that is set to default has a <code>default</code> label.</p>
+<h3>Set and remove a default by using the compliance center</h3>
+<p>To set as default (or remove the default) from <a href="../compliance_center/compliance_projects_report.html">compliance projects report</a>:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Projects</strong> tab.</li>
+<li>Hover over a compliance framework, select the <strong>Edit Framework</strong> tab.</li>
+<li>Select <strong>Set as default</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>To set as default (or remove the default) from <a href="../compliance_center/compliance_frameworks_report.html">compliance framework report</a>:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Hover over a compliance framework, select the <strong>Edit Framework</strong> tab.</li>
+<li>Select <strong>Set as default</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Remove a compliance framework from a project</h2>
+<p>To remove a compliance framework from one or multiple project in a group, remove the compliance framework through the
+<a href="../compliance_center/compliance_projects_report.md#remove-a-compliance-framework-from-projects-in-a-group">compliance projects report</a>.</p>
+<h2>Import and export compliance frameworks</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/16499">Introduced</a> in GitLab 17.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Download existing compliance frameworks as JSON files and upload new frameworks from JSON templates.</p>
+<p>A library of JSON templates is available from the
+<a href="https://gitlab.com/gitlab-org/software-supply-chain-security/compliance/engineering/compliance-adherence-templates">Compliance Adherence Templates</a> project.
+Use these templates to quickly adopt predefined compliance frameworks.</p>
+<h3>Export a compliance framework as a JSON file</h3>
+<p>With this feature, you can share and back up compliance frameworks.</p>
+<p>To export a compliance framework from the compliance center:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Locate the compliance framework you wish to export.</li>
+<li>Select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Export as JSON file</strong>.</li>
+</ol>
+<p>The JSON file is downloaded to your local system.</p>
+<h3>Import a compliance framework from a JSON file</h3>
+<p>With this feature, you can use shared or backed up compliance frameworks. The JSON file must not have the same name as an existing compliance framework.</p>
+<p>To import a compliance framework by using a JSON template:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Select <strong>New framework</strong>.</li>
+<li>Select <strong>Import framework</strong>.</li>
+<li>In the dialog that appears, select the JSON file from your local system.</li>
+</ol>
+<p>If the import is successful, the new compliance framework appears in the list. Any errors are displayed for correction.</p>
+<h3>JSON template structure and schema</h3>
+<p>Compliance framework JSON templates follow a specific schema structure that defines the framework metadata, requirements, and associated controls. Understanding this structure helps you create custom templates or modify existing ones to meet your organization's specific compliance needs.</p>
+<h4>Framework properties</h4>
+<p>Each JSON template contains the following top-level properties:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>The display name of the compliance framework.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>A detailed description of the framework's purpose.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>Hexadecimal color code for the framework (for example, <code>#1f75cb</code>).</td>
+</tr>
+<tr>
+<td><code>requirements</code></td>
+<td>Array</td>
+<td>No</td>
+<td>Array of requirement objects that define the compliance controls.</td>
+</tr>
+</tbody>
+</table>
+<h4>Requirements structure</h4>
+<p>Each requirement in the <code>requirements</code> array contains:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>The name of the compliance requirement.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>Detailed description of what the requirement enforces.</td>
+</tr>
+<tr>
+<td><code>controls</code></td>
+<td>Array</td>
+<td>Yes</td>
+<td>Array of control objects that implement the requirement.</td>
+</tr>
+</tbody>
+</table>
+<h4>Control structure</h4>
+<p>Each control in the <code>controls</code> array defines a specific check:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>The GitLab control ID (for example, <code>scanner_sast_running</code>).</td>
+</tr>
+<tr>
+<td><code>control_type</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>Always <code>"internal"</code> for GitLab controls.</td>
+</tr>
+<tr>
+<td><code>expression</code></td>
+<td>Object</td>
+<td>Yes</td>
+<td>Defines the evaluation logic for the control.</td>
+</tr>
+</tbody>
+</table>
+<h4>Expression object</h4>
+<p>The <code>expression</code> object defines how the control is evaluated:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>field</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>The field name to evaluate (matches the control name).</td>
+</tr>
+<tr>
+<td><code>operator</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>Comparison operator (<code>=</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&lt;</code>).</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>Mixed</td>
+<td>Yes</td>
+<td>Expected value (boolean, number, or string).</td>
+</tr>
+</tbody>
+</table>
+<h4>Example JSON template structure</h4>
+<p>Here's a simplified example that shows the complete structure:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;Example Compliance Framework&quot;,
+  &quot;description&quot;: &quot;Example framework demonstrating JSON structure&quot;,
+  &quot;color&quot;: &quot;#1f75cb&quot;,
+  &quot;requirements&quot;: [
+    {
+      &quot;name&quot;: &quot;Security Scanning Requirement&quot;,
+      &quot;description&quot;: &quot;Ensure security scanning is enabled for all projects&quot;,
+      &quot;controls&quot;: [
+        {
+          &quot;name&quot;: &quot;scanner_sast_running&quot;,
+          &quot;control_type&quot;: &quot;internal&quot;,
+          &quot;expression&quot;: {
+            &quot;field&quot;: &quot;scanner_sast_running&quot;,
+            &quot;operator&quot;: &quot;=&quot;,
+            &quot;value&quot;: true
+          }
+        },
+        {
+          &quot;name&quot;: &quot;minimum_approvals_required_2&quot;,
+          &quot;control_type&quot;: &quot;internal&quot;,
+          &quot;expression&quot;: {
+            &quot;field&quot;: &quot;minimum_approvals_required&quot;,
+            &quot;operator&quot;: &quot;&gt;=&quot;,
+            &quot;value&quot;: 2
+          }
+        }
+      ]
+    }
+  ]
+}
+</code></pre>
+<h2>Requirements</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/186525">Introduced</a> in GitLab 17.11 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>enable_standards_adherence_dashboard_v2</code>. Enabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/535563">Generally available</a> in GitLab 18.3. Feature flag <code>enable_standards_adherence_dashboard_v2</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>In GitLab Ultimate, you can define specific <strong>requirements</strong> for a compliance framework. Requirements are made up of one
+or more controls, which are checks against the configuration or behavior of projects that are assigned the framework. Each requirement has a maximum of five controls.</p>
+<p>Each control includes logic that GitLab uses during scheduled or triggered scans to evaluate a project's adherence. For
+more details on how adherence is tracked, see <a href="../compliance_center/compliance_status_report.html">Compliance status report</a>.</p>
+<p>You can use GitLab compliance controls or external controls for framework requirements.</p>
+<h3>GitLab compliance controls</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>In GitLab 18.7 and later, <a href="https://gitlab.com/gitlab-org/gitlab/-/work_items/579849">security scanner controls no longer require a successful pipeline</a>.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab compliance controls can be used in GitLab compliance frameworks. Controls are checks against the configuration or
+behavior of projects that are assigned to a compliance framework.</p>
+<p>Combine GitLab compliance controls to help you meet
+<a href="compliance_standards.html">compliance standards</a>.</p>
+<!-- Updates to control names must be reflected also in compliance_standards.md -->
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Control name</th>
+<th style="text-align: left;">Control ID</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">API security running</td>
+<td style="text-align: left;"><code>scanner_api_security_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../../application_security/api_security/_index.html">API security scanning</a> is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">At least one approval</td>
+<td style="text-align: left;"><code>minimum_approvals_required_1</code></td>
+<td style="text-align: left;">Ensures that merge requests <a href="../../project/merge_requests/approvals/_index.html">require at least one approvals</a> before merging.</td>
+</tr>
+<tr>
+<td style="text-align: left;">At least two approvals</td>
+<td style="text-align: left;"><code>minimum_approvals_required_2</code></td>
+<td style="text-align: left;">Ensures that merge requests <a href="../../project/merge_requests/approvals/_index.html">require at least two approvals</a> before merging.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Auth SSO enabled</td>
+<td style="text-align: left;"><code>auth_sso_enabled</code></td>
+<td style="text-align: left;">Ensures that <a href="../../group/saml_sso/_index.html">Single Sign-On (SSO) authentication</a> is enabled for the project.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Author approved merge request is forbidden</td>
+<td style="text-align: left;"><code>merge_request_prevent_author_approval</code></td>
+<td style="text-align: left;">Ensures that the author of a merge request <a href="../../project/merge_requests/approvals/_index.html">cannot approve their own changes</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Branch deletion disabled</td>
+<td style="text-align: left;"><code>branch_deletion_disabled</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/repository/branches/protected.html">branches can't be deleted</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">CI/CD job token scope enabled</td>
+<td style="text-align: left;"><code>cicd_job_token_scope_enabled</code></td>
+<td style="text-align: left;">Ensures that <a href="../../../ci/jobs/ci_job_token.html">CI/CD job token</a> scope restrictions are enabled.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Code changes require code owners</td>
+<td style="text-align: left;"><code>code_changes_requires_code_owners</code></td>
+<td style="text-align: left;">Ensures that code changes require approval from <a href="../../project/codeowners/_index.html">code owners</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Code owner approval required</td>
+<td style="text-align: left;"><code>code_owner_approval_required</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/codeowners/_index.html">code owners file</a> is configured.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Code quality running</td>
+<td style="text-align: left;"><code>scanner_code_quality_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../../../ci/testing/code_quality.html">code quality scanning</a> is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Committers approved merge request is forbidden</td>
+<td style="text-align: left;"><code>merge_request_prevent_committers_approval</code></td>
+<td style="text-align: left;">Ensures that users who have <a href="../../project/merge_requests/approvals/_index.html">committed to a merge request cannot approve it</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Container scanning running</td>
+<td style="text-align: left;"><code>scanner_container_scanning_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../../application_security/container_scanning/_index.html">container scanning</a> is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">DAST running</td>
+<td style="text-align: left;"><code>scanner_dast_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../../application_security/dast/_index.html">dynamic application security testing (DAST)</a> is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default branch protected</td>
+<td style="text-align: left;"><code>default_branch_protected</code></td>
+<td style="text-align: left;">Ensures that the default branch has <a href="../../project/repository/branches/protected.html">protection rules</a> enabled.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default branch protected from direct push</td>
+<td style="text-align: left;"><code>default_branch_protected_from_direct_push</code></td>
+<td style="text-align: left;"><a href="../../project/repository/branches/protected.html">Prevents direct pushes to the default branch</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default branch users can merge</td>
+<td style="text-align: left;"><code>default_branch_users_can_merge</code></td>
+<td style="text-align: left;">Controls <a href="../../project/repository/branches/protected.html">whether users can merge changes to the default branch</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default branch users can push</td>
+<td style="text-align: left;"><code>default_branch_users_can_push</code></td>
+<td style="text-align: left;">Controls <a href="../../project/repository/branches/protected.html">whether users can push directly to the default branch</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Dependency scanning running</td>
+<td style="text-align: left;"><code>scanner_dep_scanning_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../../application_security/dependency_scanning/_index.html">dependency scanning</a> is configured and running in the project's default branch pipeline. <strong>Note</strong>: On GitLab Self-Managed instances (from 18.4), this control may fail when using <a href="../../application_security/dependency_scanning/dependency_scanning_sbom/_index.html">SBOM-based dependency scanning</a> due to artifact differences. See <a href="../../application_security/dependency_scanning/dependency_scanning_sbom/_index.md#compliance-framework-compatibility">compatibility considerations</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ensure two administrators per repository</td>
+<td style="text-align: left;"><code>ensure_2_admins_per_repo</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/members/_index.html">at least two Owners</a> are assigned to each project.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Error tracking enabled</td>
+<td style="text-align: left;"><code>error_tracking_enabled</code></td>
+<td style="text-align: left;">Ensures that <a href="../../../operations/error_tracking.html">error tracking</a> is enabled for the project.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Force push disabled</td>
+<td style="text-align: left;"><code>force_push_disabled</code></td>
+<td style="text-align: left;">Prevents <a href="../../project/repository/branches/protected.html">force pushing</a> to repositories.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Forks exist for the project</td>
+<td style="text-align: left;"><code>has_forks</code></td>
+<td style="text-align: left;">Ensures that the project has been <a href="../../project/repository/forking_workflow.html">forked</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Fuzz testing running</td>
+<td style="text-align: left;"><code>scanner_fuzz_testing_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../../application_security/coverage_fuzzing/_index.html">fuzz testing</a> is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">GitLab license level Ultimate</td>
+<td style="text-align: left;"><code>gitlab_license_level_ultimate</code></td>
+<td style="text-align: left;">Ensures that the GitLab instance is using an <a href="https://about.gitlab.com/pricing/feature-comparison/">Ultimate license</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Has valid CI/CD configuration</td>
+<td style="text-align: left;"><code>has_valid_ci_config</code></td>
+<td style="text-align: left;">Ensures that the project has a <a href="../../../ci/yaml/_index.html">valid CI/CD configuration</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">IaC scanning running</td>
+<td style="text-align: left;"><code>scanner_iac_running</code></td>
+<td style="text-align: left;">Ensures <a href="../../application_security/iac_scanning/_index.html">Infrastructure as Code (IaC) scanning</a> is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Internal visibility is forbidden</td>
+<td style="text-align: left;"><code>project_visibility_not_internal</code></td>
+<td style="text-align: left;">Ensures that projects are not set to <a href="../../public_access.html">internal visibility</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Issue tracking enabled</td>
+<td style="text-align: left;"><code>issue_tracking_enabled</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/issues/_index.html">issue tracking</a> is enabled for the project.</td>
+</tr>
+<tr>
+<td style="text-align: left;">License compliance running</td>
+<td style="text-align: left;"><code>scanner_license_compliance_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../license_approval_policies.html">license compliance scanning</a> is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Merge request commit resets approvals</td>
+<td style="text-align: left;"><code>merge_request_commit_reset_approvals</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/merge_requests/approvals/settings.html">new commits to merge requests reset approvals</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Merge requests approval rules prevent editing</td>
+<td style="text-align: left;"><code>merge_requests_approval_rules_prevent_editing</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/merge_requests/approvals/settings.html">merge request approval rules</a> can't be edited.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Merge requests require code owner approval</td>
+<td style="text-align: left;"><code>merge_requests_require_code_owner_approval</code></td>
+<td style="text-align: left;">Ensures that merge requests require approval from <a href="../../project/codeowners/_index.html">code owners</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">More members than admins</td>
+<td style="text-align: left;"><code>more_members_than_admins</code></td>
+<td style="text-align: left;">Ensures fewer Administrators <a href="../../project/members/_index.html">(Owners or Maintainers)</a> are assigned to the project than total members.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Package Hunter no findings untriaged</td>
+<td style="text-align: left;"><code>package_hunter_no_findings_untriaged</code></td>
+<td style="text-align: left;">Ensures that all <a href="../../application_security/triage/_index.html">Package Hunter</a> findings are triaged.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Project not archived</td>
+<td style="text-align: left;"><code>project_archived</code></td>
+<td style="text-align: left;">Checks whether the <a href="../../project/settings/_index.html">project is archived</a>. Typically <code>false</code> is compliant.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Project not marked for deletion</td>
+<td style="text-align: left;"><code>project_marked_for_deletion</code></td>
+<td style="text-align: left;">Checks whether the <a href="../../project/settings/_index.html">project is marked for deletion</a>. <code>false</code> is compliant.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Project pipelines not public</td>
+<td style="text-align: left;"><code>project_pipelines_not_public</code></td>
+<td style="text-align: left;">Ensures that <a href="../../../ci/pipelines/settings.html">project pipelines are not publicly visible</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Project repository exists</td>
+<td style="text-align: left;"><code>project_repo_exists</code></td>
+<td style="text-align: left;">Ensures that a <a href="../../../topics/git/_index.html">Git repository</a> exists for the project.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Project visibility not public</td>
+<td style="text-align: left;"><code>project_visibility_not_public</code></td>
+<td style="text-align: left;">Ensures that projects are not set to <a href="../../public_access.html">public visibility</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Protected branches exist</td>
+<td style="text-align: left;"><code>protected_branches_set</code></td>
+<td style="text-align: left;">Ensures that project contains <a href="../../project/repository/branches/protected.html">protected branches</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Push protection enabled</td>
+<td style="text-align: left;"><code>push_protection_enabled</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/repository/push_rules.html">push protection</a> is enabled for sensitive files.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Require branch up to date</td>
+<td style="text-align: left;"><code>require_branch_up_to_date</code></td>
+<td style="text-align: left;">Ensures that the <a href="../../project/merge_requests/methods/_index.html">source branch is up to date with the target branch before merging</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Require linear history</td>
+<td style="text-align: left;"><code>require_linear_history</code></td>
+<td style="text-align: left;">Ensures a <a href="../../project/merge_requests/methods/_index.md#fast-forward-merge">linear commit history</a> by forbidding merge commits.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Require MFA at organization level</td>
+<td style="text-align: left;"><code>require_mfa_at_org_level</code></td>
+<td style="text-align: left;">Ensures that <a href="../../profile/account/two_factor_authentication.html">multi-factor authentication</a> is required at the organization level.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Require MFA for contributors</td>
+<td style="text-align: left;"><code>require_mfa_for_contributors</code></td>
+<td style="text-align: left;">Ensures that <a href="../../profile/account/two_factor_authentication.html">contributors have multi-factor authentication enabled</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Requires signed commits</td>
+<td style="text-align: left;"><code>require_signed_commits</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/repository/signed_commits">signed commits</a> are required.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Reset approvals on push</td>
+<td style="text-align: left;"><code>reset_approvals_on_push</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/merge_requests/approvals/settings.html">approvals are reset when new commits are pushed</a> to the merge request.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Resolve discussions required</td>
+<td style="text-align: left;"><code>resolve_discussions_required</code></td>
+<td style="text-align: left;">Ensures that all <a href="../../discussions/_index.html">discussions must be resolved</a> before merging is allowed.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Restrict push/merge access</td>
+<td style="text-align: left;"><code>restrict_push_merge_access</code></td>
+<td style="text-align: left;">Restricts who can push to or merge into <a href="../../project/repository/branches/protected.html">protected branches</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Restricted build access</td>
+<td style="text-align: left;"><code>restricted_build_access</code></td>
+<td style="text-align: left;">Ensures <a href="../../../ci/pipelines/settings.html">restricted access to build artifacts and pipeline outputs</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Review and archive stale repositories</td>
+<td style="text-align: left;"><code>review_and_archive_stale_repos</code></td>
+<td style="text-align: left;">Ensures that stale repositories are reviewed and <a href="../../project/settings/_index.html">archived</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Review and remove inactive users</td>
+<td style="text-align: left;"><code>review_and_remove_inactive_users</code></td>
+<td style="text-align: left;">Ensures that <a href="../../../administration/admin_area.html">inactive users</a> are reviewed and removed.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SAST running</td>
+<td style="text-align: left;"><code>scanner_sast_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../../application_security/sast/_index.html">static application security testing</a> (SAST) is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Secret detection running</td>
+<td style="text-align: left;"><code>scanner_secret_detection_running</code></td>
+<td style="text-align: left;">Ensures that <a href="../../application_security/secret_detection/_index.html">secret detection scanning</a> is configured and running in the project's default branch pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Secure webhooks</td>
+<td style="text-align: left;"><code>secure_webhooks</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/integrations/webhooks.html">webhooks</a> are securely configured.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Stale branch cleanup enabled</td>
+<td style="text-align: left;"><code>stale_branch_cleanup_enabled</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/repository/branches/_index.html">automatic cleanup of stale branches</a> is enabled.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Status checks required</td>
+<td style="text-align: left;"><code>status_checks_required</code></td>
+<td style="text-align: left;">Ensures that <a href="../../project/merge_requests/status_checks.html">status checks</a> must pass before merging is allowed.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Status page configured</td>
+<td style="text-align: left;"><code>status_page_configured</code></td>
+<td style="text-align: left;">Ensures that a <a href="../../../operations/incident_management/status_page.html">status page</a> is configured for the project.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Strict Permission for Repository</td>
+<td style="text-align: left;"><code>strict_permissions_for_repo</code></td>
+<td style="text-align: left;">Ensures that <a href="../../permissions.html">strict permissions</a> are set for repository access.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Terraform enabled</td>
+<td style="text-align: left;"><code>terraform_enabled</code></td>
+<td style="text-align: left;">Ensures that the <a href="../../../administration/terraform_state.html">Terraform integration</a> is enabled for the project.</td>
+</tr>
+<tr>
+<td style="text-align: left;">User-defined CI/CD variables restricted to maintainers</td>
+<td style="text-align: left;"><code>project_user_defined_variables_restricted_to_maintainers</code></td>
+<td style="text-align: left;">Ensures that only users with the maintainer role or higher can pass <a href="../../../ci/variables/_index.html">user-defined variables when triggering pipelines</a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vulnerabilities SLO days over threshold</td>
+<td style="text-align: left;"><code>vulnerabilities_slo_days_over_threshold</code></td>
+<td style="text-align: left;">Ensures that <a href="../../application_security/vulnerabilities/_index.html">vulnerabilities are addressed</a> inside SLO thresholds (180 days).</td>
+</tr>
+</tbody>
+</table>
+<h3>External controls</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>External control name <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192177">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>External controls are API calls to external systems that request the status of an external control or requirement.</p>
+<p>You can create a external control that sends data to third-party tools.</p>
+<p>When the <a href="../compliance_center/compliance_status_report.md#scan-timing-and-triggers">compliance scans</a> are run, GitLab sends a notification. The users or automated workflows can then update the status of control from outside of GitLab.</p>
+<p>With this integration, you can integrate with third-party workflow tools, like ServiceNow, or the custom tool of your choice. The third-party tool
+responds with an associated status. This status is then displayed in the <a href="../compliance_center/compliance_status_report.html">Compliance status report</a>.</p>
+<p>You can configure external controls for each individual project. External controls are not shared between projects.
+Status checks fail if an external control stays in the pending state for more than six hours.</p>
+<h4>Add external controls</h4>
+<p>To add an external control when creating or editing a framework:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Select <strong>New framework</strong> or edit an existing one.</li>
+<li>In the <strong>Requirements</strong> section, select <strong>New requirement</strong>.</li>
+<li>Select <strong>Add an external control</strong>.</li>
+<li>In the fields edit <strong>External Control Name</strong>, <strong>External URL</strong> and <strong><code>HMAC</code> shared secret</strong>.</li>
+<li>Optional. Turn off the <strong>Ping enabled</strong> toggle to control whether GitLab sends notifications to the external service during compliance scans.</li>
+<li>Select <strong>Save changes to the framework</strong> to save the requirement.</li>
+</ol>
+<h4>Ping enabled setting</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/538898">Introduced</a> in GitLab 18.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>The <strong>Ping enabled</strong> setting controls whether GitLab requests external control status updates from external systems every 12 hours.</p>
+<ul>
+<li>Enabled (default): GitLab automatically sends HTTP requests to the external service URL every 12 hours and updates the external control status based on the response.</li>
+<li>Disabled: GitLab does not send notifications to the external service and the external control displays a <strong>Disabled</strong> badge in the compliance framework UI. To request
+  the status of an external control, you must manually use the <a href="../../../api/external_controls.html">External Controls API</a>.</li>
+</ul>
+<h4>External control lifecycle</h4>
+<p>External controls have an <strong>asynchronous</strong> workflow. <a href="../compliance_center/compliance_status_report.md#scan-timing-and-triggers">Compliance scans</a> emit a payload to an external service whenever.</p>
+<pre><code class="language-mermaid">%%{init: { &quot;fontFamily&quot;: &quot;GitLab Sans&quot; }}%%
+sequenceDiagram
+    accTitle: Workflow for external compliance controls
+    accDescr: GitLab sends a requirement payload to an external service and receives a control response for compliance validation.
+
+    GitLab-&gt;&gt;+External service: Requirement payload
+    External service--&gt;&gt;-GitLab: Control response
+    Note over External service,GitLab: Response includes SHA at HEAD
+</code></pre>
+<p>After the payload is received, the external service can run any required processes. The external service can then post
+its response back to the merge request by using the REST API.</p>
+<p>External controls can have one of three statuses.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Status</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>pending</code></td>
+<td style="text-align: left;">Default status. No response received from the external service.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pass</code></td>
+<td style="text-align: left;">Response received from the external service and the external control was approved by the external service.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fail</code></td>
+<td style="text-align: left;">Response received from the external service and the external control was denied by the external service.</td>
+</tr>
+</tbody>
+</table>
+<p>If something changes outside of GitLab, you can set the <a href="../../../api/external_controls.html">status of an external control by using the API</a>. You don't need to wait for a payload to be sent first.</p>
+<h4>External control payload example</h4>
+<p>When GitLab sends a notification to an external service during compliance scans, it includes detailed project information in the payload. The following is an example of the JSON payload structure:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 123456,
+  &quot;description&quot;: &quot;Project for compliance testing and validation&quot;,
+  &quot;name&quot;: &quot;Compliance Test Project&quot;,
+  &quot;name_with_namespace&quot;: &quot;acme-corp / engineering / security / compliance-test-project&quot;,
+  &quot;path&quot;: &quot;compliance-test-project&quot;,
+  &quot;path_with_namespace&quot;: &quot;acme-corp/engineering/security/compliance-test-project&quot;,
+  &quot;created_at&quot;: &quot;2024-01-15T10:30:00.000Z&quot;,
+  &quot;tag_list&quot;: [&quot;compliance&quot;, &quot;security&quot;],
+  &quot;topics&quot;: [&quot;governance&quot;, &quot;audit&quot;],
+  &quot;ssh_url_to_repo&quot;: &quot;git@gitlab.com:acme-corp/engineering/security/compliance-test-project.git&quot;,
+  &quot;http_url_to_repo&quot;: &quot;https://gitlab.com/acme-corp/engineering/security/compliance-test-project.git&quot;,
+  &quot;web_url&quot;: &quot;https://gitlab.com/acme-corp/engineering/security/compliance-test-project&quot;,
+  &quot;avatar_url&quot;: &quot;https://gitlab.com/uploads/-/system/project/avatar/123456/avatar.png&quot;,
+  &quot;star_count&quot;: 5,
+  &quot;last_activity_at&quot;: &quot;2024-11-20T14:25:30.000Z&quot;,
+  &quot;visibility&quot;: &quot;private&quot;,
+  &quot;namespace&quot;: {
+    &quot;id&quot;: 654321,
+    &quot;name&quot;: &quot;Security Group&quot;,
+    &quot;path&quot;: &quot;security&quot;,
+    &quot;kind&quot;: &quot;group&quot;,
+    &quot;full_path&quot;: &quot;acme-corp/engineering/security&quot;,
+    &quot;parent_id&quot;: 654320,
+    &quot;avatar_url&quot;: &quot;https://gitlab.com/uploads/-/system/group/avatar/654321/avatar.png&quot;,
+    &quot;web_url&quot;: &quot;https://gitlab.com/groups/acme-corp/engineering/security&quot;
+  },
+  &quot;container_registry_image_prefix&quot;: &quot;registry.gitlab.com/acme-corp/engineering/security/compliance-test-project&quot;,
+  &quot;_links&quot;: {
+    &quot;self&quot;: &quot;https://gitlab.com/api/v4/projects/123456&quot;,
+    &quot;issues&quot;: &quot;https://gitlab.com/api/v4/projects/123456/issues&quot;,
+    &quot;merge_requests&quot;: &quot;https://gitlab.com/api/v4/projects/123456/merge_requests&quot;,
+    &quot;repo_branches&quot;: &quot;https://gitlab.com/api/v4/projects/123456/repository/branches&quot;,
+    &quot;labels&quot;: &quot;https://gitlab.com/api/v4/projects/123456/labels&quot;,
+    &quot;events&quot;: &quot;https://gitlab.com/api/v4/projects/123456/events&quot;,
+    &quot;members&quot;: &quot;https://gitlab.com/api/v4/projects/123456/members&quot;,
+    &quot;cluster_agents&quot;: &quot;https://gitlab.com/api/v4/projects/123456/cluster_agents&quot;
+  },
+  &quot;marked_for_deletion_at&quot;: null,
+  &quot;marked_for_deletion_on&quot;: null,
+  &quot;packages_enabled&quot;: true,
+  &quot;empty_repo&quot;: false,
+  &quot;archived&quot;: false,
+  &quot;resolve_outdated_diff_discussions&quot;: false,
+  &quot;container_expiration_policy&quot;: {
+    &quot;cadence&quot;: &quot;1d&quot;,
+    &quot;enabled&quot;: false,
+    &quot;keep_n&quot;: 10,
+    &quot;older_than&quot;: &quot;90d&quot;,
+    &quot;name_regex&quot;: &quot;.*&quot;,
+    &quot;name_regex_keep&quot;: null,
+    &quot;next_run_at&quot;: &quot;2024-01-16T10:30:00.000Z&quot;
+  },
+  &quot;repository_object_format&quot;: &quot;sha1&quot;,
+  &quot;issues_enabled&quot;: true,
+  &quot;merge_requests_enabled&quot;: true,
+  &quot;wiki_enabled&quot;: true,
+  &quot;jobs_enabled&quot;: true,
+  &quot;snippets_enabled&quot;: true,
+  &quot;container_registry_enabled&quot;: true,
+  &quot;service_desk_enabled&quot;: true,
+  &quot;can_create_merge_request_in&quot;: false,
+  &quot;issues_access_level&quot;: &quot;enabled&quot;,
+  &quot;repository_access_level&quot;: &quot;enabled&quot;,
+  &quot;merge_requests_access_level&quot;: &quot;enabled&quot;,
+  &quot;forking_access_level&quot;: &quot;enabled&quot;,
+  &quot;wiki_access_level&quot;: &quot;enabled&quot;,
+  &quot;builds_access_level&quot;: &quot;enabled&quot;,
+  &quot;snippets_access_level&quot;: &quot;enabled&quot;,
+  &quot;pages_access_level&quot;: &quot;private&quot;,
+  &quot;analytics_access_level&quot;: &quot;enabled&quot;,
+  &quot;container_registry_access_level&quot;: &quot;enabled&quot;,
+  &quot;security_and_compliance_access_level&quot;: &quot;private&quot;,
+  &quot;releases_access_level&quot;: &quot;enabled&quot;,
+  &quot;environments_access_level&quot;: &quot;enabled&quot;,
+  &quot;feature_flags_access_level&quot;: &quot;enabled&quot;,
+  &quot;infrastructure_access_level&quot;: &quot;enabled&quot;,
+  &quot;monitor_access_level&quot;: &quot;enabled&quot;,
+  &quot;model_experiments_access_level&quot;: &quot;enabled&quot;,
+  &quot;model_registry_access_level&quot;: &quot;enabled&quot;,
+  &quot;package_registry_access_level&quot;: &quot;enabled&quot;,
+  &quot;emails_disabled&quot;: false,
+  &quot;emails_enabled&quot;: true,
+  &quot;show_diff_preview_in_email&quot;: true,
+  &quot;shared_runners_enabled&quot;: true,
+  &quot;lfs_enabled&quot;: true,
+  &quot;creator_id&quot;: 111222,
+  &quot;import_status&quot;: &quot;none&quot;,
+  &quot;open_issues_count&quot;: 3,
+  &quot;description_html&quot;: &quot;&lt;p&gt;Project for compliance testing and validation&lt;/p&gt;&quot;,
+  &quot;updated_at&quot;: &quot;2024-11-20T14:25:30.000Z&quot;,
+  &quot;public_jobs&quot;: true,
+  &quot;shared_with_groups&quot;: [],
+  &quot;only_allow_merge_if_pipeline_succeeds&quot;: false,
+  &quot;allow_merge_on_skipped_pipeline&quot;: null,
+  &quot;request_access_enabled&quot;: true,
+  &quot;only_allow_merge_if_all_discussions_are_resolved&quot;: false,
+  &quot;remove_source_branch_after_merge&quot;: true,
+  &quot;printing_merge_request_link_enabled&quot;: true,
+  &quot;merge_method&quot;: &quot;merge&quot;,
+  &quot;merge_request_title_regex&quot;: null,
+  &quot;merge_request_title_regex_description&quot;: null,
+  &quot;squash_option&quot;: &quot;default_off&quot;,
+  &quot;enforce_auth_checks_on_uploads&quot;: true,
+  &quot;suggestion_commit_message&quot;: null,
+  &quot;merge_commit_template&quot;: null,
+  &quot;squash_commit_template&quot;: null,
+  &quot;issue_branch_template&quot;: null,
+  &quot;warn_about_potentially_unwanted_characters&quot;: true,
+  &quot;autoclose_referenced_issues&quot;: true,
+  &quot;max_artifacts_size&quot;: null,
+  &quot;approvals_before_merge&quot;: 0,
+  &quot;mirror&quot;: false,
+  &quot;external_authorization_classification_label&quot;: &quot;&quot;,
+  &quot;requirements_enabled&quot;: true,
+  &quot;requirements_access_level&quot;: &quot;enabled&quot;,
+  &quot;security_and_compliance_enabled&quot;: false,
+  &quot;compliance_frameworks&quot;: [&quot;SOC 2 Compliance Framework&quot;],
+  &quot;merge_pipelines_enabled&quot;: false,
+  &quot;merge_trains_enabled&quot;: false,
+  &quot;merge_trains_skip_train_allowed&quot;: false,
+  &quot;only_allow_merge_if_all_status_checks_passed&quot;: false,
+  &quot;allow_pipeline_trigger_approve_deployment&quot;: false,
+  &quot;prevent_merge_without_jira_issue&quot;: false,
+  &quot;auto_duo_code_review_enabled&quot;: false,
+  &quot;duo_remote_flows_enabled&quot;: true,
+  &quot;duo_foundational_flows_enabled&quot;: true,
+  &quot;spp_repository_pipeline_access&quot;: false,
+  &quot;project_control_compliance_status&quot;: {
+    &quot;status&quot;: &quot;pending&quot;,
+    &quot;compliance_requirements_control_id&quot;: 100001,
+    &quot;project_id&quot;: 123456,
+    &quot;compliance_requirement_id&quot;: 200001,
+    &quot;namespace_id&quot;: 654321,
+    &quot;id&quot;: 300001,
+    &quot;created_at&quot;: &quot;2024-11-26T10:00:00.000Z&quot;,
+    &quot;updated_at&quot;: &quot;2024-11-26T10:00:00.000Z&quot;,
+    &quot;requirement_status_id&quot;: null
+  }
+}
+</code></pre>
+<p>The external service can use this information to perform its compliance checks and then respond with the appropriate control status using the <a href="../../../api/external_controls.html">external controls API</a>.</p>
+<h3>Add requirements</h3>
+<p>To add a requirement when creating or editing a framework:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Select <strong>New framework</strong> or edit an existing one.</li>
+<li>In the <strong>Requirements</strong> section, select <strong>New requirement</strong>.</li>
+<li>In the dialog add <strong>Name</strong> and <strong>Description</strong>.</li>
+<li>Select <strong>Add a GitLab control</strong> to add more controls.</li>
+<li>In the control dropdown list search and select a control.</li>
+<li>Select <strong>Save changes to the framework</strong> to save the requirement.</li>
+</ol>
+<h3>Edit requirements</h3>
+<p>To edit a requirement when creating or editing a framework:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Compliance center</strong>.</li>
+<li>On the page, select the <strong>Frameworks</strong> tab.</li>
+<li>Select <strong>New framework</strong> or edit an existing one.</li>
+<li>In the <strong>Requirements</strong> section, select <strong>Action</strong> &gt; <strong>Edit</strong>.</li>
+<li>In the dialog edit <strong>Name</strong> and <strong>Description</strong>.</li>
+<li>Select <strong>Add a GitLab control</strong> to add more controls.</li>
+<li>In the control dropdown list search and select a control.</li>
+<li>Select {{&lt; icon name="remove" &gt;}} to remove a control.</li>
+<li>Select <strong>Save changes to the framework</strong> to save the requirement.</li>
+</ol>
+<h2>Troubleshooting</h2>
+<p>When working with compliance frameworks, you might encounter the following issues.</p>
+<h3>Error: <code>Unable to determine the correct upload URL</code></h3>
+<p>You will encounter this error during a <a href="#import-a-compliance-framework-from-a-json-file">compliance framework import</a> if a compliance framework already exists with the same name as
+the JSON template.</p></code></pre>
+</body>
+</html>

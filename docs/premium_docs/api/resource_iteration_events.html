@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Issues</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Project Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Resource iteration events API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use this API to access <a href="../user/group/iterations/_index.html">iteration events</a> for issues.</p>
+<h2>Issues</h2>
+<h3>List project issue iteration events</h3>
+<p>Gets a list of all iteration events for a single issue.</p>
+<pre><code class="language-plaintext">GET /projects/:id/issues/:issue_iid/resource_iteration_events
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>issue_iid</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The IID of an issue</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/projects/5/issues/11/resource_iteration_events&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 142,
+    &quot;user&quot;: {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Administrator&quot;,
+      &quot;username&quot;: &quot;root&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+    },
+    &quot;created_at&quot;: &quot;2018-08-20T13:38:20.077Z&quot;,
+    &quot;resource_type&quot;: &quot;Issue&quot;,
+    &quot;resource_id&quot;: 253,
+    &quot;iteration&quot;:   {
+      &quot;id&quot;: 50,
+      &quot;iid&quot;: 9,
+      &quot;group_id&quot;: 5,
+      &quot;title&quot;: &quot;Iteration I&quot;,
+      &quot;description&quot;: &quot;Ipsum Lorem&quot;,
+      &quot;state&quot;: 1,
+      &quot;created_at&quot;: &quot;2020-01-27T05:07:12.573Z&quot;,
+      &quot;updated_at&quot;: &quot;2020-01-27T05:07:12.573Z&quot;,
+      &quot;due_date&quot;: null,
+      &quot;start_date&quot;: null
+    },
+    &quot;action&quot;: &quot;add&quot;
+  },
+  {
+    &quot;id&quot;: 143,
+    &quot;user&quot;: {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;Administrator&quot;,
+      &quot;username&quot;: &quot;root&quot;,
+      &quot;state&quot;: &quot;active&quot;,
+      &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+      &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+    },
+    &quot;created_at&quot;: &quot;2018-08-21T14:38:20.077Z&quot;,
+    &quot;resource_type&quot;: &quot;Issue&quot;,
+    &quot;resource_id&quot;: 253,
+    &quot;iteration&quot;:   {
+      &quot;id&quot;: 53,
+      &quot;iid&quot;: 13,
+      &quot;group_id&quot;: 5,
+      &quot;title&quot;: &quot;Iteration II&quot;,
+      &quot;description&quot;: &quot;Ipsum Lorem ipsum&quot;,
+      &quot;state&quot;: 2,
+      &quot;created_at&quot;: &quot;2020-01-27T05:07:12.573Z&quot;,
+      &quot;updated_at&quot;: &quot;2020-01-27T05:07:12.573Z&quot;,
+      &quot;due_date&quot;: null,
+      &quot;start_date&quot;: null
+    },
+    &quot;action&quot;: &quot;remove&quot;
+  }
+]
+</code></pre>
+<h3>Get single issue iteration event</h3>
+<p>Returns a single iteration event for a specific project issue.</p>
+<pre><code class="language-plaintext">GET /projects/:id/issues/:issue_iid/resource_iteration_events/:resource_iteration_event_id
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the project</td>
+</tr>
+<tr>
+<td><code>issue_iid</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The IID of an issue</td>
+</tr>
+<tr>
+<td><code>resource_iteration_event_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of an iteration event</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/projects/5/issues/11/resource_iteration_events/143&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 143,
+  &quot;user&quot;: {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;Administrator&quot;,
+    &quot;username&quot;: &quot;root&quot;,
+    &quot;state&quot;: &quot;active&quot;,
+    &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&amp;d=identicon&quot;,
+    &quot;web_url&quot;: &quot;http://gitlab.example.com/root&quot;
+  },
+  &quot;created_at&quot;: &quot;2018-08-21T14:38:20.077Z&quot;,
+  &quot;resource_type&quot;: &quot;Issue&quot;,
+  &quot;resource_id&quot;: 253,
+  &quot;iteration&quot;:   {
+    &quot;id&quot;: 53,
+    &quot;iid&quot;: 13,
+    &quot;group_id&quot;: 5,
+    &quot;title&quot;: &quot;Iteration II&quot;,
+    &quot;description&quot;: &quot;Ipsum Lorem ipsum&quot;,
+    &quot;state&quot;: 2,
+    &quot;created_at&quot;: &quot;2020-01-27T05:07:12.573Z&quot;,
+    &quot;updated_at&quot;: &quot;2020-01-27T05:07:12.573Z&quot;,
+    &quot;due_date&quot;: null,
+    &quot;start_date&quot;: null
+  },
+  &quot;action&quot;: &quot;remove&quot;
+}
+</code></pre></code></pre>
+</body>
+</html>

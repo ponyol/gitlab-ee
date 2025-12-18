@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: GitLab Delivery
+group: Operate
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: How to set up Consul
+description: Configure a Consul cluster.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>A Consul cluster consists of both
+<a href="https://developer.hashicorp.com/consul/docs/agent">server and client agents</a>.
+The servers run on their own nodes and the clients run on other nodes that in
+turn communicate with the servers.</p>
+<p>GitLab Premium includes a bundled version of <a href="https://www.consul.io/">Consul</a>
+a service networking solution that you can manage by using <code>/etc/gitlab/gitlab.rb</code>.</p>
+<h2>Prerequisites</h2>
+<p>Before configuring Consul:</p>
+<ol>
+<li>Review the <a href="reference_architectures/_index.md#available-reference-architectures">reference architecture</a>
+   documentation to determine the number of Consul server nodes you should have.</li>
+<li>If necessary, ensure the <a href="package_information/defaults.md#ports">appropriate ports are open</a> in your firewall.</li>
+</ol>
+<h2>Configure the Consul nodes</h2>
+<p>On each Consul server node:</p>
+<ol>
+<li>Follow the instructions to <a href="https://about.gitlab.com/install/">install</a>
+   GitLab by choosing your preferred platform, but do not supply the
+   <code>EXTERNAL_URL</code> value when asked.</li>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>, and add the following by replacing the values
+   noted in the <code>retry_join</code> section. In the example below, there are three
+   nodes, two denoted with their IP, and one with its FQDN, you can use either
+   notation:</li>
+</ol>
+<p>```ruby
+   # Disable all components except Consul
+   roles ['consul_role']</p>
+<p># Consul nodes: can be FQDN or IP, separated by a whitespace
+   consul['configuration'] = {
+     server: true,
+     retry_join: %w(10.10.10.1 consul1.gitlab.example.com 10.10.10.2)
+   }</p>
+<p># Disable auto migrations
+   gitlab_rails['auto_migrate'] = false
+   ```</p>
+<ol>
+<li><a href="restart_gitlab.md#reconfigure-a-linux-package-installation">Reconfigure GitLab</a> for the changes
+   to take effect.</li>
+<li>Run the following command to ensure Consul is both configured correctly and
+   to verify that all server nodes are communicating:</li>
+</ol>
+<p><code>shell
+   sudo /opt/gitlab/embedded/bin/consul members</code></p>
+<p>The output should be similar to:</p>
+<p><code>plaintext
+   Node                 Address               Status  Type    Build  Protocol  DC
+   CONSUL_NODE_ONE      XXX.XXX.XXX.YYY:8301  alive   server  0.9.2  2         gitlab_consul
+   CONSUL_NODE_TWO      XXX.XXX.XXX.YYY:8301  alive   server  0.9.2  2         gitlab_consul
+   CONSUL_NODE_THREE    XXX.XXX.XXX.YYY:8301  alive   server  0.9.2  2         gitlab_consul</code></p>
+<p>If the results display any nodes with a status that isn't <code>alive</code>, or if any
+   of the three nodes are missing, see the <a href="#troubleshooting-consul">Troubleshooting section</a>.</p>
+<h2>Securing the Consul nodes</h2>
+<p>There are two ways you can secure the communication between the Consul nodes, using either TLS or gossip encryption.</p>
+<h3>TLS encryption</h3>
+<p>By default TLS is not enabled for the Consul cluster, the default configuration
+options and their defaults are:</p>
+<pre><code class="language-ruby">consul['use_tls'] = false
+consul['tls_ca_file'] = nil
+consul['tls_certificate_file'] = nil
+consul['tls_key_file'] = nil
+consul['tls_verify_client'] = nil
+</code></pre>
+<p>These configuration options apply to both client and server nodes.</p>
+<p>To enable TLS on a Consul node start with <code>consul['use_tls'] = true</code>. Depending
+on the role of the node (server or client) and your TLS preferences you need to
+provide further configuration:</p>
+<ul>
+<li>On a server node you must at least specify <code>tls_ca_file</code>,
+  <code>tls_certificate_file</code>, and <code>tls_key_file</code>.</li>
+<li>On a client node, when client TLS authentication is disabled on the server
+  (enabled by default) you must at least specify <code>tls_ca_file</code>, otherwise you have
+  to pass the client TLS certificate and key using <code>tls_certificate_file</code>,
+  <code>tls_key_file</code>.</li>
+</ul>
+<p>When TLS is enabled, by default the server uses mTLS and listens on both HTTPS
+and HTTP (and TLS and non-TLS RPC). It expects clients to use TLS
+authentication. You can disable client TLS authentication by setting
+<code>consul['tls_verify_client'] = false</code>.</p>
+<p>On the other hand, clients only use TLS for outgoing connection to server nodes
+and only listen on HTTP (and non-TLS RPC) for incoming requests. You can enforce
+client Consul agents to use TLS for incoming connections by setting
+<code>consul['https_port']</code> to a non-negative integer (<code>8501</code> is the Consul's default
+HTTPS port). You must also pass <code>tls_certificate_file</code> and <code>tls_key_file</code> for
+this to work. When server nodes use client TLS authentication, the client TLS
+certificate and key is used for both TLS authentication and incoming HTTPS
+connections.</p>
+<p>Consul client nodes do not use TLS client authentication by default (as opposed
+to servers) and you need to explicitly instruct them to do it by setting
+<code>consul['tls_verify_client'] = true</code>.</p>
+<p>Below are some examples of TLS encryption.</p>
+<h4>Minimal TLS support</h4>
+<p>In the following example, the server uses TLS for incoming connections (without client TLS authentication).</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Consul server node" &gt;}}</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p>```ruby
+   consul['enable'] = true
+   consul['configuration'] = {
+     'server' =&gt; true
+   }</p>
+<p>consul['use_tls'] = true
+   consul['tls_ca_file'] = '/path/to/ca.crt.pem'
+   consul['tls_certificate_file'] = '/path/to/server.crt.pem'
+   consul['tls_key_file'] = '/path/to/server.key.pem'
+   consul['tls_verify_client'] = false
+   ```</p>
+<ol>
+<li>Reconfigure GitLab:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Consul client node" &gt;}}</p>
+<p>The following can be configured on a Patroni node for example.</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p><code>ruby
+   consul['enable'] = true
+   consul['use_tls'] = true
+   consul['tls_ca_file'] = '/path/to/ca.crt.pem'
+   patroni['consul']['url'] = 'http://localhost:8500'</code></p>
+<ol>
+<li>Reconfigure GitLab:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<p>Patroni talks to the local Consul agent which does not use TLS for incoming
+connections. Hence the HTTP URL for <code>patroni['consul']['url']</code>.</p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h4>Default TLS support</h4>
+<p>In the following example, the server uses mutual TLS authentication.</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Consul server node" &gt;}}</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p>```ruby
+   consul['enable'] = true
+   consul['configuration'] = {
+     'server' =&gt; true
+   }</p>
+<p>consul['use_tls'] = true
+   consul['tls_ca_file'] = '/path/to/ca.crt.pem'
+   consul['tls_certificate_file'] = '/path/to/server.crt.pem'
+   consul['tls_key_file'] = '/path/to/server.key.pem'
+   ```</p>
+<ol>
+<li>Reconfigure GitLab:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Consul client node" &gt;}}</p>
+<p>The following can be configured on a Patroni node for example.</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p><code>ruby
+   consul['enable'] = true
+   consul['use_tls'] = true
+   consul['tls_ca_file'] = '/path/to/ca.crt.pem'
+   consul['tls_certificate_file'] = '/path/to/client.crt.pem'
+   consul['tls_key_file'] = '/path/to/client.key.pem'
+   patroni['consul']['url'] = 'http://localhost:8500'</code></p>
+<ol>
+<li>Reconfigure GitLab:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<p>Patroni talks to the local Consul agent which does not use TLS for incoming
+connections, even though it uses TLS authentication to Consul server nodes.
+Hence the HTTP URL for <code>patroni['consul']['url']</code>.</p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h4>Full TLS support</h4>
+<p>In the following example, both client and server use mutual TLS authentication.</p>
+<p>The Consul server, client, and Patroni client certificates must be issued by the
+same CA for mutual TLS authentication to work.</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Consul server node" &gt;}}</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p>```ruby
+   consul['enable'] = true
+   consul['configuration'] = {
+     'server' =&gt; true
+   }</p>
+<p>consul['use_tls'] = true
+   consul['tls_ca_file'] = '/path/to/ca.crt.pem'
+   consul['tls_certificate_file'] = '/path/to/server.crt.pem'
+   consul['tls_key_file'] = '/path/to/server.key.pem'
+   ```</p>
+<ol>
+<li>Reconfigure GitLab:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Consul client node" &gt;}}</p>
+<p>The following can be configured on a Patroni node for example.</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p>```ruby
+   consul['enable'] = true
+   consul['use_tls'] = true
+   consul['tls_verify_client'] = true
+   consul['tls_ca_file'] = '/path/to/ca.crt.pem'
+   consul['tls_certificate_file'] = '/path/to/client.crt.pem'
+   consul['tls_key_file'] = '/path/to/client.key.pem'
+   consul['https_port'] = 8501</p>
+<p>patroni['consul']['url'] = 'https://localhost:8501'
+   patroni['consul']['cacert'] = '/path/to/ca.crt.pem'
+   patroni['consul']['cert'] = '/opt/tls/patroni.crt.pem'
+   patroni['consul']['key'] = '/opt/tls/patroni.key.pem'
+   patroni['consul']['verify'] = true
+   ```</p>
+<ol>
+<li>Reconfigure GitLab:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h3>Gossip encryption</h3>
+<p>The Gossip protocol can be encrypted to secure communication between Consul
+agents. By default encryption is not enabled, to enable encryption a shared
+encryption key is required. For convenience, the key can be generated by using
+the <code>gitlab-ctl consul keygen</code> command. The key must be 32 bytes long, Base 64
+encoded and shared on all agents.</p>
+<p>The following options work on both client and server nodes.</p>
+<p>To enable the gossip protocol:</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p><code>ruby
+   consul['encryption_key'] = &lt;base-64-key&gt;
+   consul['encryption_verify_incoming'] = true
+   consul['encryption_verify_outgoing'] = true</code></p>
+<ol>
+<li>Reconfigure GitLab:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<p>To <a href="https://developer.hashicorp.com/consul/docs/security/encryption#enable-on-an-existing-consul-datacenter">enable encryption in an existing datacenter</a>,
+manually set these options for a rolling update.</p>
+<h2>Upgrade the Consul nodes</h2>
+<p>To upgrade your Consul nodes, upgrade the GitLab package.</p>
+<p>Nodes should be:</p>
+<ul>
+<li>Members of a healthy cluster prior to upgrading the Linux package.</li>
+<li>Upgraded one node at a time.</li>
+</ul>
+<p>Identify any existing health issues in the cluster by running the following command
+in each node. The command returns an empty array if the cluster is healthy:</p>
+<pre><code class="language-shell">curl &quot;http://127.0.0.1:8500/v1/health/state/critical&quot;
+</code></pre>
+<p>If the Consul version has changed, you see a notice at the end of <code>gitlab-ctl reconfigure</code>
+informing you that Consul must be restarted for the new version to be used.</p>
+<p>Restart Consul one node at a time:</p>
+<pre><code class="language-shell">sudo gitlab-ctl restart consul
+</code></pre>
+<p>Consul nodes communicate using the raft protocol. If the current leader goes
+offline, there must be a leader election. A leader node must exist to facilitate
+synchronization across the cluster. If too many nodes go offline at the same time,
+the cluster loses quorum and doesn't elect a leader due to
+<a href="https://developer.hashicorp.com/consul/docs/architecture/consensus">broken consensus</a>.</p>
+<p>Consult the <a href="#troubleshooting-consul">troubleshooting section</a> if the cluster is not
+able to recover after the upgrade. The <a href="#outage-recovery">outage recovery</a> may
+be of particular interest.</p>
+<p>GitLab uses Consul to store only easily regenerated, transient data. If the
+bundled Consul wasn't used by any process other than GitLab itself, you can
+<a href="#recreate-from-scratch">rebuild the cluster from scratch</a>.</p>
+<h2>Troubleshooting Consul</h2>
+<p>Below are some operations should you debug any issues.
+You can see any error logs by running:</p>
+<pre><code class="language-shell">sudo gitlab-ctl tail consul
+</code></pre>
+<h3>Check the cluster membership</h3>
+<p>To determine which nodes are part of the cluster, run the following on any member in the cluster:</p>
+<pre><code class="language-shell">sudo /opt/gitlab/embedded/bin/consul members
+</code></pre>
+<p>The output should be similar to:</p>
+<pre><code class="language-plaintext">Node            Address               Status  Type    Build  Protocol  DC
+consul-b        XX.XX.X.Y:8301        alive   server  0.9.0  2         gitlab_consul
+consul-c        XX.XX.X.Y:8301        alive   server  0.9.0  2         gitlab_consul
+consul-c        XX.XX.X.Y:8301        alive   server  0.9.0  2         gitlab_consul
+db-a            XX.XX.X.Y:8301        alive   client  0.9.0  2         gitlab_consul
+db-b            XX.XX.X.Y:8301        alive   client  0.9.0  2         gitlab_consul
+</code></pre>
+<p>Ideally all nodes have a <code>Status</code> of <code>alive</code>.</p>
+<h3>Restart Consul</h3>
+<p>If it is necessary to restart Consul, it is important to do this in
+a controlled manner to maintain quorum. If quorum is lost, to recover the cluster,
+you follow the Consul <a href="#outage-recovery">outage recovery</a> process.</p>
+<p>To be safe, it's recommended that you only restart Consul in one node at a time to
+ensure the cluster remains intact. For larger clusters, it is possible to restart
+multiple nodes at a time. See the
+<a href="https://developer.hashicorp.com/consul/docs/architecture/consensus#deployment-table">Consul consensus document</a>
+for the number of failures it can tolerate. This is the number of simultaneous
+restarts it can sustain.</p>
+<p>To restart Consul:</p>
+<pre><code class="language-shell">sudo gitlab-ctl restart consul
+</code></pre>
+<h3>Consul nodes unable to communicate</h3>
+<p>By default, Consul attempts to
+<a href="https://developer.hashicorp.com/consul/docs/agent/config/config-files#bind_addr">bind</a> to <code>0.0.0.0</code>, but
+it advertises the first private IP address on the node for other Consul nodes
+to communicate with it. If the other nodes cannot communicate with a node on
+this address, then the cluster has a failed status.</p>
+<p>If you run into this issue, then messages like the following are output in <code>gitlab-ctl tail consul</code>:</p>
+<pre><code class="language-plaintext">2017-09-25_19:53:39.90821     2017/09/25 19:53:39 [WARN] raft: no known peers, aborting election
+2017-09-25_19:53:41.74356     2017/09/25 19:53:41 [ERR] agent: failed to sync remote state: No cluster leader
+</code></pre>
+<p>To fix this:</p>
+<ol>
+<li>Pick an address on each node that all of the other nodes can reach this node through.</li>
+<li>Update your <code>/etc/gitlab/gitlab.rb</code></li>
+</ol>
+<p><code>ruby
+   consul['configuration'] = {
+     ...
+     bind_addr: 'IP ADDRESS'
+   }</code></p>
+<ol>
+<li>Reconfigure GitLab;</li>
+</ol>
+<p><code>shell
+   gitlab-ctl reconfigure</code></p>
+<p>If you still see the errors, you may have to
+<a href="#recreate-from-scratch">erase the Consul database and reinitialize</a> on the affected node.</p>
+<h3>Consul does not start - multiple private IPs</h3>
+<p>If a node has multiple private IPs, Consul doesn't know about
+which of the private addresses to advertise, and then it immediately exits on start.</p>
+<p>Messages like the following are output in <code>gitlab-ctl tail consul</code>:</p>
+<pre><code class="language-plaintext">2017-11-09_17:41:45.52876 ==&gt; Starting Consul agent...
+2017-11-09_17:41:45.53057 ==&gt; Error creating agent: Failed to get advertise address: Multiple private IPs found. Please configure one.
+</code></pre>
+<p>To fix this:</p>
+<ol>
+<li>Pick an address on the node that all of the other nodes can reach this node through.</li>
+<li>Update your <code>/etc/gitlab/gitlab.rb</code></li>
+</ol>
+<p><code>ruby
+   consul['configuration'] = {
+     ...
+     bind_addr: 'IP ADDRESS'
+   }</code></p>
+<ol>
+<li>Reconfigure GitLab;</li>
+</ol>
+<p><code>shell
+   gitlab-ctl reconfigure</code></p>
+<h3>Outage recovery</h3>
+<p>If you have lost enough Consul nodes in the cluster to break quorum, then the cluster
+is considered to have failed and cannot function without manual intervention.
+In that case, you can either recreate the nodes from scratch or attempt a
+recover.</p>
+<h4>Recreate from scratch</h4>
+<p>By default, GitLab does not store anything in the Consul node that cannot be
+recreated. To erase the Consul database and reinitialize:</p>
+<pre><code class="language-shell">sudo gitlab-ctl stop consul
+sudo rm -rf /var/opt/gitlab/consul/data
+sudo gitlab-ctl start consul
+</code></pre>
+<p>After this, the node should start back up, and the rest of the server agents rejoin.
+Shortly after that, the client agents should rejoin as well.</p>
+<p>If they do not join, you might also need to erase the Consul data on the client:</p>
+<pre><code class="language-shell">sudo rm -rf /var/opt/gitlab/consul/data
+</code></pre>
+<h4>Recover a failed node</h4>
+<p>If you have taken advantage of Consul to store other data and want to restore
+the failed node, follow the
+<a href="https://developer.hashicorp.com/consul/tutorials/operate-consul/recovery-outage">Consul guide</a>
+to recover a failed cluster.</p></code></pre>
+</body>
+</html>

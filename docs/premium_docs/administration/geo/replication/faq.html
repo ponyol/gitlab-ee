@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># What are the minimum requirements to run Geo?</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+gitlab_dedicated: no
+title: Geo Frequently Asked Questions</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<h2>What are the minimum requirements to run Geo?</h2>
+<p>The requirements are listed <a href="../_index.md#requirements-for-running-geo">on the index page</a></p>
+<h2>How does Geo know which projects to sync?</h2>
+<p>On each <strong>secondary</strong> site, there is a read-only replicated copy of the GitLab database.
+A <strong>secondary</strong> site also has a tracking database where it stores which projects have been synced.
+Geo compares the two databases to find projects that are not yet tracked.</p>
+<p>At the start, this tracking database is empty, so Geo tries to update from every project that it can see in the GitLab database.</p>
+<p>For each project to sync:</p>
+<ol>
+<li>Geo issues a <code>git fetch geo --mirror</code> to get the latest information from the <strong>primary</strong> site.
+   If there are no changes, the sync is fast. Otherwise, it has to pull the latest commits.</li>
+<li>The <strong>secondary</strong> site updates the tracking database to store the fact that it has synced projects by name.</li>
+<li>Repeat until all projects are synced.</li>
+</ol>
+<p>When someone pushes a commit to the <strong>primary</strong> site, it generates an event in the GitLab database that the repository has changed.
+The <strong>secondary</strong> site sees this event, marks the project in question as dirty, and schedules the project to be resynced.</p>
+<p>To ensure that problems with pipelines (for example, syncs failing too many times or jobs being lost) don't permanently stop projects syncing, Geo also periodically checks the tracking database for projects that are marked as dirty. This check happens when
+the number of concurrent syncs falls below <code>repos_max_capacity</code> and there are no new projects waiting to be synced.</p>
+<p>Geo also has a checksum feature which runs a SHA256 sum across all the Git references to the SHA values.
+If the refs don't match between the <strong>primary</strong> site and the <strong>secondary</strong> site, then the <strong>secondary</strong> site marks that project as dirty and try to resync it.
+So even if we have an outdated tracking database, the validation should activate and find discrepancies in the repository state and resync.</p>
+<h2>Can you use Geo in a disaster recovery situation?</h2>
+<p>Yes, but there are limitations to what we replicate (see
+<a href="#what-data-is-replicated-to-a-secondary-site">What data is replicated to a <strong>secondary</strong> site?</a>).</p>
+<p>Read the documentation for <a href="../disaster_recovery/_index.html">Disaster Recovery</a>.</p>
+<h2>What data is replicated to a <strong>secondary</strong> site?</h2>
+<p>We replicate the whole rails database, project repositories, LFS objects, generated
+attachments, avatars and more. This means information such as user accounts,
+issues, merge requests, groups, and project data are available for
+query.</p>
+<p>For a comprehensive list of data replicated by Geo, see the <a href="datatypes.html">supported Geo data types page</a>.</p>
+<h2>Can I <code>git push</code> to a <strong>secondary</strong> site?</h2>
+<p>Pushing directly to a <strong>secondary</strong> site (for both HTTP and SSH, including Git LFS) is supported.</p>
+<h2>How long does it take to have a commit replicated to a <strong>secondary</strong> site?</h2>
+<p>All replication operations are asynchronous and are queued to be dispatched. Therefore, it depends on a lot of
+factors such as the amount of traffic, how big your commit is, the
+connectivity between your sites, and your hardware.</p>
+<h2>What if the SSH server runs at a different port?</h2>
+<p>That's totally fine. We use HTTP(s) to fetch repository changes from the <strong>primary</strong> site to all <strong>secondary</strong> sites.</p>
+<h2>Can I make a container registry for a secondary site to mirror the primary?</h2>
+<p>Yes, however, we only support this for Disaster Recovery scenarios. See <a href="container_registry.html">container registry for a <strong>secondary</strong> site</a>.</p>
+<h2>Can you sign in to a secondary site?</h2>
+<p>Yes, but secondary sites receive all authentication data (like user accounts and logins) from the primary instance. This means you are re-directed to the primary for authentication and then routed back.</p>
+<h2>Do all Geo sites need to be the same as the primary?</h2>
+<p>No, Geo sites can be based on different reference architectures. For example, you can have the primary site based on a 3K reference architecture, one secondary site based 3K reference architecture, and another one based on a 1K reference architecture.</p>
+<h2>Does Geo replicate archived projects?</h2>
+<p>Yes, provided they are not excluded through <a href="selective_synchronization.html">selective sync</a>.</p>
+<h2>Does Geo replicate personal projects?</h2>
+<p>Yes, provided they are not excluded through <a href="selective_synchronization.html">selective sync</a>.</p>
+<h2>Are delayed deletion projects replicated to secondary sites?</h2>
+<p>Yes, projects scheduled for deletion by <a href="../../settings/visibility_and_access_controls.md#deletion-protection">delayed deletion</a>, but are yet to be permanently deleted, are replicated to secondary sites.</p>
+<h2>What happens to my secondary sites with when my primary site goes down?</h2>
+<p>When a primary site goes down,
+<a href="../secondary_proxy/_index.md#behavior-of-secondary-sites-when-the-primary-geo-site-is-down">your secondary will not be accessible through the UI</a>
+unless your restore the services on your primary site or you perform a promotion
+on your secondary site.</p></code></pre>
+</body>
+</html>

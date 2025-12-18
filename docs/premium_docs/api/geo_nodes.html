@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Create a new Geo node</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Geo Nodes API (deprecated)</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>The Geo Nodes API was <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/369140">deprecated</a> in GitLab 16.0
+and is planned for removal in v5 of the API. Use the <a href="geo_sites.html">Geo Sites API</a> instead.
+This change is a breaking change.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Use this API to manage <a href="../administration/geo/_index.html">Geo nodes</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<h2>Create a new Geo node</h2>
+<p>Creates a new Geo node.</p>
+<pre><code class="language-plaintext">POST /geo_nodes
+</code></pre>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://primary.example.com/api/v4/geo_nodes&quot; \
+  -d &quot;name=himynameissomething&quot; \
+  -d &quot;url=https://another-node.example.com/&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>primary</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Specifying whether this node should be primary. Defaults to false.</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Flag indicating if the Geo node is enabled. Defaults to true.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The unique identifier for the Geo node. Must match <code>geo_node_name</code> if it is set in <code>gitlab.rb</code>, otherwise it must match <code>external_url</code></td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The user-facing URL for the Geo node.</td>
+</tr>
+<tr>
+<td><code>internal_url</code></td>
+<td>string</td>
+<td>no</td>
+<td>The URL defined on the primary node that secondary nodes should use to contact it. Returns <code>url</code> if not set.</td>
+</tr>
+<tr>
+<td><code>files_max_capacity</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Control the maximum concurrency of LFS/attachment backfill for this secondary node. Defaults to 10.</td>
+</tr>
+<tr>
+<td><code>repos_max_capacity</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Control the maximum concurrency of repository backfill for this secondary node. Defaults to 25.</td>
+</tr>
+<tr>
+<td><code>verification_max_capacity</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Control the maximum concurrency of repository verification for this node. Defaults to 100.</td>
+</tr>
+<tr>
+<td><code>container_repositories_max_capacity</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Control the maximum concurrency of container repository sync for this node. Defaults to 10.</td>
+</tr>
+<tr>
+<td><code>sync_object_storage</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Flag indicating if the secondary Geo node should replicate blobs in Object Storage. Defaults to false.</td>
+</tr>
+<tr>
+<td><code>selective_sync_type</code></td>
+<td>string</td>
+<td>no</td>
+<td>Limit syncing to only specific groups or shards. Valid values: <code>"namespaces"</code>, <code>"shards"</code>, or <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>selective_sync_shards</code></td>
+<td>array</td>
+<td>no</td>
+<td>The repository storage for the projects synced if <code>selective_sync_type</code> == <code>shards</code>.</td>
+</tr>
+<tr>
+<td><code>selective_sync_namespace_ids</code></td>
+<td>array</td>
+<td>no</td>
+<td>The IDs of groups that should be synced, if <code>selective_sync_type</code> == <code>namespaces</code>.</td>
+</tr>
+<tr>
+<td><code>minimum_reverification_interval</code></td>
+<td>integer</td>
+<td>no</td>
+<td>The interval (in days) in which the repository verification is valid. Once expired, it is reverified. This has no effect when set on a secondary node.</td>
+</tr>
+</tbody>
+</table>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 3,
+  &quot;name&quot;: &quot;Test Node 1&quot;,
+  &quot;url&quot;: &quot;https://secondary.example.com/&quot;,
+  &quot;internal_url&quot;: &quot;https://secondary.example.com/&quot;,
+  &quot;primary&quot;: false,
+  &quot;enabled&quot;: true,
+  &quot;current&quot;: false,
+  &quot;files_max_capacity&quot;: 10,
+  &quot;repos_max_capacity&quot;: 25,
+  &quot;verification_max_capacity&quot;: 100,
+  &quot;selective_sync_type&quot;: &quot;namespaces&quot;,
+  &quot;selective_sync_shards&quot;: [],
+  &quot;selective_sync_namespace_ids&quot;: [1, 25],
+  &quot;minimum_reverification_interval&quot;: 7,
+  &quot;container_repositories_max_capacity&quot;: 10,
+  &quot;sync_object_storage&quot;: false,
+  &quot;clone_protocol&quot;: &quot;http&quot;,
+  &quot;web_edit_url&quot;: &quot;https://primary.example.com/admin/geo/sites/3/edit&quot;,
+  &quot;web_geo_replication_details_url&quot;: &quot;https://secondary.example.com/admin/geo/sites/3/replication/lfs_objects&quot;,
+  &quot;_links&quot;: {
+     &quot;self&quot;: &quot;https://primary.example.com/api/v4/geo_nodes/3&quot;,
+     &quot;status&quot;: &quot;https://primary.example.com/api/v4/geo_nodes/3/status&quot;,
+     &quot;repair&quot;: &quot;https://primary.example.com/api/v4/geo_nodes/3/repair&quot;
+  }
+}
+</code></pre>
+<h2>Retrieve configuration about all Geo nodes</h2>
+<pre><code class="language-plaintext">GET /geo_nodes
+</code></pre>
+<pre><code class="language-shell">curl \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://primary.example.com/api/v4/geo_nodes&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;us-node&quot;,
+    &quot;url&quot;: &quot;https://primary.example.com/&quot;,
+    &quot;internal_url&quot;: &quot;https://internal.example.com/&quot;,
+    &quot;primary&quot;: true,
+    &quot;enabled&quot;: true,
+    &quot;current&quot;: true,
+    &quot;files_max_capacity&quot;: 10,
+    &quot;repos_max_capacity&quot;: 25,
+    &quot;container_repositories_max_capacity&quot;: 10,
+    &quot;verification_max_capacity&quot;: 100,
+    &quot;selective_sync_type&quot;: &quot;namespaces&quot;,
+    &quot;selective_sync_shards&quot;: [],
+    &quot;selective_sync_namespace_ids&quot;: [1, 25],
+    &quot;minimum_reverification_interval&quot;: 7,
+    &quot;clone_protocol&quot;: &quot;http&quot;,
+    &quot;web_edit_url&quot;: &quot;https://primary.example.com/admin/geo/sites/1/edit&quot;,
+    &quot;_links&quot;: {
+      &quot;self&quot;: &quot;https://primary.example.com/api/v4/geo_nodes/1&quot;,
+      &quot;status&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/1/status&quot;,
+      &quot;repair&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/1/repair&quot;
+    }
+  },
+  {
+    &quot;id&quot;: 2,
+    &quot;name&quot;: &quot;cn-node&quot;,
+    &quot;url&quot;: &quot;https://secondary.example.com/&quot;,
+    &quot;internal_url&quot;: &quot;https://secondary.example.com/&quot;,
+    &quot;primary&quot;: false,
+    &quot;enabled&quot;: true,
+    &quot;current&quot;: false,
+    &quot;files_max_capacity&quot;: 10,
+    &quot;repos_max_capacity&quot;: 25,
+    &quot;container_repositories_max_capacity&quot;: 10,
+    &quot;verification_max_capacity&quot;: 100,
+    &quot;selective_sync_type&quot;: &quot;namespaces&quot;,
+    &quot;selective_sync_shards&quot;: [],
+    &quot;selective_sync_namespace_ids&quot;: [1, 25],
+    &quot;minimum_reverification_interval&quot;: 7,
+    &quot;sync_object_storage&quot;: true,
+    &quot;clone_protocol&quot;: &quot;http&quot;,
+    &quot;web_edit_url&quot;: &quot;https://primary.example.com/admin/geo/sites/2/edit&quot;,
+    &quot;web_geo_replication_details_url&quot;: &quot;https://secondary.example.com/admin/geo/sites/2/replication/lfs_objects&quot;,
+    &quot;_links&quot;: {
+      &quot;self&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/2&quot;,
+      &quot;status&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/2/status&quot;,
+      &quot;repair&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/2/repair&quot;
+    }
+  }
+]
+</code></pre>
+<h2>Retrieve configuration about a specific Geo node</h2>
+<pre><code class="language-plaintext">GET /geo_nodes/:id
+</code></pre>
+<pre><code class="language-shell">curl \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://primary.example.com/api/v4/geo_nodes/1&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;us-node&quot;,
+  &quot;url&quot;: &quot;https://primary.example.com/&quot;,
+  &quot;internal_url&quot;: &quot;https://primary.example.com/&quot;,
+  &quot;primary&quot;: true,
+  &quot;enabled&quot;: true,
+  &quot;current&quot;: true,
+  &quot;files_max_capacity&quot;: 10,
+  &quot;repos_max_capacity&quot;: 25,
+  &quot;container_repositories_max_capacity&quot;: 10,
+  &quot;verification_max_capacity&quot;: 100,
+  &quot;selective_sync_type&quot;: &quot;namespaces&quot;,
+  &quot;selective_sync_shards&quot;: [],
+  &quot;selective_sync_namespace_ids&quot;: [1, 25],
+  &quot;minimum_reverification_interval&quot;: 7,
+  &quot;clone_protocol&quot;: &quot;http&quot;,
+  &quot;web_edit_url&quot;: &quot;https://primary.example.com/admin/geo/sites/1/edit&quot;,
+  &quot;_links&quot;: {
+    &quot;self&quot;: &quot;https://primary.example.com/api/v4/geo_nodes/1&quot;,
+    &quot;status&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/1/status&quot;,
+    &quot;repair&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/1/repair&quot;
+  }
+}
+</code></pre>
+<h2>Edit a Geo node</h2>
+<p>Updates settings of an existing Geo node.</p>
+<pre><code class="language-plaintext">PUT /geo_nodes/:id
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the Geo node.</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Flag indicating if the Geo node is enabled.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>no</td>
+<td>The unique identifier for the Geo node. Must match <code>geo_node_name</code> if it is set in <code>gitlab.rb</code>, otherwise it must match <code>external_url</code>.</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>no</td>
+<td>The user-facing URL of the Geo node.</td>
+</tr>
+<tr>
+<td><code>internal_url</code></td>
+<td>string</td>
+<td>no</td>
+<td>The URL defined on the primary node that secondary nodes should use to contact it. Returns <code>url</code> if not set.</td>
+</tr>
+<tr>
+<td><code>files_max_capacity</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Control the maximum concurrency of LFS/attachment backfill for this secondary node.</td>
+</tr>
+<tr>
+<td><code>repos_max_capacity</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Control the maximum concurrency of repository backfill for this secondary node.</td>
+</tr>
+<tr>
+<td><code>verification_max_capacity</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Control the maximum concurrency of verification for this node.</td>
+</tr>
+<tr>
+<td><code>container_repositories_max_capacity</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Control the maximum concurrency of container repository sync for this node.</td>
+</tr>
+<tr>
+<td><code>sync_object_storage</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Flag indicating if the secondary Geo node should replicate blobs in Object Storage.</td>
+</tr>
+<tr>
+<td><code>selective_sync_type</code></td>
+<td>string</td>
+<td>no</td>
+<td>Limit syncing to only specific groups or shards. Valid values: <code>"namespaces"</code>, <code>"shards"</code>, or <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>selective_sync_shards</code></td>
+<td>array</td>
+<td>no</td>
+<td>The repository storage for the projects synced if <code>selective_sync_type</code> == <code>shards</code>.</td>
+</tr>
+<tr>
+<td><code>selective_sync_namespace_ids</code></td>
+<td>array</td>
+<td>no</td>
+<td>The IDs of groups that should be synced, if <code>selective_sync_type</code> == <code>namespaces</code>.</td>
+</tr>
+<tr>
+<td><code>minimum_reverification_interval</code></td>
+<td>integer</td>
+<td>no</td>
+<td>The interval (in days) in which the repository verification is valid. Once expired, it is reverified. This has no effect when set on a secondary node.</td>
+</tr>
+</tbody>
+</table>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;cn-node&quot;,
+  &quot;url&quot;: &quot;https://secondary.example.com/&quot;,
+  &quot;internal_url&quot;: &quot;https://secondary.example.com/&quot;,
+  &quot;primary&quot;: false,
+  &quot;enabled&quot;: true,
+  &quot;current&quot;: true,
+  &quot;files_max_capacity&quot;: 10,
+  &quot;repos_max_capacity&quot;: 25,
+  &quot;container_repositories_max_capacity&quot;: 10,
+  &quot;verification_max_capacity&quot;: 100,
+  &quot;selective_sync_type&quot;: &quot;namespaces&quot;,
+  &quot;selective_sync_shards&quot;: [],
+  &quot;selective_sync_namespace_ids&quot;: [1, 25],
+  &quot;minimum_reverification_interval&quot;: 7,
+  &quot;sync_object_storage&quot;: true,
+  &quot;clone_protocol&quot;: &quot;http&quot;,
+  &quot;web_edit_url&quot;: &quot;https://primary.example.com/admin/geo/sites/2/edit&quot;,
+  &quot;web_geo_replication_details_url&quot;: &quot;https://secondary.example.com/admin/geo/sites/2/replication/lfs_objects&quot;,
+  &quot;_links&quot;: {
+    &quot;self&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/2&quot;,
+    &quot;status&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/2/status&quot;,
+    &quot;repair&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/2/repair&quot;
+  }
+}
+</code></pre>
+<h2>Delete a Geo node</h2>
+<p>Removes the Geo node.</p>
+<pre><code class="language-plaintext">DELETE /geo_nodes/:id
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the Geo node.</td>
+</tr>
+</tbody>
+</table>
+<h2>Repair a Geo node</h2>
+<p>To repair the OAuth authentication of a Geo node.</p>
+<p><em>This can only be run against a primary Geo node.</em></p>
+<pre><code class="language-plaintext">POST /geo_nodes/:id/repair
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;us-node&quot;,
+  &quot;url&quot;: &quot;https://primary.example.com/&quot;,
+  &quot;internal_url&quot;: &quot;https://primary.example.com/&quot;,
+  &quot;primary&quot;: true,
+  &quot;enabled&quot;: true,
+  &quot;current&quot;: true,
+  &quot;files_max_capacity&quot;: 10,
+  &quot;repos_max_capacity&quot;: 25,
+  &quot;container_repositories_max_capacity&quot;: 10,
+  &quot;verification_max_capacity&quot;: 100,
+  &quot;clone_protocol&quot;: &quot;http&quot;,
+  &quot;web_edit_url&quot;: &quot;https://primary.example.com/admin/geo/sites/1/edit&quot;,
+  &quot;_links&quot;: {
+    &quot;self&quot;: &quot;https://primary.example.com/api/v4/geo_nodes/1&quot;,
+    &quot;status&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/1/status&quot;,
+    &quot;repair&quot;:&quot;https://primary.example.com/api/v4/geo_nodes/1/repair&quot;
+  }
+}
+</code></pre>
+<h2>Retrieve status about all Geo nodes</h2>
+<pre><code class="language-plaintext">GET /geo_nodes/status
+</code></pre>
+<pre><code class="language-shell">curl \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://primary.example.com/api/v4/geo_nodes/status&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;geo_node_id&quot;: 1,
+    &quot;healthy&quot;: true,
+    &quot;health&quot;: &quot;Healthy&quot;,
+    &quot;health_status&quot;: &quot;Healthy&quot;,
+    &quot;missing_oauth_application&quot;: false,
+    &quot;db_replication_lag_seconds&quot;: null,
+    &quot;lfs_objects_count&quot;: 5,
+    &quot;lfs_objects_checksum_total_count&quot;: 5,
+    &quot;lfs_objects_checksummed_count&quot;: 5,
+    &quot;lfs_objects_checksum_failed_count&quot;: 0,
+    &quot;lfs_objects_synced_count&quot;: null,
+    &quot;lfs_objects_failed_count&quot;: null,
+    &quot;lfs_objects_registry_count&quot;: null,
+    &quot;lfs_objects_verification_total_count&quot;: null,
+    &quot;lfs_objects_verified_count&quot;: null,
+    &quot;lfs_objects_verification_failed_count&quot;: null,
+    &quot;lfs_objects_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;lfs_objects_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;job_artifacts_count&quot;: 2,
+    &quot;job_artifacts_synced_count&quot;: null,
+    &quot;job_artifacts_failed_count&quot;: null,
+    &quot;job_artifacts_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;projects_count&quot;: 41,
+    &quot;repositories_count&quot;: 41,
+    &quot;replication_slots_count&quot;: 1,
+    &quot;replication_slots_used_count&quot;: 1,
+    &quot;replication_slots_used_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;replication_slots_max_retained_wal_bytes&quot;: 0,
+    &quot;repositories_checked_count&quot;: 20,
+    &quot;repositories_checked_failed_count&quot;: 20,
+    &quot;repositories_checked_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;last_event_id&quot;: 23,
+    &quot;last_event_timestamp&quot;: 1509681166,
+    &quot;cursor_last_event_id&quot;: null,
+    &quot;cursor_last_event_timestamp&quot;: 0,
+    &quot;last_successful_status_check_timestamp&quot;: 1510125024,
+    &quot;version&quot;: &quot;10.3.0&quot;,
+    &quot;revision&quot;: &quot;33d33a096a&quot;,
+    &quot;merge_request_diffs_count&quot;: 5,
+    &quot;merge_request_diffs_checksum_total_count&quot;: 5,
+    &quot;merge_request_diffs_checksummed_count&quot;: 5,
+    &quot;merge_request_diffs_checksum_failed_count&quot;: 0,
+    &quot;merge_request_diffs_synced_count&quot;: null,
+    &quot;merge_request_diffs_failed_count&quot;: null,
+    &quot;merge_request_diffs_registry_count&quot;: null,
+    &quot;merge_request_diffs_verification_total_count&quot;: null,
+    &quot;merge_request_diffs_verified_count&quot;: null,
+    &quot;merge_request_diffs_verification_failed_count&quot;: null,
+    &quot;merge_request_diffs_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;merge_request_diffs_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;package_files_count&quot;: 5,
+    &quot;package_files_checksum_total_count&quot;: 5,
+    &quot;package_files_checksummed_count&quot;: 5,
+    &quot;package_files_checksum_failed_count&quot;: 0,
+    &quot;package_files_synced_count&quot;: null,
+    &quot;package_files_failed_count&quot;: null,
+    &quot;package_files_registry_count&quot;: null,
+    &quot;package_files_verification_total_count&quot;: null,
+    &quot;package_files_verified_count&quot;: null,
+    &quot;package_files_verification_failed_count&quot;: null,
+    &quot;package_files_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;package_files_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;pages_deployments_count&quot;: 5,
+    &quot;pages_deployments_checksum_total_count&quot;: 5,
+    &quot;pages_deployments_checksummed_count&quot;: 5,
+    &quot;pages_deployments_checksum_failed_count&quot;: 0,
+    &quot;pages_deployments_synced_count&quot;: null,
+    &quot;pages_deployments_failed_count&quot;: null,
+    &quot;pages_deployments_registry_count&quot;: null,
+    &quot;pages_deployments_verification_total_count&quot;: null,
+    &quot;pages_deployments_verified_count&quot;: null,
+    &quot;pages_deployments_verification_failed_count&quot;: null,
+    &quot;pages_deployments_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;pages_deployments_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;terraform_state_versions_count&quot;: 5,
+    &quot;terraform_state_versions_checksum_total_count&quot;: 5,
+    &quot;terraform_state_versions_checksummed_count&quot;: 5,
+    &quot;terraform_state_versions_checksum_failed_count&quot;: 0,
+    &quot;terraform_state_versions_synced_count&quot;: null,
+    &quot;terraform_state_versions_failed_count&quot;: null,
+    &quot;terraform_state_versions_registry_count&quot;: null,
+    &quot;terraform_state_versions_verification_total_count&quot;: null,
+    &quot;terraform_state_versions_verified_count&quot;: null,
+    &quot;terraform_state_versions_verification_failed_count&quot;: null,
+    &quot;terraform_state_versions_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;terraform_state_versions_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;snippet_repositories_count&quot;: 5,
+    &quot;snippet_repositories_checksum_total_count&quot;: 5,
+    &quot;snippet_repositories_checksummed_count&quot;: 5,
+    &quot;snippet_repositories_checksum_failed_count&quot;: 0,
+    &quot;snippet_repositories_synced_count&quot;: null,
+    &quot;snippet_repositories_failed_count&quot;: null,
+    &quot;snippet_repositories_registry_count&quot;: null,
+    &quot;snippet_repositories_verification_total_count&quot;: null,
+    &quot;snippet_repositories_verified_count&quot;: null,
+    &quot;snippet_repositories_verification_failed_count&quot;: null,
+    &quot;snippet_repositories_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;snippet_repositories_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;project_wiki_repositories_count&quot;: 3,
+    &quot;project_wiki_repositories_checksum_total_count&quot;: 3,
+    &quot;project_wiki_repositories_checksummed_count&quot;: 3,
+    &quot;project_wiki_repositories_checksum_failed_count&quot;: 0,
+    &quot;project_wiki_repositories_synced_count&quot;: null,
+    &quot;project_wiki_repositories_failed_count&quot;: null,
+    &quot;project_wiki_repositories_registry_count&quot;: null,
+    &quot;project_wiki_repositories_verification_total_count&quot;:  null,
+    &quot;project_wiki_repositories_verified_count&quot;:  null,
+    &quot;project_wiki_repositories_verification_failed_count&quot;:  null,
+    &quot;project_wiki_repositories_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;project_wiki_repositories_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;group_wiki_repositories_count&quot;: 5,
+    &quot;group_wiki_repositories_checksum_total_count&quot;: 5,
+    &quot;group_wiki_repositories_checksummed_count&quot;: 5,
+    &quot;group_wiki_repositories_checksum_failed_count&quot;: 0,
+    &quot;group_wiki_repositories_synced_count&quot;: null,
+    &quot;group_wiki_repositories_failed_count&quot;: null,
+    &quot;group_wiki_repositories_registry_count&quot;: null,
+    &quot;group_wiki_repositories_verification_total_count&quot;: null,
+    &quot;group_wiki_repositories_verified_count&quot;: null,
+    &quot;group_wiki_repositories_verification_failed_count&quot;: null,
+    &quot;group_wiki_repositories_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;group_wiki_repositories_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;pipeline_artifacts_count&quot;: 5,
+    &quot;pipeline_artifacts_checksum_total_count&quot;: 5,
+    &quot;pipeline_artifacts_checksummed_count&quot;: 5,
+    &quot;pipeline_artifacts_checksum_failed_count&quot;: 0,
+    &quot;pipeline_artifacts_synced_count&quot;: null,
+    &quot;pipeline_artifacts_failed_count&quot;: null,
+    &quot;pipeline_artifacts_registry_count&quot;: null,
+    &quot;pipeline_artifacts_verification_total_count&quot;: null,
+    &quot;pipeline_artifacts_verified_count&quot;: null,
+    &quot;pipeline_artifacts_verification_failed_count&quot;: null,
+    &quot;pipeline_artifacts_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;pipeline_artifacts_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;uploads_count&quot;: 5,
+    &quot;uploads_synced_count&quot;: null,
+    &quot;uploads_failed_count&quot;: 0,
+    &quot;uploads_registry_count&quot;: null,
+    &quot;uploads_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;uploads_checksum_total_count&quot;: 5,
+    &quot;uploads_checksummed_count&quot;: 5,
+    &quot;uploads_checksum_failed_count&quot;: null,
+    &quot;uploads_verification_total_count&quot;:  null,
+    &quot;uploads_verified_count&quot;: null,
+    &quot;uploads_verification_failed_count&quot;: null,
+    &quot;uploads_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;job_artifacts_count&quot;: 5,
+    &quot;job_artifacts_checksum_total_count&quot;: 5,
+    &quot;job_artifacts_checksummed_count&quot;: 5,
+    &quot;job_artifacts_checksum_failed_count&quot;: 0,
+    &quot;job_artifacts_synced_count&quot;: 5,
+    &quot;job_artifacts_failed_count&quot;: 0,
+    &quot;job_artifacts_registry_count&quot;: 5,
+    &quot;job_artifacts_verification_total_count&quot;: 5,
+    &quot;job_artifacts_verified_count&quot;: 5,
+    &quot;job_artifacts_verification_failed_count&quot;: 0,
+    &quot;job_artifacts_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;job_artifacts_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;ci_secure_files_count&quot;: 5,
+    &quot;ci_secure_files_checksum_total_count&quot;: 5,
+    &quot;ci_secure_files_checksummed_count&quot;: 5,
+    &quot;ci_secure_files_checksum_failed_count&quot;: 0,
+    &quot;ci_secure_files_synced_count&quot;: 5,
+    &quot;ci_secure_files_failed_count&quot;: 0,
+    &quot;ci_secure_files_registry_count&quot;: 5,
+    &quot;ci_secure_files_verification_total_count&quot;: 5,
+    &quot;ci_secure_files_verified_count&quot;: 5,
+    &quot;ci_secure_files_verification_failed_count&quot;: 0,
+    &quot;ci_secure_files_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;ci_secure_files_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;dependency_proxy_blobs_count&quot;: 5,
+    &quot;dependency_proxy_blobs_checksum_total_count&quot;: 5,
+    &quot;dependency_proxy_blobs_checksummed_count&quot;: 5,
+    &quot;dependency_proxy_blobs_checksum_failed_count&quot;: 0,
+    &quot;dependency_proxy_blobs_synced_count&quot;: 5,
+    &quot;dependency_proxy_blobs_failed_count&quot;: 0,
+    &quot;dependency_proxy_blobs_registry_count&quot;: 5,
+    &quot;dependency_proxy_blobs_verification_total_count&quot;: 5,
+    &quot;dependency_proxy_blobs_verified_count&quot;: 5,
+    &quot;dependency_proxy_blobs_verification_failed_count&quot;: 0,
+    &quot;dependency_proxy_blobs_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;dependency_proxy_blobs_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;container_repositories_count&quot;: 5,
+    &quot;container_repositories_synced_count&quot;: 5,
+    &quot;container_repositories_failed_count&quot;: 0,
+    &quot;container_repositories_registry_count&quot;: 5,
+    &quot;container_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;container_repositories_checksum_total_count&quot;: 0,
+    &quot;container_repositories_checksummed_count&quot;: 0,
+    &quot;container_repositories_checksum_failed_count&quot;: 0,
+    &quot;container_repositories_verification_total_count&quot;: 0,
+    &quot;container_repositories_verified_count&quot;: 0,
+    &quot;container_repositories_verification_failed_count&quot;: 0,
+    &quot;container_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;dependency_proxy_manifests_count&quot;: 5,
+    &quot;dependency_proxy_manifests_checksum_total_count&quot;: 5,
+    &quot;dependency_proxy_manifests_checksummed_count&quot;: 5,
+    &quot;dependency_proxy_manifests_checksum_failed_count&quot;: 5,
+    &quot;dependency_proxy_manifests_synced_count&quot;: 5,
+    &quot;dependency_proxy_manifests_failed_count&quot;: 0,
+    &quot;dependency_proxy_manifests_registry_count&quot;: 5,
+    &quot;dependency_proxy_manifests_verification_total_count&quot;: 5,
+    &quot;dependency_proxy_manifests_verified_count&quot;: 5,
+    &quot;dependency_proxy_manifests_verification_failed_count&quot;: 5,
+    &quot;dependency_proxy_manifests_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;dependency_proxy_manifests_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;design_management_repositories_count&quot;: 5,
+    &quot;design_management_repositories_checksum_total_count&quot;: 5,
+    &quot;design_management_repositories_checksummed_count&quot;: 5,
+    &quot;design_management_repositories_checksum_failed_count&quot;: 5,
+    &quot;design_management_repositories_synced_count&quot;: 5,
+    &quot;design_management_repositories_failed_count&quot;: 0,
+    &quot;design_management_repositories_registry_count&quot;: 5,
+    &quot;design_management_repositories_verification_total_count&quot;: 5,
+    &quot;design_management_repositories_verified_count&quot;: 5,
+    &quot;design_management_repositories_verification_failed_count&quot;: 5,
+    &quot;design_management_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;design_management_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;project_repositories_count&quot;: 5,
+    &quot;project_repositories_checksum_total_count&quot;: 5,
+    &quot;project_repositories_checksummed_count&quot;: 5,
+    &quot;project_repositories_checksum_failed_count&quot;: 0,
+    &quot;project_repositories_synced_count&quot;: 5,
+    &quot;project_repositories_failed_count&quot;: 0,
+    &quot;project_repositories_registry_count&quot;: 5,
+    &quot;project_repositories_verification_total_count&quot;: 5,
+    &quot;project_repositories_verified_count&quot;: 5,
+    &quot;project_repositories_verification_failed_count&quot;: 0,
+    &quot;project_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;project_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;
+  },
+  {
+    &quot;geo_node_id&quot;: 2,
+    &quot;healthy&quot;: true,
+    &quot;health&quot;: &quot;Healthy&quot;,
+    &quot;health_status&quot;: &quot;Healthy&quot;,
+    &quot;missing_oauth_application&quot;: false,
+    &quot;db_replication_lag_seconds&quot;: 0,
+    &quot;lfs_objects_count&quot;: 5,
+    &quot;lfs_objects_checksum_total_count&quot;: 5,
+    &quot;lfs_objects_checksummed_count&quot;: 5,
+    &quot;lfs_objects_checksum_failed_count&quot;: 0,
+    &quot;lfs_objects_synced_count&quot;: null,
+    &quot;lfs_objects_failed_count&quot;: null,
+    &quot;lfs_objects_registry_count&quot;: null,
+    &quot;lfs_objects_verification_total_count&quot;: null,
+    &quot;lfs_objects_verified_count&quot;: null,
+    &quot;lfs_objects_verification_failed_count&quot;: null,
+    &quot;lfs_objects_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;lfs_objects_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;job_artifacts_count&quot;: 2,
+    &quot;job_artifacts_synced_count&quot;: 1,
+    &quot;job_artifacts_failed_count&quot;: 1,
+    &quot;job_artifacts_synced_in_percentage&quot;: &quot;50.00%&quot;,
+    &quot;design_management_repositories_count&quot;: 5,
+    &quot;design_management_repositories_synced_count&quot;: 5,
+    &quot;design_management_repositories_failed_count&quot;: 5,
+    &quot;design_management_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;design_management_repositories_checksum_total_count&quot;: 5,
+    &quot;design_management_repositories_checksummed_count&quot;: 5,
+    &quot;design_management_repositories_checksum_failed_count&quot;: 5,
+    &quot;design_management_repositories_registry_count&quot;: 5,
+    &quot;design_management_repositories_verification_total_count&quot;: 5,
+    &quot;design_management_repositories_verified_count&quot;: 5,
+    &quot;design_management_repositories_verification_failed_count&quot;: 5,
+    &quot;design_management_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;projects_count&quot;: 41,
+    &quot;repositories_count&quot;: 41,
+    &quot;replication_slots_count&quot;: null,
+    &quot;replication_slots_used_count&quot;: null,
+    &quot;replication_slots_used_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;replication_slots_max_retained_wal_bytes&quot;: null,
+    &quot;repositories_checked_count&quot;: 5,
+    &quot;repositories_checked_failed_count&quot;: 1,
+    &quot;repositories_checked_in_percentage&quot;: &quot;12.20%&quot;,
+    &quot;last_event_id&quot;: 23,
+    &quot;last_event_timestamp&quot;: 1509681166,
+    &quot;cursor_last_event_id&quot;: 23,
+    &quot;cursor_last_event_timestamp&quot;: 1509681166,
+    &quot;last_successful_status_check_timestamp&quot;: 1510125024,
+    &quot;version&quot;: &quot;10.3.0&quot;,
+    &quot;revision&quot;: &quot;33d33a096a&quot;,
+    &quot;merge_request_diffs_count&quot;: 5,
+    &quot;merge_request_diffs_checksum_total_count&quot;: 5,
+    &quot;merge_request_diffs_checksummed_count&quot;: 5,
+    &quot;merge_request_diffs_checksum_failed_count&quot;: 0,
+    &quot;merge_request_diffs_synced_count&quot;: 5,
+    &quot;merge_request_diffs_failed_count&quot;: 0,
+    &quot;merge_request_diffs_registry_count&quot;: 5,
+    &quot;merge_request_diffs_verification_total_count&quot;: 5,
+    &quot;merge_request_diffs_verified_count&quot;: 5,
+    &quot;merge_request_diffs_verification_failed_count&quot;: 0,
+    &quot;merge_request_diffs_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;merge_request_diffs_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;package_files_count&quot;: 5,
+    &quot;package_files_checksum_total_count&quot;: 5,
+    &quot;package_files_checksummed_count&quot;: 5,
+    &quot;package_files_checksum_failed_count&quot;: 0,
+    &quot;package_files_synced_count&quot;: 5,
+    &quot;package_files_failed_count&quot;: 0,
+    &quot;package_files_registry_count&quot;: 5,
+    &quot;package_files_verification_total_count&quot;: 5,
+    &quot;package_files_verified_count&quot;: 5,
+    &quot;package_files_verification_failed_count&quot;: 0,
+    &quot;package_files_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;package_files_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;packages_nuget_symbols_count&quot;: 5,
+    &quot;packages_nuget_symbols_checksum_total_count&quot;: 5,
+    &quot;packages_nuget_symbols_checksummed_count&quot;: 5,
+    &quot;packages_nuget_symbols_checksum_failed_count&quot;: 0,
+    &quot;packages_nuget_symbols_synced_count&quot;: 5,
+    &quot;packages_nuget_symbols_failed_count&quot;: 0,
+    &quot;packages_nuget_symbols_registry_count&quot;: 5,
+    &quot;packages_nuget_symbols_verification_total_count&quot;: 5,
+    &quot;packages_nuget_symbols_verified_count&quot;: 5,
+    &quot;packages_nuget_symbols_verification_failed_count&quot;: 0,
+    &quot;packages_nuget_symbols_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;packages_nuget_symbols_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;terraform_state_versions_count&quot;: 5,
+    &quot;terraform_state_versions_checksum_total_count&quot;: 5,
+    &quot;terraform_state_versions_checksummed_count&quot;: 5,
+    &quot;terraform_state_versions_checksum_failed_count&quot;: 0,
+    &quot;terraform_state_versions_synced_count&quot;: 5,
+    &quot;terraform_state_versions_failed_count&quot;: 0,
+    &quot;terraform_state_versions_registry_count&quot;: 5,
+    &quot;terraform_state_versions_verification_total_count&quot;: 5,
+    &quot;terraform_state_versions_verified_count&quot;: 5,
+    &quot;terraform_state_versions_verification_failed_count&quot;: 0,
+    &quot;terraform_state_versions_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;terraform_state_versions_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;snippet_repositories_count&quot;: 5,
+    &quot;snippet_repositories_checksum_total_count&quot;: 5,
+    &quot;snippet_repositories_checksummed_count&quot;: 5,
+    &quot;snippet_repositories_checksum_failed_count&quot;: 0,
+    &quot;snippet_repositories_synced_count&quot;: 5,
+    &quot;snippet_repositories_failed_count&quot;: 0,
+    &quot;snippet_repositories_registry_count&quot;: 5,
+    &quot;snippet_repositories_verification_total_count&quot;: 5,
+    &quot;snippet_repositories_verified_count&quot;: 5,
+    &quot;snippet_repositories_verification_failed_count&quot;: 0,
+    &quot;snippet_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;snippet_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;group_wiki_repositories_count&quot;: 5,
+    &quot;group_wiki_repositories_checksum_total_count&quot;: 5,
+    &quot;group_wiki_repositories_checksummed_count&quot;: 5,
+    &quot;group_wiki_repositories_checksum_failed_count&quot;: 0,
+    &quot;group_wiki_repositories_synced_count&quot;: 5,
+    &quot;group_wiki_repositories_failed_count&quot;: 0,
+    &quot;group_wiki_repositories_registry_count&quot;: 5,
+    &quot;group_wiki_repositories_verification_total_count&quot;: 5,
+    &quot;group_wiki_repositories_verified_count&quot;: 5,
+    &quot;group_wiki_repositories_verification_failed_count&quot;: 0,
+    &quot;group_wiki_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;group_wiki_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;pipeline_artifacts_count&quot;: 5,
+    &quot;pipeline_artifacts_checksum_total_count&quot;: 5,
+    &quot;pipeline_artifacts_checksummed_count&quot;: 5,
+    &quot;pipeline_artifacts_checksum_failed_count&quot;: 0,
+    &quot;pipeline_artifacts_synced_count&quot;: 5,
+    &quot;pipeline_artifacts_failed_count&quot;: 0,
+    &quot;pipeline_artifacts_registry_count&quot;: 5,
+    &quot;pipeline_artifacts_verification_total_count&quot;: 5,
+    &quot;pipeline_artifacts_verified_count&quot;: 5,
+    &quot;pipeline_artifacts_verification_failed_count&quot;: 0,
+    &quot;pipeline_artifacts_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;pipeline_artifacts_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;uploads_count&quot;: 5,
+    &quot;uploads_synced_count&quot;: null,
+    &quot;uploads_failed_count&quot;: 0,
+    &quot;uploads_registry_count&quot;: null,
+    &quot;uploads_synced_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;uploads_checksum_total_count&quot;: 5,
+    &quot;uploads_checksummed_count&quot;: 5,
+    &quot;uploads_checksum_failed_count&quot;: null,
+    &quot;uploads_verification_total_count&quot;:  null,
+    &quot;uploads_verified_count&quot;: null,
+    &quot;uploads_verification_failed_count&quot;: null,
+    &quot;uploads_verified_in_percentage&quot;: &quot;0.00%&quot;,
+    &quot;job_artifacts_count&quot;: 5,
+    &quot;job_artifacts_checksum_total_count&quot;: 5,
+    &quot;job_artifacts_checksummed_count&quot;: 5,
+    &quot;job_artifacts_checksum_failed_count&quot;: 0,
+    &quot;job_artifacts_synced_count&quot;: 5,
+    &quot;job_artifacts_failed_count&quot;: 0,
+    &quot;job_artifacts_registry_count&quot;: 5,
+    &quot;job_artifacts_verification_total_count&quot;: 5,
+    &quot;job_artifacts_verified_count&quot;: 5,
+    &quot;job_artifacts_verification_failed_count&quot;: 0,
+    &quot;job_artifacts_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;job_artifacts_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;dependency_proxy_blobs_count&quot;: 5,
+    &quot;dependency_proxy_blobs_checksum_total_count&quot;: 5,
+    &quot;dependency_proxy_blobs_checksummed_count&quot;: 5,
+    &quot;dependency_proxy_blobs_checksum_failed_count&quot;: 0,
+    &quot;dependency_proxy_blobs_synced_count&quot;: 5,
+    &quot;dependency_proxy_blobs_failed_count&quot;: 0,
+    &quot;dependency_proxy_blobs_registry_count&quot;: 5,
+    &quot;dependency_proxy_blobs_verification_total_count&quot;: 5,
+    &quot;dependency_proxy_blobs_verified_count&quot;: 5,
+    &quot;dependency_proxy_blobs_verification_failed_count&quot;: 0,
+    &quot;dependency_proxy_blobs_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;dependency_proxy_blobs_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;container_repositories_count&quot;: 5,
+    &quot;container_repositories_synced_count&quot;: 5,
+    &quot;container_repositories_failed_count&quot;: 0,
+    &quot;container_repositories_registry_count&quot;: 5,
+    &quot;container_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;container_repositories_checksum_total_count&quot;: 0,
+    &quot;container_repositories_checksummed_count&quot;: 0,
+    &quot;container_repositories_checksum_failed_count&quot;: 0,
+    &quot;container_repositories_verification_total_count&quot;: 0,
+    &quot;container_repositories_verified_count&quot;: 0,
+    &quot;container_repositories_verification_failed_count&quot;: 0,
+    &quot;container_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;dependency_proxy_manifests_count&quot;: 5,
+    &quot;dependency_proxy_manifests_checksum_total_count&quot;: 5,
+    &quot;dependency_proxy_manifests_checksummed_count&quot;: 5,
+    &quot;dependency_proxy_manifests_checksum_failed_count&quot;: 5,
+    &quot;dependency_proxy_manifests_synced_count&quot;: 5,
+    &quot;dependency_proxy_manifests_failed_count&quot;: 0,
+    &quot;dependency_proxy_manifests_registry_count&quot;: 5,
+    &quot;dependency_proxy_manifests_verification_total_count&quot;: 5,
+    &quot;dependency_proxy_manifests_verified_count&quot;: 5,
+    &quot;dependency_proxy_manifests_verification_failed_count&quot;: 5,
+    &quot;dependency_proxy_manifests_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;dependency_proxy_manifests_verified_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;project_repositories_count&quot;: 5,
+    &quot;project_repositories_checksum_total_count&quot;: 5,
+    &quot;project_repositories_checksummed_count&quot;: 5,
+    &quot;project_repositories_checksum_failed_count&quot;: 0,
+    &quot;project_repositories_synced_count&quot;: 5,
+    &quot;project_repositories_failed_count&quot;: 0,
+    &quot;project_repositories_registry_count&quot;: 5,
+    &quot;project_repositories_verification_total_count&quot;: 5,
+    &quot;project_repositories_verified_count&quot;: 5,
+    &quot;project_repositories_verification_failed_count&quot;: 0,
+    &quot;project_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+    &quot;project_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;
+  }
+]
+</code></pre>
+<h2>Retrieve status about a specific Geo node</h2>
+<pre><code class="language-plaintext">GET /geo_nodes/:id/status
+</code></pre>
+<pre><code class="language-shell">curl \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://primary.example.com/api/v4/geo_nodes/2/status&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;geo_node_id&quot;: 2,
+  &quot;healthy&quot;: true,
+  &quot;health&quot;: &quot;Healthy&quot;,
+  &quot;health_status&quot;: &quot;Healthy&quot;,
+  &quot;missing_oauth_application&quot;: false,
+  &quot;db_replication_lag_seconds&quot;: 0,
+  &quot;lfs_objects_count&quot;: 5,
+  &quot;lfs_objects_checksum_total_count&quot;: 5,
+  &quot;lfs_objects_checksummed_count&quot;: 5,
+  &quot;lfs_objects_checksum_failed_count&quot;: 0,
+  &quot;lfs_objects_synced_count&quot;: null,
+  &quot;lfs_objects_failed_count&quot;: null,
+  &quot;lfs_objects_registry_count&quot;: null,
+  &quot;lfs_objects_verification_total_count&quot;: null,
+  &quot;lfs_objects_verified_count&quot;: null,
+  &quot;lfs_objects_verification_failed_count&quot;: null,
+  &quot;lfs_objects_synced_in_percentage&quot;: &quot;0.00%&quot;,
+  &quot;lfs_objects_verified_in_percentage&quot;: &quot;0.00%&quot;,
+  &quot;job_artifacts_count&quot;: 2,
+  &quot;job_artifacts_synced_count&quot;: 1,
+  &quot;job_artifacts_failed_count&quot;: 1,
+  &quot;job_artifacts_synced_in_percentage&quot;: &quot;50.00%&quot;,
+  &quot;projects_count&quot;: 41,
+  &quot;repositories_count&quot;: 41,
+  &quot;replication_slots_count&quot;: null,
+  &quot;replication_slots_used_count&quot;: null,
+  &quot;replication_slots_used_in_percentage&quot;: &quot;0.00%&quot;,
+  &quot;replication_slots_max_retained_wal_bytes&quot;: null,
+  &quot;last_event_id&quot;: 23,
+  &quot;last_event_timestamp&quot;: 1509681166,
+  &quot;cursor_last_event_id&quot;: 23,
+  &quot;cursor_last_event_timestamp&quot;: 1509681166,
+  &quot;last_successful_status_check_timestamp&quot;: 1510125268,
+  &quot;version&quot;: &quot;10.3.0&quot;,
+  &quot;revision&quot;: &quot;33d33a096a&quot;,
+  &quot;merge_request_diffs_count&quot;: 5,
+  &quot;merge_request_diffs_checksum_total_count&quot;: 5,
+  &quot;merge_request_diffs_checksummed_count&quot;: 5,
+  &quot;merge_request_diffs_checksum_failed_count&quot;: 0,
+  &quot;merge_request_diffs_synced_count&quot;: 5,
+  &quot;merge_request_diffs_failed_count&quot;: 0,
+  &quot;merge_request_diffs_registry_count&quot;: 5,
+  &quot;merge_request_diffs_verification_total_count&quot;: 5,
+  &quot;merge_request_diffs_verified_count&quot;: 5,
+  &quot;merge_request_diffs_verification_failed_count&quot;: 0,
+  &quot;merge_request_diffs_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;merge_request_diffs_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;package_files_count&quot;: 5,
+  &quot;package_files_checksum_total_count&quot;: 5,
+  &quot;package_files_checksummed_count&quot;: 5,
+  &quot;package_files_checksum_failed_count&quot;: 0,
+  &quot;package_files_synced_count&quot;: 5,
+  &quot;package_files_failed_count&quot;: 0,
+  &quot;package_files_registry_count&quot;: 5,
+  &quot;package_files_verification_total_count&quot;: 5,
+  &quot;package_files_verified_count&quot;: 5,
+  &quot;package_files_verification_failed_count&quot;: 0,
+  &quot;package_files_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;package_files_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;terraform_state_versions_count&quot;: 5,
+  &quot;terraform_state_versions_checksum_total_count&quot;: 5,
+  &quot;terraform_state_versions_checksummed_count&quot;: 5,
+  &quot;terraform_state_versions_checksum_failed_count&quot;: 0,
+  &quot;terraform_state_versions_synced_count&quot;: 5,
+  &quot;terraform_state_versions_failed_count&quot;: 0,
+  &quot;terraform_state_versions_registry_count&quot;: 5,
+  &quot;terraform_state_versions_verification_total_count&quot;: 5,
+  &quot;terraform_state_versions_verified_count&quot;: 5,
+  &quot;terraform_state_versions_verification_failed_count&quot;: 0,
+  &quot;terraform_state_versions_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;terraform_state_versions_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;snippet_repositories_count&quot;: 5,
+  &quot;snippet_repositories_checksum_total_count&quot;: 5,
+  &quot;snippet_repositories_checksummed_count&quot;: 5,
+  &quot;snippet_repositories_checksum_failed_count&quot;: 0,
+  &quot;snippet_repositories_synced_count&quot;: 5,
+  &quot;snippet_repositories_failed_count&quot;: 0,
+  &quot;snippet_repositories_registry_count&quot;: 5,
+  &quot;snippet_repositories_verification_total_count&quot;: 5,
+  &quot;snippet_repositories_verified_count&quot;: 5,
+  &quot;snippet_repositories_verification_failed_count&quot;: 0,
+  &quot;snippet_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;snippet_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;group_wiki_repositories_count&quot;: 5,
+  &quot;group_wiki_repositories_checksum_total_count&quot;: 5,
+  &quot;group_wiki_repositories_checksummed_count&quot;: 5,
+  &quot;group_wiki_repositories_checksum_failed_count&quot;: 0,
+  &quot;group_wiki_repositories_synced_count&quot;: 5,
+  &quot;group_wiki_repositories_failed_count&quot;: 0,
+  &quot;group_wiki_repositories_registry_count&quot;: 5,
+  &quot;group_wiki_repositories_verification_total_count&quot;: 5,
+  &quot;group_wiki_repositories_verified_count&quot;: 5,
+  &quot;group_wiki_repositories_verification_failed_count&quot;: 0,
+  &quot;group_wiki_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;group_wiki_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;pipeline_artifacts_count&quot;: 5,
+  &quot;pipeline_artifacts_checksum_total_count&quot;: 5,
+  &quot;pipeline_artifacts_checksummed_count&quot;: 5,
+  &quot;pipeline_artifacts_checksum_failed_count&quot;: 0,
+  &quot;pipeline_artifacts_synced_count&quot;: 5,
+  &quot;pipeline_artifacts_failed_count&quot;: 0,
+  &quot;pipeline_artifacts_registry_count&quot;: 5,
+  &quot;pipeline_artifacts_verification_total_count&quot;: 5,
+  &quot;pipeline_artifacts_verified_count&quot;: 5,
+  &quot;pipeline_artifacts_verification_failed_count&quot;: 0,
+  &quot;pipeline_artifacts_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;pipeline_artifacts_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;uploads_count&quot;: 5,
+  &quot;uploads_synced_count&quot;: null,
+  &quot;uploads_failed_count&quot;: 0,
+  &quot;uploads_registry_count&quot;: null,
+  &quot;uploads_synced_in_percentage&quot;: &quot;0.00%&quot;,
+  &quot;uploads_checksum_total_count&quot;: 5,
+  &quot;uploads_checksummed_count&quot;: 5,
+  &quot;uploads_checksum_failed_count&quot;: null,
+  &quot;uploads_verification_total_count&quot;:  null,
+  &quot;uploads_verified_count&quot;: null,
+  &quot;uploads_verification_failed_count&quot;: null,
+  &quot;uploads_verified_in_percentage&quot;: &quot;0.00%&quot;,
+  &quot;job_artifacts_count&quot;: 5,
+  &quot;job_artifacts_checksum_total_count&quot;: 5,
+  &quot;job_artifacts_checksummed_count&quot;: 5,
+  &quot;job_artifacts_checksum_failed_count&quot;: 0,
+  &quot;job_artifacts_synced_count&quot;: 5,
+  &quot;job_artifacts_failed_count&quot;: 0,
+  &quot;job_artifacts_registry_count&quot;: 5,
+  &quot;job_artifacts_verification_total_count&quot;: 5,
+  &quot;job_artifacts_verified_count&quot;: 5,
+  &quot;job_artifacts_verification_failed_count&quot;: 0,
+  &quot;job_artifacts_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;job_artifacts_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;ci_secure_files_count&quot;: 5,
+  &quot;ci_secure_files_checksum_total_count&quot;: 5,
+  &quot;ci_secure_files_checksummed_count&quot;: 5,
+  &quot;ci_secure_files_checksum_failed_count&quot;: 0,
+  &quot;ci_secure_files_synced_count&quot;: 5,
+  &quot;ci_secure_files_failed_count&quot;: 0,
+  &quot;ci_secure_files_registry_count&quot;: 5,
+  &quot;ci_secure_files_verification_total_count&quot;: 5,
+  &quot;ci_secure_files_verified_count&quot;: 5,
+  &quot;ci_secure_files_verification_failed_count&quot;: 0,
+  &quot;ci_secure_files_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;ci_secure_files_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;dependency_proxy_blobs_count&quot;: 5,
+  &quot;dependency_proxy_blobs_checksum_total_count&quot;: 5,
+  &quot;dependency_proxy_blobs_checksummed_count&quot;: 5,
+  &quot;dependency_proxy_blobs_checksum_failed_count&quot;: 0,
+  &quot;dependency_proxy_blobs_synced_count&quot;: 5,
+  &quot;dependency_proxy_blobs_failed_count&quot;: 0,
+  &quot;dependency_proxy_blobs_registry_count&quot;: 5,
+  &quot;dependency_proxy_blobs_verification_total_count&quot;: 5,
+  &quot;dependency_proxy_blobs_verified_count&quot;: 5,
+  &quot;dependency_proxy_blobs_verification_failed_count&quot;: 0,
+  &quot;dependency_proxy_blobs_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;dependency_proxy_blobs_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;container_repositories_count&quot;: 5,
+  &quot;container_repositories_synced_count&quot;: 5,
+  &quot;container_repositories_failed_count&quot;: 0,
+  &quot;container_repositories_registry_count&quot;: 5,
+  &quot;container_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;container_repositories_checksum_total_count&quot;: 0,
+  &quot;container_repositories_checksummed_count&quot;: 0,
+  &quot;container_repositories_checksum_failed_count&quot;: 0,
+  &quot;container_repositories_verification_total_count&quot;: 0,
+  &quot;container_repositories_verified_count&quot;: 0,
+  &quot;container_repositories_verification_failed_count&quot;: 0,
+  &quot;container_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;dependency_proxy_manifests_count&quot;: 5,
+  &quot;dependency_proxy_manifests_checksum_total_count&quot;: 5,
+  &quot;dependency_proxy_manifests_checksummed_count&quot;: 5,
+  &quot;dependency_proxy_manifests_checksum_failed_count&quot;: 5,
+  &quot;dependency_proxy_manifests_synced_count&quot;: 5,
+  &quot;dependency_proxy_manifests_failed_count&quot;: 0,
+  &quot;dependency_proxy_manifests_registry_count&quot;: 5,
+  &quot;dependency_proxy_manifests_verification_total_count&quot;: 5,
+  &quot;dependency_proxy_manifests_verified_count&quot;: 5,
+  &quot;dependency_proxy_manifests_verification_failed_count&quot;: 5,
+  &quot;dependency_proxy_manifests_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;dependency_proxy_manifests_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;design_management_repositories_count&quot;: 5,
+  &quot;design_management_repositories_checksum_total_count&quot;: 5,
+  &quot;design_management_repositories_checksummed_count&quot;: 5,
+  &quot;design_management_repositories_checksum_failed_count&quot;: 5,
+  &quot;design_management_repositories_synced_count&quot;: 5,
+  &quot;design_management_repositories_failed_count&quot;: 0,
+  &quot;design_management_repositories_registry_count&quot;: 5,
+  &quot;design_management_repositories_verification_total_count&quot;: 5,
+  &quot;design_management_repositories_verified_count&quot;: 5,
+  &quot;design_management_repositories_verification_failed_count&quot;: 5,
+  &quot;design_management_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;design_management_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;project_repositories_count&quot;: 5,
+  &quot;project_repositories_checksum_total_count&quot;: 5,
+  &quot;project_repositories_checksummed_count&quot;: 5,
+  &quot;project_repositories_checksum_failed_count&quot;: 0,
+  &quot;project_repositories_synced_count&quot;: 5,
+  &quot;project_repositories_failed_count&quot;: 0,
+  &quot;project_repositories_registry_count&quot;: 5,
+  &quot;project_repositories_verification_total_count&quot;: 5,
+  &quot;project_repositories_verified_count&quot;: 5,
+  &quot;project_repositories_verification_failed_count&quot;: 0,
+  &quot;project_repositories_synced_in_percentage&quot;: &quot;100.00%&quot;,
+  &quot;project_repositories_verified_in_percentage&quot;: &quot;100.00%&quot;
+}
+</code></pre>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The <code>health_status</code> parameter can only be in a "Healthy" or "Unhealthy" state, while the <code>health</code> parameter can be empty, "Healthy", or contain the actual error message.</p>
+<p>{{&lt; /alert &gt;}}</p></code></pre>
+</body>
+</html>

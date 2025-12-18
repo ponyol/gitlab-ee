@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># List all epic boards in a group</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Product Planning
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Group epic boards API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/385903">Introduced</a> in GitLab 15.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use this API to manage <a href="../user/group/epics/epic_boards.html">group epic boards</a>. Every request to this API must be authenticated.</p>
+<p>If a user is not a member of a group and the group is private, a <code>GET</code>
+request results in <code>404</code> status code.</p>
+<h2>List all epic boards in a group</h2>
+<p>Lists epic boards in the given group.</p>
+<pre><code class="language-plaintext">GET /groups/:id/epic_boards
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group accessible by the authenticated user</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/groups/5/epic_boards&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;group epic board&quot;,
+    &quot;hide_backlog_list&quot;: false,
+    &quot;hide_closed_list&quot;: false,
+    &quot;group&quot;: {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;Documentcloud&quot;,
+      &quot;web_url&quot;: &quot;http://example.com/groups/documentcloud&quot;
+    },
+    &quot;hide_backlog_list&quot;: false,
+    &quot;hide_closed_list&quot;: false,
+    &quot;labels&quot;: [
+      {
+        &quot;id&quot;: 1,
+        &quot;title&quot;: &quot;Board Label&quot;,
+        &quot;color&quot;: &quot;#c21e56&quot;,
+        &quot;description&quot;: &quot;label applied to the epic board&quot;,
+        &quot;group_id&quot;: 5,
+        &quot;project_id&quot;: null,
+        &quot;template&quot;: false,
+        &quot;text_color&quot;: &quot;#FFFFFF&quot;,
+        &quot;created_at&quot;: &quot;2023-01-27T10:40:59.738Z&quot;,
+        &quot;updated_at&quot;: &quot;2023-01-27T10:40:59.738Z&quot;
+      }
+    ],
+    &quot;lists&quot;: [
+      {
+        &quot;id&quot;: 1,
+        &quot;label&quot;: {
+          &quot;id&quot;: 69,
+          &quot;name&quot;: &quot;Testing&quot;,
+          &quot;color&quot;: &quot;#F0AD4E&quot;,
+          &quot;description&quot;: null
+        },
+        &quot;position&quot;: 1,
+        &quot;list_type&quot;: &quot;label&quot;
+      },
+      {
+        &quot;id&quot;: 2,
+        &quot;label&quot;: {
+          &quot;id&quot;: 70,
+          &quot;name&quot;: &quot;Ready&quot;,
+          &quot;color&quot;: &quot;#FF0000&quot;,
+          &quot;description&quot;: null
+        },
+        &quot;position&quot;: 2,
+        &quot;list_type&quot;: &quot;label&quot;
+      },
+      {
+        &quot;id&quot;: 3,
+        &quot;label&quot;: {
+          &quot;id&quot;: 71,
+          &quot;name&quot;: &quot;Production&quot;,
+          &quot;color&quot;: &quot;#FF5F00&quot;,
+          &quot;description&quot;: null
+        },
+        &quot;position&quot;: 3,
+        &quot;list_type&quot;: &quot;label&quot;
+      }
+    ]
+  }
+]
+</code></pre>
+<h2>Single group epic board</h2>
+<p>Gets a single group epic board.</p>
+<pre><code class="language-plaintext">GET /groups/:id/epic_boards/:board_id
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group accessible by the authenticated user</td>
+</tr>
+<tr>
+<td><code>board_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of an epic board</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/groups/5/epic_boards/1&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">  {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;group epic board&quot;,
+    &quot;hide_backlog_list&quot;: false,
+    &quot;hide_closed_list&quot;: false,
+    &quot;group&quot;: {
+      &quot;id&quot;: 5,
+      &quot;name&quot;: &quot;Documentcloud&quot;,
+      &quot;web_url&quot;: &quot;http://example.com/groups/documentcloud&quot;
+    },
+    &quot;labels&quot;: [
+      {
+        &quot;id&quot;: 1,
+        &quot;title&quot;: &quot;Board Label&quot;,
+        &quot;color&quot;: &quot;#c21e56&quot;,
+        &quot;description&quot;: &quot;label applied to the epic board&quot;,
+        &quot;group_id&quot;: 5,
+        &quot;project_id&quot;: null,
+        &quot;template&quot;: false,
+        &quot;text_color&quot;: &quot;#FFFFFF&quot;,
+        &quot;created_at&quot;: &quot;2023-01-27T10:40:59.738Z&quot;,
+        &quot;updated_at&quot;: &quot;2023-01-27T10:40:59.738Z&quot;
+      }
+    ],
+    &quot;lists&quot; : [
+      {
+        &quot;id&quot; : 1,
+        &quot;label&quot; : {
+          &quot;id&quot;: 69,
+          &quot;name&quot; : &quot;Testing&quot;,
+          &quot;color&quot; : &quot;#F0AD4E&quot;,
+          &quot;description&quot; : null
+        },
+        &quot;position&quot; : 1,
+        &quot;list_type&quot;: &quot;label&quot;
+      },
+      {
+        &quot;id&quot; : 2,
+        &quot;label&quot; : {
+          &quot;id&quot;: 70,
+          &quot;name&quot; : &quot;Ready&quot;,
+          &quot;color&quot; : &quot;#FF0000&quot;,
+          &quot;description&quot; : null
+        },
+        &quot;position&quot; : 2,
+        &quot;list_type&quot;: &quot;label&quot;
+      },
+      {
+        &quot;id&quot; : 3,
+        &quot;label&quot; : {
+          &quot;id&quot;: 71,
+          &quot;name&quot; : &quot;Production&quot;,
+          &quot;color&quot; : &quot;#FF5F00&quot;,
+          &quot;description&quot; : null
+        },
+        &quot;position&quot; : 3,
+        &quot;list_type&quot;: &quot;label&quot;
+      }
+    ]
+  }
+</code></pre>
+<h2>List group epic board lists</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/385904">Introduced</a> in GitLab 15.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Gets a list of the epic board's lists.
+Does not include <code>open</code> and <code>closed</code> lists.</p>
+<pre><code class="language-plaintext">GET /groups/:id/epic_boards/:board_id/lists
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group accessible by the authenticated user</td>
+</tr>
+<tr>
+<td><code>board_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of an epic board</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/groups/5/epic_boards/1/lists&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot; : 1,
+    &quot;label&quot; : {
+      &quot;name&quot; : &quot;Testing&quot;,
+      &quot;color&quot; : &quot;#F0AD4E&quot;,
+      &quot;description&quot; : null
+    },
+    &quot;position&quot; : 1,
+    &quot;list_type&quot; : &quot;label&quot;,
+    &quot;collapsed&quot; : false
+  },
+  {
+    &quot;id&quot; : 2,
+    &quot;label&quot; : {
+      &quot;name&quot; : &quot;Ready&quot;,
+      &quot;color&quot; : &quot;#FF0000&quot;,
+      &quot;description&quot; : null
+    },
+    &quot;position&quot; : 2,
+    &quot;list_type&quot; : &quot;label&quot;,
+    &quot;collapsed&quot; : false
+  },
+  {
+    &quot;id&quot; : 3,
+    &quot;label&quot; : {
+      &quot;name&quot; : &quot;Production&quot;,
+      &quot;color&quot; : &quot;#FF5F00&quot;,
+      &quot;description&quot; : null
+    },
+    &quot;position&quot; : 3,
+    &quot;list_type&quot; : &quot;label&quot;,
+    &quot;collapsed&quot; : false
+  }
+]
+</code></pre>
+<h2>Single group epic board list</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/385904">Introduced</a> in GitLab 15.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Gets a single board list.</p>
+<pre><code class="language-plaintext">GET /groups/:id/epic_boards/:board_id/lists/:list_id
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group accessible by the authenticated user</td>
+</tr>
+<tr>
+<td><code>board_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of an epic board</td>
+</tr>
+<tr>
+<td><code>list_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of an epic board's list</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/groups/5/epic_boards/1/lists/1&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot; : 1,
+  &quot;label&quot; : {
+    &quot;name&quot; : &quot;Testing&quot;,
+    &quot;color&quot; : &quot;#F0AD4E&quot;,
+    &quot;description&quot; : null
+  },
+  &quot;position&quot; : 1,
+  &quot;list_type&quot; : &quot;label&quot;,
+  &quot;collapsed&quot; : false
+}
+</code></pre></code></pre>
+</body>
+</html>

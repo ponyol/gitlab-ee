@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: AI Framework
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Connect AI tools to your GitLab instance with the GitLab MCP server.
+title: GitLab MCP server</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Introduced as an <a href="../../../policy/development_stages_support.md#experiment">experiment</a> in GitLab 18.3 <a href="../../../administration/feature_flags/_index.html">with flags</a> named <code>mcp_server</code> and <code>oauth_dynamic_client_registration</code>. Disabled by default.</li>
+<li>Changed from experiment to <a href="../../../policy/development_stages_support.md#beta">beta</a> in GitLab 18.6. Feature flags <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/556448"><code>mcp_server</code></a> and <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/555942"><code>oauth_dynamic_client_registration</code></a> removed.</li>
+<li>Support for <code>2025-03-26</code> and <code>2025-06-18</code> MCP protocol specifications <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/581459">added</a> in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>To provide feedback on this feature, leave a comment on <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/561564">issue 561564</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>With the GitLab <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) server,
+you can securely connect AI tools and applications to your GitLab instance.
+AI assistants like Claude Desktop, Claude Code, Cursor, and other MCP-compatible tools
+can then access your GitLab data and perform actions on your behalf.</p>
+<p>The GitLab MCP server provides a standardized way for AI tools to:</p>
+<ul>
+<li>Access GitLab project information.</li>
+<li>Retrieve issue and merge request data.</li>
+<li>Interact with GitLab APIs securely.</li>
+<li>Perform GitLab-specific operations through AI assistants.</li>
+</ul>
+<p>The GitLab MCP server supports <a href="https://tools.ietf.org/html/rfc7591">OAuth 2.0 Dynamic Client Registration</a>,
+which enables AI tools to register themselves with your GitLab instance. When an AI tool connects to
+your GitLab MCP server for the first time, it:</p>
+<ol>
+<li>Registers itself as an OAuth application.</li>
+<li>Requests authorization to access your GitLab data.</li>
+<li>Receives an access token for secure API access.</li>
+</ol>
+<p>For a click-through demo, see <a href="https://gitlab.navattic.com/gitlab-mcp-server">GitLab Duo Agent Platform - GitLab MCP server</a>.</p>
+<!-- Demo published on 2025-09-11 -->
+
+<h2>Prerequisites</h2>
+<ul>
+<li>Have <a href="../../gitlab_duo/turn_on_off.md#turn-gitlab-duo-core-on-or-off">GitLab Duo Core</a> and
+  <a href="../../gitlab_duo/turn_on_off.md#turn-on-beta-and-experimental-features">beta and experimental features</a> turned on.</li>
+</ul>
+<h2>Connect a client to the GitLab MCP server</h2>
+<p>The GitLab MCP server supports two transport types:</p>
+<ul>
+<li><strong>HTTP transport (recommended)</strong>: Direct connection without additional dependencies.</li>
+<li><strong>stdio transport with <code>mcp-remote</code></strong>: Connection through a proxy (requires Node.js).</li>
+</ul>
+<p>Common AI tools support the JSON configuration format for the <code>mcpServers</code> key
+and provide different methods to configure the GitLab MCP server settings.</p>
+<h3>HTTP transport (recommended)</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/577575">Introduced</a> in GitLab 18.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To configure the GitLab MCP server by using HTTP transport, use this format:</p>
+<ul>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:</li>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;GitLab&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://&lt;gitlab.example.com&gt;/api/v4/mcp&quot;
+    }
+  }
+}
+</code></pre>
+<h3>stdio transport with <code>mcp-remote</code></h3>
+<p>Prerequisites:</p>
+<ul>
+<li>Install Node.js version 20 or later.</li>
+</ul>
+<p>To configure the GitLab MCP server by using stdio transport, use this format:</p>
+<ul>
+<li>For the <code>"command":</code> parameter, if <code>npx</code> is installed locally instead of globally, provide the full path to <code>npx</code>.</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:</li>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;GitLab&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [
+        &quot;mcp-remote&quot;,
+        &quot;https://&lt;gitlab.example.com&gt;/api/v4/mcp&quot;
+      ]
+    }
+  }
+}
+</code></pre>
+<h2>Connect Cursor to the GitLab MCP server</h2>
+<p>Cursor uses HTTP transport for direct connection without additional dependencies.
+To configure the GitLab MCP server in Cursor:</p>
+<ol>
+<li>In Cursor, go to <strong>Settings</strong> &gt; <strong>Cursor Settings</strong> &gt; <strong>Tools &amp; MCP</strong>.</li>
+<li>Under <strong>Installed MCP Servers</strong>, select <strong>New MCP Server</strong>.</li>
+<li>Add this definition to the <code>mcpServers</code> key in the opened <code>mcp.json</code> file:</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:<ul>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+</li>
+</ol>
+<p><code>json
+   {
+     "mcpServers": {
+       "GitLab": {
+          "type": "http",
+          "url": "https://&lt;gitlab.example.com&gt;/api/v4/mcp"
+       }
+     }
+   }</code></p>
+<ol>
+<li>Save the file, and wait for your browser to open the OAuth authorization page.</li>
+</ol>
+<p>If this does not happen, close and restart Cursor.
+1. In your browser, review and approve the authorization request.</p>
+<p>You can now start a new chat and ask a question depending on the <a href="mcp_server_tools.html">available tools</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You're responsible for guarding against prompt injection when you use these tools.
+Exercise extreme caution or use MCP tools only on GitLab objects you trust.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Connect Claude Code to the GitLab MCP server</h2>
+<p>Claude Code uses HTTP transport for direct connection without additional dependencies.
+To configure the GitLab MCP server in Claude Code:</p>
+<ol>
+<li>In your terminal, add the GitLab MCP server with the CLI:</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:<ul>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+</li>
+</ol>
+<p><code>shell
+   claude mcp add --transport http GitLab https://&lt;gitlab.example.com&gt;/api/v4/mcp</code></p>
+<ol>
+<li>Start Claude Code:</li>
+</ol>
+<p><code>shell
+   claude</code></p>
+<ol>
+<li>Authenticate with the GitLab MCP server:</li>
+<li>In the chat, type <code>/mcp</code>.</li>
+<li>From the list, select your GitLab server.</li>
+<li>
+<p>In your browser, review and approve the authorization request.</p>
+</li>
+<li>
+<p>Optional. To verify the connection, type <code>/mcp</code> again.
+   Your GitLab server should appear as connected.</p>
+</li>
+</ol>
+<p>You can now start a new chat and ask a question depending on the <a href="mcp_server_tools.html">available tools</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You're responsible for guarding against prompt injection when you use these tools.
+Exercise extreme caution or use MCP tools only on GitLab objects you trust.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Connect Claude Desktop to the GitLab MCP server</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>Install Node.js version 20 or later.</li>
+<li>Have Node.js available globally in the <code>PATH</code> environment variable (<code>which -a node</code>).</li>
+</ul>
+<p>To configure the GitLab MCP server in Claude Desktop:</p>
+<ol>
+<li>Open Claude Desktop.</li>
+<li>Edit the configuration file. You can do either of the following:</li>
+<li>In Claude Desktop, go to <strong>Settings</strong> &gt; <strong>Developer</strong> &gt; <strong>Edit Config</strong>.</li>
+<li>On macOS, open the <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> file.</li>
+<li>Add this entry for the GitLab MCP server, editing as needed:</li>
+<li>For the <code>"command":</code> parameter, if <code>npx</code> is installed locally instead of globally, provide the full path to <code>npx</code>.</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:<ul>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>GitLab.com</code>.</li>
+</ul>
+</li>
+</ol>
+<p><code>json
+   {
+     "mcpServers": {
+       "GitLab": {
+         "command": "npx",
+         "args": [
+           "-y",
+           "mcp-remote",
+           "https://&lt;gitlab.example.com&gt;/api/v4/mcp"
+         ]
+       }
+     }
+   }</code></p>
+<ol>
+<li>Save the configuration and restart Claude Desktop.</li>
+<li>On first connect, Claude Desktop opens a browser window for OAuth. Review and approve the request.</li>
+<li>Go to <strong>Settings</strong> &gt; <strong>Developer</strong> and verify the new GitLab MCP configuration.</li>
+<li>Go to <strong>Settings</strong> &gt; <strong>Connectors</strong> and inspect the connected GitLab MCP server.</li>
+</ol>
+<p>You can now start a new chat and ask a question depending on the <a href="mcp_server_tools.html">available tools</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You're responsible for guarding against prompt injection when you use these tools.
+Exercise extreme caution or use MCP tools only on GitLab objects you trust.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Connect Gemini Code Assist and Gemini CLI to the GitLab MCP server</h2>
+<p>Gemini Code Assist and Gemini CLI use HTTP transport
+for direct connection without additional dependencies.
+To configure the GitLab MCP server in Gemini Code Assist or Gemini CLI:</p>
+<ol>
+<li>Edit <code>~/.gemini/settings.json</code> and add the GitLab MCP server.</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:<ul>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+</li>
+</ol>
+<p><code>json
+   {
+     "mcpServers": {
+       "GitLab": {
+         "httpUrl": "https://&lt;gitlab.example.com&gt;/api/v4/mcp"
+       }
+     }
+   }</code></p>
+<ol>
+<li>In Gemini Code Assist or Gemini CLI, run the <code>/mcp auth GitLab</code> command.</li>
+</ol>
+<p>The OAuth authorization page should appear.
+   Otherwise, restart Gemini Code Assist or Gemini CLI.</p>
+<ol>
+<li>In your browser, review and approve the authorization request.</li>
+</ol>
+<p>You can now start a new chat and ask a question depending on the <a href="mcp_server_tools.html">available tools</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You're responsible for guarding against prompt injection when you use these tools.
+Exercise extreme caution or use MCP tools only on GitLab objects you trust.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Connect GitHub Copilot in VS Code to the GitLab MCP server</h2>
+<p>GitHub Copilot uses HTTP transport for direct connection without additional dependencies.
+To configure the GitLab MCP server in GitHub Copilot in VS Code:</p>
+<ol>
+<li>In VS Code, open the Command Palette:</li>
+<li>On macOS, press <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.</li>
+<li>On Windows or Linux, press <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.</li>
+<li>Type <code>MCP: Add Server</code> and press <kbd>Enter</kbd>.</li>
+<li>For the server type, select <strong>HTTP</strong>.</li>
+<li>For the server URL, enter <code>https://&lt;gitlab.example.com&gt;/api/v4/mcp</code>.</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:<ul>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+</li>
+<li>For the server ID, enter <code>GitLab</code>.</li>
+<li>Save the configuration globally or in the <code>vscode/mcp.json</code> workspace.</li>
+</ol>
+<p>The OAuth authorization page should appear.
+   Otherwise, open the Command Palette and search for <strong>MCP: List Servers</strong>
+   to check the status or restart the server.</p>
+<ol>
+<li>In your browser, review and approve the authorization request.</li>
+</ol>
+<p>You can now start a new chat and ask a question depending on the <a href="mcp_server_tools.html">available tools</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You're responsible for guarding against prompt injection when you use these tools.
+Exercise extreme caution or use MCP tools only on GitLab objects you trust.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Connect Continue in VS Code to the GitLab MCP server</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>Install Node.js version 20 or later.</li>
+<li>Have Node.js available globally in the <code>PATH</code> environment variable (<code>which -a node</code>).</li>
+</ul>
+<p>To configure the GitLab MCP server in Continue in VS Code:</p>
+<ol>
+<li>In VS Code, in the Activity Bar, select the Continue extension.</li>
+<li>Open the settings and select <strong>Tools</strong>.</li>
+<li>Next to <strong>MCP Servers</strong>, add a new server.</li>
+<li>Edit the configuration file <code>.continue/mcpServers/new-mcp-server.yaml</code>:</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:<ul>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+</li>
+</ol>
+<p><code>yaml
+   name: GitLab MCP server
+   version: 0.0.1
+   schema: v1
+   mcpServers:
+     - name: GitLab MCP server
+       type: stdio
+       command: npx
+       args:
+         - mcp-remote
+         - https://&lt;gitlab.example.com&gt;/api/v4/mcp</code></p>
+<ol>
+<li>Save the configuration.</li>
+</ol>
+<p>The OAuth authorization page should appear.</p>
+<ol>
+<li>In your browser, review and approve the authorization request.</li>
+</ol>
+<p>You can now start a new chat and ask a question depending on the <a href="mcp_server_tools.html">available tools</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You're responsible for guarding against prompt injection when you use these tools.
+Exercise extreme caution or use MCP tools only on GitLab objects you trust.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Connect OpenAI Codex to the GitLab MCP server</h2>
+<p>OpenAI Codex uses HTTP transport for direct connection without additional dependencies.
+To configure the GitLab MCP server in OpenAI Codex:</p>
+<ol>
+<li>In your terminal, add the GitLab MCP server with the CLI:</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:<ul>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+</li>
+</ol>
+<p><code>shell
+  codex mcp add --url "https://&lt;gitlab.example.com&gt;/api/v4/mcp" GitLab</code></p>
+<ol>
+<li>Edit <code>~/.codex/config.toml</code> and, in the <code>[features]</code> section,
+   enable the <code>rmcp_client</code> feature flag.</li>
+</ol>
+<p>```toml
+   [features]
+   "rmcp_client" = true</p>
+<p>[mcp_servers.GitLab]
+   url = "https://<gitlab.example.com>/api/v4/mcp"
+   ```</p>
+<ol>
+<li>Run the login flow and authenticate with the GitLab instance.</li>
+</ol>
+<p><code>shell
+   codex mcp login GitLab</code></p>
+<ol>
+<li>In your browser, review and approve the authorization request.</li>
+</ol>
+<p>You can now start a new chat and ask a question depending on the <a href="mcp_server_tools.html">available tools</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You're responsible for guarding against prompt injection when you use these tools.
+Exercise extreme caution or use MCP tools only on GitLab objects you trust.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Connect Zed to the GitLab MCP server</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>Install Node.js version 20 or later.</li>
+<li>Have Node.js available globally in the <code>PATH</code> environment variable (<code>which -a node</code>).</li>
+</ul>
+<p>To configure the GitLab MCP server in Zed:</p>
+<ol>
+<li>In Zed, open the Command Palette:</li>
+<li>On macOS, press <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.</li>
+<li>On Windows or Linux, press <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.</li>
+<li>Type <code>agent: open settings</code> and press <kbd>Enter</kbd>.</li>
+<li>In the <strong>Model Context Protocol (MCP) Servers</strong> section, select <strong>Add Server</strong>.</li>
+<li>For the server URL in <code>args</code>, use <code>https://&lt;gitlab.example.com&gt;/api/v4/mcp</code>.</li>
+<li>Replace <code>&lt;gitlab.example.com&gt;</code> with:<ul>
+<li>On GitLab Self-Managed, your GitLab instance URL.</li>
+<li>On GitLab.com, <code>gitlab.com</code>.</li>
+</ul>
+</li>
+</ol>
+<p><code>json
+   {
+     /// The name of your MCP server
+     "GitLab": {
+       /// The command which runs the MCP server
+       "command": "npx",
+       /// The arguments to pass to the MCP server
+       "args": ["-y","mcp-remote@latest","https://&lt;gitlab.example.com&gt;/api/v4/mcp"],
+       /// The environment variables to set
+       "env": {}
+     }
+   }</code></p>
+<ol>
+<li>Save the configuration.</li>
+</ol>
+<p>The OAuth authorization page should appear.
+   If not, turn the <strong>GitLab</strong> toggle off and on again.</p>
+<ol>
+<li>In your browser, review and approve the authorization request.</li>
+</ol>
+<p>You can now start a new chat and ask a question depending on the <a href="mcp_server_tools.html">available tools</a>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You're responsible for guarding against prompt injection when you use these tools.
+Exercise extreme caution or use MCP tools only on GitLab objects you trust.</p>
+<p>{{&lt; /alert &gt;}}</p></code></pre>
+</body>
+</html>

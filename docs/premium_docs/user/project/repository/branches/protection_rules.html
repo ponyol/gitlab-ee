@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Rule behaviors</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: How protection rules work with protected branches in GitLab, especially in complex scenarios.
+title: Protection rules and permissions</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Protection rules control access to branches and determine what happens when multiple
+rules apply to the same branch.
+They help you implement the right security measures for your
+repository branches. These rules cover:</p>
+<ul>
+<li>Permission levels, precedence, and rule conflicts.</li>
+<li>Force push permissions across multiple matching rules.</li>
+<li>Code Owner approvals.</li>
+<li>Protection settings between groups and projects.</li>
+</ul>
+<h2>Rule behaviors</h2>
+<p>When a branch matches multiple protection rules, these behaviors apply:</p>
+<ul>
+<li>Group rules apply to all projects in a group and cannot be modified from project settings.
+  For more information, see <a href="#rules-across-groups-and-projects">Rules across groups and projects</a>.</li>
+<li>When a branch matches multiple rules, the most permissive rule applies. However,
+  <a href="#code-owner-approval">code owner approval</a> uses the most restrictive rule.</li>
+<li>Exact branch names like <code>main</code> do not override wildcard patterns like <code>m*</code>.</li>
+</ul>
+<h2>Push and merge permissions</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Branch push permission <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/118532">changed</a> to require GitLab administrators to also have the <strong>Allowed</strong> permission in GitLab 16.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When a branch is protected, the default behavior enforces these restrictions:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Who can do it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Protect a branch</td>
+<td style="text-align: left;">At least the Maintainer role.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Push to the branch</td>
+<td style="text-align: left;">Anyone with <strong>Allowed</strong> permission. (1)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Force push to the branch</td>
+<td style="text-align: left;">No one.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Delete the branch</td>
+<td style="text-align: left;">No one. (2)</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Users with the Developer role can create a project in a group, but might not be allowed to
+   initially push to the <a href="default.html">default branch</a>.</li>
+<li>No one can delete a protected branch using Git commands, however, users with at least Maintainer
+   role can <a href="protected.md#delete-protected-branches">delete a protected branch</a> from the UI or API.</li>
+</ol>
+<p>When you configure these permissions, selecting a role grants access to users with that role and all
+higher roles. For example:</p>
+<ul>
+<li>Selecting <strong>Maintainers</strong> grants access to users with the Maintainer and Owner roles.</li>
+<li>Selecting <strong>Developers + Maintainers</strong> grants access to users with the Developer, Maintainer, and Owner roles.</li>
+</ul>
+<p>This behavior ensures that users with higher privileges retain access available to users with lower
+privileges.</p>
+<h2>Force push permissions</h2>
+<p>Force push permissions follow the same most permissive rule applies logic. For example, consider
+these rules, which include <a href="protected.md#use-wildcard-rules">wildcards</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Branch name pattern</th>
+<th>Allow force push</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>v1.x</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>v1.*</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>v*</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>A branch named <code>v1.x</code> matches all three branch name patterns: <code>v1.x</code>, <code>v1.*</code>, and <code>v*</code>.
+As the most permissive option determines the behavior, the resulting permissions for branch <code>v1.x</code> are:</p>
+<ul>
+<li><strong>Allow force push</strong>: Of the three settings, <code>Yes</code> is most permissive,
+  and controls branch behavior as a result. Even though the branch also matched <code>v1.x</code> and <code>v*</code>
+  (which each have stricter permissions), any user that can push to this branch can also force push.</li>
+</ul>
+<h2>Code owner approval</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Unlike push and merge permissions, and force push permissions, code owner approval uses the most
+restrictive rule. If a branch is protected by multiple rules, code owner approval is required if any of
+the applicable rules have <strong>Required approval from code owners</strong> enabled. For more information, see
+<a href="protected.md#require-code-owner-approval">require code owner approval</a>.</p>
+<p>For example, consider these rules:</p>
+<table>
+<thead>
+<tr>
+<th>Branch name pattern</th>
+<th>Code owner approval required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>v1.x</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>v1.*</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>v*</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>A branch named <code>v1.x</code> matches all three branch name patterns: <code>v1.x</code>, <code>v1.*</code>, and <code>v*</code>.
+Because at least one rule (<code>v1.x</code>) requires code owner approval, all merge requests to this branch
+require approval by a Code Owner before they can be merged.</p>
+<h2>Rules across groups and projects</h2>
+<p>Branch protection rules can be set in both groups and projects:</p>
+<ul>
+<li>Group rules apply to all projects in a group and cannot be modified from project settings.</li>
+<li>Project rules apply only to that specific project.</li>
+</ul>
+<p>When both group and project rules exist that match a branch:</p>
+<ul>
+<li>All matching rules are evaluated together.</li>
+<li>The most permissive rule applies for most settings.</li>
+<li>For <a href="#code-owner-approval">code owner approval</a>, the most restrictive rule applies.</li>
+</ul>
+<p>You cannot edit or remove group rules from project settings, but you can add
+additional project rules for the same branch. For example:</p>
+<ul>
+<li>A group rule for <code>main</code> disallows force push.</li>
+<li>You can add a project rule for <code>main</code> that allows force push.</li>
+<li>Both rules exist, but the more permissive project rule takes effect for force push settings.</li>
+</ul>
+<h2>Multiple branch rule examples</h2>
+<p>The following examples demonstrate how different rules can affect branch protection.</p>
+<h3>Allowed to merge</h3>
+<p>An example of how an exact branch name does not override a more permissive wildcard pattern.</p>
+<table>
+<thead>
+<tr>
+<th>Branch pattern</th>
+<th>Allowed to merge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>release-v1.0</code></td>
+<td>No one</td>
+</tr>
+<tr>
+<td><code>release*</code></td>
+<td>Maintainer</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>Developer + Maintainer</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Branch <code>release-v1.0</code> matches all three patterns. The most permissive rule applies:</li>
+<li><strong>Allowed to merge</strong>: Developer + Maintainer can merge (from <code>*</code> rule).</li>
+</ul>
+<h3>Allowed to push and merge</h3>
+<p>An example of how multiple branch rules apply to different branch names.</p>
+<table>
+<thead>
+<tr>
+<th>Branch pattern</th>
+<th>Allowed to merge</th>
+<th>Allowed to push and merge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>main</code></td>
+<td>Maintainer</td>
+<td>No one</td>
+</tr>
+<tr>
+<td><code>m*</code></td>
+<td>Developer + Maintainer</td>
+<td>Developer + Maintainer</td>
+</tr>
+<tr>
+<td><code>r*</code></td>
+<td>No one</td>
+<td>No one</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Branch <code>main</code> matches two patterns (<code>main</code> and <code>m*</code>). The most permissive rule applies:</li>
+<li><strong>Allowed to merge</strong>: Developer + Maintainer can merge (from <code>m*</code> rule).</li>
+<li><strong>Allowed to push and merge</strong>: Developer + Maintainer can push (from <code>m*</code> rule).</li>
+<li>Branch <code>release-v1.0</code> matches one pattern:</li>
+<li><strong>Allowed to merge</strong>: No one can merge (from <code>r*</code> rule).</li>
+<li><strong>Allowed to push and merge</strong>: No one can push (from <code>r*</code> rule).</li>
+</ul>
+<h3>Code owner requirements</h3>
+<p>Code owner approval works differently from other branch protection settings. When multiple rules
+match, the most restrictive rule applies instead of the most permissive.</p>
+<table>
+<thead>
+<tr>
+<th>Branch pattern</th>
+<th>Code owner approval required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>production</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>prod*</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>p*</code></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Branch <code>production</code> matches all three patterns. The most restrictive rule applies:</li>
+<li><strong>Code owner approval</strong>: Required (from <code>production</code> and <code>p*</code> rules).</li>
+<li>Branch <code>product-v1.0</code> matches two patterns (<code>prod*</code> and <code>p*</code>). The most restrictive rule applies:</li>
+<li><strong>Code owner approval</strong>: Required (from <code>p*</code> rule).</li>
+</ul>
+<h3>Ensure strict protection</h3>
+<p>To ensure strict protection that cannot be overridden by more permissive patterns, configure all
+matching patterns with the same restrictive settings.</p>
+<table>
+<thead>
+<tr>
+<th>Branch pattern</th>
+<th>Allowed to merge</th>
+<th>Allowed to push and merge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>production</code></td>
+<td>Maintainer</td>
+<td>No one</td>
+</tr>
+<tr>
+<td><code>prod*</code></td>
+<td>Maintainer</td>
+<td>No one</td>
+</tr>
+<tr>
+<td><code>p*</code></td>
+<td>Maintainer</td>
+<td>No one</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>Maintainer</td>
+<td>No one</td>
+</tr>
+</tbody>
+</table>
+<p>Now branch <code>production</code> has restrictive push permissions because all matching rules specify
+<strong>No one</strong> can push.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="protected.html">Protected branches</a></li>
+<li><a href="../../../../api/protected_branches.html">Protected branches API</a></li>
+<li><a href="branch_rules.html">Branch rules</a></li>
+<li><a href="../../codeowners/_index.md#code-owners-and-protected-branches">Code Owners</a></li>
+</ul></code></pre>
+</body>
+</html>

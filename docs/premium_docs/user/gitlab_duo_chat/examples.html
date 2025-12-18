@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Ask about GitLab</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Duo Chat
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Ask GitLab Duo Chat</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Model information" &gt;}}</p>
+<p>Unless stated otherwise, the default LLM for:</p>
+<ul>
+<li>Chat (Agentic) is Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-haiku-4-5">Claude Haiku 4.5</a>.</li>
+<li>Chat (Classic) is Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-4-5">Claude Sonnet 4.5</a>.</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Updated default LLM to Claude Sonnet 4.5 for Chat (Classic) and Chat (Agentic) in GitLab 18.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/19998">Updated default LLM</a> for Chat (Agentic) to Claude Haiku 4.5 in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab Duo Chat can help you perform a variety of tasks, including:</p>
+<ul>
+<li>Get explanations of code, errors, and GitLab features.</li>
+<li>Generate or refactor code, write tests, and fix issues.</li>
+<li>Create CI/CD configurations and troubleshoot job failures.</li>
+<li>Summarize issues, epics, and merge requests.</li>
+<li>Resolve security vulnerabilities.</li>
+</ul>
+<p>The examples on this page, including the <a href="#gitlab-duo-chat-slash-commands">slash commands</a>, are deliberately generic.
+You might receive more useful responses from Chat by asking questions that are specific to your current goal.
+For example, <code>How does the clean_missing_data function in data_cleaning.py decide which rows to drop?</code>.</p>
+<p>For additional practical examples, see the <a href="../gitlab_duo/use_cases.html">GitLab Duo use cases</a>
+and <a href="example_prompts.html">prompt examples</a>.</p>
+<h2>Ask about GitLab</h2>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/117695">Introduced</a> for GitLab.com in GitLab 16.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/451215">Introduced</a> ability to ask doc-related questions on GitLab Self-Managed in GitLab 17.0 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>ai_gateway_docs_search</code>. Enabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/154876">Generally available and feature flag removed</a> in GitLab 17.1.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask questions about how GitLab works. Things like:</p>
+<ul>
+<li><code>Explain the concept of a 'fork' in a concise manner.</code></li>
+<li><code>Provide step-by-step instructions on how to reset a user's password.</code></li>
+</ul>
+<p>GitLab Duo Chat uses the GitLab documentation from the <a href="https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc">GitLab repository</a> as source.</p>
+<p>To keep Chat up to date with the documentation, its knowledge base is updated daily.</p>
+<ul>
+<li>On GitLab.com, the most recent version of the documentation is used.</li>
+<li>On GitLab Self-Managed and GitLab Dedicated, the documentation for the version of the instance is used.</li>
+</ul>
+<h2>Ask about a specific issue</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/122235">Introduced</a> for GitLab.com in GitLab 16.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/122235">Introduced</a> for GitLab Self-Managed and GitLab Dedicated in GitLab 16.8.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask about a specific GitLab issue. For example:</p>
+<ul>
+<li><code>Generate a summary for the issue identified via this link: &lt;link to your issue&gt;</code></li>
+<li>When you are viewing an issue in GitLab, you can ask <code>Generate a concise summary of the current issue.</code></li>
+<li><code>How can I improve the description of &lt;link to your issue&gt; so that readers understand the value and problems to be solved?</code></li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If the issue contains a large amount of text (more than 40,000 words), GitLab Duo Chat might not be able to consider every word. The AI model has a limit to the amount of input it can process at one time.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p><i class="fa-youtube-play" aria-hidden="true"></i>
+For tips on how GitLab Duo Chat can improve your productivity with issues and epics, see <a href="https://youtu.be/RJezT5_V6dI">Boost your productivity with GitLab Duo Chat</a>.</p>
+<!-- Video published on 2024-04-17 -->
+
+<h2>Ask about a specific epic</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/128487">Introduced</a> for GitLab.com in GitLab 16.3.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/128487">Introduced</a> for GitLab Self-Managed and GitLab Dedicated in GitLab 16.8.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask about a specific GitLab epic. For example:</p>
+<ul>
+<li><code>Generate a summary for the epic identified via this link: &lt;link to your epic&gt;</code></li>
+<li>When you are viewing an epic in GitLab, you can ask <code>Generate a concise summary of the opened epic.</code></li>
+<li><code>What are the unique use cases raised by commenters in &lt;link to your epic&gt;?</code></li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If the epic contains a large amount of text (more than 40,000 words), GitLab Duo Chat might not be able to consider every word. The AI model has a limit to the amount of input it can process at one time.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Ask about a specific merge request</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors: GitLab UI</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/464587">Introduced</a> in GitLab 17.5.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask GitLab about the merge request you're viewing. You can ask about:</p>
+<ul>
+<li>The title or description.</li>
+<li>Comments and threads.</li>
+<li>The content on the <strong>Changes</strong> tab.</li>
+<li>Metadata, like labels, source branch, author, milestone, and more.</li>
+</ul>
+<p>While in the merge request, open Chat and type your question. For example:</p>
+<ul>
+<li><code>Why was the .vue file changed?</code></li>
+<li><code>What do the reviewers say about this merge request?</code></li>
+<li><code>How can this merge request be improved?</code></li>
+<li><code>Which files and changes should I review first?</code></li>
+</ul>
+<h2>Ask about a specific commit</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors: GitLab UI</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/468460">Introduced</a> in GitLab 17.6.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask about a specific GitLab commit. For example:</p>
+<ul>
+<li><code>Generate a summary for the commit identified with this link: &lt;link to your commit&gt;</code></li>
+<li><code>How can I improve the description of this commit?</code></li>
+<li>When you are viewing a commit in GitLab, you can ask <code>Generate a summary of the current commit.</code></li>
+</ul>
+<h2>Ask about a specific pipeline job</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors: GitLab UI</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/468461">Introduced</a> in GitLab 17.6.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask about a specific GitLab pipeline job. For example:</p>
+<ul>
+<li><code>Generate a summary for the pipeline job identified via this link: &lt;link to your pipeline job&gt;</code></li>
+<li><code>Can you suggest ways to fix this failed pipeline job?</code></li>
+<li><code>What are the main steps executed in this pipeline job?</code></li>
+<li>When you are viewing a pipeline job in GitLab, you can ask <code>Generate a summary of the current pipeline job.</code></li>
+</ul>
+<h2>Ask about a specific work item</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/194302">Introduced</a> in GitLab 18.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask about a specific GitLab work item. For example:</p>
+<ul>
+<li><code>Generate a summary for the work item identified via this link: &lt;link to your work item&gt;</code></li>
+<li>When you are viewing an work item in GitLab, you can ask <code>Generate a concise summary of the current work item.</code></li>
+<li><code>How can I improve the description of &lt;link to your work item&gt; so that readers understand the value and problems to be solved?</code></li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If the work item contains a large amount of text (more than 40,000 words), GitLab Duo Chat might not be able to consider every word. The AI model has a limit to the amount of input it can process at one time.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Explain selected code</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise, GitLab Duo with Amazon Q</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor and model information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+<li>LLM for Amazon Q: Amazon Q Developer</li>
+<li>Available on <a href="../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429915">Introduced</a> for GitLab.com in GitLab 16.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429915">Introduced</a> for GitLab Self-Managed and GitLab Dedicated in GitLab 16.8.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask GitLab Duo Chat to explain selected code:</p>
+<ol>
+<li>Select some code in your IDE.</li>
+<li>In GitLab Duo Chat, type <code>/explain</code>.</li>
+</ol>
+<p><img alt="Selecting code and asking GitLab Duo Chat to explain using the /explain slash command." src="img/code_selection_duo_chat_v17_4.png" /></p>
+<p>You can also add additional instructions to be considered. For example:</p>
+<ul>
+<li><code>/explain the performance</code></li>
+<li><code>/explain focus on the algorithm</code></li>
+<li><code>/explain the performance gains or losses using this code</code></li>
+<li><code>/explain the object inheritance</code> (classes, object-oriented)</li>
+<li><code>/explain why a static variable is used here</code> (C++)</li>
+<li><code>/explain how this function would cause a segmentation fault</code> (C)</li>
+<li><code>/explain how concurrency works in this context</code> (Go)</li>
+<li><code>/explain how the request reaches the client</code> (REST API, database)</li>
+</ul>
+<p>For more information, see:</p>
+<ul>
+<li><a href="_index.md#use-gitlab-duo-chat-in-vs-code">Use GitLab Duo Chat in VS Code</a>.</li>
+<li><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://youtu.be/FjoAmt5eeXA?si=SLv9Mv8eSUAVwW5Z">Application modernization with GitLab Duo (C++ to Java)</a>.
+  <!-- Video published on 2025-03-18 -->
+</li>
+</ul>
+<p>In the GitLab UI, you can also explain code in:</p>
+<ul>
+<li>A <a href="../project/repository/code_explain.html">file</a>.</li>
+<li>A <a href="../project/merge_requests/changes.md#explain-code-in-a-merge-request">merge request</a>.</li>
+</ul>
+<h2>Ask about or generate code</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/122235">Introduced</a> for GitLab.com in GitLab 16.1.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/122235">Introduced</a> for GitLab Self-Managed and GitLab Dedicated in GitLab 16.8.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask GitLab Duo Chat questions about code by pasting that code into
+the Chat window. For example:</p>
+<pre><code class="language-plaintext">Provide a clear explanation of this Ruby code: def sum(a, b) a + b end.
+Describe what this code does and how it works.
+</code></pre>
+<p>You can also ask Chat to generate code. For example:</p>
+<ul>
+<li><code>Write a Ruby function that prints 'Hello, World!' when called.</code></li>
+<li><code>Develop a JavaScript program that simulates a two-player Tic-Tac-Toe game. Provide both game logic and user interface, if applicable.</code></li>
+<li><code>Create a regular expression for parsing IPv4 and IPv6 addresses in Python.</code></li>
+<li><code>Generate code for parsing a syslog log file in Java. Use regular expressions when possible, and store the results in a hash map.</code></li>
+<li><code>Create a product-consumer example with threads and shared memory in C++. Use atomic locks when possible.</code></li>
+<li><code>Generate Rust code for high performance gRPC calls. Provide a source code example for a server and client.</code></li>
+</ul>
+<h2>Ask follow-up questions</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask follow-up questions to delve deeper into the topic or task at hand.
+This helps you get more detailed and precise responses tailored to your specific needs,
+whether it's for further clarification, elaboration, or additional assistance.</p>
+<p>A follow-up to the question <code>Write a Ruby function that prints 'Hello, World!' when called</code> could be:</p>
+<ul>
+<li><code>Can you also explain how I can call and execute this Ruby function in a typical Ruby environment, such as the command line?</code></li>
+</ul>
+<p>A follow-up to the question <code>How to start a C# project?</code> could be:</p>
+<ul>
+<li><code>Can you also explain how to add a .gitignore and .gitlab-ci.yml file for C#?</code></li>
+</ul>
+<h2>Ask about errors</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, the Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Programming languages that require compiling the source code may throw cryptic error messages. Similarly, a script or a web application could throw a stack trace. You can ask GitLab Duo Chat by prefixing the copied error message with, for example, <code>Explain this error message:</code>. Add the specific context, like the programming language.</p>
+<ul>
+<li><code>Explain this error message in Java: Int and system cannot be resolved to a type</code></li>
+<li><code>Explain when this C function would cause a segmentation fault: sqlite3_prepare_v2()</code></li>
+<li><code>Explain what would cause this error in Python: ValueError: invalid literal for int()</code></li>
+<li><code>Why is "this" undefined in VueJS? Provide common error cases, and explain how to avoid them.</code></li>
+<li><code>How to debug a Ruby on Rails stacktrace? Share common strategies and an example exception.</code></li>
+</ul>
+<h2>Ask about specific files in the IDE</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/477258">Introduced</a> in GitLab 17.7 <a href="../../administration/feature_flags/_index.html">with flags</a> named <code>duo_additional_context</code> and <code>duo_include_context_file</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15183">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 17.9.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/188613">Generally available</a> in GitLab 18.0. All feature flags removed.</li>
+<li>Changed to include the GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Add repository files to your GitLab Duo Chat conversations in VS Code or JetBrains IDEs
+by typing <code>/include</code> and choosing the files.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>The files must be part of a repository.</li>
+<li>The files must be text-based. Binary files, like PDFs or images, are not supported.</li>
+</ul>
+<p>To do this:</p>
+<ol>
+<li>In your IDE, in GitLab Duo Chat, type <code>/include</code>.</li>
+<li>To add files, you can either:</li>
+<li>Select the files from the list.</li>
+<li>Enter the file path.</li>
+</ol>
+<p>For example, if you are developing an e-commerce app, you can add the <code>cart_service.py</code> and <code>checkout_flow.js</code> files to Chat's context and ask:</p>
+<ul>
+<li><code>How does checkout_flow.js interact with cart_service.py? Generate a sequence diagram using Mermaid.</code></li>
+<li><code>Can you extend the checkout process by showing products related to the ones in the user's cart? I want to move the checkout logic to the backend before proceeding. Generate the Python backend code and change the frontend code to work with the new backend.</code></li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>You cannot use <a href="_index.md#in-an-editor-window">Quick Chat</a> to add files or ask questions about files added for Chat's context.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Refactor code in the IDE</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise, GitLab Duo with Amazon Q</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor and model information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+<li>LLM for Amazon Q: Amazon Q Developer</li>
+<li>Available on <a href="../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429915">Introduced</a> for GitLab.com in GitLab 16.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429915">Introduced</a> for GitLab Self-Managed and GitLab Dedicated in GitLab 16.8.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask GitLab Duo Chat to refactor selected code:</p>
+<ol>
+<li>Select some code in your IDE.</li>
+<li>In GitLab Duo Chat, type <code>/refactor</code>.</li>
+</ol>
+<p>You can include additional instructions to be considered. For example:</p>
+<ul>
+<li>Use a specific coding pattern, for example <code>/refactor with ActiveRecord</code> or <code>/refactor into a class providing static functions</code>.</li>
+<li>Use a specific library, for example <code>/refactor using mysql</code>.</li>
+<li>Use a specific function/algorithm, for example <code>/refactor into a stringstream with multiple lines</code> in C++.</li>
+<li>Refactor to a different programming language, for example <code>/refactor to TypeScript</code>.</li>
+<li>Focus on performance, for example <code>/refactor improving performance</code>.</li>
+<li>Focus on potential vulnerabilities, for example <code>/refactor avoiding memory leaks and exploits</code>.</li>
+</ul>
+<p><code>/refactor</code> uses <a href="../project/repository/code_suggestions/repository_xray.html">Repository X-Ray</a> to deliver more accurate, context-aware suggestions.</p>
+<p>For more information, see:</p>
+<ul>
+<li>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://youtu.be/FjoAmt5eeXA?si=SLv9Mv8eSUAVwW5Z">Application modernization with GitLab Duo (C++ to Java)</a>.
+  <!-- Video published on 2025-03-18 --></p>
+</li>
+<li>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://youtu.be/oxziu7_mWVk?si=fS2JUO-8doARS169">Watch an overview</a></p>
+</li>
+</ul>
+<h2>Fix code in the IDE</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise, GitLab Duo with Amazon Q</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor and model information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+<li>LLM for Amazon Q: Amazon Q Developer</li>
+<li>Available on <a href="../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429915">Introduced</a> for GitLab.com, GitLab Self-Managed and GitLab Dedicated in GitLab 17.3.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask GitLab Duo Chat to fix selected code:</p>
+<ol>
+<li>Select some code in your IDE.</li>
+<li>In GitLab Duo Chat, type <code>/fix</code>.</li>
+</ol>
+<p>You can include additional instructions to be considered. For example:</p>
+<ul>
+<li>Focus on grammar and typos, for example, <code>/fix grammar mistakes and typos</code>.</li>
+<li>Focus on a concrete algorithm or problem description, for example, <code>/fix duplicate database inserts</code> or <code>/fix race conditions</code>.</li>
+<li>Focus on potential bugs that are not directly visible, for example, <code>/fix potential bugs</code>.</li>
+<li>Focus on code performance problems, for example, <code>/fix performance problems</code>.</li>
+<li>Focus on fixing the build when the code does not compile, for example, <code>/fix the build</code>.</li>
+</ul>
+<p><code>/fix</code> uses <a href="../project/repository/code_suggestions/repository_xray.html">Repository X-Ray</a> to deliver more accurate, context-aware suggestions.</p>
+<h2>Write tests in the IDE</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise, GitLab Duo with Amazon Q</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor and model information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+<li>LLM for Amazon Q: Amazon Q Developer</li>
+<li>Available on <a href="../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429915">Introduced</a> for GitLab.com in GitLab 16.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429915">Introduced</a> for GitLab Self-Managed and GitLab Dedicated in GitLab 16.8.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask GitLab Duo Chat to create tests for the selected code:</p>
+<ol>
+<li>Select some code in your IDE.</li>
+<li>In GitLab Duo Chat, type <code>/tests</code>.</li>
+</ol>
+<p>You can include additional instructions to be considered. For example:</p>
+<ul>
+<li>Use a specific test framework, for example <code>/tests using the Boost.test framework</code> (C++) or <code>/tests using Jest</code> (JavaScript).</li>
+<li>Focus on extreme test cases, for example <code>/tests focus on extreme cases, force regression testing</code>.</li>
+<li>Focus on performance, for example <code>/tests focus on performance</code>.</li>
+<li>Focus on regressions and potential exploits, for example <code>/tests focus on regressions and potential exploits</code>.</li>
+</ul>
+<p><code>/tests</code> uses <a href="../project/repository/code_suggestions/repository_xray.html">Repository X-Ray</a> to deliver more accurate, context-aware suggestions.</p>
+<p>For more information, see <a href="_index.md#use-gitlab-duo-chat-in-vs-code">Use GitLab Duo Chat in VS Code</a>.</p>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=zWhwuixUkYU">Watch an overview</a></p>
+<h2>Ask about CI/CD</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Pro or Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/423524">Introduced</a> for GitLab.com in GitLab 16.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/423524">Introduced</a> for GitLab Self-Managed and GitLab Dedicated in GitLab 16.8.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/149619">Updated LLM</a> from Claude 2.1 to Claude 3 Sonnet in GitLab 17.2.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/157696">Updated LLM</a> from Claude 3 Sonnet to Claude 3.5 Sonnet in GitLab 17.2.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/521034">Updated LLM</a> from Claude 3.5 Sonnet to Claude 4.0 Sonnet in GitLab 17.10.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask GitLab Duo Chat to create a CI/CD configuration:</p>
+<ul>
+<li><code>Create a .gitlab-ci.yml configuration file for testing and building a Ruby on Rails application in a GitLab CI/CD pipeline.</code></li>
+<li><code>Create a CI/CD configuration for building and linting a Python application.</code></li>
+<li><code>Create a CI/CD configuration to build and test Rust code.</code></li>
+<li><code>Create a CI/CD configuration for C++. Use gcc as compiler, and cmake as build tool.</code></li>
+<li><code>Create a CI/CD configuration for VueJS. Use npm, and add SAST security scanning.</code></li>
+<li><code>Generate a security scanning pipeline configuration, optimized for Java.</code></li>
+</ul>
+<p>You can also ask to explain specific job errors by copy-pasting the error message, prefixed with <code>Explain this CI/CD job error message, in the context of &lt;language&gt;:</code>:</p>
+<ul>
+<li><code>Explain this CI/CD job error message in the context of a Go project: build.sh: line 14: go command not found</code></li>
+</ul>
+<p>Alternatively, you can use GitLab Duo Root Cause Analysis to <a href="#troubleshoot-failed-cicd-jobs-with-root-cause-analysis">troubleshoot failed CI/CD jobs</a>.</p>
+<h2>Troubleshoot failed CI/CD jobs with Root Cause Analysis</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Enterprise, GitLab Duo with Amazon Q</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor and model information" &gt;}}</p>
+<ul>
+<li>Editors: GitLab UI</li>
+<li>Default LLM: Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-4">Claude Sonnet 4.0</a></li>
+<li>LLM for Amazon Q: Amazon Q Developer</li>
+<li>Available on <a href="../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/123692">Introduced</a> in GitLab 16.2 as an <a href="../../policy/development_stages_support.md#experiment">experiment</a> on GitLab.com.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/441681">Generally available</a> and moved to GitLab Duo Chat in GitLab 17.3.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+<li>Failed jobs widget for merge requests <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/174586">introduced</a> in GitLab 17.7.</li>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can use GitLab Duo Root Cause Analysis in GitLab Duo Chat to quickly identify and fix CI/CD job failures.
+It analyzes the last 100,000 characters of the job log to determine the cause of failure and provides an example fix.</p>
+<p>You can access this feature either from the <strong>Pipelines</strong> tab in merge requests or directly from the job log.</p>
+<p><i class="fa-youtube-play" aria-hidden="true"></i> <a href="https://www.youtube.com/watch?v=MLjhVbMjFAY&amp;list=PLFGfElNsQthZGazU1ZdfDpegu0HflunXW">Watch overview</a></p>
+<p>Root Cause Analysis does not support:</p>
+<ul>
+<li>Trigger jobs</li>
+<li>Downstream pipelines</li>
+</ul>
+<p>Provide feedback on this feature in <a href="https://gitlab.com/groups/gitlab-org/-/epics/13872">epic 13872</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have permission to view the CI/CD job.</li>
+</ul>
+<h3>From a merge request</h3>
+<p>To troubleshoot a failed CI/CD job from a merge request:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Go to your merge request.</li>
+<li>Select the <strong>Pipelines</strong> tab.</li>
+<li>From the Failed jobs widget, either:</li>
+<li>Select the job ID to go to the job log.</li>
+<li>Select <strong>Troubleshoot</strong> to analyze the failure directly.</li>
+</ol>
+<h3>From the job log</h3>
+<p>To troubleshoot a failed CI/CD job from the job log:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Build</strong> &gt; <strong>Jobs</strong>.</li>
+<li>Select the failed CI/CD job.</li>
+<li>Below the job log, either:</li>
+<li>Select <strong>Troubleshoot</strong>.</li>
+<li>Open GitLab Duo Chat and type <code>/troubleshoot</code>.</li>
+</ol>
+<h2>Explain a vulnerability</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Add-on: GitLab Duo Enterprise, GitLab Duo with Amazon Q</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor and model information" &gt;}}</p>
+<ul>
+<li>Editors: GitLab UI</li>
+<li>Default LLM: Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-3-7-sonnet">Claude Sonnet 3.7</a></li>
+<li>LLM for Amazon Q: Amazon Q Developer</li>
+<li>Available on <a href="../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can ask GitLab Duo Chat to explain a vulnerability when you are viewing a SAST vulnerability report.</p>
+<p>For more information, see <a href="../application_security/vulnerabilities/_index.md#vulnerability-explanation">Explaining a vulnerability</a>.</p>
+<h2>Create a new conversation</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Pro or Enterprise</li>
+<li>Offering: GitLab.com</li>
+<li>Editors: GitLab UI</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/16108">Introduced</a> in GitLab 17.10 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>duo_chat_multi_thread</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/190042">Generally available</a> in GitLab 18.1. Feature flag <code>duo_chat_multi_thread</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>In GitLab 17.10 and later, you can have multiple simultaneous conversations with Chat.</p>
+<ul>
+<li>In the upper-left corner of the Chat drawer, select <strong>New Chat</strong>.</li>
+<li>In the text box, type <code>/new</code> and press <kbd>Enter</kbd> or select <strong>Send</strong>.</li>
+</ul>
+<h2>Delete or start a new conversation</h2>
+<p>To delete a conversation, use the <a href="_index.md#delete-a-conversation">chat history</a>.</p>
+<p>To clear the chat window and start a new conversation in the same conversation thread,
+type <code>/reset</code> and select <strong>Send</strong>.</p>
+<p>In both cases, the conversation history will not be considered when you ask new questions.
+Starting a new conversation might help improve the answers when you switch contexts,
+because GitLab Duo Chat will not get confused by the unrelated conversations.</p>
+<h2>GitLab Duo Chat slash commands</h2>
+<p>GitLab Duo Chat has a list of universal, GitLab UI, and IDE commands, each of which is preceded by a slash (<code>/</code>).</p>
+<p>Use the commands to quickly accomplish specific tasks.</p>
+<h3>Universal</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): GitLab UI, VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): GitLab UI, Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/new</td>
+<td><a href="#delete-or-start-a-new-conversation">Start a new conversation, but keep the previous conversations in the chat history</a></td>
+</tr>
+<tr>
+<td>/reset</td>
+<td><a href="#delete-or-start-a-new-conversation">Clear the chat window and reset the conversation</a></td>
+</tr>
+<tr>
+<td>/help</td>
+<td>Learn more about how GitLab Duo Chat works</td>
+</tr>
+</tbody>
+</table>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>On GitLab.com, in GitLab 17.10 and later, when having <a href="_index.md#have-multiple-conversations">multiple conversations</a>, the <code>/clear</code> and <code>/reset</code> slash commands are replaced by the <a href="#gitlab-ui"><code>/new</code> slash command</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>GitLab UI</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Enterprise</li>
+<li>Editors: GitLab UI</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Changed to include Premium in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>These commands are dynamic and are available only in the GitLab UI when using GitLab Duo Chat:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+<th>Area</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/summarize_comments</td>
+<td>Generate a summary of all comments on the current issue</td>
+<td>Issues</td>
+</tr>
+<tr>
+<td>/troubleshoot</td>
+<td><a href="#troubleshoot-failed-cicd-jobs-with-root-cause-analysis">Troubleshoot failed CI/CD jobs with Root Cause Analysis</a></td>
+<td>Jobs</td>
+</tr>
+<tr>
+<td>/vulnerability_explain</td>
+<td><a href="../application_security/vulnerabilities/_index.md#vulnerability-explanation">Explain current vulnerability</a></td>
+<td>Vulnerabilities</td>
+</tr>
+</tbody>
+</table>
+<h3>IDE</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Editor information" &gt;}}</p>
+<ul>
+<li>Editors - GitLab Duo Chat (Agentic): VS Code, JetBrains IDEs, and Visual Studio</li>
+<li>Editors - GitLab Duo Chat (Classic): Web IDE, VS Code, JetBrains IDEs, Visual Studio, and Eclipse</li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/15227">Enabled</a> for <a href="../../administration/gitlab_duo_self_hosted/_index.md#self-hosted-ai-gateway-and-llms">self-hosted model configuration</a> as well as the <a href="../../administration/gitlab_duo_self_hosted/_index.md#gitlabcom-ai-gateway-with-default-gitlab-external-vendor-llms">default GitLab external AI vendor configuration</a> in GitLab 17.9.</li>
+<li>Changed to include GitLab Duo Core add-on in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>These commands work only when using GitLab Duo Chat in supported IDEs:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/tests</td>
+<td><a href="#write-tests-in-the-ide">Write tests</a></td>
+</tr>
+<tr>
+<td>/explain</td>
+<td><a href="#explain-selected-code">Explain code</a></td>
+</tr>
+<tr>
+<td>/refactor</td>
+<td><a href="#refactor-code-in-the-ide">Refactor the code</a></td>
+</tr>
+<tr>
+<td>/fix</td>
+<td><a href="#fix-code-in-the-ide">Fix the code</a></td>
+</tr>
+<tr>
+<td>/include</td>
+<td><a href="#ask-about-specific-files-in-the-ide">Include file context</a></td>
+</tr>
+</tbody>
+</table></code></pre>
+</body>
+</html>

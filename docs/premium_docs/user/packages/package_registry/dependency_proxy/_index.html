@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Enable the dependency proxy</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Package
+group: Package Registry
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Dependency proxy for packages</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/3610">Introduced</a> in GitLab 16.6 <a href="../../../../administration/feature_flags/_index.html">with a flag</a> named <code>packages_dependency_proxy_maven</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/415218">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 16.8. Feature flag <code>packages_dependency_proxy_maven</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>The dependency proxy is in <a href="../../../../policy/development_stages_support.md#beta">beta</a>. Review the documentation carefully before you use this feature.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>The GitLab dependency proxy is a local proxy server that downloads and stores copies of packages.</p>
+<p>The first time you request a package, GitLab fetches it from the upstream package registry and saves a copy in your project. When you request the same package again, GitLab serves the saved copy in the project's package registry.</p>
+<p>This approach reduces the number of downloads from external sources and makes package builds faster.</p>
+<h2>Enable the dependency proxy</h2>
+<p>To use the dependency proxy for packages, ensure your project is configured properly,
+and that users who pull from the cache have the necessary authentication:</p>
+<ol>
+<li>In the global configuration, if the following features are disabled, enable them:</li>
+<li>The <a href="../../../../administration/packages/_index.md#enable-or-disable-the-package-registry"><code>package</code> feature</a>. Enabled by default.</li>
+<li>The <a href="../../../../administration/packages/dependency_proxy.md#turn-on-the-dependency-proxy"><code>dependency_proxy</code> feature</a>. Enabled by default.</li>
+<li>In the project settings, if the <a href="../_index.md#turn-off-the-package-registry"><code>package</code> feature</a>
+   is disabled, enable it. It is enabled by default.</li>
+<li><a href="#configure-a-client">Add an authentication method</a>. The dependency proxy supports the same <a href="../supported_functionality.md#authenticate-with-the-registry">authentication methods</a> as the package registry:</li>
+<li><a href="../../../profile/personal_access_tokens.html">Personal access token</a></li>
+<li><a href="../../../project/deploy_tokens/_index.html">Project deploy token</a></li>
+<li><a href="../../../project/deploy_tokens/_index.html">Group deploy token</a></li>
+<li><a href="../../../../ci/jobs/ci_job_token.html">Job token</a></li>
+</ol>
+<h2>Advanced caching</h2>
+<p>When possible, the dependency proxy for packages uses advanced caching to store packages in the project's package registry.</p>
+<p>Advanced caching verifies the coherence between the project's package registry
+and the upstream package registry. If the upstream registry has updated files,
+the dependency proxy uses them to update the cached files.</p>
+<p>When advanced caching is not supported, the dependency proxy falls back to the default behavior:</p>
+<ul>
+<li>If the requested file is found in the project's package registry, it is returned.</li>
+<li>If the file is not found, it is fetched from the upstream package registry.</li>
+</ul>
+<p>Advanced caching support depends on how the upstream package registry
+responds to dependency proxy requests, and on
+which package format you use.</p>
+<p>For Maven packages:</p>
+<table>
+<thead>
+<tr>
+<th>Package registry</th>
+<th>Advanced caching supported?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../maven_repository/_index.html">GitLab</a></td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td><a href="https://mvnrepository.com/repos/central">Maven Central</a></td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td><a href="https://jfrog.com/integration/maven-repository/">Artifactory</a></td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td><a href="https://help.sonatype.com/en/maven-repositories.html">Sonatype Nexus</a></td>
+<td>{{&lt; yes &gt;}}</td>
+</tr>
+<tr>
+<td><a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry">GitHub Packages</a></td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+</tbody>
+</table>
+<h3>Permissions</h3>
+<p>When the dependency proxy pulls a file, the following occurs:</p>
+<ol>
+<li>The dependency proxy searches for a file in the project's package registry.
+   This is a read operation.</li>
+<li>The dependency proxy might publish a package file to the project's package registry.
+   This is a write operation.</li>
+</ol>
+<p>Whether both steps are executed depends on user permissions.
+The dependency proxy uses the <a href="../_index.md#package-registry-visibility-permissions">same permissions as the package registry</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Project visibility</th>
+<th>Minimum <a href="../../../permissions.md#roles">role</a></th>
+<th>Can read package files?</th>
+<th>Can write package files?</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public</td>
+<td>Anonymous</td>
+<td>{{&lt; no &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+<td>Request rejected.</td>
+</tr>
+<tr>
+<td>Public</td>
+<td>Guest</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+<td>Package file returned from either the cache or the remote registry.</td>
+</tr>
+<tr>
+<td>Public</td>
+<td>Developer</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>Package file returned from either the cache or the remote registry. The file is published to the cache.</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Anonymous</td>
+<td>{{&lt; no &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+<td>Request rejected</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Guest</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+<td>Package file returned from either the cache or the remote registry.</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Developer</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>Package file returned from either the cache or the remote registry. The file is published to the cache.</td>
+</tr>
+<tr>
+<td>Private</td>
+<td>Anonymous</td>
+<td>{{&lt; no &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+<td>Request rejected</td>
+</tr>
+<tr>
+<td>Private</td>
+<td>Reporter</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; no &gt;}}</td>
+<td>Package file returned from either the cache or the remote registry.</td>
+</tr>
+<tr>
+<td>Private</td>
+<td>Developer</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>{{&lt; yes &gt;}}</td>
+<td>Package file returned from either the cache or the remote registry. The file is published to the cache.</td>
+</tr>
+</tbody>
+</table>
+<p>At a minimum, any user who can use the dependency proxy can also use the project's package registry.</p>
+<p>To ensure the cache is properly filled over time, you should make sure a user with at least the Developer role pulls packages with the dependency proxy.</p>
+<h2>Configure a client</h2>
+<p>Configuring a client for the dependency proxy is similar to configuring a client for the <a href="../supported_functionality.md#pulling-packages">package registry</a>.</p>
+<h3>For Maven packages</h3>
+<p>For Maven packages, <a href="../../maven_repository/_index.html">all clients supported by the package registry</a> are supported by the dependency proxy:</p>
+<ul>
+<li><code>mvn</code></li>
+<li><code>gradle</code></li>
+<li><code>sbt</code></li>
+</ul>
+<p>For authentication, you can use all methods accepted by the <a href="../../maven_repository/_index.md#edit-the-client-configuration">Maven package registry</a>.
+You should use the <a href="../../maven_repository/_index.md#basic-http-authentication">Basic HTTP authentication</a> method as it is less complex.</p>
+<p>To configure the client:</p>
+<ol>
+<li>Follow the instructions in <a href="../../maven_repository/_index.md#basic-http-authentication">Basic HTTP authentication</a>.</li>
+</ol>
+<p>Make sure you use the endpoint URL <code>https://gitlab.example.com/api/v4/projects/&lt;project_id&gt;/dependency_proxy/packages/maven</code>.</p>
+<ol>
+<li>Complete the configuration for your client:</li>
+</ol>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="mvn" &gt;}}</p>
+<p><a href="../../maven_repository/_index.md#basic-http-authentication">Basic HTTP authentication</a> is accepted.
+However, you should use the <a href="../../maven_repository/_index.md#custom-http-header">custom HTTP header authentication</a>,
+so that <code>mvn</code> uses fewer network requests.</p>
+<p>In the <code>pom.xml</code> file add a <code>repository</code> element:</p>
+<pre><code class="language-xml">&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id&gt;gitlab-maven&lt;/id&gt;
+    &lt;url&gt;https://gitlab.example.com/api/v4/projects/&lt;project_id&gt;/dependency_proxy/packages/maven&lt;/url&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+</code></pre>
+<p>Where:</p>
+<ul>
+<li><code>&lt;project_id&gt;</code> is the ID of the project to be used as a dependency proxy.</li>
+<li><code>&lt;id&gt;</code> contains the name of the <code>&lt;server&gt;</code> used in the <a href="../../maven_repository/_index.md#basic-http-authentication">authentication configuration</a>.</li>
+</ul>
+<p>By default, Maven Central is checked first through the <a href="https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#Super_POM">Super POM</a>.
+However, you might want to force <code>mvn</code> to check the GitLab endpoint first. To do this, follow the instructions from the <a href="../../maven_repository/_index.md#additional-configuration-for-mvn">request forward</a>.</p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="gradle" &gt;}}</p>
+<p>Add a <code>repositories</code> section to your <a href="https://docs.gradle.org/current/userguide/tutorial_using_tasks.html"><code>build.gradle</code></a> file.</p>
+<ul>
+<li>In Groovy DSL:</li>
+</ul>
+<p><code>groovy
+  repositories {
+      maven {
+          url "https://gitlab.example.com/api/v4/projects/&lt;project_id&gt;/dependency_proxy/packages/maven"
+          name "GitLab"
+          credentials(PasswordCredentials) {
+              username = 'REPLACE_WITH_NAME'
+              password = gitLabPrivateToken
+          }
+          authentication {
+              basic(BasicAuthentication)
+          }
+      }
+  }</code></p>
+<ul>
+<li>In Kotlin DSL:</li>
+</ul>
+<p><code>kotlin
+  repositories {
+      maven {
+          url = uri("https://gitlab.example.com/api/v4/projects/&lt;project_id&gt;/dependency_proxy/packages/maven")
+          name = "GitLab"
+          credentials(BasicAuthentication::class) {
+              username = "REPLACE_WITH_NAME"
+              password = findProperty("gitLabPrivateToken") as String?
+          }
+          authentication {
+              create("basic", BasicAuthentication::class)
+          }
+      }
+  }</code></p>
+<p>In this example:</p>
+<ul>
+<li><code>&lt;project_id&gt;</code> is the ID of the project to be used as a dependency proxy.</li>
+<li><code>REPLACE_WITH_NAME</code> is explained in the <a href="../../maven_repository/_index.md#basic-http-authentication">Basic HTTP authentication</a> section.</li>
+</ul>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="sbt" &gt;}}</p>
+<p>In your <a href="https://www.scala-sbt.org/1.x/docs/Directories.html#sbt+build+definition+files"><code>build.sbt</code></a>, add the following lines:</p>
+<pre><code class="language-scala">resolvers += (&quot;gitlab&quot; at &quot;https://gitlab.example.com/api/v4/projects/&lt;project_id&gt;/dependency_proxy/packages/maven&quot;)
+
+credentials += Credentials(&quot;GitLab Packages Registry&quot;, &quot;&lt;host&gt;&quot;, &quot;&lt;name&gt;&quot;, &quot;&lt;token&gt;&quot;)
+</code></pre>
+<p>In this example:</p>
+<ul>
+<li><code>&lt;project_id&gt;</code> is the ID of the project to be used as a dependency proxy.</li>
+<li><code>&lt;host&gt;</code> is the host present in the <code>&lt;endpoint url&gt;</code> without the protocol scheme or the port. Example: <code>gitlab.example.com</code>.</li>
+<li><code>&lt;name&gt;</code> and <code>&lt;token&gt;</code> are explained in the <a href="../../maven_repository/_index.md#basic-http-authentication">Basic HTTP authentication</a> section.</li>
+</ul>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h2>Configure the remote registry</h2>
+<p>The dependency proxy must be configured with:</p>
+<ul>
+<li>The URL of the remote package registry.</li>
+<li>Optional. The required credentials.</li>
+</ul>
+<p>To set those parameters:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Packages and registries</strong>.</li>
+<li>Expand <strong>Package registry</strong>.</li>
+<li>Under <strong>Dependency Proxy</strong>, complete the form for your package format:</li>
+</ol>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Maven" &gt;}}</p>
+<p>Any Maven package registry can be connected to the dependency proxy. You can
+authorize the connection with the Maven package registry username and password.</p>
+<p>To set or update the remote Maven package registry, update the following fields
+in the form:</p>
+<ul>
+<li><code>URL</code> - The URL of the remote registry.</li>
+<li><code>Username</code> - Optional. The username to use with the remote registry.</li>
+<li><code>Password</code> - Optional. The password to use with the remote registry.</li>
+</ul>
+<p>You must either set both the username and password, or leave both fields empty.</p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h2>Troubleshooting</h2>
+<h3>Manual file pull errors</h3>
+<p>You can pull files manually with cURL.
+However, you might encounter one of the following responses:</p>
+<ul>
+<li><code>404 Not Found</code> - The dependency proxy setting object was not found because it doesn't exist, or because the <a href="#enable-the-dependency-proxy">requirements</a> were not fulfilled.</li>
+<li><code>401 Unauthorized</code> - The user was properly authenticated but did not have the proper permissions to access the dependency proxy object.</li>
+<li><code>403 Forbidden</code> - There was an issue with the <a href="#enable-the-dependency-proxy">GitLab license level</a>.</li>
+<li><code>502 Bad Gateway</code> - The remote package registry could not fulfill the file request. Verify the <a href="#configure-the-remote-registry">dependency proxy settings</a>.</li>
+<li><code>504 Gateway Timeout</code> - The remote package registry timed out. Verify the <a href="#configure-the-remote-registry">dependency proxy settings</a>.</li>
+</ul>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Maven" &gt;}}</p>
+<pre><code class="language-shell">curl --fail-with-body --verbose &quot;https://&lt;username&gt;:&lt;personal access token&gt;@gitlab.example.com/api/v4/projects/&lt;project_id&gt;/dependency_proxy/packages/maven/&lt;group id and artifact id&gt;/&lt;version&gt;/&lt;file_name&gt;&quot;
+</code></pre>
+<ul>
+<li><code>&lt;username&gt;</code> and <code>&lt;personal access token&gt;</code> are the credentials to access the dependency proxy of the GitLab instance.</li>
+<li><code>&lt;project_id&gt;</code> is the project ID.</li>
+<li><code>&lt;group id and artifact id&gt;</code> are the <a href="https://maven.apache.org/pom.html#Maven_Coordinates">Maven package group ID and artifact ID</a> joined with a forward slash.</li>
+<li><code>&lt;version&gt;</code> is the package version.</li>
+<li><code>file_name</code> is the exact name of the file.</li>
+</ul>
+<p>For example, given a package with:</p>
+<ul>
+<li>group ID: <code>com.my_company</code>.</li>
+<li>artifact ID: <code>my_package</code>.</li>
+<li>version: <code>1.2.3</code>.</li>
+</ul>
+<p>The request to manually pull a package is:</p>
+<pre><code class="language-shell">curl --fail-with-body --verbose &quot;https://&lt;username&gt;:&lt;personal access token&gt;@gitlab.example.com/api/v4/projects/&lt;project_id&gt;/dependency_proxy/packages/maven/com/my_company/my_package/1.2.3/my_package-1.2.3.pom&quot;
+</code></pre>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p></code></pre>
+</body>
+</html>

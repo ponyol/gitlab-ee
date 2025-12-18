@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Fixing errors during a failover or when promoting a secondary to a primary site</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Troubleshooting Geo failover</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<h2>Fixing errors during a failover or when promoting a secondary to a primary site</h2>
+<p>The following are possible error messages that might be encountered during failover or
+when promoting a secondary to a primary site with strategies to resolve them.</p>
+<h3>Message: <code>ActiveRecord::RecordInvalid: Validation failed: Name has already been taken</code></h3>
+<p>When <a href="_index.md#step-3-promoting-a-secondary-site">promoting a <strong>secondary</strong> site</a>,
+you might encounter the following error message:</p>
+<pre><code class="language-plaintext">Running gitlab-rake geo:set_secondary_as_primary...
+
+rake aborted!
+ActiveRecord::RecordInvalid: Validation failed: Name has already been taken
+/opt/gitlab/embedded/service/gitlab-rails/ee/lib/tasks/geo.rake:236:in `block (3 levels) in &lt;top (required)&gt;'
+/opt/gitlab/embedded/service/gitlab-rails/ee/lib/tasks/geo.rake:221:in `block (2 levels) in &lt;top (required)&gt;'
+/opt/gitlab/embedded/bin/bundle:23:in `load'
+/opt/gitlab/embedded/bin/bundle:23:in `&lt;main&gt;'
+Tasks: TOP =&gt; geo:set_secondary_as_primary
+(See full trace by running task with --trace)
+
+You successfully promoted this node!
+</code></pre>
+<p>If you encounter this message when running <code>gitlab-rake geo:set_secondary_as_primary</code>
+or <code>gitlab-ctl promote-to-primary-node</code>, enter a Rails console and run:</p>
+<p><code>ruby
+  Rails.application.load_tasks; nil
+  Gitlab::Geo.expire_cache!
+  Rake::Task['geo:set_secondary_as_primary'].invoke</code></p>
+<h3>Message: <code>NoMethodError: undefined method `secondary?' for nil:NilClass</code></h3>
+<p>When <a href="_index.md#step-3-promoting-a-secondary-site">promoting a <strong>secondary</strong> site</a>,
+you might encounter the following error message:</p>
+<pre><code class="language-plaintext">sudo gitlab-rake geo:set_secondary_as_primary
+
+rake aborted!
+NoMethodError: undefined method `secondary?' for nil:NilClass
+/opt/gitlab/embedded/service/gitlab-rails/ee/lib/tasks/geo.rake:232:in `block (3 levels) in &lt;top (required)&gt;'
+/opt/gitlab/embedded/service/gitlab-rails/ee/lib/tasks/geo.rake:221:in `block (2 levels) in &lt;top (required)&gt;'
+/opt/gitlab/embedded/bin/bundle:23:in `load'
+/opt/gitlab/embedded/bin/bundle:23:in `&lt;main&gt;'
+Tasks: TOP =&gt; geo:set_secondary_as_primary
+(See full trace by running task with --trace)
+</code></pre>
+<p>This command is intended to be executed on a secondary site only, and this error message
+is displayed if you attempt to run this command on a primary site.</p>
+<h3>Expired artifacts</h3>
+<p>If you notice for some reason there are more artifacts on the Geo
+<strong>secondary</strong> site than on the Geo <strong>primary</strong> site, you can use the Rake task
+to <a href="../../raketasks/cleanup.md#remove-orphan-artifact-files">cleanup orphan artifact files</a></p>
+<p>On a Geo <strong>secondary</strong> site, this command also cleans up all Geo
+registry record related to the orphan files on disk.</p>
+<h3>Fixing sign in errors</h3>
+<h4>Message: The redirect URI included is not valid</h4>
+<p>If you are able to sign in to the web interface for the <strong>primary</strong> site, but you receive this error message
+when attempting to sign in to a <strong>secondary</strong> web interface, you should verify the Geo
+site's URL matches its external URL.</p>
+<p>On the <strong>primary</strong> site:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Geo</strong> &gt; <strong>Sites</strong>.</li>
+<li>Find the affected <strong>secondary</strong> site and select <strong>Edit</strong>.</li>
+<li>Ensure the <strong>URL</strong> field matches the value found in <code>/etc/gitlab/gitlab.rb</code>
+   in <code>external_url "https://gitlab.example.com"</code> on the <strong>Rails nodes of the secondary</strong> site.</li>
+</ol>
+<h4>Authenticating with SAML on the secondary site always lands on the primary site</h4>
+<p>This <a href="../../../update/versions/gitlab_15_changes.md#1510">problem is usually encountered when upgrading to GitLab 15.1</a>. To fix this problem, see <a href="../replication/single_sign_on.md#configuring-instance-wide-saml">configuring instance-wide SAML in Geo with Single Sign-On</a>.</p>
+<h2>Recovering from a partial failover</h2>
+<p>The partial failover to a secondary Geo site may be the result of a temporary/transient issue. Therefore, first attempt to run the promote command again.</p>
+<ol>
+<li>
+<p>SSH into every Sidekiq, PostgreSQL, Gitaly, and Rails node in the <strong>secondary</strong> site and run one of the following commands:</p>
+</li>
+<li>
+<p>To promote the secondary site to primary:</p>
+<p><code>shell
+ sudo gitlab-ctl geo promote</code></p>
+</li>
+<li>
+<p>To promote the secondary site to primary <strong>without any further confirmation</strong>:</p>
+<p><code>shell
+ sudo gitlab-ctl geo promote --force</code></p>
+</li>
+<li>
+<p>Verify you can connect to the newly-promoted <strong>primary</strong> site using the URL used previously for the <strong>secondary</strong> site.</p>
+</li>
+<li>If <strong>successful</strong>, the <strong>secondary</strong> site is now promoted to the <strong>primary</strong> site.</li>
+</ol>
+<p>If the previous steps are <strong>not successful</strong>, proceed through the next steps:</p>
+<ol>
+<li>
+<p>SSH to every Sidekiq, PostgreSQL, Gitaly and Rails node in the <strong>secondary</strong> site and perform the following operations:</p>
+</li>
+<li>
+<p>Create a <code>/etc/gitlab/gitlab-cluster.json</code> file with the following content:</p>
+<p><code>shell
+ {
+   "primary": true,
+   "secondary": false
+ }</code></p>
+</li>
+<li>
+<p>Reconfigure GitLab for the changes to take effect:</p>
+<p><code>shell
+ sudo gitlab-ctl reconfigure</code></p>
+</li>
+<li>
+<p>Verify you can connect to the newly-promoted <strong>primary</strong> site using the URL used previously for the <strong>secondary</strong> site.</p>
+</li>
+<li>If successful, the <strong>secondary</strong> site is now promoted to the <strong>primary</strong> site.</li>
+</ol></code></pre>
+</body>
+</html>

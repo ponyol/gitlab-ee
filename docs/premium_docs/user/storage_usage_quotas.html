@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Free limit</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Fulfillment
+group: Utilization
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Storage</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<h2>Free limit</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Each project in a Free tier namespace on GitLab.com has 10 GiB of free storage for its Git repository and Large File Storage (LFS).</p>
+<p>When a project's repository and LFS exceed 10 GiB, the project is set to a read-only state.
+You cannot push changes to a read-only project.
+To increase storage of the project's repository and LFS to more than 10 GiB,
+you must purchase more storage.</p>
+<p>Only the project's repository and LFS are included in the storage limit.
+The container registry, package registry, and build artifacts are not included in the limit.</p>
+<h2>View storage</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can view the following statistics for storage usage in projects and namespaces:</p>
+<ul>
+<li>Storage usage that exceeds the GitLab.com storage limit or <a href="../administration/settings/account_and_limit_settings.md#repository-size-limit">GitLab Self-Managed storage limits</a>.</li>
+<li>Available purchased storage for GitLab.com.</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>To view storage usage for a project, you must have at least the Maintainer role for the project or Owner role for the namespace.</li>
+<li>To view storage usage for a group namespace, you must have the Owner role for the namespace.</li>
+</ul>
+<p>To view storage:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Usage quotas</strong>.</li>
+<li>Select the <strong>Storage</strong> tab to see namespace storage usage.</li>
+<li>To view storage usage for a project, in the table at the bottom, select a project. Storage usage is updated every 90 minutes.</li>
+</ol>
+<p>If your namespace shows <code>'Not applicable.'</code>, push a commit to any project in the
+namespace to recalculate the storage.</p>
+<p>Storage and network usage is calculated with the binary measurement system (1024 unit multiples).
+Storage usage is displayed in kibibytes (KiB), mebibytes (MiB),
+or gibibytes (GiB). 1 KiB is 2<sup>10</sup> bytes (1024 bytes),
+1 MiB is 2<sup>20</sup> bytes (1024 kibibytes), and 1 GiB is 2<sup>30</sup> bytes (1024 mebibytes).</p>
+<h2>View project fork storage usage</h2>
+<p>A cost factor is applied to the storage consumed by project forks so that forks consume less namespace storage than their actual size. The cost factors for forks storage reduction applies only to namespace storage. It does not apply to project repository storage limits.</p>
+<p>To view the amount of namespace storage the fork has used:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project or group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Usage quotas</strong>.</li>
+<li>Select the <strong>Storage</strong> tab. The <strong>Total</strong> column displays the amount of namespace storage used by the fork as a portion of the actual size of the fork on disk.</li>
+</ol>
+<p>The cost factor applies to the project repository, LFS objects, job artifacts, packages, snippets, and the wiki.</p>
+<p>The cost factor does not apply to private forks in namespaces on the Free plan.</p>
+<h2>Excess storage usage</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Excess storage usage is the amount that exceeds the 10 GiB free storage of a project's repository and LFS. If no purchased storage is available,
+the project is set to a read-only state. You cannot push changes to a read-only project.</p>
+<p>To remove the read-only state, you must purchase more storage for the namespace.
+After the purchase has completed, the read-only state is removed and projects are automatically
+restored. The amount of available purchased storage must always
+be greater than zero.</p>
+<p>The <strong>Storage</strong> tab of the <strong>Usage quotas</strong> page displays the following:</p>
+<ul>
+<li>Purchased storage available is running low.</li>
+<li>Projects that are at risk of becoming read-only if purchased storage available is zero.</li>
+<li>Projects that are read-only because purchased storage available is zero. Read-only projects are
+  marked with an information icon ({{&lt; icon name="information-o" &gt;}}) beside their name.</li>
+</ul>
+<p>The total storage includes the free and excess storage purchased.
+The remaining excess storage is expressed as a percentage and calculated as:
+100 % - ((excess storage used - excess storage purchased) × 100).</p>
+<h3>Excess storage example</h3>
+<p>The following example describes an excess storage scenario for projects in a namespace:</p>
+<table>
+<thead>
+<tr>
+<th>Repository</th>
+<th>Storage used</th>
+<th>Excess storage</th>
+<th>Quota</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Red</td>
+<td>10 GiB</td>
+<td>0 GiB</td>
+<td>10 GiB</td>
+<td>Read-only {{&lt; icon name="lock" &gt;}}</td>
+</tr>
+<tr>
+<td>Blue</td>
+<td>8 GiB</td>
+<td>0 GiB</td>
+<td>10 GiB</td>
+<td>Not read-only</td>
+</tr>
+<tr>
+<td>Green</td>
+<td>10 GiB</td>
+<td>0 GiB</td>
+<td>10 GiB</td>
+<td>Read-only {{&lt; icon name="lock" &gt;}}</td>
+</tr>
+<tr>
+<td>Yellow</td>
+<td>2 GiB</td>
+<td>0 GiB</td>
+<td>10 GiB</td>
+<td>Not read-only</td>
+</tr>
+<tr>
+<td><strong>Totals</strong></td>
+<td><strong>30 GiB</strong></td>
+<td><strong>0 GiB</strong></td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p>The Red and Green projects are read-only because their repositories and LFS have reached the quota. In this
+example, no additional storage has yet been purchased.</p>
+<p>To remove the read-only state from the Red and Green projects, 50 GiB additional storage is purchased.</p>
+<p>If some projects' repositories and LFS grow past the 10 GiB quota, the available purchased storage decreases.</p>
+<table>
+<thead>
+<tr>
+<th>Repository</th>
+<th>Storage used</th>
+<th>Excess storage</th>
+<th>Quota</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Red</td>
+<td>15 GiB</td>
+<td>5 GiB</td>
+<td>10 GiB</td>
+<td>Not read-only</td>
+</tr>
+<tr>
+<td>Blue</td>
+<td>14 GiB</td>
+<td>4 GiB</td>
+<td>10 GiB</td>
+<td>Not read-only</td>
+</tr>
+<tr>
+<td>Green</td>
+<td>11 GiB</td>
+<td>1 GiB</td>
+<td>10 GiB</td>
+<td>Not read-only</td>
+</tr>
+<tr>
+<td>Yellow</td>
+<td>5 GiB</td>
+<td>0 GiB</td>
+<td>10 GiB</td>
+<td>Not read-only</td>
+</tr>
+<tr>
+<td><strong>Totals</strong></td>
+<td><strong>45 GiB</strong></td>
+<td><strong>10 GiB</strong></td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p>In this example:</p>
+<ul>
+<li>Available purchased storage is 40 GiB: 50 GiB (purchased storage) - 10 GiB (total excess storage used). Consequently, the projects are no longer read-only.</li>
+<li>Excess storage usage is 20%: 10 GiB / 50 GiB × 100.</li>
+<li>Remaining purchased storage is 80%.</li>
+</ul>
+<h2>Manage storage usage</h2>
+<p>To manage your storage, if you are a namespace Owner of a Free GitLab.com namespace,
+you can purchase more storage for the namespace.</p>
+<p>In the Premium and Ultimate tier, depending on your role, you can also
+<a href="project/repository/repository_size.md#methods-to-reduce-repository-size">reduce repository size</a>.
+To automate storage usage analysis and management, see <a href="storage_management_automation.html">storage management automation</a>.</p>
+<p>In addition to managing your storage usage you can consider these options for increased consumables:</p>
+<ul>
+<li>If you are eligible, apply for a <a href="../subscriptions/community_programs.html">community program subscription</a>:</li>
+<li>GitLab for Education</li>
+<li>GitLab for Open Source</li>
+<li>GitLab for Startups</li>
+<li>Consider a <a href="../subscriptions/manage_subscription.html">GitLab Self-Managed subscription</a>, which does not have storage limits.</li>
+<li><a href="https://page.gitlab.com/usage_limits_help.html">Talk to an expert</a> for more information about your options.</li>
+</ul>
+<h2>Purchase more storage</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>To exceed the free tier 10 GiB limit on your Free GitLab.com namespace, you can purchase more storage for your personal or group namespace.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role or be a billing account manager.</li>
+<li>The billing account must be linked to the subscription for the personal or group's namespace.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Storage subscriptions <strong>renew automatically each year</strong>.
+You can <a href="../subscriptions/manage_subscription.md#turn-on-or-turn-off-automatic-subscription-renewal">disable automatic subscription renewal</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>For your personal namespace</h3>
+<ol>
+<li>Sign in to GitLab.com.</li>
+<li>From either your personal homepage or the group's page, go to <strong>Settings</strong> &gt; <strong>Usage quotas</strong>.</li>
+<li>Select the <strong>Storage</strong> tab.</li>
+<li>For each read-only project, total by how much its <strong>Usage</strong> exceeds the free quota and purchased
+   storage. You must purchase the storage increment that exceeds this total.</li>
+<li>Select <strong>Buy storage</strong>. You are taken to the Customers Portal.</li>
+<li>In the <strong>Subscription details</strong> section, select the name of the user from the dropdown list.</li>
+<li>Enter the desired quantity of storage packs.</li>
+<li>In the <strong>Customer information</strong> section, verify your address.</li>
+<li>In the <strong>Billing information</strong> section, select the payment method from the dropdown list.</li>
+<li>Select the <strong>Privacy Statement</strong> and <strong>Terms of Service</strong> checkboxes.</li>
+<li>Select <strong>Buy storage</strong>.</li>
+</ol>
+<p>The <strong>Purchased storage available</strong> total is incremented by the amount purchased. The read-only
+state for all projects is removed, and their excess usage is deducted from the additional storage.</p>
+<h3>For your group namespace</h3>
+<p>If you're using GitLab.com, you can purchase additional storage so your
+pipelines aren't blocked after you have used all your storage from your
+main quota. You can find pricing for additional storage on the
+<a href="https://about.gitlab.com/pricing/#storage">GitLab Pricing page</a>.</p>
+<p>To purchase additional storage for your group on GitLab.com:</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Group owner" &gt;}}</p>
+<ol>
+<li>Sign in to GitLab.com.</li>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Usage quotas</strong>.</li>
+<li>Select the <strong>Storage</strong> tab.</li>
+<li>Select <strong>Buy storage</strong>. You are taken to the Customers Portal.</li>
+<li>In the <strong>Subscription details</strong> section, in the <strong>Quantity</strong> field, enter the desired quantity of storage packs.</li>
+<li>In the <strong>Customer information</strong> section, verify your address.</li>
+<li>In the <strong>Billing information</strong> section, select a payment method from the dropdown list.</li>
+<li>Select the <strong>Privacy Statement</strong> and <strong>Terms of Service</strong> checkbox.</li>
+<li>Select <strong>Buy storage</strong>.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Billing account manager" &gt;}}</p>
+<ol>
+<li>Go to <a href="https://customers.gitlab.com/customers/sign_in">Customers Portal</a>.</li>
+<li>On the subscription card, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) and then <strong>Buy more storage</strong>.</li>
+<li>In the <strong>Subscription details</strong> section, in the <strong>Quantity</strong> field enter, the desired quantity of storage packs.</li>
+<li>In the <strong>Customer information</strong> section, verify your address.</li>
+<li>In the <strong>Billing information</strong> section, select a payment method from the dropdown list.</li>
+<li>Select the <strong>Privacy Statement</strong> and <strong>Terms of Service</strong> checkbox.</li>
+<li>Select <strong>Buy storage</strong>.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<p>After your payment is processed, the extra storage is available for your group namespace.</p>
+<p>To confirm the available storage, follow the first three steps listed previously.</p>
+<p>The <strong>Purchased storage available</strong> total is incremented by the amount purchased. All locked
+projects are unlocked and their excess usage is deducted from the additional storage.</p>
+<h2>Fixed project limit</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When a project's repository and LFS exceed 500 GiB, GitLab places the project in a read-only state.
+You cannot push changes to a read-only project.</p>
+<p>When a project exceeds the storage limit, owners of the group and top-level namespace
+receive notifications through the UI and email. To manage storage usage, contact your
+account team or GitLab Support.</p>
+<h2>Expired storage</h2>
+<p>Expired storage can exist on a subscription when storage is mistakenly not de-provisioned at the end of your subscription period.
+If you experience an unexpected drop in purchased storage, expired storage could have been removed from your account.
+For more information and solutions, contact support.</p></code></pre>
+</body>
+</html>

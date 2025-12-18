@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Configure the former **primary** site to be a **secondary** site</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Bring a demoted primary site back online</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>After a failover, it is possible to fail back to the demoted <strong>primary</strong> site to
+restore your original configuration. This process consists of two steps:</p>
+<ol>
+<li>Making the old <strong>primary</strong> site a <strong>secondary</strong> site.</li>
+<li>Promoting a <strong>secondary</strong> site to a <strong>primary</strong> site.</li>
+</ol>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>If you have any doubts about the consistency of the data on this site, we recommend setting it up from scratch.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Configure the former <strong>primary</strong> site to be a <strong>secondary</strong> site</h2>
+<p>Because the former <strong>primary</strong> site is out of sync with the current <strong>primary</strong> site, the first step is to bring the former <strong>primary</strong> site up to date. Note, deletion of data stored on disk like
+repositories and uploads is not replayed when bringing the former <strong>primary</strong> site back
+into sync, which may result in increased disk usage.
+Alternatively, you can <a href="../setup/_index.html">set up a new <strong>secondary</strong> GitLab instance</a> to avoid this.</p>
+<p>To bring the former <strong>primary</strong> site up to date:</p>
+<ol>
+<li>SSH into the former <strong>primary</strong> site that has fallen behind.</li>
+<li>Remove <code>/etc/gitlab/gitlab-cluster.json</code> if it exists.</li>
+</ol>
+<p>If the site to be re-added as a <strong>secondary</strong> site was promoted with the <code>gitlab-ctl geo promote</code> command, then it may contain a <code>/etc/gitlab/gitlab-cluster.json</code> file. For example during <code>gitlab-ctl reconfigure</code>, you may notice output like:</p>
+<p><code>plaintext
+   The 'geo_primary_role' is defined in /etc/gitlab/gitlab-cluster.json as 'true' and overrides the setting in the /etc/gitlab/gitlab.rb</code></p>
+<p>If so, then <code>/etc/gitlab/gitlab-cluster.json</code> must be deleted from every Sidekiq, PostgreSQL, Gitaly, and Rails node in the site, to make <code>/etc/gitlab/gitlab.rb</code> the single source of truth again.</p>
+<ol>
+<li>Make sure all the services are up:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl start</code></p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If you <a href="_index.md#step-2-permanently-disable-the-primary-site">disabled the <strong>primary</strong> site permanently</a>,
+   you need to undo those steps now. For distributions with systemd, such as Debian/Ubuntu/CentOS7+, you must run
+   <code>sudo systemctl enable gitlab-runsvdir</code>. For distributions without systemd, such as CentOS 6, you need to install
+   the GitLab instance from scratch and set it up as a <strong>secondary</strong> site by
+   following <a href="../setup/_index.html">Setup instructions</a>. In this case, you don't need to follow the next step.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If you <a href="_index.md#step-4-optional-updating-the-primary-domain-dns-record">changed the DNS records</a>
+   for this site during disaster recovery procedure you may need to
+   <a href="planned_failover.md#prevent-updates-to-the-primary-site">block all the writes to this site</a>
+   during this procedure.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ol>
+<li><a href="../setup/_index.html">Set up Geo</a>. In this case, the <strong>secondary</strong> site
+   refers to the former <strong>primary</strong> site.</li>
+<li>If <a href="../../postgresql/pgbouncer.html">PgBouncer</a> was enabled on the <strong>current secondary</strong> site
+      (when it was a primary site) disable it by editing <code>/etc/gitlab/gitlab.rb</code>
+      and running <code>sudo gitlab-ctl reconfigure</code>.</li>
+<li>You can then set up database replication on the <strong>secondary</strong> site.</li>
+</ol>
+<p>If you have lost your original <strong>primary</strong> site, follow the
+<a href="../setup/_index.html">setup instructions</a> to set up a new <strong>secondary</strong> site.</p>
+<h2>Promote the <strong>secondary</strong> site to <strong>primary</strong> site</h2>
+<p>When the initial replication is complete and the <strong>primary</strong> site and <strong>secondary</strong> site are
+closely in sync, you can do a <a href="planned_failover.html">planned failover</a>.</p>
+<h2>Restore the <strong>secondary</strong> site</h2>
+<p>If your objective is to have two sites again, you need to bring your <strong>secondary</strong>
+site back online as well by repeating the first step
+(<a href="#configure-the-former-primary-site-to-be-a-secondary-site">configure the former <strong>primary</strong> site to be a <strong>secondary</strong> site</a>)
+for the <strong>secondary</strong> site.</p>
+<h3>Restoring additional <strong>secondary</strong> sites</h3>
+<p>If there is more than one <strong>secondary</strong> site, the remaining sites can be brought online now. For each of the remaining sites, <a href="../setup/database.md#step-3-initiate-the-replication-process">initiate the replication process</a> with the <strong>primary</strong> site.</p>
+<h2>Skipping re-transfer of data on a <strong>secondary</strong> site</h2>
+<p>When a secondary site is added, if it contains data that would otherwise be synced from the primary, then Geo avoids re-transferring the data.</p>
+<ul>
+<li>Git repositories are transferred by <code>git fetch</code>, which only transfers missing refs.</li>
+<li>Geo's container registry sync code compares tuples of tags and digests, and only pulls missing ones.</li>
+<li><a href="#skipping-re-transfer-of-blobs">Blobs</a> are skipped if they exist on the first sync.</li>
+</ul>
+<p>Use-cases:</p>
+<ul>
+<li>You do a planned failover and demote the old primary site by attaching it as a secondary site without rebuilding it.</li>
+<li>You have multiple secondary Geo sites. You do a planned failover and reattach the other secondary Geo sites without rebuilding them.</li>
+<li>You do a failover test by promoting and demoting a secondary site and reattach it without rebuilding it.</li>
+<li>You restore a backup and attach the site as a secondary site.</li>
+<li>You manually copy data to a secondary site to workaround a sync problem.</li>
+<li>You delete or truncate registry table rows in the Geo tracking database to workaround a problem.</li>
+<li>You reset the Geo tracking database to workaround a problem.</li>
+</ul>
+<h3>Skipping re-transfer of blobs</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/352530">Introduced</a> in GitLab 16.8 <a href="../../feature_flags/_index.html">with a flag</a> named <code>geo_skip_download_if_exists</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/435788">Generally available</a> in GitLab 16.9. Feature flag <code>geo_skip_download_if_exists</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you add a secondary site which has preexisting blobs data, then the secondary Geo site will avoid re-transferring that data. This applies to:</p>
+<ul>
+<li>CI job artifacts</li>
+<li>CI pipeline artifacts</li>
+<li>CI secure files</li>
+<li>LFS objects</li>
+<li>Merge request diffs</li>
+<li>Package files</li>
+<li>Pages deployments</li>
+<li>Terraform state versions</li>
+<li>Uploads</li>
+<li>Dependency proxy manifests</li>
+<li>Dependency proxy blobs</li>
+</ul>
+<p>If the secondary site's copy is actually corrupted, then background verification will eventually fail, and the blob will be resynced.</p>
+<p>Blobs will only be skipped in this manner if they do not have a corresponding registry record in the Geo tracking database. The conditions are strict because resyncing is almost always intentional, and we cannot risk mistakenly skipping a transfer.</p></code></pre>
+</body>
+</html>

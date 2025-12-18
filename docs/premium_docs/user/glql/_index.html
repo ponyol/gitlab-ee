@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Advanced Search integration</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Knowledge
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: GitLab Query Language (GLQL)</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/14767">Introduced</a> in GitLab 17.4 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>glql_integration</code>. Disabled by default.</li>
+<li>Enabled on GitLab.com in GitLab 17.4 for a subset of groups and projects.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/476990">Changed</a> from experiment to beta in GitLab 17.10.</li>
+<li>Enabled on GitLab.com, GitLab Self-Managed, and GitLab Dedicated in GitLab 17.10.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/554870">Generally available</a> in GitLab 18.3. Feature flag <code>glql_integration</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab Query Language (GLQL) is an attempt to create a single query language for all of GitLab.
+Use it to filter and embed content from anywhere in the platform, using familiar syntax.</p>
+<p>Embed queries in Markdown code blocks.
+An embedded view is the rendered output of a GLQL source code block.</p>
+<p>Share your feedback in the <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/509792">embedded views, powered by GLQL, feedback issue</a>.</p>
+<h2>Advanced Search integration</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/210854">Introduced</a> in GitLab 18.6 as a <a href="../../policy/development_stages_support.md#beta">beta</a> with <a href="../../administration/feature_flags/_index.html">feature flags</a> named <code>glql_work_items</code> and <code>glql_es_integration</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>GLQL uses Advanced Search when available to speed up queries. Advanced Search
+provides faster response times for complex queries across large datasets.</p>
+<p>Advanced Search is:</p>
+<ul>
+<li>Enabled by default for GitLab.com and GitLab Dedicated paid subscriptions.</li>
+<li>Available for GitLab Self-Managed when an administrator
+  <a href="../../integration/advanced_search/elasticsearch.md#enable-advanced-search">enables Advanced Search</a>.</li>
+</ul>
+<p>If Advanced Search isn't available, GLQL uses PostgreSQL instead.</p>
+<h2>Query syntax</h2>
+<p>The query syntax consists primarily of logical expressions. These expressions follow the
+syntax of <code>&lt;field&gt; &lt;operator&gt; &lt;value&gt; and ...</code>.</p>
+<h3>Fields</h3>
+<p>Field names can have values like <code>assignee</code>, <code>author</code>, <code>label</code>, and <code>milestone</code>.
+A <code>type</code> field can be used to filter a query by the object type, like <code>Issue</code>, <code>MergeRequest</code>,
+or work item types like <code>Task</code> or <code>Objective</code>.</p>
+<p>For a full list of supported fields, supported operators, and value types, see <a href="fields.html">GLQL fields</a>.</p>
+<h3>Operators</h3>
+<p><strong>Comparison operators</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>GLQL operator</th>
+<th>Description</th>
+<th>Equivalent in search</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>=</code></td>
+<td>Equals / Includes all in list</td>
+<td><code>is</code> (equal to)</td>
+</tr>
+<tr>
+<td><code>!=</code></td>
+<td>Doesn't equal / Isn't contained in list</td>
+<td><code>is not</code> (equal to)</td>
+</tr>
+<tr>
+<td><code>in</code></td>
+<td>Contained in list</td>
+<td><code>or</code> / <code>is one of</code></td>
+</tr>
+<tr>
+<td><code>&gt;</code></td>
+<td>Greater than</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+<tr>
+<td><code>&lt;</code></td>
+<td>Less than</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+<tr>
+<td><code>&gt;=</code></td>
+<td>Greater than or equal to</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+<tr>
+<td><code>&lt;=</code></td>
+<td>Less than or equal to</td>
+<td>{{&lt; no &gt;}}</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Logical operators</strong>: Only <code>and</code> is supported.
+<code>or</code> is indirectly supported for some fields by using the <code>in</code> comparison operator.</p>
+<h3>Values</h3>
+<p>Values can include:</p>
+<ul>
+<li>Strings</li>
+<li>Numbers</li>
+<li>Relative dates (like <code>-1d</code>, <code>2w</code>, <code>-6m</code>, or <code>1y</code>)</li>
+<li>Absolute dates (in <code>YYYY-MM-DD</code> format, like <code>2025-01-01</code>)</li>
+<li>Functions (like <code>currentUser()</code> for user fields or <code>today()</code> for dates)</li>
+<li>Enum values (like <code>upcoming</code> or <code>started</code> for milestones)</li>
+<li>Booleans (<code>true</code> or <code>false</code>)</li>
+<li>Nullable values (like <code>null</code>, <code>none</code>, or <code>any</code>)</li>
+<li>GitLab references (like <code>~label</code> for a label, <code>%Backlog</code> for a milestone, or <code>@username</code> for a user)</li>
+<li>Lists containing any of the previous values (surrounded by parenthesis: <code>()</code> and delimited by commas: <code>,</code>)</li>
+</ul>
+<h2>Embedded views</h2>
+<p>An embedded view is the output of a GLQL source code block in Markdown. The source includes YAML
+attributes that describe how to display the GLQL query results, along with the query.</p>
+<h3>Supported areas</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Embedded views in repository Markdown files <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/197950">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Embedded views can be displayed in the following areas:</p>
+<ul>
+<li>Group and project wikis</li>
+<li>Descriptions and comments of:</li>
+<li>Epics</li>
+<li>Issues</li>
+<li>Merge requests</li>
+<li>Work items (tasks, OKRs, or epics)</li>
+<li>Repository Markdown files</li>
+</ul>
+<h3>Syntax</h3>
+<p>The syntax of an embedded view's source is a superset of YAML that consists of:</p>
+<ul>
+<li>The <code>query</code> parameter: Expressions joined together with a logical operator, such as <code>and</code>.</li>
+<li>Parameters related to the presentation layer, like <code>display</code>, <code>limit</code>, or <code>fields</code>, <code>title</code>, and <code>description</code>
+  represented as YAML.</li>
+</ul>
+<p>A view is defined in Markdown as a code block, similar to other code blocks like Mermaid.</p>
+<p>For example:</p>
+<ul>
+<li>Display a table of first 5 open issues assigned to the authenticated user in <code>gitlab-org/gitlab</code>.</li>
+<li>Display columns <code>title</code>, <code>state</code>, <code>health</code>, <code>description</code>, <code>epic</code>, <code>milestone</code>, <code>weight</code>, and <code>updated</code>.</li>
+</ul>
+<pre><code class="language-yaml">```glql
+display: table
+title: GLQL table 🎉
+description: This view lists my open issues
+fields: title, state, health, epic, milestone, weight, updated
+limit: 5
+query: group = &quot;gitlab-org&quot; AND assignee = currentUser() AND state = opened
+```
+</code></pre>
+<p>This source should render a table like the one below:</p>
+<p><img alt="A table listing issues assigned to the current user" src="img/glql_table_v18_5.png" /></p>
+<h4>Presentation syntax</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/508956">Changed</a> in GitLab 17.7: Configuring the presentation layer using YAML front matter is deprecated.</li>
+<li><code>title</code> and <code>description</code> parameters <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/183709">introduced</a> in GitLab 17.10.</li>
+<li>Sorting and pagination <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/502701">introduced</a> in GitLab 18.2.</li>
+<li><code>collapsed</code> parameter <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/197824">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Aside from the <code>query</code> parameter, you can configure presentation details for your view using some
+more optional parameters.</p>
+<p>Supported parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collapsed</code></td>
+<td><code>false</code></td>
+<td>Whether to collapse or expand the view.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>None</td>
+<td>An optional description to display below the title.</td>
+</tr>
+<tr>
+<td><code>display</code></td>
+<td><code>table</code></td>
+<td>How to display the data. Supported options: <code>table</code>, <code>list</code>, or <code>orderedList</code>.</td>
+</tr>
+<tr>
+<td><code>fields</code></td>
+<td><code>title</code></td>
+<td>A comma-separated list of <a href="fields.md#fields-in-embedded-views">fields</a> to include in the view.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td><code>100</code></td>
+<td>How many items to display on the first page. The maximum value is <code>100</code>.</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td><code>updated desc</code></td>
+<td>The <a href="fields.md#fields-to-sort-embedded-views-by">field to sort the data by</a> followed by a sort order (<code>asc</code> or <code>desc</code>).</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>Embedded table view</code> or <code>Embedded list view</code></td>
+<td>A title displayed at the top of the embedded view.</td>
+</tr>
+</tbody>
+</table>
+<p>For example, to display the first five issues assigned to the current user in the <code>gitlab-org/gitlab</code>
+project as a list, sorted by due date (earliest first) and displaying the <code>title</code>, <code>health</code>, and <code>due</code> fields:</p>
+<pre><code class="language-yaml">```glql
+display: list
+fields: title, health, due
+limit: 5
+sort: due asc
+query: group = &quot;gitlab-org&quot; AND assignee = currentUser() AND state = opened
+```
+</code></pre>
+<p>This source should render a list like the one below:</p>
+<p><img alt="An embedded view with a list of issues assigned to the current user" src="img/glql_list_v18_5.png" /></p>
+<h4>Pagination</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/502701">Introduced</a> in GitLab 18.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Embedded views display the first page of results by default.
+The <code>limit</code> parameter controls the number of items shown.</p>
+<p>To load the next page, in the last row, select <strong>Load more</strong>.</p>
+<h4>Field functions</h4>
+<p>To create dynamically generated columns, use functions in the <code>fields</code> parameters in views.
+For a full list, see <a href="functions.md#functions-in-embedded-views">Functions in embedded views</a>.</p>
+<h4>Custom field aliases</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/535558">Introduced</a> in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To rename a table view's column to a custom value, use the <code>AS</code> syntax keyword to alias fields.</p>
+<pre><code class="language-yaml">```glql
+display: list
+fields: title, labels(&quot;workflow::*&quot;) AS &quot;Workflow&quot;, labels(&quot;priority::*&quot;) AS &quot;Priority&quot;
+limit: 5
+query: project = &quot;gitlab-org/gitlab&quot; AND assignee = currentUser() AND state = opened
+```
+</code></pre>
+<p>This source displays a view with columns <code>Title</code>, <code>Workflow</code> and <code>Priority</code>.</p>
+<h3>View actions</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/184788">Introduced</a> in GitLab 17.11.</li>
+<li><strong>Reload</strong> action <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/537310">introduced</a> in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When a view appears on a page, use the <strong>View actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}})
+dropdown list to take an action on it.</p>
+<p>Supported actions:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View source</td>
+<td>View the source of the view.</td>
+</tr>
+<tr>
+<td>Copy source</td>
+<td>Copy the source of the view to clipboard.</td>
+</tr>
+<tr>
+<td>Copy contents</td>
+<td>Copy the table or list contents to clipboard.</td>
+</tr>
+<tr>
+<td>Reload</td>
+<td>Reload this view.</td>
+</tr>
+</tbody>
+</table></code></pre>
+</body>
+</html>

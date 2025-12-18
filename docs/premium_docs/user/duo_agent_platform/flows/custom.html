@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Flow visibility</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Workflow Catalog
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Custom flows</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Model information" &gt;}}</p>
+<ul>
+<li>LLM: Anthropic <a href="https://www.anthropic.com/claude/sonnet">Claude Sonnet 4</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/578228">Introduced</a> in GitLab 18.7 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>ai_catalog_flows</code>. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Custom flows are AI-powered workflows you create and configure to
+automate complex, multi-step tasks across your GitLab projects.</p>
+<h2>Flow visibility</h2>
+<p>When you create a custom flow, you select a project to manage it and choose whether the flow is public or private.</p>
+<p>Public flows:</p>
+<ul>
+<li>Can be viewed by anyone on the instance and can be enabled in any project that meets the prerequisites.</li>
+</ul>
+<p>Private flows:</p>
+<ul>
+<li>Can be viewed only by members of the managing project who have at least the Developer role, and by users with the Owner role for the top-level group.</li>
+<li>Cannot be enabled in projects other than the managing project, or in groups other than the top-level group.</li>
+</ul>
+<p>You cannot change a private flow to public if the flow is currently enabled.</p>
+<h2>View the flows for your project</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Developer role for the project.</li>
+</ul>
+<p>To view a list of flows associated with your project:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Flows</strong>.</li>
+<li>To view flows enabled in the project, select the <strong>Enabled</strong> tab.</li>
+<li>To view flows managed by the project, select the <strong>Managed</strong> tab.</li>
+</ol>
+<p>Select a flow to view its details.</p>
+<h2>Create a flow</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To create a flow:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Flows</strong>.</li>
+<li>Select <strong>New flow</strong>.</li>
+<li>Under <strong>Basic information</strong>:</li>
+<li>In <strong>Display name</strong>, enter a name.</li>
+<li>In <strong>Description</strong>, enter a description.</li>
+<li>Under <strong>Visibility &amp; access</strong>, for <strong>Visibility</strong>, select <strong>Private</strong> or <strong>Public</strong>.</li>
+<li>Under <strong>Configuration</strong>:</li>
+<li>Select <strong>Flow</strong>.</li>
+<li>In the editor, enter your flow configuration.
+      To learn how to write custom flow YAML, see the <a href="https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/main/docs/flow_registry/v1.md">flow registry framework documentation</a>.</li>
+<li>Select <strong>Create flow</strong>.</li>
+</ol>
+<p>The flow appears in the AI Catalog.</p>
+<h2>Enable a flow</h2>
+<p>Enable a flow to trigger it from an issue, merge request, or discussion.
+To enable a flow, you must:</p>
+<ol>
+<li>Enable it in a top-level group.</li>
+<li>Enable it in the project you want to use it in.</li>
+</ol>
+<h3>Enable in a top-level group</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role for the group.</li>
+</ul>
+<p>To enable a flow in a top-level group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> &gt; <strong>Explore</strong>.</li>
+<li>Select <strong>AI Catalog</strong>, then select the <strong>Flows</strong> tab.</li>
+<li>Select the flow you want to enable.</li>
+<li>In the upper-right corner, select <strong>Enable in group</strong>.</li>
+<li>From the dropdown list, select the group you want to enable the flow in.</li>
+<li>Select <strong>Enable</strong>.</li>
+</ol>
+<p>The flow appears in the group's <strong>Automate</strong> &gt; <strong>Flows</strong> page.</p>
+<p>A service account is created in the group. The name of the account
+follows this naming convention: <code>ai-&lt;flow&gt;-&lt;group&gt;</code>.</p>
+<h3>Enable in a project</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+<li>The flow must be enabled in the project's top-level group.</li>
+</ul>
+<p>To enable a flow in a project:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Flows</strong>.</li>
+<li>In the upper-right corner, select <strong>Enable flow from group</strong>.</li>
+<li>From the dropdown list, select the flow you want to enable.</li>
+<li>For <strong>Add triggers</strong>, select which events trigger the flow:</li>
+<li><strong>Mention</strong>: When the service account user is mentioned
+     in a comment on an issue or merge request.</li>
+<li><strong>Assign</strong>: When the service account user is assigned
+     to an issue or merge request.</li>
+<li><strong>Assign reviewer</strong>: When the service account user is assigned
+     as a reviewer to a merge request.</li>
+<li>Select <strong>Enable</strong>.</li>
+</ol>
+<p>The flow appears in the project's <strong>Automate</strong> &gt; <strong>Flows</strong> list.</p>
+<p>The top-level group's service account is added to the project.
+This account is assigned the Developer role.</p>
+<h3>Disable a flow</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>For groups, you must have the Owner role.</li>
+<li>For projects, you must have at least the Maintainer role.</li>
+</ul>
+<p>To disable a flow:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group or project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Flows</strong>.</li>
+<li>Find the flow you want to remove and select <strong>Actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) &gt; <strong>Disable</strong>.</li>
+<li>On the confirmation dialog, select <strong>Disable</strong>.</li>
+</ol>
+<p>The flow no longer appears in the project or group, and can't be run. Any service accounts or triggers associated with the flow are also removed.</p>
+<h2>Create a trigger</h2>
+<p>You must now <a href="../triggers/_index.html">create a trigger</a>, which determines when the flow runs.</p>
+<p>For example, you can specify the flow to be triggered when you mention the flow service account user in a discussion,
+or when you assign the service account as a reviewer.</p>
+<p>When you enable a flow in a project, you also create triggers.</p>
+<h2>Use a flow</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Developer role for the project.</li>
+<li>The flow must be enabled in the project.</li>
+</ul>
+<p>To use a flow:</p>
+<ol>
+<li>In your project, open an issue, merge request, or epic.</li>
+<li>To trigger the flow, mention, assign, or request a review from the flow service account user. By default, the user has the name <code>ai-&lt;flow&gt;-&lt;group&gt;</code>.</li>
+</ol>
+<p>For example, if you enable a flow called <code>Code review flow</code> in the <code>GitLab Duo</code> group, the service account user is <code>ai-code-review-flow-gitlab-duo</code>.
+1. After the flow has completed the task, you see a confirmation, and either a ready-to-merge change or an inline comment.</p>
+<p>{{&lt; alert type="warning" &gt;}}
+The service account can access all projects that both:</p>
+<ul>
+<li>You have access to.</li>
+<li>The flow has been added to.</li>
+</ul>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Duplicate a flow</h2>
+<p>To make changes to a flow without overwriting the original, create a copy of an existing flow.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To duplicate a flow:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> &gt; <strong>Explore</strong>.</li>
+<li>Select <strong>AI Catalog</strong>, then select the <strong>Flows</strong> tab.</li>
+<li>Select the flow you want to duplicate.</li>
+<li>In the upper-right corner, select <strong>Actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) &gt; <strong>Duplicate</strong>.</li>
+<li>Optional. Edit any fields you want to change.</li>
+<li>Select <strong>Create flow</strong>.</li>
+</ol>
+<h2>Manage flows</h2>
+<p>Edit a flow to change its configuration, or delete it to remove it from the AI Catalog.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be a member of the managing project and have at least the Maintainer role.</p>
+</li>
+<li>
+<p>On the top bar, select <strong>Search or go to</strong> &gt; <strong>Explore</strong>.</p>
+</li>
+<li>Select <strong>AI Catalog</strong>, then select the <strong>Flows</strong> tab.</li>
+<li>Select the flow you want to manage.</li>
+<li>To edit a flow:<ol>
+<li>In the upper-right corner, select <strong>Edit</strong>.</li>
+<li>Edit any fields you want to change, then select <strong>Save changes</strong>.</li>
+</ol>
+</li>
+<li>To delete a flow:<ol>
+<li>In the upper-right corner, select <strong>Actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) &gt; <strong>Delete</strong>.</li>
+<li>On the confirmation dialog, select <strong>Delete</strong>.</li>
+</ol>
+</li>
+</ul>
+<h2>Group sharing and flows</h2>
+<p>When you enable a flow in a group, a related service account is automatically created. The service account:</p>
+<ul>
+<li>Uses <a href="../security.html">composite identity authentication</a> to ensure that the flow can never access more than the user who runs the flow.</li>
+<li>Is added as a member to any project under the top-level group that enables the flow, so the flow can't access resources outside that group.</li>
+<li>Is granted access to any additional groups that are shared with the top-level group. The service account is treated like any other group member for group sharing.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Sharing flow service accounts across multiple top-level groups can create unintended access
+permissions and security risks.</p>
+<p>{{&lt; /alert &gt;}}</p></code></pre>
+</body>
+</html>

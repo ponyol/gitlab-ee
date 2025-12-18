@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bitbucket_integration</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Pipeline Execution
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Connect your Bitbucket Cloud repository to GitLab CI/CD.
+title: Using GitLab CI/CD with a Bitbucket Cloud repository</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>GitLab CI/CD can be used with Bitbucket Cloud by:</p>
+<ol>
+<li>Creating a <a href="_index.html">CI/CD project</a>.</li>
+<li>Connecting your Git repository by URL.</li>
+</ol>
+<p>To use GitLab CI/CD with a Bitbucket Cloud repository:</p>
+<ol>
+<li>In Bitbucket, create an <a href="https://support.atlassian.com/bitbucket-cloud/docs/create-an-app-password/"><strong>App password</strong></a> to authenticate
+   the script that sets commit build
+   statuses in Bitbucket. Repository write permissions are required.</li>
+</ol>
+<p><img alt="Bitbucket Cloud page showing the App password creation interface." src="img/bitbucket_app_password_v10_6.png" /></p>
+<ol>
+<li>
+<p>In Bitbucket, from your repository, select <strong>Clone</strong>, then copy the URL that starts after <code>git clone</code>.</p>
+</li>
+<li>
+<p>In GitLab, create a project:</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Create new</strong> ({{&lt; icon name="plus" &gt;}}) and <strong>New project/repository</strong>.</p>
+</li>
+<li>Select <strong>Run CI/CD for external repository</strong>.</li>
+<li>Select <strong>Repository by URL</strong>.</li>
+<li>Complete the fields:<ul>
+<li>For <strong>Git repository URL</strong>, enter the URL of your Bitbucket repository. Make sure to remove your <code>@username</code>.</li>
+<li>For <strong>Username</strong>, enter the username associated with the App password.</li>
+<li>For <strong>Password</strong>, enter the App password from Bitbucket.</li>
+</ul>
+</li>
+</ol>
+<p>GitLab imports the repository and enables <a href="../../user/project/repository/mirror/pull.html">Pull Mirroring</a>.
+   You can check that mirroring is working in the project in <strong>Settings</strong> &gt; <strong>Repository</strong> &gt; <strong>Mirroring repositories</strong>.</p>
+<ol>
+<li>
+<p>In GitLab, generate a
+   <a href="../../user/profile/personal_access_tokens.html">personal access token</a>
+   with <code>api</code> scope. The token is used to authenticate requests from the web
+   hook that is created in Bitbucket to notify GitLab of new commits.</p>
+</li>
+<li>
+<p>In Bitbucket, from <strong>Settings</strong> &gt; <strong>Webhooks</strong>, create a new webhook to notify
+   GitLab of new commits.</p>
+</li>
+<li>
+<p>Set the webhook URL to the <a href="../../api/project_pull_mirroring.md#start-the-pull-mirroring-process-for-a-project">GitLab pull mirroring</a> endpoint, and
+   use the personal access token you just generated for authentication.</p>
+</li>
+</ol>
+<p><code>plaintext
+   https://gitlab.example.com/api/v4/projects/:project_id/mirror/pull?private_token=&lt;your_personal_access_token&gt;</code></p>
+<p>The webhook trigger should be set to <strong>Repository Push</strong>.</p>
+<p><img alt="Bitbucket Cloud repository settings page displaying webhook configuration for GitLab mirroring." src="img/bitbucket_webhook_v10_6.png" /></p>
+<p>After saving, test the webhook by pushing a change to your Bitbucket
+   repository.</p>
+<ol>
+<li>
+<p>In GitLab, from <strong>Settings</strong> &gt; <strong>CI/CD</strong> &gt; <strong>Variables</strong>, add variables to allow
+   communication with Bitbucket through the Bitbucket API:</p>
+</li>
+<li>
+<p><code>BITBUCKET_ACCESS_TOKEN</code>: The Bitbucket app password created previously. This variable should be <a href="../variables/_index.md#mask-a-cicd-variable">masked</a>.</p>
+</li>
+<li><code>BITBUCKET_USERNAME</code>: The username of the Bitbucket account.</li>
+<li><code>BITBUCKET_NAMESPACE</code>: Set this variable if your GitLab and Bitbucket namespaces differ.</li>
+<li>
+<p><code>BITBUCKET_REPOSITORY</code>: Set this variable if your GitLab and Bitbucket project names differ.</p>
+</li>
+<li>
+<p>In Bitbucket, add a script that pushes the pipeline status to Bitbucket. The script
+   is created in Bitbucket, but the mirroring process copies it to the GitLab mirror. The GitLab
+   CI/CD pipeline runs the script, and pushes the status back to Bitbucket.</p>
+</li>
+</ol>
+<p>Create a file <code>build_status</code>, insert the following script and run
+   <code>chmod +x build_status</code> in your terminal to make the script executable.</p>
+<p>```shell
+   #!/usr/bin/env bash</p>
+<p># Push GitLab CI/CD build status to Bitbucket Cloud</p>
+<p>if [ -z "$BITBUCKET_ACCESS_TOKEN" ]; then
+      echo "ERROR: BITBUCKET_ACCESS_TOKEN is not set"
+   exit 1
+   fi
+   if [ -z "$BITBUCKET_USERNAME" ]; then
+       echo "ERROR: BITBUCKET_USERNAME is not set"
+   exit 1
+   fi
+   if [ -z "$BITBUCKET_NAMESPACE" ]; then
+       echo "Setting BITBUCKET_NAMESPACE to $CI_PROJECT_NAMESPACE"
+       BITBUCKET_NAMESPACE=$CI_PROJECT_NAMESPACE
+   fi
+   if [ -z "$BITBUCKET_REPOSITORY" ]; then
+       echo "Setting BITBUCKET_REPOSITORY to $CI_PROJECT_NAME"
+       BITBUCKET_REPOSITORY=$CI_PROJECT_NAME
+   fi</p>
+<p>BITBUCKET_API_ROOT="https://api.bitbucket.org/2.0"
+   BITBUCKET_STATUS_API="$BITBUCKET_API_ROOT/repositories/$BITBUCKET_NAMESPACE/$BITBUCKET_REPOSITORY/commit/$CI_COMMIT_SHA/statuses/build"
+   BITBUCKET_KEY="ci/gitlab-ci/$CI_JOB_NAME"</p>
+<p>case "$BUILD_STATUS" in
+   running)
+      BITBUCKET_STATE="INPROGRESS"
+      BITBUCKET_DESCRIPTION="The build is running!"
+      ;;
+   passed)
+      BITBUCKET_STATE="SUCCESSFUL"
+      BITBUCKET_DESCRIPTION="The build passed!"
+      ;;
+   failed)
+      BITBUCKET_STATE="FAILED"
+      BITBUCKET_DESCRIPTION="The build failed."
+      ;;
+   esac</p>
+<p>echo "Pushing status to $BITBUCKET_STATUS_API..."
+   curl --request POST "$BITBUCKET_STATUS_API" \
+   --user $BITBUCKET_USERNAME:$BITBUCKET_ACCESS_TOKEN \
+   --header "Content-Type:application/json" \
+   --silent \
+   --data "{ \"state\": \"$BITBUCKET_STATE\", \"key\": \"$BITBUCKET_KEY\", \"description\":
+   \"$BITBUCKET_DESCRIPTION\",\"url\": \"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID\" }"
+   ```</p>
+<ol>
+<li>In Bitbucket, create a <code>.gitlab-ci.yml</code> file to use the script to push
+   pipeline success and failures to Bitbucket. Similar to the script added previously,
+   this file is copied to the GitLab repository as part of the mirroring process.</li>
+</ol>
+<p>```yaml
+   stages:
+     - test
+     - ci_status</p>
+<p>unit-tests:
+     script:
+       - echo "Success. Add your tests!"</p>
+<p>success:
+     stage: ci_status
+     before_script:
+       - ""
+     after_script:
+       - ""
+     script:
+       - BUILD_STATUS=passed BUILD_KEY=push ./build_status
+     when: on_success</p>
+<p>failure:
+     stage: ci_status
+     before_script:
+       - ""
+     after_script:
+       - ""
+     script:
+       - BUILD_STATUS=failed BUILD_KEY=push ./build_status
+     when: on_failure
+   ```</p>
+<p>GitLab is now configured to mirror changes from Bitbucket, run CI/CD pipelines
+configured in <code>.gitlab-ci.yml</code> and push the status to Bitbucket.</p></code></pre>
+</body>
+</html>

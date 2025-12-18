@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Install the GitLab for Eclipse plugin</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Editor Extensions
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Connect and use GitLab Duo in Eclipse.
+title: Install and set up GitLab for Eclipse</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-eclipse-plugin/-/issues/163">Changed</a> from experiment to beta in GitLab 17.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="disclaimer" /&gt;}}</p>
+<h2>Install the GitLab for Eclipse plugin</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>Eclipse 4.33 and later.</li>
+<li>GitLab version 16.8 or later.</li>
+</ul>
+<p>To install GitLab for Eclipse:</p>
+<ol>
+<li>Open your Eclipse IDE and your preferred web browser.</li>
+<li>In your web browser, go to the page for the
+   <a href="https://marketplace.eclipse.org/content/gitlab-eclipse">GitLab for Eclipse plugin</a> in the Eclipse Marketplace.</li>
+<li>On the plugin's page, select <strong>Install</strong>, and drag your mouse over to your Eclipse IDE.</li>
+<li>In the <strong>Eclipse Marketplace</strong> window, select the <strong>GitLab For Eclipse</strong> category.</li>
+<li>Select <strong>Confirm &gt;</strong>, then select <strong>Finish</strong>.</li>
+<li>If the <strong>Trust Authorities</strong> window appears, select the <strong><code>https://gitlab.com</code></strong> update site and select <strong>Trust Selected</strong>.</li>
+<li>Select <strong>Restart Now</strong>.</li>
+</ol>
+<p>If the Eclipse Marketplace is unavailable, follow the
+<a href="https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Ftasks%2Ftasks-124.htm">Eclipse installation instructions</a>
+for adding a new software site. For <strong>Work with</strong>, use
+<code>https://gitlab.com/gitlab-org/editor-extensions/gitlab-eclipse-plugin/-/releases/permalink/latest/downloads/</code>.</p>
+<h2>Connect to GitLab</h2>
+<p>After you install the extension, connect it to your GitLab account by creating a personal access token and authenticating with GitLab.</p>
+<h3>Create a personal access token</h3>
+<p>If you are on a GitLab Self-Managed instance, create a personal access token.</p>
+<ol>
+<li>In GitLab, in the upper-right corner, select your avatar.</li>
+<li>Select <strong>Edit profile</strong>.</li>
+<li>On the left sidebar, select <strong>Personal access tokens</strong>.</li>
+<li>Select <strong>Add new token</strong>.</li>
+<li>Enter a name, description, and expiration date.</li>
+<li>Select the <code>api</code> scope.</li>
+<li>Select <strong>Create personal access token</strong>.</li>
+</ol>
+<h3>Authenticate with GitLab</h3>
+<p>After you configure the plugin in your IDE, connect it to your GitLab account:</p>
+<ol>
+<li>In your IDE, select <strong>Eclipse</strong> &gt; <strong>Settings</strong>.</li>
+<li>On the left sidebar, select <strong>GitLab</strong>.</li>
+<li>Provide the <strong>Connection URL</strong>. For GitLab.com, use <code>https://gitlab.com</code>.</li>
+<li>For <strong>GitLab Personal Access Token</strong>, paste in the personal access token you created.
+   The token is displayed while being entered for the first time. After applying, the
+   token is not displayed and stored using the Eclipse secure storage.</li>
+<li>Under the GitLab settings, select <strong>Apply</strong>.</li>
+<li>Select <strong>Apply and Close</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

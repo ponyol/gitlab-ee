@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Fulfillment
+group: Provision
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Assign GitLab Duo seats to users using the GraphQL API. Learn prerequisites, queries, mutations, and how to manage add-on seat assignments efficiently.
+title: Assign GitLab Duo seats by using GraphQL</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/146620">Introduced</a> in GitLab 16.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use this API to assign <a href="../../user/gitlab_duo/_index.html">GitLab Duo seats</a> to users.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>You must have the Owner role for the group you want to assign seats to.</li>
+<li>You must have a personal access token with the <code>api</code> scope.</li>
+</ul>
+<h2>Get the add-on purchase ID</h2>
+<p>To start, retrieve the purchase ID for the GitLab Duo add-on. For GitLab.com:</p>
+<pre><code class="language-graphql">query {
+ addOnPurchases (namespaceId: &quot;gid://gitlab/Group/YOUR_NAMESPACE_ID&quot;)
+ {
+  name
+  purchasedQuantity
+  assignedQuantity
+  id
+ }
+}
+</code></pre>
+<p>For GitLab Self-Managed and GitLab Dedicated:</p>
+<pre><code class="language-graphql">query {
+ addOnPurchases
+ {
+  name
+  purchasedQuantity
+  assignedQuantity
+  id
+ }
+}
+</code></pre>
+<h2>Assign a GitLab Duo seat to specific users</h2>
+<p>Then assign seats to specific users:</p>
+<pre><code class="language-graphql">mutation {
+  userAddOnAssignmentBulkCreate(input: {
+    addOnPurchaseId: &quot;gid://gitlab/GitlabSubscriptions::AddOnPurchase/YOUR_ADDON_PURCHASE_ID&quot;,
+    userIds: [
+      &quot;gid://gitlab/User/USER_ID_1&quot;,
+      &quot;gid://gitlab/User/USER_ID_2&quot;,
+      &quot;gid://gitlab/User/USER_ID_3&quot;
+    ]
+  }) {
+    addOnPurchase {
+      id
+      name
+      assignedQuantity
+      purchasedQuantity
+    }
+    users {
+      nodes {
+        id
+        username
+        }
+      }
+    errors
+  }
+}
+</code></pre>
+<h2>Use GraphQL</h2>
+<p>You can use <a href="https://gitlab.com/-/graphql-explorer">GraphQL</a> to assign seats to users.</p>
+<ol>
+<li>Copy the add-on purchase ID code excerpt.</li>
+<li>Open GraphQL.</li>
+<li>In the left window, enter the query for <a href="#get-the-add-on-purchase-id">getting an add-on purchase ID</a>.</li>
+<li>Select <strong>Play</strong>.</li>
+<li>Repeat to assign a GitLab Duo seat to specific users.</li>
+</ol>
+<h2>Related topics</h2>
+<ul>
+<li><a href="reference/_index.html">GraphQL API Resources</a></li>
+<li><a href="https://graphql.org/learn/">GraphQL specific entities, like fragments and interfaces</a></li>
+</ul></code></pre>
+</body>
+</html>

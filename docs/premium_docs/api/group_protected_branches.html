@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Valid access levels</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Group-level protected branches API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/500250">Generally available</a> in GitLab 17.6. Feature flag <code>group_protected_branches</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use this API to manage <a href="../user/project/repository/branches/protected.md#in-a-group">protected branch settings</a>.
+Use this API to manage <a href="../user/project/repository/branches/protected.md#in-a-group">protected branch settings</a>
+that are inherited by all projects in a group.
+Group protected branches only support <a href="#valid-access-levels">valid access levels</a>. Individual users
+and groups cannot be specified.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Protected branch settings for groups are restricted to top-level groups only.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Valid access levels</h2>
+<p>The access levels are defined in the <code>ProtectedRefAccess.allowed_access_levels</code> method.
+These levels are recognized:</p>
+<pre><code class="language-plaintext">0  =&gt; No access
+30 =&gt; Developer access
+40 =&gt; Maintainer access
+60 =&gt; Admin access
+</code></pre>
+<h2>List protected branches</h2>
+<p>Gets a list of protected branches from a group. If a wildcard is set, it is returned instead
+of the exact name of the branches that match that wildcard.</p>
+<pre><code class="language-plaintext">GET /groups/:id/protected_branches
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>no</td>
+<td>Name or part of the name of protected branches to be searched for.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/5/protected_branches&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;main&quot;,
+    &quot;push_access_levels&quot;: [
+      {
+        &quot;id&quot;:  1,
+        &quot;access_level&quot;: 40,
+        &quot;user_id&quot;: null,
+        &quot;group_id&quot;: null,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      }
+    ],
+    &quot;merge_access_levels&quot;: [
+      {
+        &quot;id&quot;:  1,
+        &quot;access_level&quot;: 40,
+        &quot;user_id&quot;: null,
+        &quot;group_id&quot;: null,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      }
+    ],
+    &quot;allow_force_push&quot;:false,
+    &quot;code_owner_approval_required&quot;: false
+  },
+  {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;release/*&quot;,
+    &quot;push_access_levels&quot;: [
+      {
+        &quot;id&quot;:  1,
+        &quot;access_level&quot;: 40,
+        &quot;user_id&quot;: null,
+        &quot;group_id&quot;: null,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      }
+    ],
+    &quot;merge_access_levels&quot;: [
+      {
+        &quot;id&quot;:  1,
+        &quot;access_level&quot;: 40,
+        &quot;user_id&quot;: null,
+        &quot;group_id&quot;: null,
+        &quot;access_level_description&quot;: &quot;Maintainers&quot;
+      }
+    ],
+    &quot;allow_force_push&quot;:false,
+    &quot;code_owner_approval_required&quot;: false
+  },
+  ...
+]
+</code></pre>
+<h2>Get a single protected branch or wildcard protected branch</h2>
+<p>Gets a single protected branch or wildcard protected branch.</p>
+<pre><code class="language-plaintext">GET /groups/:id/protected_branches/:name
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the branch or wildcard.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/5/protected_branches/main&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;main&quot;,
+  &quot;push_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1,
+      &quot;access_level&quot;: 40,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;merge_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1,
+      &quot;access_level&quot;: 40,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;allow_force_push&quot;:false,
+  &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<h2>Protect repository branches</h2>
+<p>Protects a single repository branch using a wildcard protected branch.</p>
+<pre><code class="language-plaintext">POST /groups/:id/protected_branches
+</code></pre>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/5/protected_branches?name=*-stable&amp;push_access_level=30&amp;merge_access_level=30&amp;unprotect_access_level=40&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the branch or wildcard.</td>
+</tr>
+<tr>
+<td><code>allow_force_push</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Allow all users with push access to force push. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>allowed_to_merge</code></td>
+<td>array</td>
+<td>no</td>
+<td>Array of access levels allowed to merge, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, or <code>{access_level: integer}</code>.</td>
+</tr>
+<tr>
+<td><code>allowed_to_push</code></td>
+<td>array</td>
+<td>no</td>
+<td>Array of access levels allowed to push, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, or <code>{access_level: integer}</code>.</td>
+</tr>
+<tr>
+<td><code>allowed_to_unprotect</code></td>
+<td>array</td>
+<td>no</td>
+<td>Array of access levels allowed to unprotect, with each described by a hash of the form <code>{user_id: integer}</code>, <code>{group_id: integer}</code>, or <code>{access_level: integer}</code>.</td>
+</tr>
+<tr>
+<td><code>code_owner_approval_required</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Prevent pushes to this branch if it matches an item in the <a href="../user/project/codeowners/_index.html"><code>CODEOWNERS</code> file</a>. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>merge_access_level</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Access levels allowed to merge. Defaults: <code>40</code>, Maintainer role.</td>
+</tr>
+<tr>
+<td><code>push_access_level</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Access levels allowed to push. Defaults: <code>40</code>, Maintainer role.</td>
+</tr>
+<tr>
+<td><code>unprotect_access_level</code></td>
+<td>integer</td>
+<td>no</td>
+<td>Access levels allowed to unprotect. Defaults: <code>40</code>, Maintainer role.</td>
+</tr>
+</tbody>
+</table>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;*-stable&quot;,
+  &quot;push_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1,
+      &quot;access_level&quot;: 30,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+    }
+  ],
+  &quot;merge_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1,
+      &quot;access_level&quot;: 30,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;
+    }
+  ],
+  &quot;unprotect_access_levels&quot;: [
+    {
+      &quot;id&quot;:  1,
+      &quot;access_level&quot;: 40,
+      &quot;user_id&quot;: null,
+      &quot;group_id&quot;: null,
+      &quot;access_level_description&quot;: &quot;Maintainers&quot;
+    }
+  ],
+  &quot;allow_force_push&quot;:false,
+  &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<h3>Example with access levels</h3>
+<p>Use access levels to configure group protected branches:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --header &quot;Content-Type: application/json&quot; \
+  --data '{
+    &quot;name&quot;: &quot;main&quot;,
+    &quot;allowed_to_push&quot;: [{&quot;access_level&quot;: 30}],
+    &quot;allowed_to_merge&quot;: [{
+        &quot;access_level&quot;: 30
+      },{
+        &quot;access_level&quot;: 40
+      }
+    ]}'
+    --url &quot;https://gitlab.example.com/api/v4/groups/5/protected_branches&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+    &quot;id&quot;: 5,
+    &quot;name&quot;: &quot;main&quot;,
+    &quot;push_access_levels&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;access_level&quot;: 30,
+            &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;,
+            &quot;user_id&quot;: null,
+            &quot;group_id&quot;: null
+        }
+    ],
+    &quot;merge_access_levels&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;access_level&quot;: 30,
+            &quot;access_level_description&quot;: &quot;Developers + Maintainers&quot;,
+            &quot;user_id&quot;: null,
+            &quot;group_id&quot;: null
+        },
+        {
+            &quot;id&quot;: 2,
+            &quot;access_level&quot;: 40,
+            &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+            &quot;user_id&quot;: null,
+            &quot;group_id&quot;: null
+        }
+    ],
+    &quot;unprotect_access_levels&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;access_level&quot;: 40,
+            &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+            &quot;user_id&quot;: null,
+            &quot;group_id&quot;: null
+        }
+    ],
+    &quot;allow_force_push&quot;:false,
+    &quot;code_owner_approval_required&quot;: false
+}
+</code></pre>
+<h2>Unprotect repository branches</h2>
+<p>Unprotects the given protected branch or wildcard protected branch.</p>
+<pre><code class="language-plaintext">DELETE /groups/:id/protected_branches/:name
+</code></pre>
+<pre><code class="language-shell">curl --request DELETE \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/5/protected_branches/*-stable&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the branch.</td>
+</tr>
+</tbody>
+</table>
+<p>Example response:</p>
+<pre><code class="language-json">{
+   &quot;name&quot;: &quot;main&quot;,
+   &quot;push_access_levels&quot;: [
+      {
+         &quot;id&quot;: 12,
+         &quot;access_level&quot;: 40,
+         &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+         &quot;user_id&quot;: null,
+         &quot;group_id&quot;: null
+      }
+   ]
+}
+</code></pre>
+<h2>Update a protected branch</h2>
+<p>Updates a protected branch.</p>
+<pre><code class="language-plaintext">PATCH /groups/:id/protected_branches/:name
+</code></pre>
+<pre><code class="language-shell">curl --request PATCH \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/5/protected_branches/feature-branch?allow_force_push=true&amp;code_owner_approval_required=true&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The name of the branch.</td>
+</tr>
+<tr>
+<td><code>allow_force_push</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>When enabled, members who can push to this branch can also force push.</td>
+</tr>
+<tr>
+<td><code>allowed_to_push</code></td>
+<td>array</td>
+<td>no</td>
+<td>Array of push access levels, with each described by a hash.</td>
+</tr>
+<tr>
+<td><code>allowed_to_merge</code></td>
+<td>array</td>
+<td>no</td>
+<td>Array of merge access levels, with each described by a hash.</td>
+</tr>
+<tr>
+<td><code>allowed_to_unprotect</code></td>
+<td>array</td>
+<td>no</td>
+<td>Array of unprotect access levels, with each described by a hash.</td>
+</tr>
+<tr>
+<td><code>code_owner_approval_required</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Prevent pushes to this branch if it matches an item in the <a href="../user/project/codeowners/_index.html"><code>CODEOWNERS</code> file</a>. Default: <code>false</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Elements in the <code>allowed_to_push</code>, <code>allowed_to_merge</code> and <code>allowed_to_unprotect</code> arrays should take the form <code>{access_level: integer}</code>. Each access level must be a valid value from the <a href="#valid-access-levels">valid access levels</a>.</p>
+<ul>
+<li>To update access levels, you must also pass the <code>id</code> of the <code>access_level</code> in the respective hash.</li>
+<li>To delete access levels, you must pass <code>_destroy</code> set to <code>true</code>. See the following examples.</li>
+</ul>
+<h3>Example: create a <code>push_access_level</code> record</h3>
+<pre><code class="language-shell">curl --header 'Content-Type: application/json' --request PATCH \
+  --data '{&quot;allowed_to_push&quot;: [{access_level: 40}]}' \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/22034114/protected_branches/main&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+   &quot;name&quot;: &quot;main&quot;,
+   &quot;push_access_levels&quot;: [
+      {
+         &quot;id&quot;: 12,
+         &quot;access_level&quot;: 40,
+         &quot;access_level_description&quot;: &quot;Maintainers&quot;,
+         &quot;user_id&quot;: null,
+         &quot;group_id&quot;: null
+      }
+   ]
+}
+</code></pre>
+<h3>Example: update a <code>push_access_level</code> record</h3>
+<pre><code class="language-shell">curl --header 'Content-Type: application/json' --request PATCH \
+  --data '{&quot;allowed_to_push&quot;: [{&quot;id&quot;: 12, &quot;access_level&quot;: 0}]' \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/22034114/protected_branches/main&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+   &quot;name&quot;: &quot;main&quot;,
+   &quot;push_access_levels&quot;: [
+      {
+         &quot;id&quot;: 12,
+         &quot;access_level&quot;: 0,
+         &quot;access_level_description&quot;: &quot;No One&quot;,
+         &quot;user_id&quot;: null,
+         &quot;group_id&quot;: null
+      }
+   ]
+}
+</code></pre>
+<h3>Example: delete a <code>push_access_level</code> record</h3>
+<pre><code class="language-shell">curl --header 'Content-Type: application/json' --request PATCH \
+  --data '{&quot;allowed_to_push&quot;: [{&quot;id&quot;: 12, &quot;_destroy&quot;: true}]}' \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/22034114/protected_branches/main&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+   &quot;name&quot;: &quot;main&quot;,
+   &quot;push_access_levels&quot;: []
+}
+</code></pre></code></pre>
+</body>
+</html>

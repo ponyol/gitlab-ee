@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Review the Error Log</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Editor Extensions
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Connect and use GitLab Duo in Eclipse.
+title: Troubleshooting Eclipse</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-eclipse-plugin/-/issues/163">Changed</a> from experiment to beta in GitLab 17.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="disclaimer" /&gt;}}</p>
+<p>If the steps on this page don't solve your problem, check the
+<a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-eclipse-plugin/-/issues/?sort=created_date&amp;state=opened&amp;first_page_size=100">list of open issues</a>
+in the Eclipse plugin's project. If an issue matches your problem, update the issue.
+If no issues match your problem, <a href="https://gitlab.com/gitlab-org/editor-extensions/gitlab-eclipse-plugin/-/issues/new">create a new issue</a> with the <a href="#required-information-for-support">required information for support</a>.</p>
+<h2>Review the Error Log</h2>
+<ol>
+<li>In the menu bar of your IDE, select <strong>Window</strong>.</li>
+<li>Expand <strong>Show View</strong>, then select <strong>Error Log</strong>.</li>
+<li>Search for errors referencing the <code>gitlab-eclipse-plugin</code> plugins.</li>
+</ol>
+<h2>Locate the Workspace Log file</h2>
+<p>The Workspace log file, named <code>.log</code> is located in the directory <code>&lt;your-eclipse-workspace&gt;/.metadata</code>.</p>
+<h2>Enable GitLab Language Server debug logs</h2>
+<p>To enable GitLab Language Server debug logs:</p>
+<ol>
+<li>In your IDE, select <strong>Eclipse</strong> &gt; <strong>Settings</strong>.</li>
+<li>On the left sidebar, select <strong>GitLab</strong>.</li>
+<li>In <strong>Language Server Log Level</strong>, enter <code>debug</code>.</li>
+<li>Select <strong>Apply and Close</strong>.</li>
+</ol>
+<p>The debug logs are available in the <code>language_server.log</code> file. To view this file, either:</p>
+<ul>
+<li>Go to the directory <code>/Users/&lt;user&gt;/eclipse/&lt;eclipse-version&gt;/Eclipse.app/Contents/MacOS/.gitlab_plugin</code>, replacing <code>&lt;user&gt;</code> and <code>&lt;eclipse-version&gt;</code> with the appropriate values.</li>
+<li>Open the <a href="#review-the-error-log">Error logs</a>. Search for the log <code>Language server logs saved to: &lt;file&gt;.</code> where <code>&lt;file&gt;</code> is the absolute path to the <code>language_server.log</code> file.</li>
+</ul>
+<h2>Required information for support</h2>
+<p>When creating a support request, provide the following information:</p>
+<ol>
+<li>Your current GitLab for Eclipse plugin version.</li>
+<li>
+<p>Open the <code>About Eclipse IDE</code> dialog.</p>
+<ul>
+<li>On Windows, in your IDE, select <strong>Help</strong> &gt; <strong>About Eclipse IDE</strong>.</li>
+<li>On MacOS, in your IDE, select <strong>Eclipse</strong> &gt; <strong>About Eclipse IDE</strong>.</li>
+</ul>
+</li>
+<li>
+<p>On the dialog, select <strong>Installation details</strong>.</p>
+</li>
+<li>
+<p>Locate <strong>GitLab for Eclipse</strong> and copy the <strong>Version</strong> value.</p>
+</li>
+<li>
+<p>Your Eclipse version.</p>
+</li>
+<li>
+<p>Open the <code>About Eclipse IDE</code> dialog.</p>
+<ul>
+<li>On Windows, in your IDE, select <strong>Help</strong> &gt; <strong>About Eclipse IDE</strong>.</li>
+<li>On MacOS, in your IDE, select <strong>Eclipse</strong> &gt; <strong>About Eclipse IDE</strong>.</li>
+</ul>
+</li>
+<li>
+<p>Your operating system.</p>
+</li>
+<li>Are you using a GitLab.com, GitLab Self-Managed, or GitLab Dedicated instance?</li>
+<li>Are you using a proxy?</li>
+<li>Are you using a self-signed certificate?</li>
+<li>The <a href="#locate-the-workspace-log-file">workspace logs</a>.</li>
+<li>The <a href="#enable-gitlab-language-server-debug-logs">Language Server debug logs</a>.</li>
+<li>If applicable, a video or a screenshot of the issue.</li>
+<li>If applicable, the steps to reproduce the issue.</li>
+<li>If applicable, the attempted steps to resolve the issue.</li>
+</ol>
+<h2>Certificate errors</h2>
+<p>If your machine connects to your GitLab instance through a proxy, you might encounter
+SSL certificate errors in Eclipse. GitLab Duo attempts to detect certificates in your system store;
+however, Language Server cannot do this. If you see errors from the Language Server
+about certificates, try enabling the option to pass a Certificate Authority (CA) certificate:</p>
+<p>To do this:</p>
+<ol>
+<li>On the bottom right corner of your IDE, select the GitLab icon.</li>
+<li>On the dialog, select <strong>Show Settings</strong>. This opens the <strong>Settings</strong> dialog to <strong>Tools</strong> &gt; <strong>GitLab Duo</strong>.</li>
+<li>Select <strong>GitLab Language Server</strong> to expand the section.</li>
+<li>Select <strong>HTTP Agent Options</strong> to expand it.</li>
+<li>Either:</li>
+<li>Select an option <strong>Pass CA certificate from Duo to the Language Server</strong>.</li>
+<li>In <strong>Certificate authority (CA)</strong>, specify the path to your <code>.pem</code> file with CA certificates.</li>
+<li>Restart your IDE.</li>
+</ol>
+<h3>Ignore certificate errors</h3>
+<p>If GitLab Duo still fails to connect, you might need to
+ignore certificate errors. You might see errors in the GitLab Language Server logs after enabling
+debug mode:</p>
+<pre><code class="language-plaintext">2024-10-31T10:32:54:165 [error]: fetch: request to https://gitlab.com/api/v4/personal_access_tokens/self failed with:
+request to https://gitlab.com/api/v4/personal_access_tokens/self failed, reason: unable to get local issuer certificate
+FetchError: request to https://gitlab.com/api/v4/personal_access_tokens/self failed, reason: unable to get local issuer certificate
+</code></pre>
+<p>By design, this setting represents a security risk:
+these errors alert you to potential security breaches. You should enable this
+setting only if you are absolutely certain the proxy causes the problem.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You verified the certificate chain in your system browser or your machine's administrator
+  confirmed that this error is safe to ignore.</li>
+</ul>
+<p>To do this:</p>
+<ol>
+<li>Refer to Eclipse documentation on SSL certificates.</li>
+<li>Go to your IDE's top menu bar and select <strong>Settings</strong>.</li>
+<li>On the left sidebar, select <strong>Tools</strong> &gt; <strong>GitLab Duo</strong>.</li>
+<li>Confirm your default browser trusts the <strong>URL to GitLab instance</strong> you're using.</li>
+<li>Enable the <strong>Ignore certificate errors</strong> option.</li>
+<li>Select <strong>Verify setup</strong>.</li>
+<li>Select <strong>OK</strong> or <strong>Save</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

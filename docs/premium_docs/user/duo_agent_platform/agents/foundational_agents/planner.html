@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Access the Planner Agent</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Workflow Catalog
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Planner Agent</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/576618">Introduced</a> in GitLab 18.6.</li>
+<li>Create and edit features introduced in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>The Planner Agent is a specialized AI agent that assists with product management
+and planning workflows in GitLab. It helps you create, prioritize, and track work more effectively
+because it combines:</p>
+<ul>
+<li>Product management expertise.</li>
+<li>Awareness of GitLab planning objects, like issues and epics.</li>
+</ul>
+<p>Use the Planner Agent when you need help with:</p>
+<ul>
+<li>Prioritization: Applying frameworks like RICE, MoSCoW, or WSJF to rank work items.</li>
+<li>Work breakdown: Decomposing initiatives into epics, features, and user stories.</li>
+<li>Create: Drafting memos or creating objects to provide value.</li>
+<li>Dependency analysis: Identifying blocked work and understanding relationships between items.</li>
+<li>Edit: Editing existing objects to save time and improve efficiency.</li>
+<li>Planning sessions: Organizing sprints, milestones, or quarterly planning.</li>
+<li>Status reporting: Generating summaries of progress, risks, and blockers.</li>
+<li>Backlog management: Identifying stale issues, duplicates, or items needing refinement.</li>
+<li>Estimation: Suggesting relative sizing or effort estimates for work items.</li>
+</ul>
+<p>Please leave feedback in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/576622">issue 576622</a>.</p>
+<h2>Access the Planner Agent</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>Foundational agents must be <a href="_index.md#turn-foundational-agents-on-or-off">turned on</a>.</p>
+</li>
+<li>
+<p>On the top bar, select <strong>Search or go to</strong> and find your project or group.</p>
+</li>
+<li>Open an issue, epic, or merge request.</li>
+<li>On the GitLab Duo sidebar, select either <strong>New GitLab Duo Chat</strong>
+   ({{&lt; icon name="pencil-square" &gt;}}) or <strong>Current GitLab Duo Chat</strong>
+   ({{&lt; icon name="duo-chat" &gt;}}).</li>
+</ul>
+<p>A Chat conversation opens in the GitLab Duo sidebar on the right side of your screen.</p>
+<ol>
+<li>From the <strong>New chat</strong> ({{&lt; icon name="duo-chat-new" &gt;}}) dropdown list, select <strong>Planner</strong>.</li>
+<li>
+<p>Enter your planning-related question or request. To get the best results from your request:</p>
+</li>
+<li>
+<p>Provide context about your request, like URLs, filter criteria, or scope.</p>
+</li>
+<li>If you have a preferred prioritization framework, specify it.</li>
+<li>If the agent's assumptions don't match your workflow, ask for clarification.</li>
+</ol>
+<h3>Example prompts</h3>
+<ul>
+<li>"Generate an executive summary of this epic's progress: (insert URL)"</li>
+<li>"Draft a memo for this initiative (insert URL) including objectives, success criteria, and key stakeholders."</li>
+<li>"What tasks are needed to implement this user story?"</li>
+<li>"Draft a technical requirements issue for this (insert URL) including API needs, data models, and integration points."</li>
+<li>"What issues have missed their due dates?"</li>
+<li>"Write a dependency map narrative in an issue explaining the relationships and sequencing between these epics: (insert URLs)."</li>
+<li>"Find stale issues that haven't been updated in 6 months."</li>
+<li>"Create issues for the tasks needed to implement dark mode: design tokens, component updates, user preference storage, and toggle UI. Tag them all with dark-mode label."</li>
+<li>"Identify duplicate or similar issues in this project."</li>
+<li>"Create a bug issue for the payment gateway timeout problem. This blocks our checkout flow and should be high priority with the critical label."</li>
+<li>"Break down this initiative (insert URL) into key features we need to deliver."</li>
+<li>"Create a feature request issue: users want to export their data as CSV. Include acceptance criteria: supports all data types, includes headers, and respects user permissions."</li>
+<li>"How should we sequence the features in this initiative? (insert URL)?"</li>
+<li>"Create a technical debt epic for database optimization. Update all existing issues with 'performance' and 'database' labels to link to this new epic."</li>
+<li>"What work should we defer in this epic (insert URL) to reduce scope?"</li>
+<li>"Close this epic (insert URL) as completed. Create a new retrospective issue documenting what went well and what needs improvement, and link it to the closed epic."</li>
+<li>"Suggest how to organize these 20 issues (insert filter criteria) across Q1 sprints."</li>
+<li>"Show work items assigned to me."</li>
+<li>"Summarize blockers and mitigation plans for leadership: (insert URL)"</li>
+<li>"Which of the bugs with a "boards" label should we fix first, considering user impact?"</li>
+<li>"Group these issues into logical release themes: (insert URL)"</li>
+<li>"Identify which features are required for version 1, and which are optional, and explain why: (insert URL)"</li>
+<li>"Rank these epics by strategic value for Q1."</li>
+<li>"Suggest a phased approach for this project: (insert URL)"</li>
+<li>"Help me prioritize issues in my backlog with the label (insert label name) by using the RICE framework."</li>
+<li>"Which child items on this epic should I remove from the current scope to meet the deadline?"</li>
+<li>"What would be the MVP version of this feature? (insert URL)"</li>
+<li>"Help me prioritize technical debt against new features."</li>
+<li>"Compare these features (insert URLs) using an effort versus impact matrix."</li>
+<li>"Use MoSCoW to categorize features with the criteria (insert criteria) based on customer impact."</li>
+</ul></code></pre>
+</body>
+</html>

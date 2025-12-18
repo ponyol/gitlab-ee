@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Define which roles can create projects</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+gitlab_dedicated: yes
+description: Control project visibility, creation, retention, and deletion.
+title: Control access and visibility</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Administrators of GitLab instances can enforce specific controls on branches, projects, snippets, groups, and more.
+For example, you can define:</p>
+<ul>
+<li>Which roles can create or delete projects.</li>
+<li>Retention periods for deleted projects and groups.</li>
+<li>Visibility of groups, projects, and snippets.</li>
+<li>Allowed types and lengths for SSH keys.</li>
+<li>Git settings, such as accepted protocols (SSH or HTTPS) and clone URLs.</li>
+<li>Allow or prevent push mirroring and pull mirroring.</li>
+</ul>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<p>To access the visibility and access control options:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+</ol>
+<h2>Define which roles can create projects</h2>
+<p>You can add project creation protections to your instance. These protections define which roles can
+<a href="../../user/group/_index.md#specify-who-can-add-projects-to-a-group">add projects to a group</a>
+on the instance.</p>
+<p>When you configure the <strong>Default minimum role required to create projects</strong> setting, you set the
+default for new groups. Existing groups retain their current permissions.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>For <strong>Default minimum role required to create projects</strong>, select the desired role:</li>
+<li>No one.</li>
+<li>Administrators.</li>
+<li>Owners.</li>
+<li>Maintainers.</li>
+<li>Developers.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If you select <strong>Administrators</strong> and <a href="sign_in_restrictions.md#admin-mode">Admin Mode</a>
+is enabled, administrators must enter Admin Mode to create new projects.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Restrict project deletion to administrators</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator, or have the Owner role in a project.</li>
+</ul>
+<p>To restrict project deletion to only administrators:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>Scroll to <strong>Allowed to delete projects</strong>, and select <strong>Administrators</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>To disable the restriction:</p>
+<ol>
+<li>Select <strong>Owners and administrators</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Deletion protection</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Enabled delayed deletion for projects by default <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/393622">on GitLab.com</a> and <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/119606">on GitLab Self-Managed</a> in GitLab 16.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/389557">Changed to default behavior for groups</a> on the Premium and Ultimate tier in GitLab 16.0.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/17208">Moved</a> from GitLab Premium to GitLab Free in 18.0.</li>
+<li><a href="#immediate-deletion">Instance setting</a> to allow immediate deletion for groups or projects scheduled for deletion <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/205556">introduced</a> in GitLab 18.5. Enabled by default. Disabled on GitLab.com and Dedicated.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>These protections help guard against accidental deletion of groups and projects on your instance.</p>
+<h3>Retention period</h3>
+<p>Groups and projects remain restorable during the retention period you define. By default,
+the retention period is 30 days, but you can change it to a value between <code>1</code> and <code>90</code> days.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<p>To configure deletion protection for groups and projects:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>Scroll to <strong>Deletion protection</strong> and set the retention period to a value between <code>1</code> and <code>90</code> days.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Immediate deletion</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Instance setting to allow immediate deletion for groups or projects scheduled for deletion
+  <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/205556">introduced</a> in GitLab 18.5
+  <a href="../feature_flags/_index.html">with a flag</a> named <code>allow_immediate_namespaces_deletion</code>.
+  Enabled by default on self-managed, but disabled on GitLab.com and Dedicated.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>By default, immediate deletion is allowed for groups and projects marked for deletion. This allows users
+to effectively bypass the configured retention period and delete groups or projects immediately.</p>
+<p>This can be disabled, so that groups and projects are only deleted automatically after the configured retention period:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>Scroll to <strong>Immediate deletion</strong> and uncheck the checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Administrators can always immediately delete groups and projects through the Admin pages.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Override defaults and delete immediately</h3>
+<p>To override the delay, and immediately delete a project marked for removal:</p>
+<ol>
+<li><a href="../../user/project/working_with_projects.md#restore-a-project">Restore the project</a>.</li>
+<li>Delete the project as described in the
+   <a href="../admin_area.md#administering-projects">Administering Projects page</a>.</li>
+</ol>
+<h2>Configure project visibility defaults</h2>
+<p>To set the default <a href="../../user/public_access.html">visibility levels for new projects</a>:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>Select the desired default project visibility:</li>
+<li><strong>Private</strong> - Grant project access explicitly to each user. If this
+     project is part of a group, grants access to members of the group.</li>
+<li><strong>Internal</strong> - Any authenticated user, except external users, can access the project.</li>
+<li><strong>Public</strong> - Any user can access the project without any authentication.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<h2>Configure snippet visibility defaults</h2>
+<p>To set the default visibility levels for new <a href="../../user/snippets.html">snippets</a>:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>For <strong>Default snippet visibility</strong>, select your desired visibility level:</li>
+<li><strong>Private</strong>.</li>
+<li><strong>Internal</strong>. This setting is disabled for new projects, groups, and snippets on GitLab.com.
+     Existing snippets using the <code>Internal</code> visibility setting keep this setting. To learn more
+     about this change, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/12388">issue 12388</a>.</li>
+<li><strong>Public</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<h2>Configure group visibility defaults</h2>
+<p>To set the default visibility levels for new groups:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>For <strong>Default group visibility</strong>, select your desired visibility level:</li>
+<li><strong>Private</strong> - Only members can view the group and its projects.</li>
+<li><strong>Internal</strong> - Any authenticated user, except external users, can view the group and any internal projects.</li>
+<li><strong>Public</strong> - Authentication is not required to view the group and any public projects.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<p>For more details on group visibility, see
+<a href="../../user/group/_index.md#group-visibility">Group visibility</a>.</p>
+<h2>Restrict visibility levels</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/124649">Changed</a> in GitLab 16.3 to prevent restricting default project and group visibility, <a href="../feature_flags/_index.html">with a flag</a> named <code>prevent_visibility_restriction</code>. Disabled by default.</li>
+<li><code>prevent_visibility_restriction</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/131203">enabled</a> by default in GitLab 16.4.</li>
+<li><code>prevent_visibility_restriction</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/433280">removed</a> in GitLab 16.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When restricting visibility levels, consider how these restrictions interact
+with permissions for subgroups and projects that inherit their visibility from
+the item you're changing.</p>
+<p>This setting does not apply to projects created under a personal namespace.
+There is a <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/382749">feature request</a> to extend this
+functionality to <a href="../../user/enterprise_user/_index.html">enterprise users</a>.</p>
+<p>To restrict visibility levels for groups, projects, snippets, and selected pages:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>For <strong>Restricted visibility levels</strong>, select the desired visibility levels to restrict.</li>
+<li>If you restrict the <strong>Public</strong> level:<ul>
+<li>Only administrators can create public groups, projects, and snippets.</li>
+<li>User profiles are visible to only authenticated users through the Web interface.</li>
+<li>User attributes are not visible through the GraphQL API.</li>
+</ul>
+</li>
+<li>If you restrict the <strong>Internal</strong> level:<ul>
+<li>Only administrators can create internal groups, projects, and snippets.</li>
+</ul>
+</li>
+<li>If you restrict the <strong>Private</strong> level:<ul>
+<li>Only administrators can create private groups, projects, and snippets.</li>
+</ul>
+</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>You cannot restrict a visibility level that is set as the default for new projects or groups.
+Conversely, you cannot set a restricted visibility level as the default for new projects or groups.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Configure enabled Git access protocols</h2>
+<p>With GitLab access restrictions, you can select the protocols users can use to
+communicate with GitLab. Disabling an access protocol does not block port access to the
+server itself. The ports used for the protocol, SSH or HTTP(S), are still accessible.
+The GitLab restrictions apply at the application level.</p>
+<p>GitLab allows Git actions only for the protocols you select:</p>
+<ul>
+<li>If you enable both SSH and HTTP(S), users can choose either protocol.</li>
+<li>If you enable only one protocol, project pages show only the allowed protocol's
+  URL, with no option to change it.</li>
+</ul>
+<p>To specify the enabled Git access protocols for all projects on your instance:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>For <strong>Enabled Git access protocols</strong>, select your desired protocols:</li>
+<li>Both SSH and HTTP(S).</li>
+<li>Only SSH.</li>
+<li>Only HTTP(S).</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>GitLab <a href="https://gitlab.com/gitlab-org/gitlab-foss/-/merge_requests/18021">allows the HTTP(S) protocol</a>
+for Git clone or fetch requests performed <a href="../../ci/jobs/ci_job_token.html">with GitLab CI/CD job tokens</a>.
+This happens even if you select <strong>Only SSH</strong>, because GitLab Runner and CI/CD jobs require this setting.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Customize Git clone URL for HTTP(S)</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can customize project Git clone URLs for HTTP(S), which affects the clone
+panel shown to users on a project's page. For example, if:</p>
+<ul>
+<li>Your GitLab instance is at <code>https://example.com</code>, then project clone URLs are like
+  <code>https://example.com/foo/bar.git</code>.</li>
+<li>You want clone URLs that look like <code>https://git.example.com/gitlab/foo/bar.git</code> instead,
+  you can set this setting to <code>https://git.example.com/gitlab/</code>.</li>
+</ul>
+<p>To specify a custom Git clone URL for HTTP(S) in <code>gitlab.rb</code>, set a new value for
+<code>gitlab_rails['gitlab_ssh_host']</code>. To specify a new value from the GitLab UI:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>Enter a root URL for <strong>Custom Git clone URL for HTTP(S)</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<h2>Configure defaults for RSA, DSA, ECDSA, ED25519, ECDSA_SK, ED25519_SK SSH keys</h2>
+<p>These options specify the <a href="../../security/ssh_keys_restrictions.html">permitted types and lengths</a> for SSH keys.</p>
+<p>To specify a restriction for each key type:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>Go to <strong>RSA SSH keys</strong>.</li>
+<li>For each key type, you can allow or prevent their use entirely, or allow only lengths of:</li>
+<li>At least 1024 bits.</li>
+<li>At least 2048 bits.</li>
+<li>At least 3072 bits.</li>
+<li>At least 4096 bits.</li>
+<li>At least 1024 bits.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Enable project mirroring</h2>
+<p>GitLab enables project mirroring by default. If you disable it, both
+<a href="../../user/project/repository/mirror/pull.html">pull mirroring</a> and
+<a href="../../user/project/repository/mirror/push.html">push mirroring</a> no longer
+work in every repository. They can only be re-enabled by an administrator user on a per-project basis.</p>
+<p>To allow project maintainers on your instance to configure mirroring per project:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand <strong>Repository mirroring</strong>.</li>
+<li>Select <strong>Allow project maintainers to configure repository mirroring</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<h2>Configure globally-allowed IP address ranges</h2>
+<p>Administrators can combine IP address ranges with
+<a href="../../user/group/access_and_permissions.md#restrict-group-access-by-ip-address">IP restrictions per group</a>.
+Globally-allowed IP addresses enable aspects of the GitLab installation to work properly, even when
+groups set their own IP address restrictions.</p>
+<p>For example, if the GitLab Pages daemon runs on the <code>10.0.0.0/24</code> range, globally allow that range.
+GitLab Pages can still fetch artifacts from pipelines, even if IP address restrictions for the group don't
+include the <code>10.0.0.0/24</code> range.</p>
+<p>To add a IP address range to the allowlist for a group:</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must be an administrator.</p>
+</li>
+<li>
+<p>In the upper-right corner, select <strong>Admin</strong>.</p>
+</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>In <strong>Globally-allowed IP ranges</strong>, provide a list of IP address ranges. This list:</li>
+<li>Has no limit on the number of IP address ranges.</li>
+<li>Applies to both SSH or HTTP authorized IP address ranges. You cannot split
+     this list by authorization type.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ul>
+<h2>Prevent invitations to groups and projects</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/189954">Introduced</a> in GitLab 18.0. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Administrators can prevent non-administrators from inviting users to all groups or projects on the instance.
+When you configure this setting, only administrators can invite users to groups or projects on the instance.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Features such as <a href="../../user/project/members/sharing_projects_groups.html">sharing</a> or <a href="../../user/import/_index.html">migrations</a> can still allow access to these groups and projects.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<p>To prevent invitations:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Visibility and access controls</strong>.</li>
+<li>Select the <strong>Prevent group member invitations</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

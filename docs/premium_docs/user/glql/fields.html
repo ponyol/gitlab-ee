@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Fields inside query</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Knowledge
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: GLQL fields</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/14767">Introduced</a> in GitLab 17.4 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>glql_integration</code>. Disabled by default.</li>
+<li>Enabled on GitLab.com in GitLab 17.4 for a subset of groups and projects.</li>
+<li>Promoted to <a href="../../policy/development_stages_support.md#beta">beta</a> status in GitLab 17.10.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/476990">Changed</a> from experiment to beta in GitLab 17.10.</li>
+<li>Enabled on GitLab.com, GitLab Self-Managed, and GitLab Dedicated in GitLab 17.10.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/554870">Generally available</a> in GitLab 18.3. Feature flag <code>glql_integration</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>With GitLab Query Language (GLQL), fields are used to:</p>
+<ul>
+<li>Filter the results returned from a <a href="_index.md#query-syntax">GLQL query</a>.</li>
+<li>Control the details displayed in an <a href="_index.md#presentation-syntax">embedded view</a>.</li>
+<li>Sort the results displayed in an embedded view.</li>
+</ul>
+<p>You use fields in three embedded view parameters:</p>
+<ul>
+<li><strong><code>query</code></strong> - Set conditions to determine which items to retrieve</li>
+<li><strong><code>fields</code></strong> - Specify which columns and details appear in your view</li>
+<li><strong><code>sort</code></strong> - Order items by specific criteria</li>
+</ul>
+<p>The following sections describe the available fields for each component.</p>
+<h2>Fields inside query</h2>
+<p>In an embedded view, the <code>query</code> parameter can be used to include one or more expressions of the
+format <code>&lt;field&gt; &lt;operator&gt; &lt;value&gt;</code>. Multiple expressions are joined with <code>and</code>,
+for example, <code>group = "gitlab-org" and author = currentUser()</code>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>Querying epics is available in the Premium and Ultimate tier.</li>
+</ul>
+<p>The table below provides an overview of all available query fields and their specifications:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Name (and alias)</th>
+<th>Operators</th>
+<th>Supported for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#approved-by-user">Approved by user</a></td>
+<td><code>approver</code>, <code>approvedBy</code>, <code>approvers</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Merge requests</td>
+</tr>
+<tr>
+<td><a href="#assignees">Assignees</a></td>
+<td><code>assignee</code>, <code>assignees</code></td>
+<td><code>=</code>, <code>in</code>, <code>!=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#author">Author</a></td>
+<td><code>author</code></td>
+<td><code>=</code>, <code>in</code>, <code>!=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#cadence">Cadence</a></td>
+<td><code>cadence</code></td>
+<td><code>=</code>, <code>in</code></td>
+<td>Issues</td>
+</tr>
+<tr>
+<td><a href="#closed-at">Closed at</a></td>
+<td><code>closed</code>, <code>closedAt</code></td>
+<td><code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></td>
+<td>Issues, epics</td>
+</tr>
+<tr>
+<td><a href="#confidential">Confidential</a></td>
+<td><code>confidential</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Issues, epics</td>
+</tr>
+<tr>
+<td><a href="#created-at">Created at</a></td>
+<td><code>created</code>, <code>createdAt</code>, <code>opened</code>, <code>openedAt</code></td>
+<td><code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#custom-field">Custom field</a></td>
+<td><code>customField("Field name")</code></td>
+<td><code>=</code></td>
+<td>Issues, epics</td>
+</tr>
+<tr>
+<td><a href="#draft">Draft</a></td>
+<td><code>draft</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Merge requests</td>
+</tr>
+<tr>
+<td><a href="#due-date">Due date</a></td>
+<td><code>due</code>, <code>dueDate</code></td>
+<td><code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></td>
+<td>Issues, epics</td>
+</tr>
+<tr>
+<td><a href="#environment">Environment</a></td>
+<td><code>environment</code></td>
+<td><code>=</code></td>
+<td>Merge requests</td>
+</tr>
+<tr>
+<td><a href="#epic">Epic</a></td>
+<td><code>epic</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Issues</td>
+</tr>
+<tr>
+<td><a href="#group">Group</a></td>
+<td><code>group</code></td>
+<td><code>=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#health-status">Health status</a></td>
+<td><code>health</code>, <code>healthStatus</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Issues, epics</td>
+</tr>
+<tr>
+<td><a href="#id">ID</a></td>
+<td><code>id</code></td>
+<td><code>=</code>, <code>in</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#include-subgroups">Include subgroups</a></td>
+<td><code>includeSubgroups</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#iteration">Iteration</a></td>
+<td><code>iteration</code></td>
+<td><code>=</code>, <code>in</code>, <code>!=</code></td>
+<td>Issues</td>
+</tr>
+<tr>
+<td><a href="#labels">Labels</a></td>
+<td><code>label</code>, <code>labels</code></td>
+<td><code>=</code>, <code>in</code>, <code>!=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#merged-at">Merged at</a></td>
+<td><code>merged</code>, <code>mergedAt</code></td>
+<td><code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></td>
+<td>Merge requests</td>
+</tr>
+<tr>
+<td><a href="#merged-by-user">Merged by user</a></td>
+<td><code>merger</code>, <code>mergedBy</code></td>
+<td><code>=</code></td>
+<td>Merge requests</td>
+</tr>
+<tr>
+<td><a href="#milestone">Milestone</a></td>
+<td><code>milestone</code></td>
+<td><code>=</code>, <code>in</code>, <code>!=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#my-reaction-emoji">My reaction emoji</a></td>
+<td><code>myReaction</code>, <code>myReactionEmoji</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#project">Project</a></td>
+<td><code>project</code></td>
+<td><code>=</code></td>
+<td>Issues, merge requests</td>
+</tr>
+<tr>
+<td><a href="#reviewers">Reviewers</a></td>
+<td><code>reviewer</code>, <code>reviewers</code>, <code>reviewedBy</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Merge requests</td>
+</tr>
+<tr>
+<td><a href="#source-branch">Source branch</a></td>
+<td><code>sourceBranch</code></td>
+<td><code>=</code>, <code>in</code>, <code>!=</code></td>
+<td>Merge requests</td>
+</tr>
+<tr>
+<td><a href="#state">State</a></td>
+<td><code>state</code></td>
+<td><code>=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#status">Status</a></td>
+<td><code>status</code></td>
+<td><code>=</code></td>
+<td>Issues</td>
+</tr>
+<tr>
+<td><a href="#subscribed">Subscribed</a></td>
+<td><code>subscribed</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#target-branch">Target branch</a></td>
+<td><code>targetBranch</code></td>
+<td><code>=</code>, <code>in</code>, <code>!=</code></td>
+<td>Merge requests</td>
+</tr>
+<tr>
+<td><a href="#type">Type</a></td>
+<td><code>type</code></td>
+<td><code>=</code>, <code>in</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#updated-at">Updated at</a></td>
+<td><code>updated</code>, <code>updatedAt</code></td>
+<td><code>=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></td>
+<td>Issues, epics, merge requests</td>
+</tr>
+<tr>
+<td><a href="#weight">Weight</a></td>
+<td><code>weight</code></td>
+<td><code>=</code>, <code>!=</code></td>
+<td>Issues</td>
+</tr>
+</tbody>
+</table>
+<h3>Approved by user</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/491246">Introduced</a> in GitLab 17.8.</li>
+<li>Aliases <code>approvedBy</code> and <code>approvers</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Support for <code>Nullable</code> values <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/221">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query merge requests by one or more users who approved the merge request.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>String</code></li>
+<li><code>User</code> (for example, <code>@username</code>)</li>
+<li><code>List</code> (containing <code>String</code> or <code>User</code> values)</li>
+<li><code>Nullable</code> (either of <code>null</code>, <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all merge requests approved by current user and <code>@johndoe</code></li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and approver = (currentUser(), @johndoe)</code></p>
+<ul>
+<li>List all merge requests that are not yet approved</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and approver = none</code></p>
+<h3>Assignees</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Alias <code>assignees</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Support for querying epics by assignees <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/222">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by one or more users who are assigned to them.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>String</code></li>
+<li><code>User</code> (for example, <code>@username</code>)</li>
+<li><code>List</code> (containing <code>String</code> or <code>User</code> values)</li>
+<li><code>Nullable</code> (either of <code>null</code>, <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li><code>List</code> values and the <code>in</code> operator are not supported for <code>MergeRequest</code> types.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues where assignee is <code>@johndoe</code>:</li>
+</ul>
+<p><code>plaintext
+  assignee = @johndoe</code></p>
+<ul>
+<li>List all issues where assignees are both <code>@johndoe</code> and <code>@janedoe</code>:</li>
+</ul>
+<p><code>plaintext
+  assignee = (@johndoe, @janedoe)</code></p>
+<ul>
+<li>List all issues where assignees are either of <code>@johndoe</code> or <code>@janedoe</code>:</li>
+</ul>
+<p><code>plaintext
+  assignee in (@johndoe, @janedoe)</code></p>
+<ul>
+<li>List all issues where assignee is neither of <code>@johndoe</code> or <code>@janedoe</code>:</li>
+</ul>
+<p><code>plaintext
+  assignee != (@johndoe, @janedoe)</code></p>
+<ul>
+<li>List all merge requests where assignee is <code>@johndoe</code>:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and assignee = @johndoe</code></p>
+<h3>Author</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Support for querying epics by author <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+<li>Support for <code>in</code> operator <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/221">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by their author.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>String</code></li>
+<li><code>User</code> (for example, <code>@username</code>)</li>
+<li><code>List</code> (containing <code>String</code> or <code>User</code> values)</li>
+</ul>
+<p><strong>Additional details:</strong></p>
+<ul>
+<li>The <code>in</code> operator is not supported for <code>MergeRequest</code> types.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues where author is <code>@johndoe</code>:</li>
+</ul>
+<p><code>plaintext
+  author = @johndoe</code></p>
+<ul>
+<li>List all epics where author is either <code>@johndoe</code> or <code>@janedoe</code>:</li>
+</ul>
+<p><code>plaintext
+  type = Epic and author in (@johndoe, @janedoe)</code></p>
+<ul>
+<li>List all merge requests where author is <code>@johndoe</code>:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and author = @johndoe</code></p>
+<h3>Cadence</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-haskell/-/issues/74">Introduced</a> in GitLab 17.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues by the <a href="../group/iterations/_index.md#iteration-cadences">cadence</a> that the issue's iteration is a part of.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Number</code> (only positive integers)</li>
+<li><code>List</code> (containing <code>Number</code> values)</li>
+<li><code>Nullable</code> (either of <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Because an issue can have only one iteration, the <code>=</code> operator cannot be used with <code>List</code> type for the <code>cadence</code> field.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues with iteration that are a part of cadence ID <code>123456</code>:</li>
+</ul>
+<p><code>plaintext
+  cadence = 123456</code></p>
+<ul>
+<li>List all issues with iterations that are a part of any cadences <code>123</code> or <code>456</code>:</li>
+</ul>
+<p><code>plaintext
+  cadence in (123, 456)</code></p>
+<h3>Closed at</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Alias <code>closedAt</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Operators <code>&gt;=</code> and <code>&lt;=</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/work_items/58">introduced</a> in GitLab 18.0.</li>
+<li>Support for querying epics by closed date <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/222">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues or epics by the date when they were closed.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>AbsoluteDate</code> (in the format <code>YYYY-MM-DD</code>)</li>
+<li><code>RelativeDate</code> (in the format <code>&lt;sign&gt;&lt;digit&gt;&lt;unit&gt;</code>, where sign is <code>+</code>, <code>-</code>, or omitted,
+  digit is an integer, and <code>unit</code> is one of <code>d</code> (days), <code>w</code> (weeks), <code>m</code> (months) or <code>y</code> (years))</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>For the <code>=</code> operator, the time range is considered from 00:00 to 23:59 in the user's time zone.</li>
+<li><code>&gt;=</code> and <code>&lt;=</code> operators are inclusive of the dates being queried, whereas <code>&gt;</code> and <code>&lt;</code> are not.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues closed since yesterday:</li>
+</ul>
+<p><code>plaintext
+  closed &gt; -1d</code></p>
+<ul>
+<li>List all issues closed today:</li>
+</ul>
+<p><code>plaintext
+  closed = today()</code></p>
+<ul>
+<li>List all issues closed in the month of February 2023:</li>
+</ul>
+<p><code>plaintext
+  closed &gt; 2023-02-01 and closed &lt; 2023-02-28</code></p>
+<h3>Confidential</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Support for querying epics by their confidentiality <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues or epics by their visibility to project members.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Boolean</code> (either of <code>true</code> or <code>false</code>)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Confidential issues queried using GLQL are only visible to people who have permission to view them.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all confidential issues:</li>
+</ul>
+<p><code>plaintext
+  confidential = true</code></p>
+<ul>
+<li>List all issues that are not confidential:</li>
+</ul>
+<p><code>plaintext
+  confidential = false</code></p>
+<h3>Created at</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Aliases <code>createdAt</code>, <code>opened</code>, and <code>openedAt</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Operators <code>&gt;=</code> and <code>&lt;=</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/work_items/58">introduced</a> in GitLab 18.0.</li>
+<li>Support for querying epics by creation date <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by the date when they were created.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>AbsoluteDate</code> (in the format <code>YYYY-MM-DD</code>)</li>
+<li><code>RelativeDate</code> (in the format <code>&lt;sign&gt;&lt;digit&gt;&lt;unit&gt;</code>, where sign is <code>+</code>, <code>-</code>, or omitted,
+  digit is an integer, and <code>unit</code> is one of <code>d</code> (days), <code>w</code> (weeks), <code>m</code> (months) or <code>y</code> (years))</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>For the <code>=</code> operator, the time range is considered from 00:00 to 23:59 in the user's time zone.</li>
+<li><code>&gt;=</code> and <code>&lt;=</code> operators are inclusive of the dates being queried, whereas <code>&gt;</code> and <code>&lt;</code> are not.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues that were created in the last week:</li>
+</ul>
+<p><code>plaintext
+  created &gt; -1w</code></p>
+<ul>
+<li>List all issues created today:</li>
+</ul>
+<p><code>plaintext
+  created = today()</code></p>
+<ul>
+<li>List all issues created in the month of January 2025 that are still open:</li>
+</ul>
+<p><code>plaintext
+  created &gt; 2025-01-01 and created &lt; 2025-01-31 and state = opened</code></p>
+<h3>Custom field</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/233">Introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues or epics by <a href="../work_items/custom_fields.html">custom fields</a>.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>String</code> (for single-select custom fields)</li>
+<li><code>List</code> (of <code>String</code>, for multi-select custom fields)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Custom field names and values are not case-sensitive.</li>
+</ul>
+<p><strong>Examples</strong></p>
+<ul>
+<li>List all issues where the single-select "Subscription" custom field is set to "Free":</li>
+</ul>
+<p><code>plaintext
+  customField("Subscription") = "Free"</code></p>
+<ul>
+<li>List all issues where the single-select "Subscription" and "Team" custom fields are set to
+  "Free" and "Engineering":</li>
+</ul>
+<p><code>plaintext
+  customField("Subscription") = "Free" and customField("Team") = "Engineering"</code></p>
+<ul>
+<li>List all issues where the multi-select "Category" custom field is set to "Markdown" and "Text Editors":</li>
+</ul>
+<p><code>plaintext
+  customField("Category") = ("Markdown", "Text Editors")</code></p>
+<p>Alternatively:</p>
+<p><code>plaintext
+  customField("Category") = "Markdown" and customField("Category") = "Text Editors"</code></p>
+<h3>Draft</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/491246">Introduced</a> in GitLab 17.8.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query merge requests by their draft status.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Boolean</code> (either of <code>true</code> or <code>false</code>)</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all draft merge requests:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and draft = true</code></p>
+<ul>
+<li>List all merge requests that are not in draft state:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and draft = false</code></p>
+<h3>Due date</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Alias <code>dueDate</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Operators <code>&gt;=</code> and <code>&lt;=</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/work_items/58">introduced</a> in GitLab 18.0.</li>
+<li>Support for querying epics by due date <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/222">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues or epics by the date when they are due.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>AbsoluteDate</code> (in the format <code>YYYY-MM-DD</code>)</li>
+<li><code>RelativeDate</code> (in the format <code>&lt;sign&gt;&lt;digit&gt;&lt;unit&gt;</code>, where sign is <code>+</code>, <code>-</code>, or omitted,
+  digit is an integer, and <code>unit</code> is one of <code>d</code> (days), <code>w</code> (weeks), <code>m</code> (months) or <code>y</code> (years))</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>For the <code>=</code> operator, the time range is considered from 00:00 to 23:59 in the user's time zone.</li>
+<li><code>&gt;=</code> and <code>&lt;=</code> operators are inclusive of the dates being queried, whereas <code>&gt;</code> and <code>&lt;</code> are not.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues due in a week:</li>
+</ul>
+<p><code>plaintext
+  due &lt; 1w</code></p>
+<ul>
+<li>List all issues that were overdue as of January 1, 2025:</li>
+</ul>
+<p><code>plaintext
+  due &lt; 2025-01-01</code></p>
+<ul>
+<li>List all issues that are due today (but not due yesterday or tomorrow):</li>
+</ul>
+<p><code>plaintext
+  due = today()</code></p>
+<ul>
+<li>List all issues that have been overdue in the last 1 month:</li>
+</ul>
+<p><code>plaintext
+  due &gt; -1m and due &lt; today()</code></p>
+<h3>Environment</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/491246">Introduced</a> in GitLab 17.8.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query merge requests by the environment to which they have been deployed.</p>
+<p><strong>Allowed value types</strong>: <code>String</code></p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all merge requests that have been deployed to environment <code>production</code>:</li>
+</ul>
+<p><code>plaintext
+  environment = "production"</code></p>
+<h3>Epic</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/issues/30">Introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues by their parent epic ID or reference.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Number</code> (epic ID)</li>
+<li><code>String</code> (containing an epic reference like <code>&amp;123</code>)</li>
+<li><code>Epic</code> (for example, <code>&amp;123</code>, <code>gitlab-org&amp;123</code>)</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues that have epic <code>&amp;123</code> as their parent in project <code>gitlab-org/gitlab</code>:</li>
+</ul>
+<p><code>plaintext
+  project = "gitlab-org/gitlab" and epic = &amp;123</code></p>
+<ul>
+<li>List all issues that have epic <code>gitlab-com&amp;123</code> as their parent in project <code>gitlab-org/gitlab</code>:</li>
+</ul>
+<p><code>plaintext
+  project = "gitlab-org/gitlab" and epic = gitlab-com&amp;123</code></p>
+<h3>Group</h3>
+<p><strong>Description</strong>: Query issues, epics, or merge requests in all projects in a given group.</p>
+<p><strong>Allowed value types</strong>: <code>String</code></p>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Only one group can be queried at a time.</li>
+<li>The <code>group</code> cannot be used together with the <code>project</code> field.</li>
+<li>If omitted when using inside an embedded view in a group object (like an epic), <code>group</code> is assumed to
+  be the current group.</li>
+<li>Using the <code>group</code> field queries all objects in that group, all its subgroups, and child projects.</li>
+<li>By default, issues or merge requests are searched in all descendant projects across all subgroups.
+  To query only the direct child projects of the group, set the <a href="#include-subgroups"><code>includeSubgroups</code> field</a> to <code>false</code>.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues in the <code>gitlab-org</code> group and any of its subgroups:</li>
+</ul>
+<p><code>plaintext
+  group = "gitlab-org"</code></p>
+<ul>
+<li>List all Tasks in the <code>gitlab-org</code> group and any of its subgroups:</li>
+</ul>
+<p><code>plaintext
+  group = "gitlab-org" and type = Task</code></p>
+<h3>Health status</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Alias <code>healthStatus</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Support for querying epics by health status <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/222">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues or epics by their health status.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>StringEnum</code> (one of <code>"needs attention"</code>, <code>"at risk"</code> or <code>"on track"</code>)</li>
+<li><code>Nullable</code> (either of <code>null</code>, <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues that don't have a health status set:</li>
+</ul>
+<p><code>plaintext
+  health = any</code></p>
+<ul>
+<li>List all issues where the health status is "needs attention":</li>
+</ul>
+<p><code>plaintext
+  health = "needs attention"</code></p>
+<h3>ID</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/92">Introduced</a> in GitLab 17.8.</li>
+<li>Support for querying epics by ID <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by their IDs.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Number</code> (only positive integers)</li>
+<li><code>List</code> (containing <code>Number</code> values)</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List issue with ID <code>123</code>:</li>
+</ul>
+<p><code>plaintext
+  id = 123</code></p>
+<ul>
+<li>List issues with IDs <code>1</code>, <code>2</code>, or <code>3</code>:</li>
+</ul>
+<p><code>plaintext
+  id in (1, 2, 3)</code></p>
+<ul>
+<li>List all merge requests with IDs <code>1</code>, <code>2</code>, or <code>3</code>:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and id in (1, 2, 3)</code></p>
+<h3>Include subgroups</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/106">Introduced</a> in GitLab 17.10.</li>
+<li>Support for this field to be used with epics <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests in the entire hierarchy of a group.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Boolean</code> (either of <code>true</code> or <code>false</code>)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>This field can only be used with the <code>group</code> field.</li>
+<li>The value of this field defaults to <code>false</code>.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List issues in any project that is a direct child of the <code>gitlab-org</code> group:</li>
+</ul>
+<p><code>plaintext
+  group = "gitlab-org" and includeSubgroups = false</code></p>
+<ul>
+<li>List issues in any project in the entire hierarchy of the <code>gitlab-org</code> group:</li>
+</ul>
+<p><code>plaintext
+  group = "gitlab-org" and includeSubgroups = true</code></p>
+<h3>Iteration</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-haskell/-/issues/74">Introduced</a> in GitLab 17.6.</li>
+<li>Support for iteration value types <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/79">introduced</a> in GitLab 17.8.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues by their associated <a href="../group/iterations/_index.html">iteration</a>.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Number</code> (only positive integers)</li>
+<li><code>Iteration</code> (for example, <code>*iteration:123456</code>)</li>
+<li><code>List</code> (containing <code>Number</code> or <code>Iteration</code> values)</li>
+<li><code>Enum</code> (only <code>current</code> is supported)</li>
+<li><code>Nullable</code> (either of <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Because an issue can have only one iteration, the <code>=</code> operator cannot be used with <code>List</code> type for the <code>iteration</code> field.</li>
+<li>The <code>in</code> operator is not supported for <code>MergeRequest</code> types.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues with iteration ID <code>123456</code> (using a number in the query):</li>
+</ul>
+<p><code>plaintext
+  iteration = 123456</code></p>
+<ul>
+<li>List all issues that are a part of iterations <code>123</code> or <code>456</code> (using numbers):</li>
+</ul>
+<p><code>plaintext
+  iteration in (123, 456)</code></p>
+<ul>
+<li>List all issues with iteration ID <code>123456</code> (using iteration syntax):</li>
+</ul>
+<p><code>plaintext
+  iteration = *iteration:123456</code></p>
+<ul>
+<li>List all issues that are a part of iterations <code>123</code> or <code>456</code> (using iteration syntax):</li>
+</ul>
+<p><code>plaintext
+  iteration in (*iteration:123, *iteration:456)</code></p>
+<ul>
+<li>List all issues in the current iteration</li>
+</ul>
+<p><code>plaintext
+  iteration = current</code></p>
+<h3>Labels</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Support for label value types <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/79">introduced</a> in GitLab 17.8.</li>
+<li>Alias <code>labels</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Support for querying epics by labels <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by their associated labels.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>String</code></li>
+<li><code>Label</code> (for example, <code>~bug</code>, <code>~"team::planning"</code>)</li>
+<li><code>List</code> (containing <code>String</code> or <code>Label</code> values)</li>
+<li><code>Nullable</code> (either of <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Scoped labels, or labels containing spaces must be wrapped in quotes.</li>
+<li>The <code>in</code> operator is not supported for <code>MergeRequest</code> types.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues with label <code>~bug</code>:</li>
+</ul>
+<p><code>plaintext
+  label = ~bug</code></p>
+<ul>
+<li>List all issues not having label <code>~"workflow::in progress"</code>:</li>
+</ul>
+<p><code>plaintext
+  label != ~"workflow::in progress"</code></p>
+<ul>
+<li>List all issues with labels <code>~bug</code> and <code>~"team::planning"</code>:</li>
+</ul>
+<p><code>plaintext
+  label = (~bug, ~"team::planning")</code></p>
+<ul>
+<li>List all issues with labels <code>~bug</code> or <code>~feature</code>:</li>
+</ul>
+<p><code>plaintext
+  label in (~bug, ~feature)</code></p>
+<ul>
+<li>List all issues where the labels include neither of <code>~bug</code> or <code>~feature</code>:</li>
+</ul>
+<p><code>plaintext
+  label != (~bug, ~feature)</code></p>
+<ul>
+<li>List all issues where none of the scoped labels apply, with scope <code>workflow::</code>:</li>
+</ul>
+<p><code>plaintext
+  label != ~"workflow::*"</code></p>
+<ul>
+<li>List all merge requests with labels <code>~bug</code> and <code>~"team::planning"</code></li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and label = (~bug, ~"team::planning")</code></p>
+<h3>Merged at</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/491246">Introduced</a> in GitLab 17.8.</li>
+<li>Alias <code>mergedAt</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Operators <code>&gt;=</code> and <code>&lt;=</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/work_items/58">introduced</a> in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query merge requests by the date when they were merged.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>AbsoluteDate</code> (in the format <code>YYYY-MM-DD</code>)</li>
+<li><code>RelativeDate</code> (in the format <code>&lt;sign&gt;&lt;digit&gt;&lt;unit&gt;</code>, where sign is <code>+</code>, <code>-</code>, or omitted,
+  digit is an integer, and <code>unit</code> is one of <code>d</code> (days), <code>w</code> (weeks), <code>m</code> (months) or <code>y</code> (years))</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>For the <code>=</code> operator, the time range is considered from 00:00 to 23:59 in the user's time zone.</li>
+<li><code>&gt;=</code> and <code>&lt;=</code> operators are inclusive of the dates being queried, whereas <code>&gt;</code> and <code>&lt;</code> are not.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all merge requests that have been merged in the last 6 months:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and merged &gt; -6m</code></p>
+<ul>
+<li>List all merge requests that have been merged in the month of January 2025:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and merged &gt; 2025-01-01 and merged &lt; 2025-01-31</code></p>
+<h3>Merged by user</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/491246">Introduced</a> in GitLab 17.8.</li>
+<li>Alias <code>mergedBy</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query merge requests by the user that merged the merge request.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>String</code></li>
+<li><code>User</code> (for example, <code>@username</code>)</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all merge requests merged by the current user:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and merger = currentUser()</code></p>
+<h3>Milestone</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Support for milestone value types <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/77">introduced</a> in GitLab 17.8.</li>
+<li>Support for querying epics by milestone <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by their associated milestone.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>String</code></li>
+<li><code>Milestone</code> (for example, <code>%Backlog</code>, <code>%"Awaiting Further Demand"</code>)</li>
+<li><code>List</code> (containing <code>String</code> or <code>Milestone</code> values)</li>
+<li><code>Nullable</code> (either of <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Milestones containing spaces must be wrapped in quotes (<code>"</code>).</li>
+<li>Because an issue can have only one milestone, the <code>=</code> operator cannot be used with <code>List</code> type for the <code>milestone</code> field.</li>
+<li>The <code>in</code> operator is not supported for <code>MergeRequest</code> and <code>Epic</code> types.</li>
+<li>The <code>Epic</code> type does not support wildcard milestone filters like <code>none</code> or <code>any</code>.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues with milestone <code>%Backlog</code>:</li>
+</ul>
+<p><code>plaintext
+  milestone = %Backlog</code></p>
+<ul>
+<li>List all issues with milestones <code>%17.7</code> or <code>%17.8</code>:</li>
+</ul>
+<p><code>plaintext
+  milestone in (%17.7, %17.8)</code></p>
+<ul>
+<li>List all issues in an upcoming milestone:</li>
+</ul>
+<p><code>plaintext
+  milestone = upcoming</code></p>
+<ul>
+<li>List all issues in a current milestone:</li>
+</ul>
+<p><code>plaintext
+  milestone = started</code></p>
+<ul>
+<li>List all issues where the milestone is neither of <code>%17.7</code> or <code>%17.8</code>:</li>
+</ul>
+<p><code>plaintext
+  milestone != (%17.7, %17.8)</code></p>
+<h3>My reaction emoji</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/223">Introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by the current user's <a href="../emoji_reactions.html">emoji reaction</a> on it.</p>
+<p><strong>Allowed value types</strong>: <code>String</code></p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues where the current user reacted with the thumbs-up emoji:</li>
+</ul>
+<p><code>plaintext
+  myReaction = "thumbsup"</code></p>
+<ul>
+<li>List all merge requests where the current user did not react with the thumbs-down emoji:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and myReaction != "thumbsdown"</code></p>
+<h3>Project</h3>
+<p><strong>Description</strong>: Query issues or merge requests in a particular project.</p>
+<p><strong>Allowed value types</strong>: <code>String</code></p>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Only one project can be queried at a time.</li>
+<li>The <code>project</code> field cannot be used together with the <code>group</code> field.</li>
+<li>If omitted when using inside an embedded view, <code>project</code> is assumed to be the current project.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues and work items in the <code>gitlab-org/gitlab</code> project:</li>
+</ul>
+<p><code>plaintext
+  project = "gitlab-org/gitlab"</code></p>
+<h3>Reviewers</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Aliases <code>reviewers</code> and <code>reviewedBy</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query merge requests that were reviewed by one or more users.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>String</code></li>
+<li><code>User</code> (for example, <code>@username</code>)</li>
+<li><code>Nullable</code> (either of <code>null</code>, <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all merge requests reviewed by current user:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and reviewer = currentUser()</code></p>
+<h3>Source branch</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/197407">Introduced</a> in GitLab 18.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description:</strong> Query merge requests by their source branch.</p>
+<p><strong>Allowed value types:</strong> <code>String</code>, <code>List</code></p>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li><code>List</code> values are only supported with the <code>in</code> and <code>!=</code> operators.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all merge requests from a specific branch:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and sourceBranch = "feature/new-feature"</code></p>
+<ul>
+<li>List all merge requests from multiple branches:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and sourceBranch in ("main", "develop")</code></p>
+<ul>
+<li>List all merge requests that are not from a specific branch:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and sourceBranch != "main"</code></p>
+<h3>State</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/96">Introduced</a> in GitLab 17.8.</li>
+<li>Support for querying epics by state <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by state.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Enum</code></li>
+<li>For issue and work item types, one of <code>opened</code>, <code>closed</code>, or <code>all</code></li>
+<li>For <code>MergeRequest</code> types, one of <code>opened</code>, <code>closed</code>, <code>merged</code>, or <code>all</code></li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>The <code>state</code> field does not support the <code>!=</code> operator.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all closed issues:</li>
+</ul>
+<p><code>plaintext
+  state = closed</code></p>
+<ul>
+<li>List all open issues:</li>
+</ul>
+<p><code>plaintext
+  state = opened</code></p>
+<ul>
+<li>List all issues regardless of their state (also the default):</li>
+</ul>
+<p><code>plaintext
+  state = all</code></p>
+<ul>
+<li>List all merged merge requests:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and state = merged</code></p>
+<h3>Status</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/197407">Introduced</a> in GitLab 18.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description:</strong> Query issues by their status.</p>
+<p><strong>Allowed value types:</strong> <code>String</code></p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues with status "To do":</li>
+</ul>
+<p><code>plaintext
+  status = "To do"</code></p>
+<h3>Subscribed</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/223">Introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by whether the current user has
+<a href="../profile/notifications.html">set notifications</a>
+on or off.</p>
+<p><strong>Allowed value types</strong>: <code>Boolean</code></p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all open issues where the current user has set notifications on:</li>
+</ul>
+<p><code>plaintext
+  state = opened and subscribed = true</code></p>
+<ul>
+<li>List all merge requests where the current user has set notifications off:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and subscribed = false</code></p>
+<h3>Target branch</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/197407">Introduced</a> in GitLab 18.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description:</strong> Query merge requests by their target branch.</p>
+<p><strong>Allowed value types:</strong> <code>String</code>, <code>List</code></p>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li><code>List</code> values are only supported with the <code>in</code> and <code>!=</code> operators.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all merge requests targeting a specific branch:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and targetBranch = "feature/new-feature"</code></p>
+<ul>
+<li>List all merge requests targeting multiple branches:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and targetBranch in ("main", "develop")</code></p>
+<ul>
+<li>List all merge requests that are not targeting a specific branch:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and targetBranch != "main"</code></p>
+<h3>Type</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/491246">Introduced</a> in GitLab 17.8.</li>
+<li>Support for querying epics <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: The type of object to query: issues, epics, or merge requests.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Enum</code>, one of:</li>
+<li><code>Issue</code></li>
+<li><code>Incident</code></li>
+<li><code>Epic</code></li>
+<li><code>TestCase</code></li>
+<li><code>Requirement</code></li>
+<li><code>Task</code></li>
+<li><code>Ticket</code></li>
+<li><code>Objective</code></li>
+<li><code>KeyResult</code></li>
+<li><code>MergeRequest</code></li>
+<li><code>List</code> (containing one or more <code>enum</code> values)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>If omitted when used inside an embedded view, the default <code>type</code> is <code>Issue</code>.</li>
+<li><code>type = Epic</code> queries can only be used together with the <a href="#group">group</a> field.</li>
+<li>The <code>in</code> operator cannot be used to combine <code>Epic</code> and <code>MergeRequest</code> types with other types
+  in the same query.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List incidents:</li>
+</ul>
+<p><code>plaintext
+  type = incident</code></p>
+<ul>
+<li>List issues and tasks:</li>
+</ul>
+<p><code>plaintext
+  type in (Issue, Task)</code></p>
+<ul>
+<li>List all merge requests assigned to the current user:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and assignee = currentUser()</code></p>
+<ul>
+<li>List all epics authored by the current user in the group <code>gitlab-org</code></li>
+</ul>
+<p><code>plaintext
+  group = "gitlab-org" and type = Epic and author = currentUser()</code></p>
+<h3>Updated at</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Alias <code>updatedAt</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/137">introduced</a> in GitLab 18.0.</li>
+<li>Operators <code>&gt;=</code> and <code>&lt;=</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/work_items/58">introduced</a> in GitLab 18.0.</li>
+<li>Support for querying epics by last updated <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p><strong>Description</strong>: Query issues, epics, or merge requests by when they were last updated.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>AbsoluteDate</code> (in the format <code>YYYY-MM-DD</code>)</li>
+<li><code>RelativeDate</code> (in the format <code>&lt;sign&gt;&lt;digit&gt;&lt;unit&gt;</code>, where sign is <code>+</code>, <code>-</code>, or omitted,
+  digit is an integer, and <code>unit</code> is one of <code>d</code> (days), <code>w</code> (weeks), <code>m</code> (months) or <code>y</code> (years))</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>For the <code>=</code> operator, the time range is considered from 00:00 to 23:59 in the user's time zone.</li>
+<li><code>&gt;=</code> and <code>&lt;=</code> operators are inclusive of the dates being queried, whereas <code>&gt;</code> and <code>&lt;</code> are not.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues that haven't been edited in the last 1 month:</li>
+</ul>
+<p><code>plaintext
+  updated &lt; -1m</code></p>
+<ul>
+<li>List all issues that were edited today:</li>
+</ul>
+<p><code>plaintext
+  updated = today()</code></p>
+<ul>
+<li>List all open MRs that haven't been edited in the last 1 week:</li>
+</ul>
+<p><code>plaintext
+  type = MergeRequest and state = opened and updated &lt; -1w</code></p>
+<h3>Weight</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p><strong>Description</strong>: Query issues by their weight.</p>
+<p><strong>Allowed value types</strong>:</p>
+<ul>
+<li><code>Number</code> (only positive integers or 0)</li>
+<li><code>Nullable</code> (either of <code>null</code>, <code>none</code>, or <code>any</code>)</li>
+</ul>
+<p><strong>Additional details</strong>:</p>
+<ul>
+<li>Comparison operators <code>&lt;</code> and <code>&gt;</code> cannot be used.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues with weight 5:</li>
+</ul>
+<p><code>plaintext
+  weight = 5</code></p>
+<ul>
+<li>List all issues with weight not 5:</li>
+</ul>
+<p><code>plaintext
+  weight != 5</code></p>
+<h2>Fields in embedded views</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Field <code>iteration</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-haskell/-/issues/74">introduced</a> in GitLab 17.6.</li>
+<li>Support for merge requests <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/491246">introduced</a> in GitLab 17.8.</li>
+<li>Field <code>lastComment</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/512154">introduced</a> in GitLab 17.11.</li>
+<li>Support for epics <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/192680">introduced</a> in GitLab 18.1.</li>
+<li>Fields <code>status</code>, <code>sourceBranch</code>, <code>targetBranch</code>, <code>sourceProject</code>, and <code>targetProject</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/197407">introduced</a> in GitLab 18.2.</li>
+<li>Fields <code>health</code>, and <code>type</code> in epics <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/222">introduced</a> in GitLab 18.3.</li>
+<li>Field <code>subscribed</code> <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/223">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>In embedded views, the <code>fields</code> view parameter is a comma-separated list of fields, or field functions that
+can be used to indicate what fields to include in the rendered embedded view,
+for example, <code>fields: title, state, health, epic, milestone, weight, updated</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Name or alias</th>
+<th>Objects supported</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Approved by user</td>
+<td><code>approver</code>, <code>approvers</code>, <code>approvedBy</code></td>
+<td>Merge requests</td>
+<td>Display users who approved the merge request</td>
+</tr>
+<tr>
+<td>Assignees</td>
+<td><code>assignee</code>, <code>assignees</code></td>
+<td>Issues, merge requests</td>
+<td>Display users assigned to the object</td>
+</tr>
+<tr>
+<td>Author</td>
+<td><code>author</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display the author of the object</td>
+</tr>
+<tr>
+<td>Closed at</td>
+<td><code>closed</code>, <code>closedAt</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display time since the object was closed</td>
+</tr>
+<tr>
+<td>Confidential</td>
+<td><code>confidential</code></td>
+<td>Issues, epics</td>
+<td>Display <code>Yes</code> or <code>No</code> indicating whether the object is confidential</td>
+</tr>
+<tr>
+<td>Created at</td>
+<td><code>created</code>, <code>createdAt</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display time since the object was created</td>
+</tr>
+<tr>
+<td>Description</td>
+<td><code>description</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display the description of the object</td>
+</tr>
+<tr>
+<td>Draft</td>
+<td><code>draft</code></td>
+<td>Merge requests</td>
+<td>Display <code>Yes</code> or <code>No</code> indicating whether the merge request is in draft state</td>
+</tr>
+<tr>
+<td>Due date</td>
+<td><code>due</code>, <code>dueDate</code></td>
+<td>Issues, epics</td>
+<td>Display time until the object is due</td>
+</tr>
+<tr>
+<td>Epic</td>
+<td><code>epic</code></td>
+<td>Issues</td>
+<td>Display a link to the epic for the issue. Available in the Premium and Ultimate tier</td>
+</tr>
+<tr>
+<td>Health status</td>
+<td><code>health</code>, <code>healthStatus</code></td>
+<td>Issues, epics</td>
+<td>Display a badge indicating the health status of the object. Available in the Ultimate tier</td>
+</tr>
+<tr>
+<td>ID</td>
+<td><code>id</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display the ID of the object</td>
+</tr>
+<tr>
+<td>Iteration</td>
+<td><code>iteration</code></td>
+<td>Issues</td>
+<td>Display the iteration associated with the object. Available in the Premium and Ultimate tier</td>
+</tr>
+<tr>
+<td>Labels</td>
+<td><code>label</code>, <code>labels</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display labels associated with the object. Can accept parameters to filter specific labels, for example <code>labels("workflow::*", "backend")</code></td>
+</tr>
+<tr>
+<td>Last comment</td>
+<td><code>lastComment</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display the last comment made on the object</td>
+</tr>
+<tr>
+<td>Merged at</td>
+<td><code>merged</code>, <code>mergedAt</code></td>
+<td>Merge requests</td>
+<td>Display time since the merge request was merged</td>
+</tr>
+<tr>
+<td>Milestone</td>
+<td><code>milestone</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display the milestone associated with the object</td>
+</tr>
+<tr>
+<td>Reviewers</td>
+<td><code>reviewer</code>, <code>reviewers</code></td>
+<td>Merge requests</td>
+<td>Display users assigned to review the merge request</td>
+</tr>
+<tr>
+<td>Source branch</td>
+<td><code>sourceBranch</code></td>
+<td>Merge requests</td>
+<td>Display the source branch of the merge request</td>
+</tr>
+<tr>
+<td>Source project</td>
+<td><code>sourceProject</code></td>
+<td>Merge requests</td>
+<td>Display the source project of the merge request</td>
+</tr>
+<tr>
+<td>Start date</td>
+<td><code>start</code>, <code>startDate</code></td>
+<td>Epics</td>
+<td>Display the start date of the epic</td>
+</tr>
+<tr>
+<td>State</td>
+<td><code>state</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display a badge indicating the state of the object. For issues and epics, values are <code>Open</code> or <code>Closed</code>. For merge requests, values are <code>Open</code>, <code>Closed</code>, or <code>Merged</code></td>
+</tr>
+<tr>
+<td>Status</td>
+<td><code>status</code></td>
+<td>Issues</td>
+<td>Display a badge indicating the status of the issue. For example, "To do" or "Complete". Available in the Premium and Ultimate tiers.</td>
+</tr>
+<tr>
+<td>Subscribed</td>
+<td><code>subscribed</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display <code>Yes</code> or <code>No</code> indicating whether the current user is subscribed to the object or not</td>
+</tr>
+<tr>
+<td>Target branch</td>
+<td><code>targetBranch</code></td>
+<td>Merge requests</td>
+<td>Display the target branch of the merge request</td>
+</tr>
+<tr>
+<td>Target project</td>
+<td><code>targetProject</code></td>
+<td>Merge requests</td>
+<td>Display the target project of the merge request</td>
+</tr>
+<tr>
+<td>Title</td>
+<td><code>title</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display the title of the object</td>
+</tr>
+<tr>
+<td>Type</td>
+<td><code>type</code></td>
+<td>Issues, epics</td>
+<td>Display the work item type, for example <code>Issue</code>, <code>Task</code>, or <code>Objective</code></td>
+</tr>
+<tr>
+<td>Updated at</td>
+<td><code>updated</code>, <code>updatedAt</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Display time since the object was last updated</td>
+</tr>
+<tr>
+<td>Weight</td>
+<td><code>weight</code></td>
+<td>Issues</td>
+<td>Display the weight of the object. Available in the Premium and Ultimate tiers.</td>
+</tr>
+</tbody>
+</table>
+<h2>Fields to sort embedded views by</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/178">Introduced</a> in GitLab 18.2.</li>
+<li>Support for sorting epics by health status <a href="https://gitlab.com/gitlab-org/gitlab-query-language/glql-rust/-/merge_requests/222">introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>In embedded views, the <code>sort</code> view parameter is a field name followed by
+a sort order (<code>asc</code> or <code>desc</code>) that sorts the results by the specified
+field and order.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Name (and alias)</th>
+<th>Supported for</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Closed at</td>
+<td><code>closed</code>, <code>closedAt</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Sort by closed date</td>
+</tr>
+<tr>
+<td>Created</td>
+<td><code>created</code>, <code>createdAt</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Sort by created date</td>
+</tr>
+<tr>
+<td>Due date</td>
+<td><code>due</code>, <code>dueDate</code></td>
+<td>Issues, epics</td>
+<td>Sort by due date</td>
+</tr>
+<tr>
+<td>Health status</td>
+<td><code>health</code>, <code>healthStatus</code></td>
+<td>Issues, epics</td>
+<td>Sort by health status</td>
+</tr>
+<tr>
+<td>Merged at</td>
+<td><code>merged</code>, <code>mergedAt</code></td>
+<td>Merge requests</td>
+<td>Sort by merge date</td>
+</tr>
+<tr>
+<td>Milestone</td>
+<td><code>milestone</code></td>
+<td>Issues, merge requests</td>
+<td>Sort by milestone due date</td>
+</tr>
+<tr>
+<td>Popularity</td>
+<td><code>popularity</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Sort by the number of thumbs up emoji reactions</td>
+</tr>
+<tr>
+<td>Start date</td>
+<td><code>start</code>, <code>startDate</code></td>
+<td>Epics</td>
+<td>Sort by start date</td>
+</tr>
+<tr>
+<td>Title</td>
+<td><code>title</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Sort by title</td>
+</tr>
+<tr>
+<td>Updated at</td>
+<td><code>updated</code>, <code>updatedAt</code></td>
+<td>Issues, epics, merge requests</td>
+<td>Sort by last updated date</td>
+</tr>
+<tr>
+<td>Weight</td>
+<td><code>weight</code></td>
+<td>Issues</td>
+<td>Sort by weight</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>List all issues in the <code>gitlab-org/gitlab</code> project sorted by title. Display columns
+  <code>state</code>, <code>title</code>, and <code>updated</code>.</li>
+</ul>
+<p><code>yaml
+  ```glql
+  display: table
+  fields: state, title, updated
+  sort: title asc
+  query: project = "gitlab-org/gitlab" and type = Issue
+  ```</code></p>
+<ul>
+<li>List all merge requests in the <code>gitlab-org</code> group assigned to the
+  authenticated user sorted by the merge date (latest first). Display columns
+  <code>title</code>, <code>reviewer</code>, and <code>merged</code>.</li>
+</ul>
+<p><code>yaml
+  ```glql
+  display: table
+  fields: title, reviewer, merged
+  sort: merged desc
+  query: group = "gitlab-org" and type = MergeRequest and state = merged and author = currentUser()
+  limit: 10
+  ```</code></p>
+<ul>
+<li>List all epics in the <code>gitlab-org</code> group sorted by the start date (oldest
+  first). Display columns <code>title</code>, <code>state</code>, and <code>startDate</code>.</li>
+</ul>
+<p><code>yaml
+  ```glql
+  display: table
+  fields: title, state, startDate
+  sort: startDate asc
+  query: group = "gitlab-org" and type = Epic
+  ```</code></p>
+<ul>
+<li>List all issues in the <code>gitlab-org</code> group with an assigned weight sorted by
+  the weight (highest first). Display columns <code>title</code>, <code>weight</code>, and <code>health</code>.</li>
+</ul>
+<p><code>yaml
+  ```glql
+  display: table
+  fields: title, weight, health
+  sort: weight desc
+  query: group = "gitlab-org" and weight = any
+  ```</code></p>
+<ul>
+<li>List all issues in the <code>gitlab-org</code> group due up to a week from today sorted by the due
+  date (earliest first). Display columns <code>title</code>, <code>duedate</code>, and <code>assignee</code>.</li>
+</ul>
+<p><code>yaml
+  ```glql
+  display: table
+  fields: title, dueDate, assignee
+  sort: dueDate asc
+  query: group = "gitlab-org" and due &gt;= today() and due &lt;= 1w
+  ```</code></p>
+<h2>Troubleshooting</h2>
+<h3>Query timeout errors</h3>
+<p>You might encounter these error messages:</p>
+<pre><code class="language-plaintext">Embedded view timed out. Add more filters to reduce the number of results.
+</code></pre>
+<pre><code class="language-plaintext">Query temporarily blocked due to repeated timeouts. Please try again later or try narrowing your search scope.
+</code></pre>
+<p>These errors occur when your query takes too long to execute.
+Large result sets and broad searches can cause timeouts.</p>
+<p>To resolve this issue, add filters to limit your search scope:</p>
+<ul>
+<li>Add time range filters to limit results to a specific period, by using date fields like <code>created</code>, <code>updated</code>, or <code>closed</code>.
+  For example:</li>
+</ul>
+<p><code>yaml
+  ```glql
+  display: table
+  fields: title, labels, created
+  query: group = "gitlab-org" and label = "group::knowledge" and created &gt; "2025-01-01" and created &lt; "2025-03-01"
+  ```</code></p>
+<ul>
+<li>Filter by recent updates to focus on active items:</li>
+</ul>
+<p><code>yaml
+  ```glql
+  display: table
+  fields: title, labels, updated
+  query: group = "gitlab-org" and label = "group::knowledge" and updated &gt; -3m
+  ```</code></p>
+<ul>
+<li>Use project-specific queries instead of group-wide searches when possible:</li>
+</ul>
+<p><code>yaml
+  ```glql
+  display: table
+  fields: title, state, assignee
+  query: project = "gitlab-org/gitlab" and state = opened and updated &gt; -1m
+  ```</code></p>
+<h3>Error: <code>Invalid username reference</code></h3>
+<p>You might get an error that states <code>Invalid username reference</code> when using the <code>@</code> symbol
+with a username that starts with a number in GLQL queries. For example:</p>
+<pre><code class="language-plaintext">An error occurred when trying to display this embedded view:
+* Error: Invalid username reference @123username
+</code></pre>
+<p>This issue occurs because the GLQL embedded view renderer does not support <code>@</code> mentions
+for usernames that start with a number, even though these are valid in GitLab.</p>
+<p>The workaround is to remove the <code>@</code> symbol and wrap the username in quotes.
+For example, use <code>assignee = "123username"</code> instead of <code>assignee = @123username</code>.</p>
+<p>For more information, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/583119">issue 583119</a>.</p></code></pre>
+</body>
+</html>

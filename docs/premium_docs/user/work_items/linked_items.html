@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Ways to use linked items</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Product Planning
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: "Connect and track relationships between work items in GitLab. Manage dependencies, link strategic goals to execution, and coordinate cross-functional initiatives."
+title: Linked items</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Linked items create bi-directional relationships between work items, helping you visualize and manage dependencies across your entire workflow.</p>
+<p>With linked items, you can connect various work items including issues, epics, tasks, and objectives to show relationships between them.</p>
+<p>These connections help everyone understand how individual pieces of work relate to each other and to larger strategic initiatives.</p>
+<h2>Ways to use linked items</h2>
+<p>You can use linked items to solve several planning and coordination challenges.</p>
+<p>The following examples show how linked items help teams work together more effectively.</p>
+<h3>Track dependencies</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Clearly identify work that blocks or is blocked by other items.</p>
+<p>When you link items with a blocking relationship:</p>
+<ul>
+<li>Teams can immediately see what other work they depend on.</li>
+<li>Status updates flow automatically between linked items.</li>
+<li>Warnings appear when closing items that have open blockers.</li>
+<li>Teams can avoid delays by addressing dependencies proactively.</li>
+</ul>
+<p>This visibility helps coordinate work across teams and reduces bottlenecks.</p>
+<h3>Connect strategic goals with implementation details</h3>
+<p>Use linked items to connect high-level planning with day-to-day execution.</p>
+<p>When you link strategic objectives to tactical tasks:</p>
+<ul>
+<li>Teams understand how their work contributes to larger goals.</li>
+<li>Stakeholders can trace progress from strategy to implementation.</li>
+<li>Everyone gains visibility into how individual efforts support the broader vision.</li>
+<li>Changes in strategy can be quickly traced to affected implementation work.</li>
+</ul>
+<p>This connection between levels creates alignment and purpose across the organization.</p>
+<h3>Organize cross-functional initiatives</h3>
+<p>Link related work across different teams and projects to coordinate complex initiatives.</p>
+<p>When you use linked items for cross-functional work:</p>
+<ul>
+<li>Each team can work in their own area while maintaining connections to related work.</li>
+<li>Dependencies between specialized teams become visible.</li>
+<li>Status updates flow automatically between related items.</li>
+<li>Teams can coordinate their efforts without constant meetings.</li>
+</ul>
+<p>This coordination helps break down silos and ensures all aspects of the initiative stay in sync.</p>
+<h2>Types of linked items</h2>
+<p>GitLab supports linking various types of work items:</p>
+<ul>
+<li><a href="../project/issues/related_issues.html">Issues</a> help you track tasks, bugs, and features and can be
+  linked to show dependencies between discrete pieces of work.</li>
+<li><a href="../group/epics/linked_epics.html">Epics</a> let you manage cross-functional initiatives, show
+  dependencies, and connect strategic planning to execution across multiple teams or projects.
+  Available in the Ultimate tier.</li>
+<li><a href="../tasks.md#linked-items-in-tasks">Tasks</a> provide lightweight tracking for smaller units of work
+  and can be linked to other items to show relationships or dependencies in a project.</li>
+<li><a href="../okrs.md#linked-items-in-okrs">Objectives and key results</a> help connect strategic goals with
+  execution details, ensuring that day-to-day work remains aligned with higher-level organizational
+  priorities.</li>
+<li><a href="../../operations/incident_management/incidents.html">Incidents</a> represent service disruptions or
+  outages that need urgent restoration and can be linked to related work items for better tracking
+  of operational issues and their impact on planned work.</li>
+<li><a href="../../ci/test_cases/_index.html">Test cases</a> integrate test planning directly into your GitLab
+  workflows, letting teams document testing scenarios and track requirements in the same platform
+  where they manage code. Available in the Ultimate tier.</li>
+</ul>
+<h2>Relationship types</h2>
+<p>When linking items, you can specify the type of relationship:</p>
+<ul>
+<li><strong>Relates to</strong>: Indicates a general relationship between items.</li>
+<li><strong>Blocks</strong>: Shows that an item prevents progress on another item.</li>
+<li><strong>Is blocked by</strong>: Shows that an item cannot proceed until another item is resolved.</li>
+</ul>
+<h2>Common tasks with linked items</h2>
+<p>Learn how to create and manage relationships between your work items with these common procedures.</p>
+<h3>Add a linked item</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Guest role for the projects or groups of both items.</li>
+</ul>
+<p>The general process for adding linked items is similar across all work item types:</p>
+<ol>
+<li>Go to the work item you want to modify.</li>
+<li>At the bottom of the description, find the <strong>Linked items</strong> section of the work item.</li>
+<li>Select <strong>Add</strong>.</li>
+<li>Select the relationship type: <strong>relates to</strong>, <strong>blocks</strong>, or <strong>is blocked by</strong>.</li>
+<li>Enter the reference for the item to link. You can:</li>
+<li>Enter <code>#</code> or <code>&amp;</code> (depending on item type) followed by the item's number.</li>
+<li>Enter text to search for the item by title.</li>
+<li>Paste the full URL of the item.</li>
+<li>Select <strong>Add</strong> to confirm.</li>
+</ol>
+<p>Alternatively, you can add linked items using <a href="../project/quick_actions.html">quick actions</a>:</p>
+<ul>
+<li><code>/relate</code></li>
+<li><code>/blocks</code></li>
+<li><code>/blocked_by</code></li>
+</ul>
+<p>For detailed information specific to each work item type, see the relevant documentation:</p>
+<ul>
+<li><a href="../project/issues/related_issues.md#add-a-linked-issue">Linked issues</a></li>
+<li><a href="../group/epics/linked_epics.md#add-a-linked-item">Linked epics</a></li>
+<li><a href="../tasks.md#linked-items-in-tasks">Linked tasks</a></li>
+<li><a href="../okrs.md#linked-items-in-okrs">Linked OKRs</a></li>
+</ul>
+<h3>Remove a linked item</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Guest role for the projects or groups of both items.</li>
+</ul>
+<p>To remove a linked item:</p>
+<ol>
+<li>Go to the work item you want to modify.</li>
+<li>At the bottom of the description, find the <strong>Linked items</strong> section of the work item.</li>
+<li>For each linked item, select <strong>Remove</strong> ({{&lt; icon name="close" &gt;}}).</li>
+</ol>
+<p>The bi-directional relationship is removed from both items.</p>
+<p>Alternatively, you can remove a linked item using the <a href="../project/quick_actions.md#unlink"><code>/unlink</code> quick action</a>.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="_index.html">Work items</a></li>
+<li><a href="../project/issues/_index.html">Issues</a></li>
+<li><a href="../group/epics/_index.html">Epics</a></li>
+<li><a href="../tasks.html">Tasks</a></li>
+<li><a href="../okrs.html">Objectives and key results</a></li>
+</ul></code></pre>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Agent Foundations
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Fix CI/CD Pipeline Flow</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Introduced as <a href="../../../../policy/development_stages_support.html">an experiment</a> in GitLab 18.4 <a href="../../../../administration/feature_flags/_index.html">with flags</a> named <code>duo_workflow_in_ci</code> and <code>ai_duo_agent_fix_pipeline_button</code>. <code>duo_workflow_in_ci</code> is enabled by default. <code>ai_duo_agent_fix_pipeline_button</code> is disabled by default. These flags can be enabled or disabled for the instance or project.</li>
+<li>Enabled on GitLab.com and GitLab Self-Managed in GitLab 18.5.</li>
+<li>Feature flag <code>ai_duo_agent_fix_pipeline_button</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/205086">enabled by default</a> in GitLab 18.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>The Fix CI/CD Pipeline Flow helps you automatically diagnose and fix issues in your GitLab CI/CD pipeline. This flow:</p>
+<ul>
+<li>Analyzes pipeline failure logs and error messages.</li>
+<li>Identifies configuration issues and syntax errors.</li>
+<li>Suggests specific fixes based on the type of failure.</li>
+<li>Creates a merge request with changes that attempt to fix a failing pipeline.</li>
+</ul>
+<p>The flow can automatically fix various pipeline issues, including:</p>
+<ul>
+<li>Syntax and configuration errors.</li>
+<li>Common job failures.</li>
+<li>Dependency and workflow issues.</li>
+</ul>
+<p>This flow is available in the GitLab UI only.</p>
+<h2>Prerequisites</h2>
+<p>To use this flow, you must:</p>
+<ul>
+<li>Have an existing failed pipeline.</li>
+<li>Have at least the Developer role in the project.</li>
+<li>Meet <a href="../../../duo_agent_platform/_index.md#prerequisites">the other prerequisites</a>.</li>
+<li><a href="../../troubleshooting.md#session-is-stuck-in-created-state">Ensure the GitLab Duo service account can create commits and branches</a>.</li>
+</ul>
+<h2>Fix the pipeline in a merge request</h2>
+<p>To fix the CI/CD pipeline in a merge request:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Merge requests</strong> and open your merge request.</li>
+<li>To fix the pipeline, you can either:</li>
+<li>Select the <strong>Overview</strong> tab and under the failing pipeline, select <strong>Fix pipeline with Duo</strong>.</li>
+<li>
+<p>Select the <strong>Pipelines</strong> tab and in the rightmost column, select <strong>Fix pipeline with Duo</strong> ({{&lt; icon name="tanuki-ai" &gt;}}).</p>
+</li>
+<li>
+<p>To monitor progress, select <strong>Automate</strong> &gt; <strong>Sessions</strong>.</p>
+</li>
+</ol>
+<p>When the session is complete, a comment shows a link to a merge request that contains the fix,
+or a comment describes possible next steps.</p>
+<h2>Fix other CI/CD pipelines</h2>
+<p>To fix a CI/CD pipeline that is not associated with a merge request:</p>
+<ol>
+<li>Select <strong>Build</strong> &gt; <strong>Pipelines</strong>.</li>
+<li>Select your failing pipeline.</li>
+<li>In the upper-right corner, select <strong>Fix pipeline with Duo</strong>.</li>
+<li>To monitor progress, select <strong>Automate</strong> &gt; <strong>Sessions</strong>.</li>
+</ol>
+<h2>What the flow analyzes</h2>
+<p>The Fix CI/CD Pipeline Flow examines:</p>
+<ul>
+<li>Pipeline logs: Error messages, failed job outputs, and exit codes.</li>
+<li>Merge request changes: Changes that could have caused the failure.</li>
+<li>The current repository contents: For identifying syntax, linting, or import errors.</li>
+<li>Script errors: Command failures, missing executables, or permission issues.</li>
+</ul></code></pre>
+</body>
+</html>

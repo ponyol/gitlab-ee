@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Incidents list</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Analytics
+group: Platform Insights
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Incidents</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>An incident is a service disruption or outage that needs to be restored urgently.
+Incidents are critical in incident management workflows.
+Use GitLab to triage, respond, and remediate incidents.</p>
+<h2>Incidents list</h2>
+<p>When you <a href="manage_incidents.md#view-a-list-of-incidents">view the incidents list</a>, it contains the following:</p>
+<ul>
+<li><strong>State</strong>: To filter incidents by their state, select <strong>Open</strong>, <strong>Closed</strong>,
+  or <strong>All</strong> above the incident list.</li>
+<li><strong>Search</strong>: Search for incident titles and descriptions or <a href="#filter-the-incidents-list">filter the list</a>.</li>
+<li>
+<p><strong>Severity</strong>: Severity of a particular incident, which can be one of the following
+  values:</p>
+</li>
+<li>
+<p>{{&lt; icon name="severity-critical" &gt;}} Critical - S1</p>
+</li>
+<li>{{&lt; icon name="severity-high" &gt;}} High - S2</li>
+<li>{{&lt; icon name="severity-medium" &gt;}} Medium - S3</li>
+<li>{{&lt; icon name="severity-low" &gt;}} Low - S4</li>
+<li>
+<p>{{&lt; icon name="severity-unknown" &gt;}} Unknown</p>
+</li>
+<li>
+<p><strong>Incident</strong>: The title of the incident, which attempts to capture the
+  most meaningful information.</p>
+</li>
+<li>
+<p><strong>Status</strong>: The status of the incident, which can be one of the following values:</p>
+</li>
+<li>
+<p>Triggered</p>
+</li>
+<li>Acknowledged</li>
+<li>Resolved</li>
+</ul>
+<p>In the Premium or Ultimate tier, this field is also linked to <a href="paging.md#escalating-an-incident">on-call escalation</a> for the incident.</p>
+<ul>
+<li><strong>Date created</strong>: How long ago the incident was created. This field uses the
+  standard GitLab pattern of <code>X time ago</code>. Hover over this value to see the exact date and time formatted according to your locale.</li>
+<li><strong>Assignees</strong>: The user assigned to the incident.</li>
+<li><strong>Published</strong>: Whether the incident is published to a <a href="status_page.html">status page</a>.</li>
+</ul>
+<p><img alt="Incidents List" src="img/incident_list_v15_6.png" /></p>
+<p>For an example of the incident list in action, see this
+<a href="https://gitlab.com/gitlab-org/monitor/monitor-sandbox/-/incidents">demo project</a>.</p>
+<h3>Sort the incident list</h3>
+<p>The incident list shows incidents sorted by incident created date, showing the newest first.</p>
+<p>To sort by another column, or to change the sorting order, select the column.</p>
+<p>The columns you can sort by:</p>
+<ul>
+<li>Severity</li>
+<li>Status</li>
+<li>Time to SLA</li>
+<li>Published</li>
+</ul>
+<h3>Filter the incidents list</h3>
+<p>To filter the incident list by author or assignee, enter these values in the search box.</p>
+<h2>Incident details</h2>
+<h3>Summary</h3>
+<p>The summary section for incidents provides critical details about the
+incident and the contents of the issue template (if <a href="alerts.md#trigger-actions-from-alerts">selected</a>). The highlighted
+bar at the top of the incident displays from left to right:</p>
+<ul>
+<li>The link to the original alert.</li>
+<li>The alert start time.</li>
+<li>The event count.</li>
+</ul>
+<p>Below the highlight bar, a summary includes the following fields:</p>
+<ul>
+<li>Start time</li>
+<li>Severity</li>
+<li><code>full_query</code></li>
+<li>Monitoring tool</li>
+</ul>
+<p>The incident summary can be further customized using
+<a href="../../user/markdown.html">GitLab Flavored Markdown</a>.</p>
+<p>If an incident is <a href="alerts.md#trigger-actions-from-alerts">created from an alert</a>
+that provided Markdown for the incident, then the Markdown is appended to the summary.
+If an incident template is configured for the project, then the template content is appended at the end.</p>
+<p>Comments are displayed in threads, but can be displayed chronologically
+<a href="#recent-updates-view">by toggling on the recent updates view</a>.</p>
+<p>When you make changes to an incident, GitLab creates <a href="../../user/project/system_notes.html">system notes</a> and
+displays them below the summary.</p>
+<h3>Metrics</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>In many cases, incidents are associated to metrics. You can upload screenshots of metric
+charts in the <strong>Metrics</strong> tab:</p>
+<p><img alt="Incident Metrics tab" src="img/incident_metrics_tab_v13_8.png" /></p>
+<p>When you upload an image, you can associate the image with text or a link to the original graph.</p>
+<p><img alt="Text link modal" src="img/incident_metrics_tab_text_link_modal_v14_9.png" /></p>
+<p>If you add a link, you can access the original graph by selecting the hyperlink above the uploaded image.</p>
+<h3>Alert details</h3>
+<p>Incidents show the details of linked alerts in a separate tab. To populate this
+tab, the incident must have been created with a linked alert. Incidents
+created automatically from alerts have this
+field populated.</p>
+<p><img alt="Incident alert details" src="img/incident_alert_details_v13_4.png" /></p>
+<h3>Timeline events</h3>
+<p>Incident timelines give a high-level overview of what happened
+during an incident, and the steps that were taken for it to be resolved.</p>
+<p>Read more about <a href="incident_timeline_events.html">timeline events</a> and how to enable this feature.</p>
+<h3>Recent updates view</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To see the latest updates on an incident, select
+<strong>Turn recent updates view on</strong> ({{&lt; icon name="history" &gt;}}) on the comment bar. Comments display
+un-threaded and chronologically, newest to oldest.</p>
+<h3>Service Level Agreement countdown timer</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can enable the Service Level Agreement Countdown timer on incidents to track
+the Service Level Agreements (SLA) you hold with your customers. The timer is
+automatically started when the incident is created, and shows the time
+remaining before the SLA period expires. The timer is also dynamically updated
+every 15 minutes so you do not have to refresh the page to see the time remaining.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To configure the timer:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Monitor</strong>.</li>
+<li>Expand the <strong>Incidents</strong> section, then select the <strong>Incident settings</strong> tab.</li>
+<li>Select <strong>Activate "time to SLA" countdown timer</strong>.</li>
+<li>Set a time limit in increments of 15 minutes.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>After you enable the SLA countdown timer, the <strong>Time to SLA</strong> column is available in the
+incidents list and as a field on new incidents. If
+the incident isn't closed before the SLA period ends, GitLab adds a <code>missed::SLA</code>
+label to the incident.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="manage_incidents.md#create-an-incident">Create an incident</a></li>
+<li><a href="alerts.md#trigger-actions-from-alerts">Create an incident automatically</a>
+  whenever an alert is triggered</li>
+<li><a href="manage_incidents.md#view-a-list-of-incidents">View incidents list</a></li>
+<li><a href="manage_incidents.md#assign-to-a-user">Assign to a user</a></li>
+<li><a href="manage_incidents.md#change-severity">Change incident severity</a></li>
+<li><a href="manage_incidents.md#change-status">Change incident status</a></li>
+<li><a href="manage_incidents.md#change-escalation-policy">Change escalation policy</a></li>
+<li><a href="manage_incidents.md#close-an-incident">Close an incident</a></li>
+<li><a href="manage_incidents.md#automatically-close-incidents-via-recovery-alerts">Automatically close incidents via recovery alerts</a></li>
+<li><a href="../../user/todos.md#create-a-to-do-item">Add a to-do item</a></li>
+<li><a href="../../user/project/labels.html">Add labels</a></li>
+<li><a href="../../user/project/milestones/_index.html">Assign a milestone</a></li>
+<li><a href="../../user/project/issues/confidential_issues.html">Make an incident confidential</a></li>
+<li><a href="../../user/project/issues/due_dates.html">Set a due date</a></li>
+<li><a href="../../user/profile/notifications.md#subscribe-to-notifications-for-a-specific-issue-merge-request-or-epic">Toggle notifications</a></li>
+<li><a href="../../user/project/time_tracking.html">Track spent time</a></li>
+<li><a href="../../user/project/issues/associate_zoom_meeting.html">Add a Zoom meeting to an incident</a> the same
+  way you add it to an issue</li>
+<li><a href="linked_resources.html">Linked resources in incidents</a></li>
+<li>Create incidents and receive incident notifications <a href="slack.html">directly from Slack</a></li>
+<li>Use the <a href="../../api/issues.html">Issues API</a> to interact with incidents</li>
+</ul></code></pre>
+</body>
+</html>

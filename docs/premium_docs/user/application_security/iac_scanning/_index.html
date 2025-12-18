@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Getting started</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Application Security Testing
+group: Static Analysis
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Infrastructure as Code scanning
+description: Vulnerability detection, configuration analysis, and pipeline integration.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Infrastructure as Code (IaC) scanning runs in your CI/CD pipeline, checking your infrastructure
+definition files for known vulnerabilities. Identify vulnerabilities before they're committed to
+the default branch to proactively address the risk to your application.</p>
+<p>The IaC scanning analyzer outputs JSON-formatted reports as
+<a href="../../../ci/yaml/artifacts_reports.md#artifactsreportssast">job artifacts</a>.</p>
+<p>With GitLab Ultimate, IaC scanning results are also processed so you can:</p>
+<ul>
+<li>See them in merge requests.</li>
+<li>Use them in approval workflows.</li>
+<li>Review them in the vulnerability report.</li>
+</ul>
+<h2>Getting started</h2>
+<p>If you are new to IaC scanning, follow these steps to enable it for your project.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>IaC scanning requires the AMD64 architecture. Microsoft Windows is not supported.</li>
+<li>Minimum of 4 GB RAM to ensure consistent performance.</li>
+<li>The <code>test</code> stage is required in the <code>.gitlab-ci.yml</code> file. If your project defines its own
+  <code>stages</code> list, make sure the <code>test</code> stage is included.</li>
+<li>On GitLab Self-Managed you need GitLab Runner with the
+  <a href="https://docs.gitlab.com/runner/executors/docker.html"><code>docker</code></a> or
+  <a href="https://docs.gitlab.com/runner/install/kubernetes.html"><code>kubernetes</code></a> executor.</li>
+<li>If you're using SaaS runners on GitLab.com, this is enabled by default.</li>
+</ul>
+<p>To enable IaC scanning:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>If your project does not already have one, create a <code>.gitlab-ci.yml</code> file in the root directory.</li>
+<li>At the top of the <code>.gitlab-ci.yml</code> file, add one of the following:</li>
+</ol>
+<p>Using a template:</p>
+<pre><code> ```yaml
+ include:
+   - template: Jobs/SAST-IaC.gitlab-ci.yml
+ ```
+</code></pre>
+<p>Or using a CI/CD component:</p>
+<pre><code> ```yaml
+ include:
+   - component: gitlab.com/components/sast/iac-sast@main
+ ```
+</code></pre>
+<p>At this point, IaC scanning is enabled in your pipeline:</p>
+<ul>
+<li>The IaC scanning job runs on every pipeline and executes the KICS analyzer.</li>
+<li>The analyzer determines whether the project contains supported IaC files.</li>
+<li>If supported files are found, the analyzer scans for vulnerabilities.</li>
+<li>If no supported files are found, the job completes with no findings.</li>
+</ul>
+<p>The corresponding job appears under the test stage in your pipeline.</p>
+<p>You can see a working example in
+<a href="https://gitlab.com/gitlab-org/security-products/demos/analyzer-configurations/kics/iac-getting-started">IaC scanning example project</a>.</p>
+<p>After completing these steps, you can:</p>
+<ul>
+<li>Learn more about how to <a href="#understanding-the-results">understand the results</a></li>
+<li>Review <a href="#optimization">optimization tips</a></li>
+<li>Plan a <a href="#roll-out">rollout to more projects</a></li>
+</ul>
+<h2>Understanding the results</h2>
+<p>You can review vulnerabilities in a pipeline:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>On the left sidebar, select <strong>Build</strong> &gt; <strong>Pipelines</strong>.</li>
+<li>Select the pipeline.</li>
+<li>Select the <strong>Security</strong> tab.</li>
+<li>Select a vulnerability to view its details, including:</li>
+<li>Description: Explains the cause of the vulnerability, its potential impact, and recommended remediation steps.</li>
+<li>Status: Indicates whether the vulnerability has been triaged or resolved.</li>
+<li>Severity: <a href="../vulnerabilities/severities.html">Learn more about severity levels</a>.</li>
+<li>Location: Shows the filename and line number where the issue was found.
+     Selecting the file path opens the corresponding line in the code view.</li>
+<li>Scanner: Identifies which analyzer detected the vulnerability.</li>
+<li>Identifiers: A list of references used to classify the vulnerability, such as CWE identifiers and the IDs of the rules that detected it.</li>
+</ol>
+<p>You can also download the security scan results:</p>
+<ul>
+<li>In the pipeline's <strong>Security</strong> tab, select <strong>Download results</strong>.</li>
+</ul>
+<p>For more details, see <a href="../detect/security_scanning_results.html">Pipeline security report</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Findings are generated on feature branches. When they are merged into the default branch, they become vulnerabilities. This distinction is important when evaluating your security posture.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Additional ways to see IaC scanning results:</p>
+<ul>
+<li><a href="../sast/_index.md#merge-request-widget">Merge request widget</a>: Shows newly introduced or resolved findings.</li>
+<li><a href="../sast/_index.md#merge-request-changes-view">Merge request changes view</a>: Shows inline annotations for changed lines.</li>
+<li><a href="../vulnerability_report/_index.html">Vulnerability report</a>: Shows confirmed vulnerabilities on the default branch.</li>
+</ul>
+<h2>Supported languages and frameworks</h2>
+<p>IaC scanning supports a variety of IaC configuration files. When any supported configuration files
+are detected in a project, they are scanned by using <a href="https://kics.io/">KICS</a>. Projects with a mix
+of IaC configuration files are supported.</p>
+<p>Supported configuration formats:</p>
+<ul>
+<li>Ansible</li>
+<li>AWS CloudFormation</li>
+<li>Azure Resource Manager</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>IaC scanning can analyze Azure Resource Manager templates in JSON format.
+  If you write templates in <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview">Bicep</a>,
+  you must use the <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/bicep-cli">Bicep CLI</a> to
+  convert your Bicep files into JSON before IaC scanning can analyze them.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ul>
+<li>Dockerfile</li>
+<li>Google Deployment Manager</li>
+<li>Kubernetes</li>
+<li>OpenAPI</li>
+<li>Terraform</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Terraform modules in a custom registry are not scanned for vulnerabilities.
+  For more information about the proposed feature, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/357004">issue 357004</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Optimization</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can optimize IaC scanning to reduce noise and focus on relevant findings:</p>
+<ul>
+<li>Disable specific rules by using a <code>sast-ruleset.toml</code> file.</li>
+<li>Override rule attributes (like severity) by using a <code>sast-ruleset.toml</code> file.</li>
+<li>Disable scanning of specific files by using KICS annotations in those files.</li>
+</ul>
+<p>Use a <code>sast-ruleset.toml</code> file to disable rules or override rule attributes. This approach provides:</p>
+<ul>
+<li>Integration with GitLab vulnerability management to automatically resolve existing findings when rules are disabled.</li>
+<li>Version-controlled documentation of your security policy decisions.</li>
+<li>Ability to share rulesets across multiple projects when you roll out IaC scanning.</li>
+</ul>
+<h3>Ruleset definition</h3>
+<p>Every IaC scanning rule is contained in a <code>ruleset</code> section, which contains:</p>
+<ul>
+<li>A <code>type</code> field for the rule. For IaC scanning, the identifier type is <code>kics_id</code>.</li>
+<li>A <code>value</code> field for the rule identifier. KICS rule identifiers are alphanumeric strings.
+  To find the rule identifier:</li>
+<li>Find it in the <a href="#reports-json-format">JSON report artifact</a>.</li>
+<li>Search for the rule name in the
+    <a href="https://docs.kics.io/latest/queries/all-queries/">list of KICS queries</a> and copy the
+    alphanumeric identifier that's shown. The rule name is shown on the
+    <a href="../vulnerabilities/_index.html">vulnerability details page</a> when a rule violation is
+    detected.</li>
+</ul>
+<h3>Disable rules</h3>
+<p>You can disable specific IaC scanning rules. Findings previously detected by disabled rules are
+<a href="#automatic-vulnerability-resolution">automatically resolved</a>.</p>
+<p>To disable analyzer rules:</p>
+<ol>
+<li>Create a <code>.gitlab</code> directory at the root of your project, if one doesn't already exist.</li>
+<li>Create a custom ruleset file named <code>sast-ruleset.toml</code> in the <code>.gitlab</code> directory, if
+   one doesn't already exist.</li>
+<li>Set the <code>disabled</code> flag to <code>true</code> in the context of a <code>ruleset</code> section.</li>
+<li>In one or more <code>ruleset</code> subsections, list the rules to disable.</li>
+</ol>
+<p>After you merge the <code>sast-ruleset.toml</code> file to the default branch, existing findings for disabled rules are <a href="#automatic-vulnerability-resolution">automatically resolved</a>.</p>
+<p>In the following example <code>sast-ruleset.toml</code> file, the disabled rules are assigned to
+the <code>kics</code> analyzer by matching the <code>type</code> and <code>value</code> of identifiers:</p>
+<pre><code class="language-toml">[kics]
+  [[kics.ruleset]]
+    disable = true
+    [kics.ruleset.identifier]
+      type = &quot;kics_id&quot;
+      value = &quot;8212e2d7-e683-49bc-bf78-d6799075c5a7&quot;
+
+  [[kics.ruleset]]
+    disable = true
+    [kics.ruleset.identifier]
+      type = &quot;kics_id&quot;
+      value = &quot;b03a748a-542d-44f4-bb86-9199ab4fd2d5&quot;
+</code></pre>
+<h3>Disable scanning of a file</h3>
+<p>To disable scanning of a file, either entirely or for only a rule, use
+<a href="https://docs.kics.io/latest/running-kics/#using_commands_on_scanned_files_as_comments">KICS annotations</a> in that file.</p>
+<p>This feature is only available for some types of IaC files. See the <a href="https://docs.kics.io/latest/running-kics/#using_commands_on_scanned_files_as_comments">KICS documentation</a> for a list of supported file types.</p>
+<ul>
+<li>To skip scanning an entire file, add <code># kics-scan ignore</code> as a comment at the top of the file.</li>
+<li>To disable a specific rule in an entire file, add <code># kics-scan disable=&lt;kics_id&gt;</code> as a comment at the top of the file.</li>
+</ul>
+<h3>Override rules</h3>
+<p>You can override specific IaC scanning rules to customize them. For example, assign a
+rule a lower severity, or link to your own documentation about how to fix a finding.</p>
+<p>To override rules:</p>
+<ol>
+<li>Create a <code>.gitlab</code> directory at the root of your project, if one doesn't already exist.</li>
+<li>Create a custom ruleset file named <code>sast-ruleset.toml</code> in the <code>.gitlab</code> directory, if
+   one doesn't already exist.</li>
+<li>In one or more <code>ruleset.identifier</code> subsections, list the rules to override.</li>
+<li>In the <code>ruleset.override</code> context of a <code>ruleset</code> section, provide the keys to override. Any
+   combination of keys can be overridden. Valid keys are:</li>
+<li>description</li>
+<li>message</li>
+<li>name</li>
+<li>severity (valid options are: Critical, High, Medium, Low, Unknown, Info)</li>
+</ol>
+<p>In the following example <code>sast-ruleset.toml</code> file, rules are matched by the <code>type</code> and
+<code>value</code> of identifiers and then overridden:</p>
+<pre><code class="language-toml">[kics]
+  [[kics.ruleset]]
+    [kics.ruleset.identifier]
+      type = &quot;kics_id&quot;
+      value = &quot;8212e2d7-e683-49bc-bf78-d6799075c5a7&quot;
+    [kics.ruleset.override]
+      description = &quot;OVERRIDDEN description&quot;
+      message = &quot;OVERRIDDEN message&quot;
+      name = &quot;OVERRIDDEN name&quot;
+      severity = &quot;Info&quot;
+</code></pre>
+<h2>Offline configuration</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>An offline environment has limited, restricted, or intermittent access to external resources through
+the internet. For instances in such an environment, IaC requires
+some configuration changes. The instructions in this section must be completed together with the
+instructions detailed in <a href="../offline_deployments/_index.html">offline environments</a>.</p>
+<h3>Configure GitLab Runner</h3>
+<p>By default, a runner tries to pull Docker images from the GitLab container registry even if a local
+copy is available. You should use this default setting, to ensure Docker images remain current.
+However, if no network connectivity is available, you must change the default GitLab Runner
+<code>pull_policy</code> variable.</p>
+<p>Configure the GitLab Runner CI/CD variable <code>pull_policy</code> to
+<a href="https://docs.gitlab.com/runner/executors/docker.html#using-the-if-not-present-pull-policy"><code>if-not-present</code></a>.</p>
+<h3>Use local IaC analyzer image</h3>
+<p>Use a local IaC analyzer image if you want to obtain the image from a local Docker
+registry instead of the GitLab container registry.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>Importing Docker images into a local offline Docker registry depends on your
+  network security policy. Consult your IT staff to find an accepted and approved process
+  to import or temporarily access external resources.</p>
+</li>
+<li>
+<p>Import the default IaC analyzer image from <code>registry.gitlab.com</code> into your
+   <a href="../../packages/container_registry/_index.html">local Docker container registry</a>:</p>
+</li>
+</ul>
+<p><code>plaintext
+   registry.gitlab.com/security-products/kics:6</code></p>
+<p>The IaC analyzer's image is <a href="../detect/vulnerability_scanner_maintenance.html">periodically updated</a>
+   so you should periodically update the local copy.</p>
+<ol>
+<li>Set the CI/CD variable <code>SECURE_ANALYZERS_PREFIX</code> to the local Docker container registry.</li>
+</ol>
+<p>```yaml
+   include:
+     - template: Jobs/SAST-IaC.gitlab-ci.yml</p>
+<p>variables:
+     SECURE_ANALYZERS_PREFIX: "localhost:5000/analyzers"
+   ```</p>
+<p>The IaC job should now use the local copy of the analyzer Docker image,
+without requiring internet access.</p>
+<h2>Use a specific analyzer version</h2>
+<p>The GitLab-managed CI/CD template specifies a major version and automatically pulls the latest
+analyzer release in that major version. In some cases, you may need to use a specific version.
+For example, you might need to avoid a regression in a later release.</p>
+<p>To use a specific analyzer version:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Build</strong> &gt; <strong>Pipeline editor</strong>.</li>
+<li>Add the <code>SAST_ANALYZER_IMAGE_TAG</code> CI/CD variable, after the line that includes the
+   <code>SAST-IaC.gitlab-ci.yml</code> template.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Only set this variable in a specific job. If you set it at the top level, the version you set is
+   used for other SAST analyzers.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Set the tag to:</p>
+<ul>
+<li>A major version, like <code>3</code>. Your pipelines use any minor or patch updates that are released in this major version.</li>
+<li>A minor version, like <code>3.7</code>. Your pipelines use any patch updates that are released in this minor version.</li>
+<li>A patch version, like <code>3.7.0</code>. Your pipelines don't receive any updates.</li>
+</ul>
+<p>This example uses a specific minor version of the IaC analyzer:</p>
+<pre><code class="language-yaml">include:
+  - template: Jobs/SAST-IaC.gitlab-ci.yml
+
+kics-iac-sast:
+  variables:
+    SAST_ANALYZER_IMAGE_TAG: &quot;3.1&quot;
+</code></pre>
+<h2>Supported distributions</h2>
+<p>GitLab scanners are provided with a base Alpine image for size and maintainability.</p>
+<h3>Use FIPS-enabled images</h3>
+<p>GitLab provides <a href="https://www.redhat.com/en/blog/introducing-red-hat-universal-base-image">FIPS-enabled Red Hat UBI</a>
+versions of the scanners' images, in addition to the standard images.</p>
+<p>To use the FIPS-enabled images in a pipeline, set the <code>SAST_IMAGE_SUFFIX</code> to <code>-fips</code> or modify the
+standard tag plus the <code>-fips</code> extension.</p>
+<p>The following example uses the <code>SAST_IMAGE_SUFFIX</code> CI/CD variable.</p>
+<pre><code class="language-yaml">variables:
+  SAST_IMAGE_SUFFIX: '-fips'
+
+include:
+  - template: Jobs/SAST-IaC.gitlab-ci.yml
+</code></pre>
+<h2>Automatic vulnerability resolution</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/368284">Introduced</a> in GitLab 15.9 <a href="../../../administration/feature_flags/_index.html">with a project-level flag</a> named <code>sec_mark_dropped_findings_as_resolved</code>.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/375128">Generally available</a> in GitLab 16.2. Feature flag <code>sec_mark_dropped_findings_as_resolved</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To help you focus on the vulnerabilities that are still relevant, IaC scanning automatically
+<a href="../vulnerabilities/_index.md#vulnerability-status-values">resolves</a> vulnerabilities when:</p>
+<ul>
+<li>You <a href="#disable-rules">disable a predefined rule</a>.</li>
+<li>We remove a rule from the default ruleset.</li>
+</ul>
+<p>If you re-enable the rule later, the findings are reopened for triage.</p>
+<p>The vulnerability management system adds a note when it automatically resolves a vulnerability.</p>
+<h2>Reports JSON format</h2>
+<p>The IaC scanner outputs a JSON report file in the existing SAST report format. For more information, see the
+<a href="https://gitlab.com/gitlab-org/security-products/security-report-schemas/-/blob/master/dist/sast-report-format.json">schema for this report</a>.</p>
+<p>The JSON report file can be downloaded from:</p>
+<ul>
+<li>The CI/CD pipelines page.</li>
+<li>The pipelines tab on merge requests by
+  <a href="../../../ci/yaml/_index.md#artifactspaths">setting <code>artifacts: paths</code></a> to <code>gl-sast-report.json</code>.</li>
+</ul>
+<p>For more information see <a href="../../../ci/jobs/job_artifacts.html">Downloading artifacts</a>.</p>
+<h2>Roll out</h2>
+<p>After validating the IaC scanning results for one project, you can implement the same approach across additional projects.</p>
+<ul>
+<li>Use <a href="../detect/security_configuration.md#create-a-shared-configuration">enforced scan execution</a> to apply IaC scanning settings across groups.</li>
+<li>Share and reuse a central ruleset by <a href="../sast/customize_rulesets.md#specify-a-remote-configuration-file">specifying a remote configuration file</a>.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<p>When working with IaC scanning, you might encounter the following issues.</p>
+<h3>IaC scanning findings show as <code>No longer detected</code> unexpectedly</h3>
+<p>If a previously detected finding unexpectedly shows as <code>No longer detected</code>, it might
+be due to an update to the scanner. An update can disable rules that are found to
+be ineffective or false positives, and the findings are marked as <code>No longer detected</code>.</p>
+<h3>Message <code>exec /bin/sh: exec format error</code> in job log</h3>
+<p>You might get an error in the job log that states <code>exec /bin/sh: exec format error</code>. This issue
+occurs when attempting to run the IaC scanning analyzer on an architecture other than AMD64
+architecture. For details of IaC scanning prerequisites, see the <a href="#getting-started">prerequisites</a>.</p></code></pre>
+</body>
+</html>

@@ -1,0 +1,102 @@
+body {
+    background-color: #000000; /* Black background */
+    color: #00FF00; /* Green text */
+    font-family: 'Courier New', Courier, monospace; /* Monospaced font */
+    margin: 20px;
+    line-height: 1.5;
+}
+
+pre {
+    white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
+    word-wrap: break-word;
+}
+
+a {
+    color: #00FFFF; /* Cyan for links */
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #00CCFF; /* Lighter cyan on hover */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #FFFF00; /* Yellow for headings */
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+code {
+    background-color: #333333;
+    color: #FFFFFF;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+pre code {
+    display: block;
+    padding: 10px;
+    background-color: #222222;
+    border-left: 5px solid #00FF00;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+}
+
+th, td {
+    border: 1px solid #00FF00;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #004400;
+}
+
+blockquote {
+    border-left: 4px solid #00FFFF;
+    margin-left: 0;
+    padding-left: 1em;
+    color: #AAAAAA;
+}
+
+/* For the blinking cursor effect on prompt lines if needed */
+.blinking-cursor {
+    font-weight: 100;
+    font-size: 1.2em;
+    color: #00FF00;
+    -webkit-animation: 1s blink step-end infinite;
+    -moz-animation: 1s blink step-end infinite;
+    -ms-animation: 1s blink step-end infinite;
+    -o-animation: 1s blink step-end infinite;
+    animation: 1s blink step-end infinite;
+}
+
+@keyframes blink {
+    from, to { border-right-color: transparent }
+    50% { border-right-color: #00FF00; }
+}
+
+@-moz-keyframes blink {
+    from, to { border-right-color: transparent }
+    50% { border-right-color: #00FF00; }
+}
+
+@-webkit-keyframes blink {
+    from, to { border-right-color: transparent }
+    50% { border-right-color: #00FF00; }
+}
+
+@-ms-keyframes blink {
+    from, to { border-right-color: transparent }
+    50% { border-right-color: #00FF00; }
+}
+
+@-o-keyframes blink {
+    from, to { border-right-color: transparent }
+    50% { border-right-color: #00FF00; }
+}

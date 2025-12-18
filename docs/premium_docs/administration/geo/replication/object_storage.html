@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Object storage verification</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+gitlab_dedicated: no
+title: Geo with Object storage</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Verification of files stored in object storage was <a href="https://gitlab.com/groups/gitlab-org/-/epics/8056">introduced</a> in GitLab 16.4 <a href="../../feature_flags/_index.html">with a flag</a> named <code>geo_object_storage_verification</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Geo can be used in combination with Object Storage (AWS S3, or other compatible object storage).</p>
+<p><strong>Secondary</strong> sites can use one of the following:</p>
+<ul>
+<li>The same storage bucket as the <strong>primary</strong> site.</li>
+<li>A replicated storage bucket.</li>
+<li>Local storage, if the primary uses local storage.</li>
+</ul>
+<p>The storage method (local or object storage) for files is recorded in the database, and the database
+is replicated from the <strong>primary</strong> Geo site to the <strong>secondary</strong> Geo site.</p>
+<p>When accessing an uploaded object, we get its storage method (local or object storage) from the
+database, so the <strong>secondary</strong> Geo site must match the storage method of the <strong>primary</strong> Geo site.</p>
+<p>Therefore, if the <strong>primary</strong> Geo site uses object storage, the <strong>secondary</strong> Geo site must use it too.</p>
+<p>To have:</p>
+<ul>
+<li>GitLab manage replication, follow <a href="#enabling-gitlab-managed-object-storage-replication">Enabling GitLab replication</a>.</li>
+<li>Third-party services manage replication, follow <a href="#third-party-replication-services">Third-party replication services</a>.</li>
+</ul>
+<p><a href="../../object_storage.html">Read more about using object storage with GitLab</a>.</p>
+<h2>Object storage verification</h2>
+<p>Geo verifies files stored in object storage to ensure data integrity between primary and secondary sites.</p>
+<p>{{&lt; alert type="warning" &gt;}}
+Disabling object storage verification is not recommended.
+When you disable the <code>geo_object_storage_verification</code> feature flag, GitLab asynchronously deletes all existing verification state records.
+{{&lt; /alert &gt;}}</p>
+<p>When the <code>geo_object_storage_verification</code> feature flag is disabled:</p>
+<ul>
+<li>Geo verification workers (<code>Geo::VerificationBatchWorker</code>) can still appear in Sidekiq logs, but verification does not take place.</li>
+<li>During cleanup of verification records, workers may be enqueued to process remaining records.</li>
+</ul>
+<h2>Enabling GitLab-managed object storage replication</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/5551">Introduced</a> in GitLab 15.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>In case of issues, avoid manually deleting individual files as that can lead to <a href="#inconsistencies-after-the-migration">data inconsistencies</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p><strong>Secondary</strong> sites can replicate files stored by the <strong>primary</strong> site regardless of
+whether they are stored on the local file system or in object storage.</p>
+<p>To enable GitLab replication:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Geo</strong> &gt; <strong>Sites</strong>.</li>
+<li>Select <strong>Edit</strong> on the <strong>secondary</strong> site.</li>
+<li>In the <strong>Synchronization Settings</strong> section, find the <strong>Allow this secondary site to replicate content on Object Storage</strong>
+   checkbox to enable it.</li>
+</ol>
+<p>For LFS, follow the documentation to
+<a href="../../lfs/_index.md#storing-lfs-objects-in-remote-object-storage">set up LFS object storage</a>.</p>
+<p>For CI job artifacts, there is similar documentation to configure
+<a href="../../cicd/job_artifacts.md#using-object-storage">jobs artifact object storage</a>.</p>
+<p>For user uploads, there is similar documentation to configure <a href="../../uploads.md#using-object-storage">upload object storage</a>.</p>
+<p>If you want to migrate the <strong>primary</strong> site's files to object storage, you can
+configure the <strong>secondary</strong> in a few ways:</p>
+<ul>
+<li>Use the exact same object storage.</li>
+<li>Use a separate object store but leverage your object storage solution's built-in
+  replication.</li>
+<li>Use a separate object store and enable the <strong>Allow this secondary site to replicate
+  content on Object Storage</strong> setting.</li>
+</ul>
+<p>If the <strong>Allow this secondary site to replicate content on Object Storage</strong> setting
+is disabled, and if you have migrated all your files from local storage to object storage,
+then many <strong>Admin</strong> &gt; <strong>Geo</strong> &gt; <strong>Sites</strong> progress bars display <strong>Nothing to synchronize</strong>.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>To avoid data loss, you should only enable the <strong>Allow this secondary site to replicate content on
+Object Storage</strong> setting if you are using separate object stores for the Primary and Secondary
+sites.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>GitLab does not support the case where both:</p>
+<ul>
+<li>The <strong>primary</strong> site uses local storage.</li>
+<li>A <strong>secondary</strong> site uses object storage.</li>
+</ul>
+<h3>Inconsistencies after the migration</h3>
+<p>Data inconsistencies can occur when migrating from local to object storage,
+which is further described in the <a href="../../object_storage.md#inconsistencies-after-migrating-to-object-storage">object storage troubleshooting section</a>.</p>
+<h2>Third-party replication services</h2>
+<p>When using Amazon S3, you can use
+<a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/crr.html">Cross-Region Replication (CRR)</a> to
+have automatic replication between the bucket used by the <strong>primary</strong> site and
+the bucket used by <strong>secondary</strong> sites.</p>
+<p>If you are using Google Cloud Storage, consider using
+<a href="https://cloud.google.com/storage/docs/storage-classes#multi-regional">Multi-Regional Storage</a>.
+Or you can use the <a href="https://cloud.google.com/storage-transfer/docs/overview">Storage Transfer Service</a>,
+although this only supports daily synchronization.</p>
+<p>For manual synchronization, or scheduled by <code>cron</code>, see:</p>
+<ul>
+<li><a href="https://s3tools.org/s3cmd-sync"><code>s3cmd sync</code></a></li>
+<li><a href="https://cloud.google.com/storage/docs/gsutil/commands/rsync"><code>gsutil rsync</code></a></li>
+</ul></code></pre>
+</body>
+</html>

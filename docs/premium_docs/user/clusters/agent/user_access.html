@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Configure Kubernetes access</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Runner Core
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Grant users Kubernetes access</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/390769">Introduced</a> in GitLab 16.1, with <a href="../../../administration/feature_flags/_index.html">flags</a> named <code>environment_settings_to_graphql</code>, <code>kas_user_access</code>, <code>kas_user_access_project</code>, and <code>expose_authorized_cluster_agents</code>. This feature is in <a href="../../../policy/development_stages_support.md#beta">beta</a>.</li>
+<li>Feature flag <code>environment_settings_to_graphql</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/124177">removed</a> in GitLab 16.2.</li>
+<li>Feature flags <code>kas_user_access</code>, <code>kas_user_access_project</code>, and <code>expose_authorized_cluster_agents</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/125835">removed</a> in GitLab 16.2.</li>
+<li>The <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/149844">limit of agent connection sharing was raised</a> from 100 to 500 in GitLab 17.0</li>
+<li>The <code>user_access</code> parameter <code>access_as</code> <a href="https://gitlab.com/gitlab-org/cluster-integration/gitlab-agent/-/merge_requests/2749">was made optional</a> in GitLab 18.3. Defaults to agent impersonation.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/557818">Changed</a> to allow the authorization of projects and groups that belong to different top-level groups in GitLab 18.4.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>As an administrator of Kubernetes clusters in an organization, you can grant Kubernetes access to members
+of a specific project or group.</p>
+<p>Granting access also activates <a href="../../../ci/environments/kubernetes_dashboard.html">the Dashboard for Kubernetes</a> for a project or group.</p>
+<p>For GitLab Self-Managed instances, make sure you either:</p>
+<ul>
+<li>Host your GitLab instance and <a href="../../../administration/clusters/kas.html">KAS</a> on the same domain.</li>
+<li>Host KAS on a subdomain of GitLab. For example, GitLab on <code>gitlab.com</code> and KAS on <code>kas.gitlab.com</code>.</li>
+</ul>
+<h2>Configure Kubernetes access</h2>
+<p>Configure access when you want to grant users access
+to a Kubernetes cluster.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>The agent for Kubernetes is installed in the Kubernetes cluster.</li>
+<li>You must have the Developer role or higher.</li>
+</ul>
+<p>To configure access:</p>
+<ul>
+<li>
+<p>In the agent configuration file, define a <code>user_access</code> keyword with the following parameters:</p>
+</li>
+<li>
+<p><code>projects</code>: A list of projects whose members should have access. You can authorize up to 500 projects.</p>
+</li>
+<li><code>groups</code>: A list of groups whose members should have access. You can authorize up to 500 groups. It grants access to the group and all its descendants.</li>
+<li><code>access_as</code>: For access with agent identity, the value is <code>{ agent: {...} }</code>.</li>
+</ul>
+<p>Authorized projects and groups must have the same top-level group or user namespace as the agent's configuration project, unless the
+<a href="ci_cd_workflow.md#authorize-all-projects-in-your-gitlab-instance-to-access-the-agent">instance level authorization</a> application setting is enabled.</p>
+<p>After you configure access, requests are forwarded to the API server using
+the agent service account.
+For example:</p>
+<pre><code class="language-yaml"># .gitlab/agents/my-agent/config.yaml
+
+user_access:
+  access_as:
+    agent: {}
+  projects:
+    - id: group-1/project-1
+    - id: group-2/project-2
+  groups:
+    - id: group-2
+    - id: group-3/subgroup
+</code></pre>
+<h2>Configure access with user impersonation</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can grant access to a Kubernetes cluster and transform
+requests into impersonation requests for authenticated users.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>The agent for Kubernetes is installed in the Kubernetes cluster.</li>
+<li>You must have the Developer role or higher.</li>
+</ul>
+<p>To configure access with user impersonation:</p>
+<ul>
+<li>
+<p>In the agent configuration file, define a <code>user_access</code> keyword with the following parameters:</p>
+</li>
+<li>
+<p><code>projects</code>: A list of projects whose members should have access.</p>
+</li>
+<li><code>groups</code>: A list of groups whose members should have access.</li>
+<li><code>access_as</code>: For user impersonation, the value is <code>{ user: {...} }</code>.</li>
+</ul>
+<p>After you configure access, requests are transformed into impersonation requests for
+authenticated users.</p>
+<h3>User impersonation workflow</h3>
+<p>The installed <code>agentk</code> impersonates the given users as follows:</p>
+<ul>
+<li><code>UserName</code> is <code>gitlab:user:&lt;username&gt;</code></li>
+<li><code>Groups</code> is:</li>
+<li><code>gitlab:user</code>: Common to all requests coming from GitLab users.</li>
+<li><code>gitlab:project_role:&lt;project_id&gt;:&lt;role&gt;</code> for each role in each authorized project.</li>
+<li><code>gitlab:group_role:&lt;group_id&gt;:&lt;role&gt;</code> for each role in each authorized group.</li>
+<li><code>Extra</code> carries additional information about the request:</li>
+<li><code>agent.gitlab.com/id</code>: The agent ID.</li>
+<li><code>agent.gitlab.com/username</code>: The username of the GitLab user.</li>
+<li><code>agent.gitlab.com/config_project_id</code>: The agent configuration project ID.</li>
+<li><code>agent.gitlab.com/access_type</code>: One of <code>personal_access_token</code> or <code>session_cookie</code>. Ultimate only.</li>
+</ul>
+<p>Only projects and groups directly listed in the under <code>user_access</code> in the configuration
+file are impersonated. For example:</p>
+<pre><code class="language-yaml"># .gitlab/agents/my-agent/config.yaml
+
+user_access:
+  access_as:
+    user: {}
+  projects:
+    - id: group-1/project-1 # group_id=1, project_id=1
+    - id: group-2/project-2 # group_id=2, project_id=2
+  groups:
+    - id: group-2 # group_id=2
+    - id: group-3/subgroup # group_id=3, group_id=4
+</code></pre>
+<p>In this configuration:</p>
+<ul>
+<li>If a user is a member of only <code>group-1</code>, they receive
+  only the Kubernetes RBAC groups <code>gitlab:project_role:1:&lt;role&gt;</code>.</li>
+<li>If a user is a member of <code>group-2</code>, they receive both Kubernetes RBAC groups:</li>
+<li><code>gitlab:project_role:2:&lt;role&gt;</code>,</li>
+<li><code>gitlab:group_role:2:&lt;role&gt;</code>.</li>
+</ul>
+<h3>RBAC authorization</h3>
+<p>Impersonated requests require <code>ClusterRoleBinding</code> or <code>RoleBinding</code> to identify the resource permissions
+inside Kubernetes. See <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">RBAC authorization</a>
+for the appropriate configuration.</p>
+<p>For example, if you allow maintainers in <code>awesome-org/deployment</code> project (ID: 123) to read the Kubernetes workloads,
+you must add a <code>ClusterRoleBinding</code> resource to your Kubernetes configuration:</p>
+<pre><code class="language-yaml">apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: my-cluster-role-binding
+roleRef:
+  name: view
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - name: gitlab:project_role:123:maintainer
+    kind: Group
+</code></pre>
+<h2>Access a cluster with the Kubernetes API</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/131144">Introduced</a> in GitLab 16.4.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can configure an agent to allow GitLab users to access a cluster with the Kubernetes API.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You have an agent configured with the <code>user_access</code> entry.</li>
+</ul>
+<h3>Configure local access with the GitLab CLI (recommended)</h3>
+<p>You can use the <a href="../../../editor_extensions/gitlab_cli/_index.html">GitLab CLI <code>glab</code></a> to create or update
+a Kubernetes configuration file to access the agent Kubernetes API.</p>
+<p>Use <code>glab cluster agent</code> commands to manage cluster connections:</p>
+<ol>
+<li>View a list of all the agents associated with your project:</li>
+</ol>
+<pre><code class="language-shell">glab cluster agent list --repo '&lt;group&gt;/&lt;project&gt;'
+
+# If your current working directory is the Git repository of the project with the agent, you can omit the --repo option:
+glab cluster agent list
+</code></pre>
+<ol>
+<li>Use the numerical agent ID presented in the first column of the output to update your <code>kubeconfig</code>:</li>
+</ol>
+<pre><code class="language-shell">glab cluster agent update-kubeconfig --repo '&lt;group&gt;/&lt;project&gt;' --agent '&lt;agent-id&gt;' --use-context
+</code></pre>
+<ol>
+<li>Verify the update with <code>kubectl</code> or your preferred Kubernetes tooling:</li>
+</ol>
+<pre><code class="language-shell">kubectl get nodes
+</code></pre>
+<p>The <code>update-kubeconfig</code> command sets <code>glab cluster agent get-token</code> as a
+<a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins">credential plugin</a>
+for Kubernetes tools to retrieve a token. The <code>get-token</code> command creates and
+returns a personal access token that is valid until the end of the current day.
+Kubernetes tools cache the token until it expires, the API returns an authorization error, or the process exits. Expect all subsequent calls to your Kubernetes tooling to create a new token.</p>
+<p>The <code>glab cluster agent update-kubeconfig</code> command supports a number of command line flags. You can view all supported flags with <code>glab cluster agent update-kubeconfig --help</code>.</p>
+<p>Some examples:</p>
+<pre><code class="language-shell"># When the current working directory is the Git repository where the agent is registered the --repo / -R flag can be omitted
+glab cluster agent update-kubeconfig --agent '&lt;agent-id&gt;'
+
+# When the --use-context option is specified the `current-context` of the kubeconfig file is changed to the agent context
+glab cluster agent update-kubeconfig --agent '&lt;agent-id&gt;' --use-context
+
+# The --kubeconfig flag can be used to specify an alternative kubeconfig path
+glab cluster agent update-kubeconfig --agent '&lt;agent-id&gt;' --kubeconfig ~/gitlab.kubeconfig
+</code></pre>
+<h3>Configure local access manually using a personal access token</h3>
+<p>You can configure access to a Kubernetes cluster using a long-lived personal access token:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Operate</strong> &gt; <strong>Kubernetes clusters</strong> and retrieve the numerical ID of the agent you want to access. You need the ID to construct the full API token.</li>
+<li>Create a <a href="../../profile/personal_access_tokens.html">personal access token</a> with the <code>k8s_proxy</code> scope. You need the access token to construct the full API token.</li>
+<li>Construct <code>kubeconfig</code> entries to access the cluster:</li>
+<li>Make sure that the proper <code>kubeconfig</code> is selected.
+      For example, you can set the <code>KUBECONFIG</code> environment variable.</li>
+<li>
+<p>Add the GitLab KAS proxy cluster to the <code>kubeconfig</code>:</p>
+<p><code>shell
+  kubectl config set-cluster &lt;cluster_name&gt; --server "https://kas.gitlab.com/k8s-proxy"</code></p>
+<p>The <code>server</code> argument points to the KAS address of your GitLab instance.
+  On GitLab.com, this is <code>https://kas.gitlab.com/k8s-proxy</code>.
+  You can get the KAS address of your instance when you register an agent.</p>
+</li>
+<li>
+<p>Use your numerical agent ID and personal access token to construct an API token:</p>
+<p><code>shell
+  kubectl config set-credentials &lt;gitlab_user&gt; --token "pat:&lt;agent-id&gt;:&lt;token&gt;"</code></p>
+</li>
+<li>
+<p>Add the context to combine the cluster and the user:</p>
+<p><code>shell
+  kubectl config set-context &lt;gitlab_agent&gt; --cluster &lt;cluster_name&gt; --user &lt;gitlab_user&gt;</code></p>
+</li>
+<li>
+<p>Activate the new context:</p>
+<p><code>shell
+  kubectl config use-context &lt;gitlab_agent&gt;</code></p>
+</li>
+<li>
+<p>Check that the configuration works:</p>
+</li>
+</ol>
+<p><code>shell
+   kubectl get nodes</code></p>
+<p>The configured user can access your cluster with the Kubernetes API.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/cluster-integration/gitlab-agent/-/blob/master/doc/kubernetes_user_access.md">Architectural blueprint</a></li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/2493">Dashboard for Kubernetes</a></li>
+</ul></code></pre>
+</body>
+</html>

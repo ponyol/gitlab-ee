@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 api/group_integrations.md</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <pre><code><ol>
+<li>
+<p><strong>Зачем это нужно</strong><br />
+API позволяет управлять интеграциями для группы и её подгрупп, обеспечивая автоматизацию взаимодействия с внешними системами (например, CI/CD, issue-трекерами) через REST API.</p>
+</li>
+<li>
+<p><strong>Основные возможности</strong>  </p>
+</li>
+<li>Получение списка активных интеграций для группы.  </li>
+<li>Настройка и управление различными интеграциями: Asana, Assembla, Atlassian Bamboo, Bugzilla, Buildkite, Campfire Classic, ClickUp, Confluence Workspace, Custom Issue Tracker и Datadog.  </li>
+<li>Получение настроек конкретной интеграции.  </li>
+<li>
+<p>Отключение интеграций с сбросом настроек.</p>
+</li>
+<li>
+<p><strong>Важные нюансы</strong>  </p>
+</li>
+<li>Требуется роль Maintainer для группы.  </li>
+<li>Поддержка наследования настроек через параметр <code>use_inherited_settings</code>.  </li>
+<li>Некоторые интеграции (например, Campfire Classic) устарели и больше не продаются.  </li>
+<li>Поле <code>vulnerability_events</code> доступно только в GitLab Enterprise Edition.  </li>
+<li>Поддержка всех тиров: Free, Premium, Ultimate.  </li>
+<li>Доступно в GitLab.com, GitLab Self-Managed и GitLab Dedicated.  </li>
+<li>Введено в версии GitLab 17.9.</li>
+</ol>
+<hr /></code></pre>
+</body>
+</html>

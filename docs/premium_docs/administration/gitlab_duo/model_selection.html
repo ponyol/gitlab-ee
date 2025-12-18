@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Select a model for the instance</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Custom Models
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Configure large language models for GitLab Duo features.
+title: Model selection</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Every GitLab Duo feature has a default large language model (LLM) chosen by GitLab.</p>
+<p>GitLab can update this default model to optimize feature performance. Therefore, a feature's model might change without you taking any action.</p>
+<p>If you do not want to use the default model for each feature, or have specific requirements, you can choose from an array of other available supported models.</p>
+<p>If you select a specific model for a feature, the feature uses that model until you select another.</p>
+<h2>Select a model for the instance</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/19144">Introduced</a> in GitLab 18.4 with a <a href="../../administration/feature_flags/_index.html">flag</a> named <code>instance_level_model_selection</code>. Enabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/208017">Introduced</a> to GitLab Dedicated in GitLab 18.5.</li>
+<li>Feature flag <code>instance_level_model_selection</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/209698">removed</a> in GitLab 18.6.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/210969">Changed</a> to include GitLab Duo Core and Pro in GitLab 18.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can select a model for a feature that applies to the entire instance. If you don't select a specific model,
+all GitLab Duo features use the default GitLab model.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<p>To select a model for a feature:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>On the left sidebar, select <strong>GitLab Duo</strong>.</li>
+<li>On <strong>Configure AI features</strong>, select <strong>Configure models for GitLab Duo</strong>. If <strong>Configure AI features</strong> is not displayed, verify that the GitLab Duo Enterprise add-on is configured for your instance.</li>
+<li>For the feature you want to configure, select a model from the dropdown list.</li>
+<li>Optional. To apply the model to all features in the section, select <strong>Apply to all</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

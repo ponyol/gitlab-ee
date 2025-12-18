@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Instance audit events</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Compliance
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Audit events administration
+description: View, export, and manage audit events for the GitLab instance, including CSV encoding and user impersonation.</p>
+<hr />
+<p>In addition to <a href="../../user/compliance/audit_events.html">audit events</a>, as an administrator, you can access additional
+features.</p>
+<h2>Instance audit events</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can view audit events from user actions across an entire GitLab instance.
+To view instance audit events:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Monitoring</strong> &gt; <strong>Audit events</strong>.</li>
+<li>Filter by the following:</li>
+<li>Member of the project (user) who performed the action</li>
+<li>Group</li>
+<li>Project</li>
+<li>Date Range</li>
+</ol>
+<p>Instance audit events can also be accessed using the <a href="../../api/audit_events.md#instance-audit-events">instance audit events API</a>.</p>
+<h2>Exporting audit events</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Entity type <code>Gitlab::Audit::InstanceScope</code> for instance audit events <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/418185">introduced</a> in GitLab 16.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can export the current view (including filters) of your instance audit events as a
+CSV(comma-separated values) file. To export the instance audit events to CSV:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Monitoring</strong> &gt; <strong>Audit events</strong>.</li>
+<li>Select the available search filters.</li>
+<li>Select <strong>Export as CSV</strong>.</li>
+</ol>
+<p>A download confirmation dialog then appears for you to download the CSV file. The exported CSV is limited
+to a maximum of 100000 events. The remaining records are truncated when this limit is reached.</p>
+<h3>Audit event CSV encoding</h3>
+<p>The exported CSV file is encoded as follows:</p>
+<ul>
+<li><code>,</code> is used as the column delimiter</li>
+<li><code>"</code> is used to quote fields if necessary.</li>
+<li><code>\n</code> is used to separate rows.</li>
+</ul>
+<p>The first row contains the headers, which are listed in the following table along
+with a description of the values:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ID</strong></td>
+<td>Audit event <code>id</code>.</td>
+</tr>
+<tr>
+<td><strong>Author ID</strong></td>
+<td>ID of the author.</td>
+</tr>
+<tr>
+<td><strong>Author Name</strong></td>
+<td>Full name of the author.</td>
+</tr>
+<tr>
+<td><strong>Entity ID</strong></td>
+<td>ID of the scope.</td>
+</tr>
+<tr>
+<td><strong>Entity Type</strong></td>
+<td>Type of the scope (<code>Project</code>, <code>Group</code>, <code>User</code>, or <code>Gitlab::Audit::InstanceScope</code>).</td>
+</tr>
+<tr>
+<td><strong>Entity Path</strong></td>
+<td>Path of the scope.</td>
+</tr>
+<tr>
+<td><strong>Target ID</strong></td>
+<td>ID of the target.</td>
+</tr>
+<tr>
+<td><strong>Target Type</strong></td>
+<td>Type of the target.</td>
+</tr>
+<tr>
+<td><strong>Target Details</strong></td>
+<td>Details of the target.</td>
+</tr>
+<tr>
+<td><strong>Action</strong></td>
+<td>Description of the action.</td>
+</tr>
+<tr>
+<td><strong>IP Address</strong></td>
+<td>IP address of the author who performed the action.</td>
+</tr>
+<tr>
+<td><strong>Created At (UTC)</strong></td>
+<td>Formatted as <code>YYYY-MM-DD HH:MM:SS</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>All items are sorted by <code>created_at</code> in ascending order.</p>
+<h2>User impersonation</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When a user is <a href="../admin_area.md#user-impersonation">impersonated</a>, their actions are logged as audit events with the following additional details:</p>
+<ul>
+<li>Audit events include information about the impersonating administrator.</li>
+<li>Extra audit events are recorded for the start and end of the administrator's impersonation session.</li>
+</ul>
+<p><img alt="An audit event with an impersonated user." src="img/impersonated_audit_events_v15_7.png" /></p>
+<h2>Time zones</h2>
+<p>For information on timezones and audit events, see <a href="../../user/compliance/audit_events.md#time-zones">Time zones</a>.</p>
+<h2>Contribute to audit events</h2>
+<p>For information on contributing to audit events, see
+<a href="../../user/compliance/audit_events.md#contribute-to-audit-events">Contribute to audit events</a>.</p></code></pre>
+</body>
+</html>

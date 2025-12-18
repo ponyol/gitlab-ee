@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># List wiki pages</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Knowledge
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Group wikis API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use this API to manage <a href="../user/project/wiki/group.html">group wikis</a>.
+An API for <a href="wikis.html">project wikis</a> is also available.</p>
+<p>Comments on a wiki page are called <code>notes</code>. To interact with them, use the <a href="notes.md#group-wikis">notes API</a>.</p>
+<h2>List wiki pages</h2>
+<p>List all wiki pages for a given group.</p>
+<pre><code class="language-plaintext">GET /groups/:id/wikis
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>with_content</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Include pages' content.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/wikis?with_content=1&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;content&quot; : &quot;Here is an instruction how to deploy this project.&quot;,
+    &quot;format&quot; : &quot;markdown&quot;,
+    &quot;slug&quot; : &quot;deploy&quot;,
+    &quot;title&quot; : &quot;deploy&quot;,
+    &quot;encoding&quot;: &quot;UTF-8&quot;
+  },
+  {
+    &quot;content&quot; : &quot;Our development process is described here.&quot;,
+    &quot;format&quot; : &quot;markdown&quot;,
+    &quot;slug&quot; : &quot;development&quot;,
+    &quot;title&quot; : &quot;development&quot;,
+    &quot;encoding&quot;: &quot;UTF-8&quot;
+  },{
+    &quot;content&quot; : &quot;*  [Deploy](deploy)\n*  [Development](development)&quot;,
+    &quot;format&quot; : &quot;markdown&quot;,
+    &quot;slug&quot; : &quot;home&quot;,
+    &quot;title&quot; : &quot;home&quot;,
+    &quot;encoding&quot;: &quot;UTF-8&quot;
+  }
+]
+</code></pre>
+<h2>Get a wiki page</h2>
+<p>Get a wiki page for a given group.</p>
+<pre><code class="language-plaintext">GET /groups/:id/wikis/:slug
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>URL-encoded slug (a unique string) of the wiki page, such as <code>dir%2Fpage_name</code>.</td>
+</tr>
+<tr>
+<td><code>render_html</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Return the rendered HTML of the wiki page.</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>string</td>
+<td>No</td>
+<td>Wiki page version SHA.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/wikis/home&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;content&quot; : &quot;home page&quot;,
+  &quot;format&quot; : &quot;markdown&quot;,
+  &quot;slug&quot; : &quot;home&quot;,
+  &quot;title&quot; : &quot;home&quot;,
+  &quot;encoding&quot;: &quot;UTF-8&quot;
+}
+</code></pre>
+<h2>Create a new wiki page</h2>
+<p>Create a new wiki page for the given repository with the given title, slug, and content.</p>
+<pre><code class="language-plaintext">POST /projects/:id/wikis
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The content of the wiki page.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The title of the wiki page.</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td>string</td>
+<td>No</td>
+<td>The format of the wiki page. Available formats are: <code>markdown</code> (default), <code>rdoc</code>, <code>asciidoc</code>, and <code>org</code>.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request POST \
+     --data &quot;format=rdoc&amp;title=Hello&amp;content=Hello world&quot; \
+     --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+     --url &quot;https://gitlab.example.com/api/v4/groups/1/wikis&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;content&quot; : &quot;Hello world&quot;,
+  &quot;format&quot; : &quot;markdown&quot;,
+  &quot;slug&quot; : &quot;Hello&quot;,
+  &quot;title&quot; : &quot;Hello&quot;,
+  &quot;encoding&quot;: &quot;UTF-8&quot;
+}
+</code></pre>
+<h2>Edit an existing wiki page</h2>
+<p>Update an existing wiki page. At least one parameter is required to update the wiki page.</p>
+<pre><code class="language-plaintext">PUT /groups/:id/wikis/:slug
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>string</td>
+<td>Yes, if <code>title</code> is not provided</td>
+<td>The content of the wiki page.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Yes, if <code>content</code> is not provided</td>
+<td>The title of the wiki page.</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td>string</td>
+<td>No</td>
+<td>The format of the wiki page. Available formats are <code>markdown</code> (default), <code>rdoc</code>, <code>asciidoc</code>, and <code>org</code>.</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>URL encoded slug (a unique string) of the wiki page. For example: <code>dir%2Fpage_name</code>.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request PUT \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/wikis/foo&quot; \
+  --data &quot;format=rdoc&quot; \
+  --data &quot;title=Docs&quot; \
+  --data &quot;content=documentation&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;content&quot; : &quot;documentation&quot;,
+  &quot;format&quot; : &quot;markdown&quot;,
+  &quot;slug&quot; : &quot;Docs&quot;,
+  &quot;title&quot; : &quot;Docs&quot;,
+  &quot;encoding&quot;: &quot;UTF-8&quot;
+}
+</code></pre>
+<h2>Delete a wiki page</h2>
+<p>Delete a wiki page with a given slug.</p>
+<pre><code class="language-plaintext">DELETE /groups/:id/wikis/:slug
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>URL-encoded slug (a unique string) of the wiki page, such as <code>dir%2Fpage_name</code>.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --request DELETE \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/wikis/foo&quot;
+</code></pre>
+<p>If successful, a <code>204 No Content</code> HTTP response with an empty body is expected.</p>
+<h2>Upload an attachment to the wiki repository</h2>
+<p>Upload a file to the attachment folder inside the wiki's repository. The
+attachment folder is the <code>uploads</code> folder.</p>
+<pre><code class="language-plaintext">POST /groups/:id/wikis/attachments
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>Yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of the group.</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The attachment to be uploaded.</td>
+</tr>
+<tr>
+<td><code>branch</code></td>
+<td>string</td>
+<td>No</td>
+<td>The name of the branch. Defaults to the wiki repository default branch.</td>
+</tr>
+</tbody>
+</table>
+<p>To upload a file from your file system, use the <code>--form</code> argument. This causes
+cURL to post data using the header <code>Content-Type: multipart/form-data</code>.
+The <code>file=</code> parameter must point to a file on your file system and be preceded
+by <code>@</code>. For example:</p>
+<pre><code class="language-shell">curl --request POST \
+  --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+  --url &quot;https://gitlab.example.com/api/v4/groups/1/wikis/attachments&quot; \
+  --form &quot;file=@dk.png&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;file_name&quot; : &quot;dk.png&quot;,
+  &quot;file_path&quot; : &quot;uploads/6a061c4cf9f1c28cb22c384b4b8d4e3c/dk.png&quot;,
+  &quot;branch&quot; : &quot;main&quot;,
+  &quot;link&quot; : {
+    &quot;url&quot; : &quot;uploads/6a061c4cf9f1c28cb22c384b4b8d4e3c/dk.png&quot;,
+    &quot;markdown&quot; : &quot;![dk](uploads/6a061c4cf9f1c28cb22c384b4b8d4e3c/dk.png)&quot;
+  }
+}
+</code></pre></code></pre>
+</body>
+</html>

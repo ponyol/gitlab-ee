@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Create a parallel deployment</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Knowledge
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: GitLab Pages parallel deployments</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/129534">Introduced</a> in GitLab 16.7 as an <a href="../../../policy/development_stages_support.html">experiment</a> <a href="../../../administration/feature_flags/list.html">with a flag</a> named <code>pages_multiple_versions_setting</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/480195">Renamed</a> from "multiple deployments" to "parallel deployments" in GitLab 17.4.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/422145">Enabled on GitLab.com, GitLab Self-Managed, and GitLab Dedicated</a> in GitLab 17.4.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/502219">Changed</a> to remove the project setting in GitLab 17.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/507423">Changed</a> to allow periods in <code>path_prefix</code> in GitLab 17.8.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/500000">Changed</a> to allow variables when passed to <code>publish</code> property in GitLab 17.9.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/487161">Generally available</a> in GitLab 17.9. Feature flag <code>pages_multiple_versions_setting</code> removed.</li>
+<li>Automatically appending <code>pages.publish</code> path to <code>artifacts:paths</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/428018">introduced</a> in GitLab 17.10 for Pages jobs only.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>With parallel deployments, you can publish multiple versions of your <a href="_index.html">GitLab Pages</a>
+site at the same time. Each version has its own unique URL based on a path prefix you specify.</p>
+<p>Use parallel deployments to:</p>
+<ul>
+<li>Enhance your workflow for testing changes in development branches before merging
+  to production.</li>
+<li>Share working previews with stakeholders for feedback.</li>
+<li>Maintain documentation for multiple software versions simultaneously.</li>
+<li>Publish localized content for different audiences.</li>
+<li>Create staging environments for review before final publication.</li>
+</ul>
+<p>Each version of your site gets its own URL based on a path prefix that you specify.
+Control how long these parallel deployments exist.
+They expire after 24 hours by default, but you can customize this duration to fit your review timeline.</p>
+<h2>Create a parallel deployment</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>The root-level namespace must have available <a href="../../gitlab_com/_index.md#other-limits">parallel deployment slots</a>.</li>
+</ul>
+<p>To create a parallel deployment:</p>
+<ol>
+<li>In your <code>.gitlab-ci.yml</code> file, add a Pages job with a <code>path_prefix</code>:</li>
+</ol>
+<p><code>yaml
+   pages:
+     stage: deploy
+     script:
+       - echo "Pages accessible through ${CI_PAGES_URL}"
+     pages:  # specifies that this is a Pages job and publishes the default public directory
+       path_prefix: "$CI_COMMIT_BRANCH"</code></p>
+<p>The <code>path_prefix</code> value:</p>
+<ul>
+<li>Is converted to lowercase.</li>
+<li>Can contain numbers (<code>0-9</code>), letters (<code>a-z</code>), and periods (<code>.</code>).</li>
+<li>Is replaced with hyphens (<code>-</code>) for any other characters.</li>
+<li>Cannot start or end with hyphens (<code>-</code>) or periods (<code>.</code>), so they are removed.</li>
+<li>
+<p>Must be 63 bytes or shorter. Anything longer is trimmed.</p>
+</li>
+<li>
+<p>Optional. If you want dynamic prefixes, use
+   <a href="../../../ci/variables/where_variables_can_be_used.md#gitlab-ciyml-file">CI/CD variables</a> in your <code>path_prefix</code>.
+   For example:</p>
+</li>
+</ul>
+<p><code>yaml
+   pages:
+     path_prefix: "mr-$CI_MERGE_REQUEST_IID" # Results in paths like mr-123</code></p>
+<ol>
+<li>Optional. To set an expiry time for the deployment, add <code>expire_in</code>:</li>
+</ol>
+<p><code>yaml
+   pages:
+     pages:
+       path_prefix: "$CI_COMMIT_BRANCH"
+       expire_in: 1 week</code></p>
+<p>By default, parallel deployments <a href="#expiration">expire</a> after 24 hours.</p>
+<ol>
+<li>Commit your changes and push to your repository.</li>
+</ol>
+<p>The deployment is accessible at:</p>
+<ul>
+<li>With a <a href="_index.md#unique-domains">unique domain</a>: <code>https://project-123456.gitlab.io/your-prefix-name</code>.</li>
+<li>Without a unique domain: <code>https://namespace.gitlab.io/project/your-prefix-name</code>.</li>
+</ul>
+<p>The URL path between the site domain and public directory is determined by the <code>path_prefix</code>.
+For example, if your main deployment has content at <code>/index.html</code>, a parallel deployment with prefix
+<code>staging</code> can access that same content at <code>/staging/index.html</code>.</p>
+<p>To prevent path clashes, avoid using path prefixes that match the names of existing folders in your site.
+For more information, see <a href="#path-clash">Path clash</a>.</p>
+<h2>Example configuration</h2>
+<p>Consider a project such as <code>https://gitlab.example.com/namespace/project</code>. By default, its main Pages deployment can be accessed through:</p>
+<ul>
+<li>When using a <a href="_index.md#unique-domains">unique domain</a>: <code>https://project-123456.gitlab.io/</code>.</li>
+<li>When not using a unique domain: <code>https://namespace.gitlab.io/project</code>.</li>
+</ul>
+<p>If a <code>pages.path_prefix</code> is configured to the project branch names,
+like <code>path_prefix = $CI_COMMIT_BRANCH</code>, and there's a
+branch named <code>username/testing_feature</code>, this parallel Pages deployment would be accessible through:</p>
+<ul>
+<li>When using a <a href="_index.md#unique-domains">unique domain</a>: <code>https://project-123456.gitlab.io/username-testing-feature</code>.</li>
+<li>When not using a unique domain: <code>https://namespace.gitlab.io/project/username-testing-feature</code>.</li>
+</ul>
+<h2>Limits</h2>
+<p>The number of parallel deployments is limited by the root-level namespace. For
+specific limits for:</p>
+<ul>
+<li>GitLab.com, see <a href="../../gitlab_com/_index.md#other-limits">Other limits</a>.</li>
+<li>GitLab Self-Managed, see
+  <a href="../../../administration/instance_limits.md#number-of-parallel-pages-deployments">Number of parallel Pages deployments</a>.</li>
+</ul>
+<p>To immediately reduce the number of active deployments in your namespace,
+delete some deployments. For more information, see
+<a href="_index.md#delete-a-deployment">Delete a deployment</a>.</p>
+<p>To configure an expiry time to automatically
+delete older deployments, see
+<a href="_index.md#expiring-deployments">Expiring deployments</a>.</p>
+<h2>Expiration</h2>
+<p>By default, parallel deployments <a href="_index.md#expiring-deployments">expire</a> after 24 hours,
+after which they are deleted. If you're using a self-hosted instance, your instance admin can
+<a href="../../../administration/pages/_index.md#configure-the-default-expiry-for-parallel-deployments">configure a different default duration</a>.</p>
+<p>To customize the expiry time, <a href="_index.md#expiring-deployments">configure <code>pages.expire_in</code></a>.</p>
+<p>To prevent deployments from automatically expiring, set <code>pages.expire_in</code> to
+<code>never</code>.</p>
+<h2>Path clash</h2>
+<p><code>pages.path_prefix</code> can take dynamic values from <a href="../../../ci/variables/_index.html">CI/CD variables</a>
+that can create pages deployments which could clash with existing paths in your site.
+For example, given an existing GitLab Pages site with the following paths:</p>
+<pre><code class="language-plaintext">/index.html
+/documents/index.html
+</code></pre>
+<p>If a <code>pages.path_prefix</code> is <code>documents</code>, that version overrides the existing path.
+In other words, <code>https://namespace.gitlab.io/project/documents/index.html</code> points to the
+<code>/index.html</code> on the <code>documents</code> deployment of the site, instead of <code>documents/index.html</code> of the
+<code>main</code> deployment of the site.</p>
+<p>Mixing <a href="../../../ci/variables/_index.html">CI/CD variables</a> with other strings can reduce the path clash
+possibility. For example:</p>
+<pre><code class="language-yaml">create-pages:
+  stage: deploy
+  script:
+    - echo &quot;Pages accessible through ${CI_PAGES_URL}&quot;
+  variables:
+    PAGES_PREFIX: &quot;&quot; # No prefix by default (main)
+  pages:  # specifies that this is a Pages job and publishes the default public directory
+    path_prefix: &quot;$PAGES_PREFIX&quot;
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # Run on default branch (with default PAGES_PREFIX)
+    - if: $CI_COMMIT_BRANCH == &quot;staging&quot; # Run on main (with default PAGES_PREFIX)
+      variables:
+        PAGES_PREFIX: '_stg' # Prefix with _stg for the staging branch
+    - if: $CI_PIPELINE_SOURCE == &quot;merge_request_event&quot; # Conditionally change the prefix for Merge Requests
+      when: manual # Run pages manually on Merge Requests
+      variables:
+        PAGES_PREFIX: 'mr-$CI_MERGE_REQUEST_IID' # Prefix with the mr-&lt;iid&gt;, like `mr-123`
+</code></pre>
+<p>Some other examples of mixing <a href="../../../ci/variables/_index.html">variables</a> with strings for dynamic prefixes:</p>
+<ul>
+<li><code>pages.path_prefix: 'mr-$CI_COMMIT_REF_SLUG'</code>: Branch or tag name prefixed with <code>mr-</code>, like <code>mr-branch-name</code>.</li>
+<li><code>pages.path_prefix: '_${CI_MERGE_REQUEST_IID}_'</code>: Merge request number
+  prefixed ans suffixed with <code>_</code>, like <code>_123_</code>.</li>
+</ul>
+<p>The previous YAML example uses <a href="_index.md#user-defined-job-names">user-defined job names</a>.</p>
+<h2>Use parallel deployments to create Pages environments</h2>
+<p>You can use parallel GitLab Pages deployments to create a new <a href="../../../ci/environments/_index.html">environment</a>.
+For example:</p>
+<pre><code class="language-yaml">create-pages:
+  stage: deploy
+  script:
+    - echo &quot;Pages accessible through ${CI_PAGES_URL}&quot;
+  variables:
+    PAGES_PREFIX: &quot;&quot; # no prefix by default (run on the default branch)
+  pages:  # specifies that this is a Pages job and publishes the default public directory
+    path_prefix: &quot;$PAGES_PREFIX&quot;
+  environment:
+    name: &quot;Pages ${PAGES_PREFIX}&quot;
+    url: $CI_PAGES_URL
+  rules:
+    - if: $CI_COMMIT_BRANCH == &quot;staging&quot; # ensure to run on the default branch (with default PAGES_PREFIX)
+      variables:
+        PAGES_PREFIX: '_stg' # prefix with _stg for the staging branch
+    - if: $CI_PIPELINE_SOURCE == &quot;merge_request_event&quot; # conditionally change the prefix on Merge Requests
+      when: manual # run pages manually on Merge Requests
+      variables:
+        PAGES_PREFIX: 'mr-$CI_MERGE_REQUEST_IID' # prefix with the mr-&lt;iid&gt;, like `mr-123`
+</code></pre>
+<p>With this configuration, users have access to each GitLab Pages deployment through the UI.
+When using <a href="../../../ci/environments/_index.html">environments</a> for pages, all pages environments are
+listed on the project environment list.</p>
+<p>You can also <a href="../../../ci/environments/_index.md#group-similar-environments">group similar environments</a> together.</p>
+<p>The previous YAML example uses <a href="_index.md#user-defined-job-names">user-defined job names</a>.</p>
+<h3>Auto-clean</h3>
+<p>Parallel Pages deployments, created by a merge request with a <code>path_prefix</code>, are automatically deleted when the
+merge request is closed or merged.</p>
+<h2>Usage with redirects</h2>
+<p>Redirects use absolute paths.
+Because parallel deployments are available on a sub-path, redirects require
+additional modifications to the <code>_redirects</code> file to work in parallel deployments.</p>
+<p>Existing files always take priority over a redirect rule, so you can use a splat placeholder
+to catch requests to prefixed paths.</p>
+<p>If your <code>path_prefix</code> is <code>/mr-${$CI_MERGE_REQUEST_IID}</code>, adapt this <code>_redirect</code> file example
+to redirect requests for both primary and parallel deployments:</p>
+<pre><code class="language-shell"># Redirect the primary deployment
+/will-redirect.html /redirected.html 302
+
+# Redirect parallel deployments
+/*/will-redirect.html /:splat/redirected.html 302
+</code></pre></code></pre>
+</body>
+</html>

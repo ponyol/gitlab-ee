@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Agent authorization in a group for creating workspaces</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Remote Development
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Configure the GitLab agent for Kubernetes to support your workspace.
+title: GitLab agent for Kubernetes configuration</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Feature flag <code>remote_development_feature_flag</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/391543">enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 16.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/136744">Generally available</a> in GitLab 16.7. Feature flag <code>remote_development_feature_flag</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When you <a href="configuration.md#set-up-workspace-infrastructure">set up workspace infrastructure</a>,
+you must configure a GitLab agent for Kubernetes to support workspaces. This guide assumes that a GitLab
+agent is already installed in the Kubernetes cluster.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must complete the setup steps in <a href="set_up_gitlab_agent_and_proxies.html">Tutorial: Set up the GitLab agent for Kubernetes</a>.</li>
+<li>The agent configuration must have the <code>remote_development</code> module enabled, and the required fields of this module must be correctly set.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If you disable the <code>remote_development</code> module on an agent that has active workspaces,
+  those workspaces become unusable. For more information, see
+  <a href="settings.md#enabled">workspace settings</a>.</p>
+<p>{{&lt; /alert &gt;}}
+- The agent must be allowed in a group for the purpose of creating workspaces. During workspace creation, users can select allowed agents that are associated with any parent group of the workspace project.
+- The workspace creator must have the Developer role to the project of the agent.</p>
+<h2>Agent authorization in a group for creating workspaces</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>New authorization strategy <a href="https://gitlab.com/groups/gitlab-org/-/epics/14025">introduced</a> in GitLab 17.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>The new authorization strategy replaces the <a href="#legacy-agent-authorization-strategy">legacy authorization strategy</a>.
+Group owners and administrators can control which cluster agents host workspaces in their group.</p>
+<p>For example, if the path to your workspace project is <code>top-level-group/subgroup-1/subgroup-2/workspace-project</code>, you can use any configured agent for either <code>top-level-group</code>, <code>subgroup-1</code> or <code>subgroup-2</code> group.</p>
+<pre><code class="language-mermaid">%%{init: { &quot;theme&quot;: &quot;neutral&quot;, &quot;fontFamily&quot;: &quot;GitLab Sans&quot; }}%%
+graph TD
+    accTitle: Agent authorization hierarchy for workspaces
+    accDescr: Workspace projects inherit access to agents from all parent groups in the hierarchy.
+
+    classDef active fill:lightgreen, stroke:#green, color:green, stroke-width:1px;
+
+    topGroup[Top-Level Group, allowed Agent 1]
+    subgroup1[Subgroup 1, allowed Agent 2]
+    subgroup2[Subgroup 2, allowed Agent 3]
+    wp(Workspace Project, Agent 1, 2 &amp; 3 all available)
+
+    topGroup --&gt; subgroup1
+    subgroup1 --&gt; subgroup2
+    subgroup2 --&gt; wp
+
+    class wp active;
+</code></pre>
+<p>If you allow a cluster agent for a specific group, for example, <code>subgroup-1</code>,
+it is available to create workspaces in all projects under that group.
+Consider the scope of the allowed group carefully, as it determines where the cluster agent can
+host workspaces.</p>
+<h2>Allow a cluster agent for workspaces in a group</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must <a href="configuration.md#set-up-workspace-infrastructure">set up workspace infrastructure</a>.</li>
+<li>You must have administrator access to the instance or the Owner role for the group.</li>
+</ul>
+<p>To allow a cluster agent for workspaces in a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>On the left sidebar, select <strong>Settings</strong> &gt; <strong>Workspaces</strong>.</li>
+<li>In the <strong>Group agents</strong> section, select the <strong>All agents</strong> tab.</li>
+<li>From the list of available agents, find the agent with status <strong>Blocked</strong>, and select <strong>Allow</strong>.</li>
+<li>On the confirmation dialog, select <strong>Allow agent</strong>.</li>
+</ol>
+<p>GitLab updates the status of the selected agent to <strong>Allowed</strong>, and displays the agent in the <strong>Allowed agents</strong> tab.</p>
+<h2>Remove an allowed cluster agent for workspaces in a group</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must <a href="configuration.md#set-up-workspace-infrastructure">set up workspace infrastructure</a>.</li>
+<li>You must have administrator access to the instance or the Owner role for the group.</li>
+</ul>
+<p>To remove an allowed cluster agent from a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>On the left sidebar, select <strong>Settings</strong> &gt; <strong>Workspaces</strong>.</li>
+<li>In the <strong>Group agents</strong> section, select the <strong>Allowed agents</strong> tab.</li>
+<li>From the list of allowed agents, find the agent you want to remove, and select <strong>Block</strong>.</li>
+<li>On the confirmation dialog, select <strong>Block agent</strong>.</li>
+</ol>
+<p>GitLab updates the status of the selected agent to <strong>Blocked</strong>, and removes the agent from the <strong>Allowed agents</strong> tab.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Removing an allowed cluster agent from a group does not immediately stop running workspaces using
+the agent. Running workspaces stop when they are automatically terminated or manually stopped.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Allow a cluster agent for workspaces on the instance</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/548951">Introduced</a> in GitLab 18.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must <a href="configuration.md#set-up-workspace-infrastructure">set up workspace infrastructure</a>.</li>
+<li>You must have agents with <a href="settings.md#enabled">remote development enabled</a>.</li>
+<li>You must have administrator access to the instance.</li>
+</ul>
+<p>To allow a cluster agent for workspaces on the instance:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>On the left sidebar, select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Available agents for workspaces</strong>.</li>
+<li>From the list of agents with workspaces enabled, find the agent you want to allow, and select the
+   availability toggle.</li>
+</ol>
+<h2>Remove an allowed cluster agent for workspaces on the instance</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/548951">Introduced</a> in GitLab 18.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have administrator access to the instance.</li>
+</ul>
+<p>To remove an allowed cluster agent from the instance:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>On the left sidebar, select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand <strong>Available agents for workspaces</strong>.</li>
+<li>From the list of allowed agents, find the agent you want to remove, and clear the availability toggle.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Removing an allowed cluster agent from an instance does not immediately stop running workspaces using
+the agent. Running workspaces stop when they are automatically terminated or manually stopped.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Legacy agent authorization strategy</h2>
+<p>In GitLab 17.1 and earlier, the availability of an agent in a group was not a prerequisite for
+creating workspaces.
+You can use any agent in the top-level group of a workspace project to create a workspace,
+if both of the following are true:</p>
+<ul>
+<li>The remote development module is enabled.</li>
+<li>You have at least the Developer role for the top-level group.</li>
+</ul>
+<p>For example, if the path to your workspace project is <code>top-level-group/subgroup-1/subgroup-2/workspace-project</code>,
+you can use any configured agent in <code>top-level-group</code> and in any of its subgroups.</p>
+<h2>Configuring user access with remote development</h2>
+<p>You can configure the <code>user_access</code> module to access the connected Kubernetes cluster with your GitLab credentials.
+This module is configured and runs independently of the <code>remote_development</code> module.</p>
+<p>Be careful when configuring both <code>user_access</code> and <code>remote_development</code> in the same agent.
+The <code>remote_development</code> clusters manage user credentials (such as personal access tokens) as Kubernetes Secrets.
+Any misconfiguration in <code>user_access</code> might cause this private data to be accessible over the Kubernetes API.</p>
+<p>For more information about configuring <code>user_access</code>, see
+<a href="../clusters/agent/user_access.md#configure-kubernetes-access">Configure Kubernetes access</a>.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="set_up_gitlab_agent_and_proxies.html">Tutorial: Set up the GitLab for Kubernetes</a></li>
+<li><a href="settings.html">Workspace settings</a></li>
+<li><a href="configuration.html">Workspace configuration</a></li>
+<li><a href="workspaces_troubleshooting.html">Troubleshooting Workspaces</a></li>
+</ul></code></pre>
+</body>
+</html>

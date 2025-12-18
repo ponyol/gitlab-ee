@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Relationships between epics and other items</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Product Planning
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Epics
+description: Roadmaps, hierarchies, planning, and issue progress.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Epics in GitLab coordinate and track large initiatives by organizing work items into a work hierarchy.
+Epics make complex projects manageable. They:</p>
+<ul>
+<li>Break down large features into smaller deliverables that add incremental value.</li>
+<li>Track the progress of related work items with scheduled start and end dates.</li>
+<li>Organize discussions and decisions about feature scope and requirements.</li>
+<li>Create hierarchical structures that connect tasks to strategic goals.</li>
+<li>Build visual roadmaps to monitor progress toward objectives.</li>
+</ul>
+<p>Teams use epics to coordinate across multiple iterations and track progress toward long-term goals.</p>
+<p>In the Ultimate tier, <a href="manage_epics.md#multi-level-child-epics">nested epics</a> provide additional
+structure through work hierarchies that align with agile frameworks.
+Break down complex projects into more manageable child epics, which can further contain their own
+sets of issues and tasks.
+This nested structure helps maintain clarity and ensures all aspects of a project are covered without
+losing sight of the overarching goals.</p>
+<div class="video-fallback">
+  See the video: <a href="https://www.youtube.com/watch?v=c0EwYYUZppw">GitLab Epics - Setting up your Organization with GitLab</a>.
+</div>
+<figure class="video-container">
+  <iframe src="https://www.youtube-nocookie.com/embed/c0EwYYUZppw" frameborder="0" allowfullscreen> </iframe>
+</figure>
+<!-- Video published on 2023-10-30 -->
+
+<h2>Relationships between epics and other items</h2>
+<p>The possible relationships between epics and other items are:</p>
+<ul>
+<li>An epic is the parent of one or more issues.</li>
+<li>An epic is the parent of one or more <a href="manage_epics.md#multi-level-child-epics">child epics</a>. Ultimate only.</li>
+<li>An epic is <a href="linked_epics.html">linked</a> to one or more task, objective, or key result.</li>
+</ul>
+<p>Example set of relationships:</p>
+<pre><code class="language-mermaid">
+%%{init: { &quot;fontFamily&quot;: &quot;GitLab Sans&quot; }}%%
+graph TD
+    accTitle: Epics and issues
+    accDescr: How issues and child epics relate to parent epics and lateral relationships to work items
+
+    %% Main structure %%
+    Parent_epic --&gt;|contains| Issue1
+    Parent_epic --&gt;|contains| Child_epic
+    Child_epic --&gt;|contains| Issue2
+
+    %% Additional work items and lateral relationships %%
+    Issue1 -- contains --&gt; Task1[&quot;Task&quot;]
+    Issue2 -- &quot;blocked by&quot; --&gt; Objective1[&quot;Objective&quot;]
+    Task1 -- blocking --&gt; KeyResult1[&quot;Key Result&quot;]
+
+    %% Work items linked to epics and issues %%
+    Parent_epic -. related .- Objective1
+    Child_epic -. &quot;blocked by&quot; .- KeyResult1
+
+</code></pre>
+<h3>Child issues from different group hierarchies</h3>
+<p>You can add issues from a different group hierarchy to an epic.
+To do it, paste the issue URL when
+<a href="manage_epics.md#add-an-existing-issue-to-an-epic">adding an existing issue</a>.</p>
+<h2>Roadmap in epics</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>On the <strong>Child items</strong> section header, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) &gt; <strong>View on a roadmap</strong>.</p>
+<p>A roadmap filtered for the parent epic opens.</p>
+<h2>Epics as work items</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/9290">Introduced</a> in GitLab 17.2 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>work_item_epics</code>. Disabled by default. Introduced in <a href="../../../policy/development_stages_support.md#beta">beta</a>.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/470685">Enabled on GitLab.com</a> in GitLab 17.6.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/468310">Enabled by default on GitLab Self-Managed and GitLab Dedicated</a> in GitLab 17.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/468310">Generally available</a> in GitLab 18.1. Feature flag <code>work_item_epics</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>We have changed how epics look by migrating them to a unified framework for work items to better
+meet the product needs of our Agile Planning offering.</p>
+<p>For more information, see <a href="https://gitlab.com/groups/gitlab-org/-/epics/9290">epic 9290</a> and the
+following blog posts:</p>
+<ul>
+<li><a href="https://about.gitlab.com/blog/2024/06/18/first-look-the-new-agile-planning-experience-in-gitlab/">First look: The new Agile planning experience in GitLab</a> (June 2024)</li>
+<li><a href="https://about.gitlab.com/blog/2024/07/03/unveiling-a-new-epic-experience-for-improved-agile-planning/">Unveiling a new epic experience for improved Agile planning</a> (July 2024)</li>
+</ul>
+<p>If you run into any issues while trying out this change, you can use the
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/494462">feedback issue</a> to provide more details.</p>
+<h3>Work item Markdown reference</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/352861">Introduced</a> in GitLab 18.1 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>extensible_reference_filters</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/197052">Generally available</a> in GitLab 18.2. Feature flag <code>extensible_reference_filters</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can reference work items in GitLab Flavored Markdown fields with <code>[work_item:123]</code>.
+For more information, see <a href="../../markdown.md#gitlab-specific-references">GitLab-specific references</a>.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="manage_epics.html">Manage epics</a> and multi-level child epics.</li>
+<li>Link <a href="linked_epics.html">related epics</a> based on a type of relationship.</li>
+<li>Create workflows with <a href="epic_boards.html">epic boards</a>.</li>
+<li><a href="../../profile/notifications.html">Turn on notifications</a> for about epic events.</li>
+<li><a href="../../emoji_reactions.html">Add an emoji reaction</a> to an epic or its comments.</li>
+<li>Collaborate on an epic by posting comments in a <a href="../../discussions/_index.html">thread</a>.</li>
+<li>Use <a href="manage_epics.md#health-status">health status</a> to track your progress.</li>
+<li><a href="../../project/description_templates.md#create-a-description-template">Create epic templates</a> to standardize epic descriptions.</li>
+</ul></code></pre>
+</body>
+</html>

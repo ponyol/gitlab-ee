@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Before you start</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: GitLab Delivery
+group: Operate
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Upgrade a multi-node instance with zero downtime
+description: Upgrade a multi-node Linux package-based with zero downtime.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>The process of upgrading a multi-node GitLab environment with zero downtime involves sequentially going through each node
+as per the <a href="#upgrade-order">upgrade order</a>. Load balancers and HA mechanisms handle each node going down accordingly.</p>
+<p>Before you begin an upgrade with zero downtime, <a href="downtime_options.html">consider your downtime options</a>.</p>
+<h2>Before you start</h2>
+<p>Achieving zero downtime as part of an upgrade is notably difficult for any distributed application. The documentation
+has been tested as given against our HA <a href="../administration/reference_architectures/_index.html">reference architectures</a>
+and resulted in effectively no observable downtime. But be aware your mileage may vary dependent on the specific system
+makeup.</p>
+<p>For additional confidence, some customers have found success with further techniques such as manually draining nodes by
+using specific load balancer or infrastructure capabilities. These techniques depend greatly on the underlying
+infrastructure capabilities.</p>
+<p>For any additional information reach out to your GitLab representative or the
+<a href="https://about.gitlab.com/support/">Support team</a>.</p>
+<h3>Requirements</h3>
+<p>The zero-downtime upgrade process requires a multi-node GitLab environment built with the Linux package that has load
+balancing and available HA mechanisms configured as follows:</p>
+<ul>
+<li>External load balancer configured for GitLab application nodes with health checks enabled against the
+  <a href="../administration/monitoring/health_check.md#readiness">readiness</a> (<code>/-/readiness</code>) endpoint.</li>
+<li>Internal load balancer configured for any PgBouncer and Praefect components with TCP health checks enabled.</li>
+<li>HA mechanisms configured for the Consul, Postgres, and Redis components if present.</li>
+<li>Any of these components that are not deployed in a HA fashion must upgraded separately with downtime.</li>
+<li>For databases, the <a href="https://gitlab.com/groups/gitlab-org/-/epics/7814">Linux package only supports HA for the main GitLab database</a>.
+    For any other databases, such as the <a href="#upgrade-gitaly-cluster-praefect-nodes">Praefect database</a>, a third party
+    database solution is required to achieve HA and subsequently to avoid downtime.</li>
+</ul>
+<p>For zero-downtime upgrades, you must:</p>
+<ul>
+<li>Upgrade <strong>one minor release at a time</strong>. So from <code>16.1</code> to <code>16.2</code>, not to <code>16.3</code>. If you skip releases, database
+  modifications might be run in the wrong sequence
+  <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/321542">and leave the database schema in a broken state</a>.</li>
+<li>Use post-deployment migrations.</li>
+</ul>
+<h3>Considerations</h3>
+<p>When considering a zero-downtime upgrade, be aware that:</p>
+<ul>
+<li>Most of the time, you can safely upgrade from a patch release to the next minor release if the patch release is not
+  the latest. For example, upgrading from <code>16.3.2</code> to <code>16.4.1</code> should be safe even if <code>16.3.3</code> has been released. You
+  should verify the version-specific upgrade notes relevant to your <a href="upgrade_paths.html">upgrade path</a> and be
+  aware of any required upgrade stops:</li>
+<li><a href="versions/gitlab_17_changes.html">GitLab 17 upgrade notes</a></li>
+<li><a href="versions/gitlab_16_changes.html">GitLab 16 upgrade notes</a></li>
+<li><a href="versions/gitlab_15_changes.html">GitLab 15 upgrade notes</a></li>
+<li>Some releases may include background migrations. These migrations are performed in the background by Sidekiq and are
+  often used for migrating data. Background migrations are only added in the monthly releases.</li>
+<li>Certain major or minor releases may require a set of background migrations to be finished. While this doesn't require
+    downtime (if the previous conditions are met), you must wait for background migrations to complete between each major
+    or minor release upgrade.</li>
+<li>The time necessary to complete these migrations can be reduced by increasing the number of Sidekiq workers that can
+    process jobs in the <code>background_migration</code> queue. To see the size of this queue,
+    <a href="background_migrations.html">check for background migrations before upgrading</a>.</li>
+<li>Zero-downtime upgrades can be performed for <a href="#upgrade-gitaly-nodes">Gitaly</a> because of a graceful reload mechanism.
+  The <a href="#upgrade-gitaly-cluster-praefect-nodes">Gitaly Cluster (Praefect)</a> component can also be directly upgraded without
+  downtime. However, the Linux package does not offer HA or zero downtime support for the Praefect database. A third-party
+  database solution is required to avoid downtime.</li>
+<li><a href="../administration/postgresql/replication_and_failover.md#near-zero-downtime-upgrade-of-postgresql-in-a-patroni-cluster">PostgreSQL major version upgrades</a>
+  are a separate process and not covered by zero-downtime upgrades. Smaller upgrades are covered.</li>
+<li>Zero-downtime upgrades are supported for the noted GitLab components you've deployed with the Linux package. If you've
+  deployed select components through a supported third party service, such as PostgreSQL in AWS RDS or Redis in GCP
+  Memorystore, upgrades for those services must be performed separately as per their standard processes.</li>
+<li>As a general guideline, the larger amount of data you have, the more time is needed for the upgrade to complete. In
+  testing, any database smaller than 10 GB shouldn't generally take longer than an hour, but your mileage may vary.</li>
+</ul>
+<h3>Upgrade order</h3>
+<p>You should take a back-to-front approach for the order of what components to upgrade with zero downtime:</p>
+<ol>
+<li>Stateful backends</li>
+<li>Backend dependents</li>
+<li>Frontends</li>
+</ol>
+<p>Though you can change the order of deployment, you should deploy the components running GitLab application code
+(for example, Rails and Sidekiq) together. If possible, upgrade the supporting infrastructure separately because these
+components do not have dependencies on changes introduced in a version upgrade for a major release.</p>
+<p>You should upgrade GitLab components in the following order:</p>
+<ol>
+<li>Consul</li>
+<li>PostgreSQL</li>
+<li>PgBouncer</li>
+<li>Redis</li>
+<li>Gitaly</li>
+<li>Praefect</li>
+<li>Rails</li>
+<li>Sidekiq</li>
+</ol>
+<h2>Upgrade Consul, PostgreSQL, PgBouncer, and Redis nodes</h2>
+<p>The <a href="../administration/consul.html">Consul</a>, <a href="../administration/postgresql/replication_and_failover.html">PostgreSQL</a>,
+<a href="../administration/postgresql/pgbouncer.html">PgBouncer</a>, and <a href="../administration/redis/replication_and_failover.html">Redis</a>
+components all follow the same underlying process to upgrading without downtime.</p>
+<p>On each component's node to perform the upgrade:</p>
+<ol>
+<li>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>, which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</li>
+</ol>
+<p><code>shell
+   sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+<ol>
+<li>Upgrade the node by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</li>
+<li>Reconfigure and restart to get the latest code in place:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="For PostgreSQL nodes only" &gt;}}</p>
+<p>Restart the Consul client first, then restart all other services to ensure PostgreSQL failover occurs gracefully:</p>
+<p><code>shell
+   sudo gitlab-ctl restart consul
+   sudo gitlab-ctl restart-except consul</code></p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="For all other component nodes" &gt;}}</p>
+<p><code>shell
+   sudo gitlab-ctl restart</code></p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h2>Upgrade Gitaly nodes</h2>
+<p><a href="../administration/gitaly/_index.html">Gitaly</a> follows the same core process when it comes to upgrading but with a key difference
+that the Gitaly process itself is not restarted as it has a built-in process to gracefully reload
+at the earliest opportunity. Other components must still be restarted.</p>
+<p>This process applies to both Gitaly Sharded and Cluster setups. Run through the following steps sequentially on each Gitaly node to perform the upgrade:</p>
+<ol>
+<li>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>, which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</li>
+</ol>
+<p><code>shell
+   sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+<ol>
+<li>Upgrade the node by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</li>
+<li>Run the <code>reconfigure</code> command to get the latest code in place and to instruct Gitaly to gracefully reload at the next opportunity:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure</code></p>
+<ol>
+<li>Finally, while Gitaly gracefully reloads any other components that have been deployed, you still need a restart:</li>
+</ol>
+<p>```shell
+   # Get a list of what other components have been deployed beside Gitaly
+   sudo gitlab-ctl status</p>
+<p># Restart each component except Gitaly. Example given for Consul, Node Exporter and Logrotate
+   sudo gitlab-ctl restart consul node-exporter logrotate
+   ```</p>
+<h3>Upgrade Gitaly Cluster (Praefect) nodes</h3>
+<p>For Gitaly Cluster (Praefect) setups, you must deploy and upgrade Praefect in a similar way by using a graceful reload.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The upgrade process attempts to do a graceful handover to a new Praefect process.
+Existing long-running Git requests that were started before the upgrade may eventually be dropped as this handover occurs.
+In the future this functionality may be changed, <a href="https://gitlab.com/groups/gitlab-org/-/epics/10328">refer to this Epic</a> for more information.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>This section focuses exclusively on the Praefect component, not its <a href="../administration/gitaly/praefect/configure.md#postgresql">required PostgreSQL database</a>. The <a href="https://gitlab.com/groups/gitlab-org/-/epics/7814">GitLab Linux package does not offer HA</a> and subsequently Zero Downtime support for the Praefect database. A third party database solution is required to avoid downtime.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Praefect must also perform database migrations to upgrade any existing data. To avoid clashes,
+migrations should run on only one Praefect node. To do this, designate a <strong>Praefect deploy node</strong> that runs the migrations:</p>
+<ol>
+<li>
+<p>On the <strong>Praefect deploy node</strong>:</p>
+</li>
+<li>
+<p>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>,
+      which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</p>
+<p><code>shell
+  sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+</li>
+<li>
+<p>Upgrade the node by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</p>
+</li>
+<li>Ensure that <code>praefect['auto_migrate'] = true</code> is set in <code>/etc/gitlab/gitlab.rb</code> so that database migrations run.</li>
+<li>
+<p>Run the <code>reconfigure</code> command to get the latest code in place, apply the Praefect database migrations and restart gracefully:</p>
+<p><code>shell
+  sudo gitlab-ctl reconfigure</code></p>
+</li>
+<li>
+<p>On all <strong>remaining Praefect nodes</strong>:</p>
+</li>
+<li>
+<p>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>,
+      which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</p>
+<p><code>shell
+  sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+</li>
+<li>
+<p>Upgrade the node by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</p>
+</li>
+<li>Ensure that <code>praefect['auto_migrate'] = false</code> is set in <code>/etc/gitlab/gitlab.rb</code> to prevent
+      <code>reconfigure</code> from automatically running database migrations.</li>
+<li>
+<p>Run the <code>reconfigure</code> command to get the latest code in place and restart gracefully:</p>
+<p><code>shell
+  sudo gitlab-ctl reconfigure</code></p>
+</li>
+<li>
+<p>Finally, while Praefect gracefully reloads, any other components that have been deployed still need a restart.
+   On all <strong>Praefect nodes</strong>:</p>
+</li>
+</ol>
+<p>```shell
+   # Get a list of what other components have been deployed beside Praefect
+   sudo gitlab-ctl status</p>
+<p># Restart each component except Praefect. Example given for Consul, Node Exporter and Logrotate
+   sudo gitlab-ctl restart consul node-exporter logrotate
+   ```</p>
+<h2>Upgrade GitLab application (Rails) nodes</h2>
+<p>Rails as a webserver consists primarily of <a href="../administration/operations/puma.html">Puma</a>, Workhorse, and NGINX.</p>
+<p>Each of these components have different behaviours when it comes to doing a live upgrade. While Puma can allow
+for a graceful reload, Workhorse doesn't. The best approach is to drain the node gracefully through other means,
+such as by using your load balancer. You can also do this by using NGINX on the node through its graceful shutdown
+functionality. This section explains the NGINX approach.</p>
+<p>In addition to the previous, Rails is where the main database migrations need to be executed. Like Praefect, the best approach is by using the deploy node. If PgBouncer is currently being used, it also needs to be bypassed as Rails uses an advisory lock when attempting to run a migration to prevent concurrent migrations from running on the same database. These locks are not shared across transactions, resulting in <code>ActiveRecord::ConcurrentMigrationError</code> and other issues when running database migrations using PgBouncer in transaction pooling mode.</p>
+<ol>
+<li>
+<p>On the <strong>Rails deploy node</strong>:</p>
+</li>
+<li>
+<p>Drain the node of traffic gracefully. You can do this in various ways, but one
+   approach is to use NGINX by sending it a <code>QUIT</code> signal and then stopping the service.
+   As an example, you can do this by using the following shell script:</p>
+<p>```shell
+  # Send QUIT to NGINX master process to drain and exit
+  NGINX_PID=$(cat /var/opt/gitlab/nginx/nginx.pid)
+  kill -QUIT $NGINX_PID</p>
+<p># Wait for drain to complete
+  while kill -0 $NGINX_PID 2&gt;/dev/null; do sleep 1; done</p>
+<p># Stop NGINX service to prevent automatic restarts
+  gitlab-ctl stop nginx
+  ```</p>
+</li>
+<li>
+<p>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>, which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</p>
+<p><code>shell
+  sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+</li>
+<li>
+<p>Upgrade GitLab by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</p>
+</li>
+<li>
+<p>Configure regular migrations to run by setting <code>gitlab_rails['auto_migrate'] = true</code> in the
+      <code>/etc/gitlab/gitlab.rb</code> configuration file.</p>
+<ul>
+<li>If the deploy node is going through PgBouncer to reach the database then
+    you must <a href="../administration/postgresql/pgbouncer.md#procedure-for-bypassing-pgbouncer">bypass it</a>
+    and connect directly to the database leader before running migrations.</li>
+<li>To find the database leader you can run the following command on any database node - <code>sudo gitlab-ctl patroni members</code>.</li>
+</ul>
+</li>
+<li>
+<p>Run the regular migrations and get the latest code in place:</p>
+<p><code>shell
+  sudo SKIP_POST_DEPLOYMENT_MIGRATIONS=true gitlab-ctl reconfigure</code></p>
+</li>
+<li>
+<p>Leave this node as-is for now as you come back to run post-deployment migrations later.</p>
+</li>
+<li>
+<p>On every <strong>other Rails node</strong> sequentially:</p>
+</li>
+<li>
+<p>Drain the node of traffic gracefully. You can do this in various ways, but one
+   approach is to use NGINX by sending it a <code>QUIT</code> signal and then stopping the service.
+   As an example, you can do this by using the following shell script:</p>
+<p>```shell
+  # Send QUIT to NGINX master process to drain and exit
+  NGINX_PID=$(cat /var/opt/gitlab/nginx/nginx.pid)
+  kill -QUIT $NGINX_PID</p>
+<p># Wait for drain to complete
+  while kill -0 $NGINX_PID 2&gt;/dev/null; do sleep 1; done</p>
+<p># Stop NGINX service to prevent automatic restarts
+  gitlab-ctl stop nginx
+  ```</p>
+</li>
+<li>
+<p>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>, which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</p>
+<p><code>shell
+  sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+</li>
+<li>
+<p>Upgrade GitLab by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</p>
+</li>
+<li>Ensure that <code>gitlab_rails['auto_migrate'] = false</code> is set in <code>/etc/gitlab/gitlab.rb</code> to prevent
+      <code>reconfigure</code> from automatically running database migrations.</li>
+<li>
+<p>Run the <code>reconfigure</code> command to get the latest code in place and restart:</p>
+<p><code>shell
+  sudo gitlab-ctl reconfigure
+  sudo gitlab-ctl restart</code></p>
+</li>
+<li>
+<p>On the <strong>Rails deploy node</strong> run the post-deployment migrations:</p>
+</li>
+<li>
+<p>Ensure the deploy node is still pointing at the database leader directly. If the node
+      is going through PgBouncer to reach the database then you must
+      <a href="../administration/postgresql/pgbouncer.md#procedure-for-bypassing-pgbouncer">bypass it</a>
+      and connect directly to the database leader before running migrations.</p>
+<ul>
+<li>To find the database leader you can run the following command on any database node - <code>sudo gitlab-ctl patroni members</code>.</li>
+</ul>
+</li>
+<li>
+<p>Run the post-deployment migrations:</p>
+<p><code>shell
+  sudo gitlab-rake gitlab:db:configure</code></p>
+<p>This task also runs ClickHouse migrations and configures the database based on its state by loading the schema.</p>
+</li>
+<li>
+<p>Return the configuration back to normal by setting <code>gitlab_rails['auto_migrate'] = false</code> in the
+      <code>/etc/gitlab/gitlab.rb</code> configuration file.</p>
+<ul>
+<li>If PgBouncer is being used make sure to set the database configuration to once again point towards it</li>
+</ul>
+</li>
+<li>
+<p>Run through reconfigure once again to reapply the normal configuration and restart:</p>
+<p><code>shell
+  sudo gitlab-ctl reconfigure
+  sudo gitlab-ctl restart</code></p>
+</li>
+</ol>
+<h2>Upgrade Sidekiq nodes</h2>
+<p><a href="../administration/sidekiq/_index.html">Sidekiq</a> follows the same underlying process as others to upgrading without downtime.</p>
+<p>Run through the following steps sequentially on each component node to perform the upgrade:</p>
+<ol>
+<li>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>, which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</li>
+</ol>
+<p><code>shell
+   sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+<ol>
+<li>Upgrade the node by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</li>
+<li>Run the <code>reconfigure</code> command to get the latest code in place and restart:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl reconfigure
+   sudo gitlab-ctl restart</code></p>
+<h2>Upgrade multi-node Geo instances</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>This section describes the steps required to upgrade live GitLab environment
+deployment with Geo.</p>
+<p>Overall, the approach is largely the same as the
+normal process with some additional steps required
+for each secondary site. The required order is upgrading the primary first, then
+the secondaries. You must also run any post-deployment migrations on the primary after
+all secondaries have been updated.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>The same <a href="#requirements">requirements</a> and <a href="#considerations">considerations</a> apply for upgrading a live GitLab environment with
+Geo.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Primary site</h3>
+<p>The upgrade process for the Primary site is the same as the normal process with one exception being
+not to run the post-deployment migrations until after all the secondaries have been updated.</p>
+<p>Run through the same steps for the Primary site as described but stopping at the Rails node step of running the post-deployment migrations.</p>
+<h3>Secondary sites</h3>
+<p>The upgrade process for any Secondary sites follow the same steps as the normal process except for the Rails nodes
+The upgrade process is the same for both primary and secondary sites. However, you must perform the following additional steps for Rails nodes on secondary sites.</p>
+<h4>Rails</h4>
+<ol>
+<li>
+<p>On the <strong>Rails deploy node</strong>:</p>
+</li>
+<li>
+<p>Drain the node of traffic gracefully. You can do this in various ways, but one
+   approach is to use NGINX by sending it a <code>QUIT</code> signal and then stopping the service.
+   As an example, you can do this by using the following shell script:</p>
+<p>```shell
+  # Send QUIT to NGINX master process to drain and exit
+  NGINX_PID=$(cat /var/opt/gitlab/nginx/nginx.pid)
+  kill -QUIT $NGINX_PID</p>
+<p># Wait for drain to complete
+  while kill -0 $NGINX_PID 2&gt;/dev/null; do sleep 1; done</p>
+<p># Stop NGINX service to prevent automatic restarts
+  gitlab-ctl stop nginx
+  ```</p>
+</li>
+<li>
+<p>Stop the Geo Log Cursor process to ensure it fails over to another node:</p>
+<p><code>shell
+  gitlab-ctl stop geo-logcursor</code></p>
+</li>
+<li>
+<p>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>, which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</p>
+<p><code>shell
+  sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+</li>
+<li>
+<p>Upgrade GitLab by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</p>
+</li>
+<li>Copy the <code>/etc/gitlab/gitlab-secrets.json</code> file from the primary site Rails node to the secondary site Rails node if they're different. The file must be the same on all of a site's nodes.</li>
+<li>Ensure no migrations are configured to be run automatically by setting <code>gitlab_rails['auto_migrate'] = false</code> and <code>geo_secondary['auto_migrate'] = false</code> in the
+      <code>/etc/gitlab/gitlab.rb</code> configuration file.</li>
+<li>
+<p>Run the <code>reconfigure</code> command to get the latest code in place and restart:</p>
+<p><code>shell
+  sudo gitlab-ctl reconfigure
+  sudo gitlab-ctl restart</code></p>
+</li>
+<li>
+<p>Run the regular Geo Tracking migrations and get the latest code in place:</p>
+<p><code>shell
+  sudo SKIP_POST_DEPLOYMENT_MIGRATIONS=true gitlab-rake db:migrate:geo</code></p>
+</li>
+<li>
+<p>On every <strong>other Rails node</strong> sequentially:</p>
+</li>
+<li>
+<p>Drain the node of traffic gracefully. You can do this in various ways, but one
+   approach is to use NGINX by sending it a <code>QUIT</code> signal and then stopping the service.
+   As an example, you can do this by using the following shell script:</p>
+<p>```shell
+  # Send QUIT to NGINX master process to drain and exit
+  NGINX_PID=$(cat /var/opt/gitlab/nginx/nginx.pid)
+  kill -QUIT $NGINX_PID</p>
+<p># Wait for drain to complete
+  while kill -0 $NGINX_PID 2&gt;/dev/null; do sleep 1; done</p>
+<p># Stop NGINX service to prevent automatic restarts
+  gitlab-ctl stop nginx
+  ```</p>
+</li>
+<li>
+<p>Stop the Geo Log Cursor process to ensure it fails over to another node:</p>
+<p><code>shell
+  gitlab-ctl stop geo-logcursor</code></p>
+</li>
+<li>
+<p>Create an empty file at <code>/etc/gitlab/skip-auto-reconfigure</code>. This prevents upgrades from running <code>gitlab-ctl reconfigure</code>, which by default automatically stops GitLab, runs all database migrations, and restarts GitLab:</p>
+<p><code>shell
+  sudo touch /etc/gitlab/skip-auto-reconfigure</code></p>
+</li>
+<li>
+<p>Upgrade GitLab by <a href="package/_index.md#upgrade-with-the-linux-package">upgrading with the Linux package</a>.</p>
+</li>
+<li>Ensure no migrations are configured to be run automatically by setting <code>gitlab_rails['auto_migrate'] = false</code> and <code>geo_secondary['auto_migrate'] = false</code> in the
+      <code>/etc/gitlab/gitlab.rb</code> configuration file.</li>
+<li>
+<p>Run the <code>reconfigure</code> command to get the latest code in place and restart:</p>
+<p><code>shell
+  sudo gitlab-ctl reconfigure
+  sudo gitlab-ctl restart</code></p>
+</li>
+</ol>
+<h4>Sidekiq</h4>
+<p>Following the main process all that's left to be done now is to upgrade Sidekiq.</p>
+<p>Upgrade Sidekiq in the <a href="#sidekiq">same manner as described in the main section</a>.</p>
+<h3>Post-deployment migrations</h3>
+<p>Finally, head back to the primary site and finish the upgrade by running the post-deployment migrations:</p>
+<ol>
+<li>
+<p>On the Primary site's <strong>Rails deploy node</strong> run the post-deployment migrations:</p>
+</li>
+<li>
+<p>Ensure the deploy node is still pointing at the database leader directly. If the node
+      is going through PgBouncer to reach the database then you must
+      <a href="../administration/postgresql/pgbouncer.md#procedure-for-bypassing-pgbouncer">bypass it</a>
+      and connect directly to the database leader before running migrations.</p>
+<ul>
+<li>To find the database leader you can run the following command on any database node - <code>sudo gitlab-ctl patroni members</code>.</li>
+</ul>
+</li>
+<li>
+<p>Run the post-deployment migrations:</p>
+<p><code>shell
+  sudo gitlab-rake gitlab:db:configure</code></p>
+</li>
+<li>
+<p>Verify Geo configuration and dependencies</p>
+<p><code>shell
+  sudo gitlab-rake gitlab:geo:check</code></p>
+</li>
+<li>
+<p>Return the configuration back to normal by setting <code>gitlab_rails['auto_migrate'] = false</code> in the
+      <code>/etc/gitlab/gitlab.rb</code> configuration file.</p>
+<ul>
+<li>If PgBouncer is being used make sure to set the database configuration to once again point towards it</li>
+</ul>
+</li>
+<li>
+<p>Run through reconfigure once again to reapply the normal configuration and restart:</p>
+<p><code>shell
+  sudo gitlab-ctl reconfigure
+  sudo gitlab-ctl restart</code></p>
+</li>
+<li>
+<p>On the Secondary site's <strong>Rails deploy node</strong> run the post-deployment Geo Tracking migrations:</p>
+</li>
+<li>
+<p>Run the post-deployment Geo Tracking migrations:</p>
+<p><code>shell
+  sudo gitlab-rake db:migrate:geo</code></p>
+</li>
+<li>
+<p>Verify Geo status:</p>
+<p><code>shell
+   sudo gitlab-rake geo:status</code></p>
+</li>
+</ol></code></pre>
+</body>
+</html>

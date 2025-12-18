@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Set up workspace infrastructure</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Remote Development
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Configure your GitLab workspaces to manage your GitLab development environments.
+title: Configure workspaces</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Feature flag <code>remote_development_feature_flag</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/391543">enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 16.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/136744">Generally available</a> in GitLab 16.7. Feature flag <code>remote_development_feature_flag</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can use <a href="_index.html">workspaces</a> to create and manage isolated development environments for your GitLab projects.
+Each workspace includes its own set of dependencies, libraries, and tools,
+which you can customize to meet the specific needs of each project.</p>
+<h2>Set up workspace infrastructure</h2>
+<p>Before you <a href="#create-a-workspace">create a workspace</a>, you must set up your infrastructure only once.
+To set up infrastructure for workspaces, regardless of cloud provider, you must:</p>
+<ol>
+<li>Set up a Kubernetes cluster that the <a href="../clusters/agent/_index.html">GitLab agent for Kubernetes</a> supports.
+   See the <a href="../clusters/agent/_index.md#supported-kubernetes-versions-for-gitlab-features">supported Kubernetes versions</a>.</li>
+<li>Ensure autoscaling for the Kubernetes cluster is enabled.</li>
+<li>In the Kubernetes cluster:</li>
+<li>Verify that a <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">default storage class</a>
+      is defined so that volumes can be dynamically provisioned for each workspace.</li>
+<li>Complete all steps in the <a href="set_up_gitlab_agent_and_proxies.html">Tutorial: Set up the GitLab agent for Kubernetes</a>.</li>
+<li>Optional. <a href="#build-and-run-containers-in-a-workspace">Build and run containers in a workspace</a>.</li>
+<li>Optional. <a href="#configure-support-for-private-container-registries">Configure support for private container registries</a>.</li>
+<li>Optional. <a href="#configure-sudo-access-for-a-workspace">Configure sudo access for a workspace</a>.</li>
+</ol>
+<p>If you use AWS, you can use our OpenTofu tutorial. For more information, see
+<a href="set_up_infrastructure.html">Tutorial: Set up workspaces infrastructure on AWS</a>.</p>
+<h2>Create a workspace</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><strong>Time before automatic termination</strong> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/120168">introduced</a> in GitLab 16.0</li>
+<li>Support for private projects <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/124273">introduced</a> in GitLab 16.4.</li>
+<li><strong>Git reference</strong> and <strong>Devfile location</strong> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/392382">introduced</a> in GitLab 16.10.</li>
+<li><strong>Time before automatic termination</strong> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/392382">renamed</a> to <strong>Workspace automatically terminates after</strong> in GitLab 16.10.</li>
+<li><strong>Variables</strong> <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/463514">introduced</a> in GitLab 17.1.</li>
+<li><strong>Workspace automatically terminates after</strong> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/166065">removed</a> in GitLab 17.6.</li>
+<li><strong>Workspace can be created from Merge Request page</strong> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/187320">introduced</a> in GitLab 18.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Create a workspace only from trusted projects.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must <a href="#set-up-workspace-infrastructure">set up workspace infrastructure</a>.</li>
+<li>You must have at least the Developer role for the workspace and agent projects.</li>
+</ul>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="From a project" &gt;}}</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Edit</strong> &gt; <strong>New workspace</strong>.</li>
+<li>From the <strong>Cluster agent</strong> dropdown list, select a cluster agent owned by the group the project belongs to.</li>
+<li>From the <strong>Git reference</strong> dropdown list, select the branch, tag, or commit hash
+   GitLab uses to create the workspace. By default, this is the branch you're viewing.</li>
+<li>From the <strong>Devfile</strong> dropdown list, select one of the following:</li>
+<li><a href="_index.md#gitlab-default-devfile">GitLab default devfile</a>.</li>
+<li><a href="_index.md#custom-devfile">Custom devfile</a>.</li>
+<li>In <strong>Variables</strong>, enter the keys and values of the environment variables you want to inject into the workspace.
+   To add a new variable, select <strong>Add variable</strong>.</li>
+<li>Select <strong>Create workspace</strong>.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="From a merge request" &gt;}}</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>On the left sidebar, select <strong>Code</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>Select the merge request you want to create a workspace for.</li>
+<li>Select <strong>Code</strong> &gt; <strong>Open in Workspace</strong>.</li>
+<li>From the <strong>Cluster agent</strong> dropdown list, select a cluster agent owned by the group the project belongs to.</li>
+<li>From the <strong>Git reference</strong> dropdown list, select the branch, tag, or commit hash
+   GitLab uses to create the workspace. By default, this is the source branch of the merge request.</li>
+<li>From the <strong>Devfile</strong> dropdown list, select one of the following:</li>
+<li><a href="_index.md#gitlab-default-devfile">GitLab default devfile</a>.</li>
+<li><a href="_index.md#custom-devfile">Custom devfile</a>.</li>
+<li>In <strong>Variables</strong>, enter the keys and values of the environment variables you want to inject into the workspace.
+   To add a new variable, select <strong>Add variable</strong>.</li>
+<li>Select <strong>Create workspace</strong>.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<p>The workspace might take a few minutes to start.
+To open the workspace, under <strong>Preview</strong>, select the workspace.
+You also have access to the terminal and can install any necessary dependencies.</p>
+<h3>Monitor workspace startup progress</h3>
+<p>When you start a workspace, you can monitor the progress of initialization tasks and <code>postStart</code>
+events by checking the workspace logs. For more information, see <a href="_index.md#workspace-logs-directory">Workspace logs directory</a>.</p>
+<h2>Platform compatibility</h2>
+<p>The platform requirements for workspaces depend on your development needs.</p>
+<p>For basic workspace functionality, workspaces run on any <code>linux/amd64</code> Kubernetes cluster that supports
+the GitLab agent for Kubernetes, regardless of the underlying operating system.</p>
+<p>To choose a method that fits your platform requirements, see <a href="#configure-sudo-access-for-a-workspace">Configure sudo access for a workspace</a>.</p>
+<h2>Build and run containers in a workspace</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/13983">Introduced</a> in GitLab 17.4.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Development environments often require building and running containers to manage and use dependencies
+during runtime.
+To build and run containers in a workspace, see <a href="#with-sysbox">configure sudo access for a workspace with Sysbox</a>.</p>
+<h2>Configure support for private container registries</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/14664">Introduced</a> in GitLab 17.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To use images from private container registries:</p>
+<ol>
+<li>Create an <a href="https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/">image pull secret in Kubernetes</a>.</li>
+<li>Add the <code>name</code> and <code>namespace</code> of this secret to the <a href="gitlab_agent_configuration.html">GitLab agent for Kubernetes configuration</a>.</li>
+</ol>
+<p>For more information, see <a href="settings.md#image_pull_secrets"><code>image_pull_secrets</code></a>.</p>
+<h2>Configure sudo access for a workspace</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/13983">Introduced</a> in GitLab 17.4.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Development environments often require sudo permissions to install, configure, and use dependencies
+during runtime. Choose the method that fits your platform requirements:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Platform requirements</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#with-sysbox">Sysbox</a></td>
+<td>For up-to-date information, see the <a href="https://github.com/nestybox/sysbox/blob/master/docs/distro-compat.md">Sysbox distribution compatibility matrix</a>.</td>
+<td>Improves container isolation and enables containers to run the same workloads as virtual machines.</td>
+</tr>
+<tr>
+<td><a href="#with-kata-containers">Kata Containers</a></td>
+<td>For up-to-date information, see the <a href="https://github.com/kata-containers/kata-containers/tree/main/docs/install">Kata Containers installation guides</a>.</td>
+<td>Lightweight VMs perform like containers but provide enhanced workload isolation and security.</td>
+</tr>
+<tr>
+<td><a href="#with-user-namespaces">User namespaces</a></td>
+<td>Kubernetes version 1.33 or later have the user namespaces enabled behind a Kubernetes feature gate which is enabled by default. For up-to-date information, see the <a href="https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/">Kubernetes Feature Gates</a>.</td>
+<td>No additional runtime installation required. Isolates container users from host users for improved security.</td>
+</tr>
+</tbody>
+</table>
+<p>Prerequisites:</p>
+<ul>
+<li>Your container images must support <a href="_index.md#arbitrary-user-ids">arbitrary user IDs</a>.
+  Even with sudo access configured, container images used in a <a href="_index.md#devfile">devfile</a>
+  cannot run with a user ID of <code>0</code>.</li>
+</ul>
+<h3>With Sysbox</h3>
+<p><a href="https://github.com/nestybox/sysbox">Sysbox</a> is a container runtime that improves container isolation
+and enables containers to run the same workloads as virtual machines.</p>
+<p>To configure sudo access with Sysbox:</p>
+<ol>
+<li>In your Kubernetes cluster, <a href="https://github.com/nestybox/sysbox#installation">install Sysbox</a>.</li>
+<li>
+<p>Configure the GitLab agent for Kubernetes:</p>
+</li>
+<li>
+<p>Set the default runtime class. In <a href="settings.md#default_runtime_class"><code>default_runtime_class</code></a>,
+     enter the runtime class for Sysbox. For example, <code>sysbox-runc</code>.</p>
+</li>
+<li>Enable privilege escalation.
+     Set <a href="settings.md#allow_privilege_escalation"><code>allow_privilege_escalation</code></a> to <code>true</code>.</li>
+<li>Configure the annotations required by Sysbox. Set <a href="settings.md#annotations"><code>annotations</code></a> to
+     <code>{"io.kubernetes.cri-o.userns-mode": "auto:size=65536"}</code>.</li>
+</ol>
+<h3>With Kata Containers</h3>
+<p><a href="https://github.com/kata-containers/kata-containers">Kata Containers</a> is a standard implementation
+of lightweight virtual machines that perform like containers but provide the workload isolation and
+security of virtual machines.</p>
+<p>To configure sudo access with Kata Containers:</p>
+<ol>
+<li>In your Kubernetes cluster, <a href="https://github.com/kata-containers/kata-containers/tree/main/docs/install">install Kata Containers</a>.</li>
+<li>
+<p>Configure the GitLab agent for Kubernetes:</p>
+</li>
+<li>
+<p>Set the default runtime class. In <a href="settings.md#default_runtime_class"><code>default_runtime_class</code></a>,
+     enter the runtime class for Kata Containers. For example, <code>kata-qemu</code>.</p>
+</li>
+<li>Enable privilege escalation.
+     Set <a href="settings.md#allow_privilege_escalation"><code>allow_privilege_escalation</code></a> to <code>true</code>.</li>
+</ol>
+<h3>With user namespaces</h3>
+<p><a href="https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/">User namespaces</a> isolate
+container users from host users.</p>
+<p>To configure sudo access with user namespaces:</p>
+<ol>
+<li>In your Kubernetes cluster, <a href="https://kubernetes.io/blog/2024/04/22/userns-beta/">configure user namespaces</a>.</li>
+<li>
+<p>Configure the GitLab agent for Kubernetes:</p>
+</li>
+<li>
+<p>Set <a href="settings.md#use_kubernetes_user_namespaces"><code>use_kubernetes_user_namespaces</code></a> to <code>true</code>.</p>
+</li>
+<li>Set <a href="settings.md#allow_privilege_escalation"><code>allow_privilege_escalation</code></a> to <code>true</code>.</li>
+</ol>
+<h2>Connect to a workspace with SSH</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/10478">Introduced</a> in GitLab 16.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must enable SSH access for the images specified in your <a href="_index.md#devfile">devfile</a>.
+  For more information, see <a href="#update-your-workspace-container-image">update your workspace container image</a>.</li>
+<li>You must configure a TCP load balancer that points to the GitLab workspaces proxy.
+  For more information, see <a href="set_up_gitlab_agent_and_proxies.md#update-your-dns-records">update your DNS records</a>.</li>
+</ul>
+<p>To connect to a workspace with an SSH client:</p>
+<ol>
+<li>Get the external IP address of your <code>gitlab-workspaces-proxy-ssh</code> service:</li>
+</ol>
+<p><code>shell
+   kubectl -n gitlab-workspaces get service gitlab-workspaces-proxy-ssh</code></p>
+<ol>
+<li>
+<p>Get the name of the workspace:</p>
+</li>
+<li>
+<p>On the top bar, select <strong>Search or go to</strong>.</p>
+</li>
+<li>Select <strong>Your work</strong>.</li>
+<li>Select <strong>Workspaces</strong>.</li>
+<li>
+<p>Copy the name of the workspace you want to connect to.</p>
+</li>
+<li>
+<p>Run this command:</p>
+</li>
+</ol>
+<p><code>shell
+   ssh &lt;workspace_name&gt;@&lt;ssh_proxy_IP_address&gt;</code></p>
+<ol>
+<li>For the password, enter your personal access token with at least the <code>read_api</code> scope.</li>
+</ol>
+<p>When you connect to <code>gitlab-workspaces-proxy</code> through the TCP load balancer,
+<code>gitlab-workspaces-proxy</code> examines the username (workspace name) and interacts with GitLab to verify:</p>
+<ul>
+<li>The personal access token</li>
+<li>User access to the workspace</li>
+</ul>
+<h3>Update your workspace container image</h3>
+<p>You can update your custom workspace images in two ways.</p>
+<p>If your workspace image is based on the <a href="_index.md#workspace-base-image">workspace base image</a>,
+SSH support is already configured and ready to use. This approach ensures your image has all
+necessary workspace configurations.
+For detailed instructions, see <a href="create_image.html">Create a custom workspace image</a>.</p>
+<p>If you prefer not to use the workspace base image, you can build from your own base image. If you do
+this, configure SSH support manually in your runtime images:</p>
+<ol>
+<li>Install <a href="https://man.openbsd.org/sshd.8"><code>sshd</code></a> in your runtime images.</li>
+<li>Create a user named <code>gitlab-workspaces</code> to allow access to your container without a password.</li>
+</ol>
+<p>The following is an SSH configuration example:</p>
+<pre><code class="language-dockerfile">FROM golang:1.20.5-bullseye
+
+# Install `openssh-server` and other dependencies
+RUN apt update \
+    &amp;&amp; apt upgrade -y \
+    &amp;&amp; apt install openssh-server sudo curl git wget software-properties-common apt-transport-https --yes \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+# Permit empty passwords
+RUN sed -i 's/nullok_secure/nullok/' /etc/pam.d/common-auth
+RUN echo &quot;PermitEmptyPasswords yes&quot; &gt;&gt; /etc/ssh/sshd_config
+
+# Generate a workspace host key
+RUN ssh-keygen -A
+RUN chmod 775 /etc/ssh/ssh_host_rsa_key &amp;&amp; \
+    chmod 775 /etc/ssh/ssh_host_ecdsa_key &amp;&amp; \
+    chmod 775 /etc/ssh/ssh_host_ed25519_key
+
+# Create a `gitlab-workspaces` user
+RUN useradd -l -u 5001 -G sudo -md /home/gitlab-workspaces -s /bin/bash gitlab-workspaces
+RUN passwd -d gitlab-workspaces
+ENV HOME=/home/gitlab-workspaces
+WORKDIR $HOME
+RUN mkdir -p /home/gitlab-workspaces &amp;&amp; chgrp -R 0 /home &amp;&amp; chmod -R g=u /etc/passwd /etc/group /home
+
+# Allow sign-in access to `/etc/shadow`
+RUN chmod 775 /etc/shadow
+
+USER gitlab-workspaces
+</code></pre>
+<h2>Related topics</h2>
+<ul>
+<li><a href="set_up_gitlab_agent_and_proxies.html">Tutorial: Set up the GitLab agent for Kubernetes</a></li>
+<li><a href="settings.html">Workspace settings</a></li>
+<li><a href="configuration.html">Workspace configuration</a></li>
+<li><a href="workspaces_troubleshooting.html">Troubleshooting Workspaces</a></li>
+<li><a href="https://go.gitlab.com/AVKFvy">Quickstart guide for GitLab remote development workspaces</a></li>
+<li><a href="https://go.gitlab.com/dp75xo">Set up your infrastructure for on-demand, cloud-based development environments in GitLab</a></li>
+</ul></code></pre>
+</body>
+</html>

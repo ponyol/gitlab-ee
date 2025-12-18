@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Get information about a model</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Data management API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/537707">Introduced</a> in GitLab 18.3 with a <a href="../../administration/feature_flags/_index.html">flag</a> named <code>geo_primary_verification_view</code>. Disabled by default. This feature is an <a href="../../policy/development_stages_support.html">experiment</a>.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Use the data management API to manage an instance's data.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<h2>Get information about a model</h2>
+<p>This endpoint is an <a href="../../policy/development_stages_support.html">experiment</a> and might be changed or removed without notice.</p>
+<pre><code class="language-plaintext">GET /admin/data_management/:model_name
+</code></pre>
+<p>The <code>:model_name</code> parameter must be one of:</p>
+<ul>
+<li><code>ci_job_artifacts</code></li>
+<li><code>ci_pipeline_artifacts</code></li>
+<li><code>ci_secure_files</code></li>
+<li><code>container_repositories</code></li>
+<li><code>dependency_proxy_blobs</code></li>
+<li><code>dependency_proxy_manifests</code></li>
+<li><code>design_management_repositories</code></li>
+<li><code>group_wiki_repositories</code></li>
+<li><code>lfs_objects</code></li>
+<li><code>merge_request_diffs</code></li>
+<li><code>packages_package_files</code></li>
+<li><code>pages_deployments</code></li>
+<li><code>projects</code></li>
+<li><code>projects_wiki_repositories</code></li>
+<li><code>snippet_repositories</code></li>
+<li><code>terraform_state_versions</code></li>
+<li><code>uploads</code></li>
+</ul>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model_name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The pluralized name of the requested model. Must belong to the <code>:model_name</code> list above.</td>
+</tr>
+<tr>
+<td><code>checksum_state</code></td>
+<td>string</td>
+<td>No</td>
+<td>Search by checksum status. Allowed values: pending, started, succeeded, failed, disabled.</td>
+</tr>
+<tr>
+<td><code>identifiers</code></td>
+<td>array</td>
+<td>No</td>
+<td>Filter results with an array of unique identifiers of the requested model, which can be integers or base64 encoded strings.</td>
+</tr>
+</tbody>
+</table>
+<p>This endpoint supports <a href="../rest/_index.md#keyset-based-pagination">keyset pagination</a> on the model's primary key, with sorting in ascending or descending order. To use keyset pagination, add the <code>pagination=keyset</code> parameter to the request. By default, keyset pagination loads 20 records per page sorted in ascending order. You can modify the sorting order with the query parameter <code>sort</code>, and values <code>asc</code> or <code>desc</code>. To select a number of records per page, use the parameter <code>per_page</code>.</p>
+<p>If successful, returns <a href="../rest/troubleshooting.md#status-codes"><code>200</code></a> and information about the model. It includes the following
+response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>checksum_information</code></td>
+<td>JSON</td>
+<td>Geo-specific checksum information, if available.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp</td>
+<td>Creation timestamp, if available.</td>
+</tr>
+<tr>
+<td><code>file_size</code></td>
+<td>integer</td>
+<td>Size of the object, if available.</td>
+</tr>
+<tr>
+<td><code>model_class</code></td>
+<td>string</td>
+<td>Class name of the model.</td>
+</tr>
+<tr>
+<td><code>record_identifier</code></td>
+<td>string or integer</td>
+<td>Unique identifier of the record. Can be an integer or a base64 encoded string.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://primary.example.com/api/v4/admin/data_management/projects?pagination=keyset&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;record_identifier&quot;: 1,
+    &quot;model_class&quot;: &quot;Project&quot;,
+    &quot;created_at&quot;: &quot;2025-02-05T11:27:10.173Z&quot;,
+    &quot;file_size&quot;: null,
+    &quot;checksum_information&quot;: {
+      &quot;checksum&quot;: &quot;&lt;object checksum&gt;&quot;,
+      &quot;last_checksum&quot;: &quot;2025-07-24T14:22:18.643Z&quot;,
+      &quot;checksum_state&quot;: &quot;succeeded&quot;,
+      &quot;checksum_retry_count&quot;: 0,
+      &quot;checksum_retry_at&quot;: null,
+      &quot;checksum_failure&quot;: null
+    }
+  },
+  {
+    &quot;record_identifier&quot;: 2,
+    &quot;model_class&quot;: &quot;Project&quot;,
+    &quot;created_at&quot;: &quot;2025-02-05T11:27:14.402Z&quot;,
+    &quot;file_size&quot;: null,
+    &quot;checksum_information&quot;: {
+      &quot;checksum&quot;: &quot;&lt;object checksum&gt;&quot;,
+      &quot;last_checksum&quot;: &quot;2025-07-24T14:22:18.214Z&quot;,
+      &quot;checksum_state&quot;: &quot;succeeded&quot;,
+      &quot;checksum_retry_count&quot;: 0,
+      &quot;checksum_retry_at&quot;: null,
+      &quot;checksum_failure&quot;: null
+    }
+  }
+]
+</code></pre>
+<h2>Recalculate the checksum of selected model records</h2>
+<pre><code class="language-plaintext">PUT /admin/data_management/:model_name/checksum
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model_name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The pluralized name of the requested model. Must belong to the <code>:model_name</code> list above.</td>
+</tr>
+<tr>
+<td><code>checksum_state</code></td>
+<td>string</td>
+<td>No</td>
+<td>Filter by checksum status. Allowed values: pending, started, succeeded, failed, disabled.</td>
+</tr>
+<tr>
+<td><code>identifiers</code></td>
+<td>array</td>
+<td>No</td>
+<td>Filter records with an array of unique identifiers of the requested model, which can be integers or base64 encoded strings.</td>
+</tr>
+</tbody>
+</table>
+<p>This endpoint marks all selected records from the model for checksum recalculation, filtered by <code>checksum_state</code> and <code>identifiers</code> parameters if provided. It enqueues a background job to do so. If successful, returns <a href="../rest/troubleshooting.md#status-codes"><code>200</code></a> and a JSON response containing the following information:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>message</code></td>
+<td>string</td>
+<td>A information message about the success or error.</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td>Can be "success" or "error".</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://primary.example.com/api/v4/admin/data_management/projects/checksum&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;message&quot;: &quot;Batch update job has been successfully enqueued.&quot;
+}
+</code></pre>
+<h2>Get information about a specific model record</h2>
+<pre><code class="language-plaintext">GET /admin/data_management/:model_name/:id
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model_name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The pluralized name of the requested model. Must belong to the <code>:model_name</code> list above.</td>
+</tr>
+<tr>
+<td><code>record_identifier</code></td>
+<td>string or integer</td>
+<td>Yes</td>
+<td>The unique identifier of the requested model. Can be an integer or a base64 encoded string.</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="../rest/troubleshooting.md#status-codes"><code>200</code></a> and information about the specific model record. It includes the following
+response attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>checksum_information</code></td>
+<td>JSON</td>
+<td>Geo-specific checksum information, if available.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp</td>
+<td>Creation timestamp, if available.</td>
+</tr>
+<tr>
+<td><code>file_size</code></td>
+<td>integer</td>
+<td>Size of the object, if available.</td>
+</tr>
+<tr>
+<td><code>model_class</code></td>
+<td>string</td>
+<td>Class name of the model.</td>
+</tr>
+<tr>
+<td><code>record_identifier</code></td>
+<td>string or integer</td>
+<td>Unique identifier of the record. Can be an integer or a base64 encoded string.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://primary.example.com/api/v4/admin/data_management/projects/1&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;record_identifier&quot;: 1,
+  &quot;model_class&quot;: &quot;Project&quot;,
+  &quot;created_at&quot;: &quot;2025-02-05T11:27:10.173Z&quot;,
+  &quot;file_size&quot;: null,
+  &quot;checksum_information&quot;: {
+    &quot;checksum&quot;: &quot;&lt;object checksum&gt;&quot;,
+    &quot;last_checksum&quot;: &quot;2025-07-24T14:22:18.643Z&quot;,
+    &quot;checksum_state&quot;: &quot;succeeded&quot;,
+    &quot;checksum_retry_count&quot;: 0,
+    &quot;checksum_retry_at&quot;: null,
+    &quot;checksum_failure&quot;: null
+  }
+}
+</code></pre>
+<h2>Recalculate the checksum of a specific model record</h2>
+<pre><code class="language-plaintext">PUT /admin/data_management/:model_name/:record_identifier/checksum
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model_name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The pluralized name of the requested model. Must belong to the <code>:model_name</code> list above.</td>
+</tr>
+<tr>
+<td><code>record_identifier</code></td>
+<td>string or integer</td>
+<td>Yes</td>
+<td>Unique identifier of the record. Can be an integer or a base64 encoded string (taken from the response of the GET query).</td>
+</tr>
+</tbody>
+</table>
+<p>If successful, returns <a href="../rest/troubleshooting.md#status-codes"><code>200</code></a> and information about the specific model record. The checksum value is a representation of the queried model hashed with the md5 or sha256 algorithm.</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://primary.example.com/api/v4/admin/data_management/projects/1/checksum&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;record_identifier&quot;: 1,
+  &quot;model_class&quot;: &quot;Project&quot;,
+  &quot;created_at&quot;: &quot;2025-02-05T11:27:10.173Z&quot;,
+  &quot;file_size&quot;: null,
+  &quot;checksum_information&quot;: {
+    &quot;checksum&quot;: &quot;&lt;sha256 or md5 string&gt;&quot;,
+    &quot;last_checksum&quot;: &quot;2025-07-24T14:22:18.643Z&quot;,
+    &quot;checksum_state&quot;: &quot;succeeded&quot;,
+    &quot;checksum_retry_count&quot;: 0,
+    &quot;checksum_retry_at&quot;: null,
+    &quot;checksum_failure&quot;: null
+  }
+}
+</code></pre></code></pre>
+</body>
+</html>

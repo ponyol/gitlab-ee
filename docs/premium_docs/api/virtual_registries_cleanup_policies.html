@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Manage cleanup policies</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Package
+group: Package Registry
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Virtual registries cleanup policies API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/572839">Introduced</a> in GitLab 18.6 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>maven_virtual_registry</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of these endpoints is controlled by a feature flag.
+For more information, see the history.
+Review the documentation carefully before you use them.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Use this API to:</p>
+<ul>
+<li>Create and manage virtual registries cleanup policies.</li>
+<li>Configure cleanup schedules and retention settings.</li>
+<li>Automatically clean up unused cache entries.</li>
+</ul>
+<h2>Manage cleanup policies</h2>
+<p>Use the following endpoints to create and manage virtual registries cleanup policies. Each group can have only one cleanup policy.</p>
+<h3>Get the cleanup policy for a group</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/572839">Introduced</a> in GitLab 18.6 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>maven_virtual_registry</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Gets the cleanup policy for a group. Each group can have only one cleanup policy.</p>
+<pre><code class="language-plaintext">GET /groups/:id/-/virtual_registries/cleanup/policy
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;">string or integer</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">The group ID or full-group path. Must be a top-level group.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+     --header &quot;Accept: application/json&quot; \
+     --url &quot;https://gitlab.example.com/api/v4/groups/5/-/virtual_registries/cleanup/policy&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;group_id&quot;: 5,
+  &quot;next_run_at&quot;: &quot;2024-06-06T12:28:27.855Z&quot;,
+  &quot;last_run_at&quot;: &quot;2024-05-30T12:28:27.855Z&quot;,
+  &quot;last_run_deleted_size&quot;: 1048576,
+  &quot;last_run_deleted_entries_count&quot;: 25,
+  &quot;keep_n_days_after_download&quot;: 30,
+  &quot;status&quot;: &quot;scheduled&quot;,
+  &quot;cadence&quot;: 7,
+  &quot;enabled&quot;: true,
+  &quot;notify_on_success&quot;: false,
+  &quot;notify_on_failure&quot;: false,
+  &quot;failure_message&quot;: null,
+  &quot;last_run_detailed_metrics&quot;: {
+    &quot;maven&quot;: {
+      &quot;deleted_entries_count&quot;: 25,
+      &quot;deleted_size&quot;: 1048576
+    }
+  },
+  &quot;created_at&quot;: &quot;2024-05-30T12:28:27.855Z&quot;,
+  &quot;updated_at&quot;: &quot;2024-05-30T12:28:27.855Z&quot;
+}
+</code></pre>
+<h3>Create a cleanup policy</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/572839">Introduced</a> in GitLab 18.6 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>maven_virtual_registry</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Creates a cleanup policy for a group. Each group can have only one cleanup policy.</p>
+<pre><code class="language-plaintext">POST /groups/:id/-/virtual_registries/cleanup/policy
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string or integer</td>
+<td>Yes</td>
+<td>The group ID or full-group path. Must be a top-level group.</td>
+</tr>
+<tr>
+<td><code>cadence</code></td>
+<td>integer</td>
+<td>No</td>
+<td>How often the cleanup policy should run. Must be one of: <code>1</code> (daily), <code>7</code> (weekly), <code>14</code> (bi-weekly), <code>30</code> (monthly), <code>90</code> (quarterly).</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Enable or disable the cleanup policy.</td>
+</tr>
+<tr>
+<td><code>keep_n_days_after_download</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Number of days after which unused cache entries should be cleaned up. Must be between 1 and 365.</td>
+</tr>
+<tr>
+<td><code>notify_on_success</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Notify group owners on successful cleanup runs.</td>
+</tr>
+<tr>
+<td><code>notify_on_failure</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Notify group owners on failed cleanup runs.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request POST \
+     --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+     --header &quot;Content-Type: application/json&quot; \
+     --header &quot;Accept: application/json&quot; \
+     --data '{&quot;enabled&quot;: true, &quot;keep_n_days_after_download&quot;: 30, &quot;cadence&quot;: 7}' \
+     --url &quot;https://gitlab.example.com/api/v4/groups/5/-/virtual_registries/cleanup/policy&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;group_id&quot;: 5,
+  &quot;next_run_at&quot;: &quot;2024-06-06T12:28:27.855Z&quot;,
+  &quot;last_run_at&quot;: null,
+  &quot;last_run_deleted_size&quot;: 0,
+  &quot;last_run_deleted_entries_count&quot;: 0,
+  &quot;keep_n_days_after_download&quot;: 30,
+  &quot;status&quot;: &quot;scheduled&quot;,
+  &quot;cadence&quot;: 7,
+  &quot;enabled&quot;: true,
+  &quot;notify_on_success&quot;: false,
+  &quot;notify_on_failure&quot;: false,
+  &quot;failure_message&quot;: null,
+  &quot;last_run_detailed_metrics&quot;: {},
+  &quot;created_at&quot;: &quot;2024-05-30T12:28:27.855Z&quot;,
+  &quot;updated_at&quot;: &quot;2024-05-30T12:28:27.855Z&quot;
+}
+</code></pre>
+<h3>Update a cleanup policy</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/572839">Introduced</a> in GitLab 18.6 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>maven_virtual_registry</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Updates the cleanup policy for a group.</p>
+<pre><code class="language-plaintext">PATCH /groups/:id/-/virtual_registries/cleanup/policy
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string or integer</td>
+<td>Yes</td>
+<td>The group ID or full-group path. Must be a top-level group.</td>
+</tr>
+<tr>
+<td><code>cadence</code></td>
+<td>integer</td>
+<td>No</td>
+<td>How often the cleanup policy should run. Must be one of: <code>1</code> (daily), <code>7</code> (weekly), <code>14</code> (bi-weekly), <code>30</code> (monthly), <code>90</code> (quarterly).</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Boolean to enable/disable the policy.</td>
+</tr>
+<tr>
+<td><code>keep_n_days_after_download</code></td>
+<td>integer</td>
+<td>No</td>
+<td>Number of days after which unused cache entries should be cleaned up. Must be between 1 and 365.</td>
+</tr>
+<tr>
+<td><code>notify_on_success</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Notify group owners on successful cleanup runs.</td>
+</tr>
+<tr>
+<td><code>notify_on_failure</code></td>
+<td>boolean</td>
+<td>No</td>
+<td>Notify group owners on failed cleanup runs.</td>
+</tr>
+</tbody>
+</table>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>You must provide at least one of the optional parameters in your request.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request PATCH \
+     --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+     --header &quot;Content-Type: application/json&quot; \
+     --data '{&quot;keep_n_days_after_download&quot;: 60}' \
+     --url &quot;https://gitlab.example.com/api/v4/groups/5/-/virtual_registries/cleanup/policy&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;group_id&quot;: 5,
+  &quot;next_run_at&quot;: &quot;2024-06-06T12:28:27.855Z&quot;,
+  &quot;last_run_at&quot;: &quot;2024-05-30T12:28:27.855Z&quot;,
+  &quot;last_run_deleted_size&quot;: 1048576,
+  &quot;last_run_deleted_entries_count&quot;: 25,
+  &quot;keep_n_days_after_download&quot;: 60,
+  &quot;status&quot;: &quot;scheduled&quot;,
+  &quot;cadence&quot;: 7,
+  &quot;enabled&quot;: true,
+  &quot;notify_on_success&quot;: false,
+  &quot;notify_on_failure&quot;: false,
+  &quot;failure_message&quot;: null,
+  &quot;last_run_detailed_metrics&quot;: {
+    &quot;maven&quot;: {
+      &quot;deleted_entries_count&quot;: 25,
+      &quot;deleted_size&quot;: 1048576
+    }
+  },
+  &quot;created_at&quot;: &quot;2024-05-30T12:28:27.855Z&quot;,
+  &quot;updated_at&quot;: &quot;2024-05-30T12:28:27.855Z&quot;
+}
+</code></pre>
+<h3>Delete a cleanup policy</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/572839">Introduced</a> in GitLab 18.6 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>maven_virtual_registry</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Deletes the cleanup policy for a group.</p>
+<pre><code class="language-plaintext">DELETE /groups/:id/-/virtual_registries/cleanup/policy
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string or integer</td>
+<td>Yes</td>
+<td>The group ID or full-group path. Must be a top-level group.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request DELETE --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; \
+     --header &quot;Accept: application/json&quot; \
+     --url &quot;https://gitlab.example.com/api/v4/groups/5/-/virtual_registries/cleanup/policy&quot;
+</code></pre>
+<p>If successful, returns a <a href="rest/troubleshooting.md#status-codes"><code>204 No Content</code></a> status code.</p></code></pre>
+</body>
+</html>

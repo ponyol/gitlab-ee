@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Geo planned failover for a single-node configuration</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+ignore_in_report: true
+title: Disaster Recovery (Geo) promotion runbooks</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Disaster Recovery (Geo) promotion runbooks.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>This runbook is an <a href="../../../../policy/development_stages_support.md#experiment">experiment</a>. For complete, production-ready documentation, see the
+<a href="../_index.html">disaster recovery documentation</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Geo planned failover for a single-node configuration</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">PostgreSQL</td>
+<td style="text-align: left;">Managed by the Linux package</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geo site</td>
+<td style="text-align: left;">Single-node</td>
+</tr>
+<tr>
+<td style="text-align: left;">Secondaries</td>
+<td style="text-align: left;">One</td>
+</tr>
+</tbody>
+</table>
+<p>This runbook guides you through a planned failover of a single-node Geo site
+with one secondary. The following general architecture is assumed:</p>
+<p>Primary Site:</p>
+<ul>
+<li>GitLab node</li>
+</ul>
+<p>Secondary Site:</p>
+<ul>
+<li>GitLab node</li>
+</ul>
+<p>This guide results in the following:</p>
+<ol>
+<li>An offline primary.</li>
+<li>A promoted secondary that is now the new primary.</li>
+</ol>
+<p>What is not covered:</p>
+<ol>
+<li>Re-adding the old <strong>primary</strong> as a secondary.</li>
+<li>Adding a new secondary.</li>
+</ol>
+<h3>Preparation</h3>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Before following any of those steps, make sure you have <code>root</code> access to the
+<strong>secondary</strong> to promote it because there isn't an automated way to
+promote a Geo replica and perform a failover.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>On the <strong>secondary</strong> site, go to the <strong>Admin area</strong> &gt; <strong>Geo</strong> dashboard to
+review its status. Replicated objects (shown in green) should be close to 100%,
+and there should be no failures (shown in red). If a large proportion of
+objects aren't yet replicated (shown in gray), consider giving the site more
+time to complete.</p>
+<p><img alt="Geo admin dashboard showing the synchronization status of a secondary site." src="img/geo_dashboard_v14_0.png" /></p>
+<p>If any objects are failing to replicate, this should be investigated before
+scheduling the maintenance window. After a planned failover, anything that
+failed to replicate is <strong>lost</strong>.</p>
+<p>A common cause of replication failures is the data being missing on the
+<strong>primary</strong> site - you can resolve these failures by restoring the data from backup,
+or removing references to the missing data.</p>
+<p>The maintenance window does not end until Geo replication and verification is
+completely finished. To keep the window as short as possible, you should
+ensure these processes are close to 100% as possible during active use.</p>
+<p>If the <strong>secondary</strong> site is still replicating data from the <strong>primary</strong> site,
+follow these steps to avoid unnecessary data loss:</p>
+<ol>
+<li>
+<p>Until a <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/14609">read-only mode</a>
+   is implemented, updates must be prevented from happening manually to the
+   <strong>primary</strong>. Your <strong>secondary</strong> site still needs read-only
+   access to the <strong>primary</strong> site during the maintenance window:</p>
+</li>
+<li>
+<p>At the scheduled time, using your cloud provider or your site's firewall, block
+      all HTTP, HTTPS and SSH traffic to/from the <strong>primary</strong> site, <strong>except</strong> for your IP and
+      the <strong>secondary</strong> site's IP.</p>
+<p>For instance, you can run the following commands on the <strong>primary</strong> site:</p>
+<p>```shell
+  sudo iptables -A INPUT -p tcp -s <secondary_site_ip> --destination-port 22 -j ACCEPT
+  sudo iptables -A INPUT -p tcp -s <your_ip> --destination-port 22 -j ACCEPT
+  sudo iptables -A INPUT --destination-port 22 -j REJECT</p>
+<p>sudo iptables -A INPUT -p tcp -s <secondary_site_ip> --destination-port 80 -j ACCEPT
+  sudo iptables -A INPUT -p tcp -s <your_ip> --destination-port 80 -j ACCEPT
+  sudo iptables -A INPUT --tcp-dport 80 -j REJECT</p>
+<p>sudo iptables -A INPUT -p tcp -s <secondary_site_ip> --destination-port 443 -j ACCEPT
+  sudo iptables -A INPUT -p tcp -s <your_ip> --destination-port 443 -j ACCEPT
+  sudo iptables -A INPUT --tcp-dport 443 -j REJECT
+  ```</p>
+<p>From this point, users are unable to view their data or make changes on the
+  <strong>primary</strong> site. They are also unable to sign in to the <strong>secondary</strong> site.
+  However, existing sessions need to work for the remainder of the maintenance period, and
+  so public data is accessible throughout.</p>
+</li>
+<li>
+<p>Verify the <strong>primary</strong> site is blocked to HTTP traffic by visiting it in browser via
+      another IP. The server should refuse connection.</p>
+</li>
+<li>
+<p>Verify the <strong>primary</strong> site is blocked to Git over SSH traffic by attempting to pull an
+      existing Git repository with an SSH remote URL. The server should refuse
+      connection.</p>
+</li>
+<li>
+<p>On the <strong>primary</strong> site:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>On the left sidebar, select <strong>Monitoring</strong> &gt; <strong>Background jobs</strong>.</li>
+<li>On the Sidekiq dashboard, select <strong>Cron</strong>.</li>
+<li>Select <code>Disable All</code> to disable any non-Geo periodic background jobs.</li>
+<li>Select <code>Enable</code> for the <code>geo_sidekiq_cron_config_worker</code> cron job.
+     This job re-enables several other cron jobs that are essential for planned
+     failover to complete successfully.</li>
+</ol>
+</li>
+<li>
+<p>Finish replicating and verifying all data:</p>
+</li>
+</ol>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Not all data is automatically replicated. Read more about
+   <a href="../planned_failover.md#not-all-data-is-automatically-replicated">what is excluded</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ol>
+<li>If you are manually replicating any
+      <a href="../../replication/datatypes.md#replicated-data-types">data not managed by Geo</a>,
+      trigger the final replication process now.</li>
+<li>
+<p>On the <strong>primary</strong> site:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>On the left sidebar, select <strong>Monitoring</strong> &gt; <strong>Background jobs</strong>.</li>
+<li>On the Sidekiq dashboard, select <strong>Queues</strong>, and wait for all queues except
+     those with <code>geo</code> in the name to drop to 0.
+     These queues contain work that has been submitted by your users; failing over
+     before it is completed, causes the work to be lost.</li>
+<li>
+<p>On the left sidebar, select <strong>Geo</strong> &gt; <strong>Sites</strong> and wait for the
+     following conditions to be true of the <strong>secondary</strong> site you are failing over to:</p>
+<ul>
+<li>All replication meters reach 100% replicated, 0% failures.</li>
+<li>All verification meters reach 100% verified, 0% failures.</li>
+<li>Database replication lag is 0 ms.</li>
+<li>The Geo log cursor is up to date (0 events behind).</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>On the <strong>secondary</strong> site:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>On the left sidebar, select <strong>Monitoring</strong> &gt; <strong>Background jobs</strong>.</li>
+<li>On the Sidekiq dashboard, select <strong>Queues</strong>, and wait for all the <code>geo</code>
+     queues to drop to 0 queued and 0 running jobs.</li>
+<li><a href="../../../raketasks/check.html">Run an integrity check</a> to verify the integrity
+     of CI artifacts, LFS objects, and uploads in file storage.</li>
+</ol>
+</li>
+</ol>
+<p>At this point, your <strong>secondary</strong> site contains an up-to-date copy of everything the
+   <strong>primary</strong> site has, meaning nothing is lost when you fail over.</p>
+<ol>
+<li>In this final step, you need to permanently disable the <strong>primary</strong> site.</li>
+</ol>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>When the <strong>primary</strong> site goes offline, there may be data saved on the <strong>primary</strong> site
+   that has not been replicated to the <strong>secondary</strong> site. This data should be treated
+   as lost if you proceed.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If you plan to <a href="../_index.md#step-4-optional-updating-the-primary-domain-dns-record">update the <strong>primary</strong> domain DNS record</a>,
+   you may wish to lower the TTL now to speed up propagation.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>When performing a failover, we want to avoid a split-brain situation where
+   writes can occur in two different GitLab instances. So to prepare for the
+   failover, you must disable the <strong>primary</strong> site:</p>
+<ul>
+<li>
+<p>If you have SSH access to the <strong>primary</strong> site, stop and disable GitLab:</p>
+<p><code>shell
+ sudo gitlab-ctl stop</code></p>
+<p>Prevent GitLab from starting up again if the server unexpectedly reboots:</p>
+<p><code>shell
+ sudo systemctl disable gitlab-runsvdir</code></p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>(<strong>CentOS only</strong>) In CentOS 6 or older, there is no easy way to prevent GitLab from being
+ started if the machine reboots isn't available (see <a href="https://gitlab.com/gitlab-org/omnibus-gitlab/-/issues/3058">issue 3058</a>).
+ It may be safest to uninstall the GitLab package completely with <code>sudo yum remove gitlab-ee</code>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>(<strong>Ubuntu 14.04 LTS</strong>) If you are using an older version of Ubuntu
+ or any other distribution based on the Upstart init system, you can prevent GitLab
+ from starting if the machine reboots as <code>root</code> with
+ <code>initctl stop gitlab-runsvvdir &amp;&amp; echo 'manual' &gt; /etc/init/gitlab-runsvdir.override &amp;&amp; initctl reload-configuration</code>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+</li>
+<li>
+<p>If you do not have SSH access to the <strong>primary</strong> site, take the machine offline and
+     prevent it from rebooting. Because there are many ways you may prefer to accomplish
+     this, we avoid a single recommendation. You may need to:</p>
+<ul>
+<li>Reconfigure the load balancers.</li>
+<li>Change DNS records (for example, point the <strong>primary</strong> DNS record to the
+   <strong>secondary</strong> site to stop using the <strong>primary</strong> site).</li>
+<li>Stop the virtual servers.</li>
+<li>Block traffic through a firewall.</li>
+<li>Revoke object storage permissions from the <strong>primary</strong> site.</li>
+<li>Physically disconnect a machine.</li>
+</ul>
+</li>
+</ul>
+<h3>Promoting the <strong>secondary</strong> site</h3>
+<p>Note the following when promoting a secondary:</p>
+<ul>
+<li>A new <strong>secondary</strong> should not be added at this time. If you want to add a new
+  <strong>secondary</strong>, do this after you have completed the entire process of promoting
+  the <strong>secondary</strong> to the <strong>primary</strong>.</li>
+<li>If you encounter an <code>ActiveRecord::RecordInvalid: Validation failed: Name has already been taken</code>
+  error during this process, read
+  <a href="../failover_troubleshooting.md#fixing-errors-during-a-failover-or-when-promoting-a-secondary-to-a-primary-site">the troubleshooting advice</a>.</li>
+</ul>
+<p>To promote the secondary site:</p>
+<ol>
+<li>
+<p>SSH in to your <strong>secondary</strong> site and run one of the following commands:</p>
+</li>
+<li>
+<p>To promote the secondary site to primary:</p>
+<p><code>shell
+ sudo gitlab-ctl geo promote</code></p>
+</li>
+<li>
+<p>To promote the secondary site to primary <strong>without any further confirmation</strong>:</p>
+<p><code>shell
+ sudo gitlab-ctl geo promote --force</code></p>
+</li>
+<li>
+<p>Verify you can connect to the newly promoted <strong>primary</strong> site using the URL used
+   previously for the <strong>secondary</strong> site.</p>
+</li>
+</ol>
+<p>If successful, the <strong>secondary</strong> site is now promoted to the <strong>primary</strong> site.</p>
+<h3>Next steps</h3>
+<p>To regain geographic redundancy as quickly as possible, you should
+<a href="../../setup/_index.html">add a new <strong>secondary</strong> site</a>. To
+do that, you can re-add the old <strong>primary</strong> as a new secondary and bring it back
+online.</p></code></pre>
+</body>
+</html>

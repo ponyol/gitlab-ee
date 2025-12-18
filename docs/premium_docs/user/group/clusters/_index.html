@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Cluster management project</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Runner Core
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Group-level Kubernetes clusters (certificate-based) (deprecated)</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>This feature was <a href="https://gitlab.com/groups/gitlab-org/configure/-/epics/8">deprecated</a> in GitLab 14.5. To connect clusters to GitLab,
+use the <a href="../../clusters/agent/_index.html">GitLab agent for Kubernetes</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Similar to <a href="../../project/clusters/_index.html">project-level</a> and
+<a href="../../instance/clusters/_index.html">instance-level</a> Kubernetes clusters,
+group-level Kubernetes clusters allow you to connect a Kubernetes cluster to
+your group, enabling you to use the same cluster across multiple projects.</p>
+<p>To view your group-level Kubernetes clusters:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Operate</strong> &gt; <strong>Kubernetes</strong>.</li>
+</ol>
+<h2>Cluster management project</h2>
+<p>Attach a <a href="../../clusters/management_project.html">cluster management project</a>
+to your cluster to manage shared resources requiring <code>cluster-admin</code> privileges for
+installation, such as an Ingress controller.</p>
+<h2>RBAC compatibility</h2>
+<p>For each project under a group with a Kubernetes cluster, GitLab creates a restricted
+service account with <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles"><code>edit</code> privileges</a>
+in the project namespace.</p>
+<h2>Cluster precedence</h2>
+<p>If the project's cluster is available and not disabled, GitLab uses the
+project's cluster before using any cluster belonging to the group containing
+the project.
+In the case of subgroups, GitLab uses the cluster of the closest ancestor group
+to the project, provided the cluster is not disabled.</p>
+<h2>Multiple Kubernetes clusters</h2>
+<p>You can associate more than one Kubernetes cluster to your group, and maintain different clusters
+for different environments, such as development, staging, and production.</p>
+<p>When adding another cluster,
+<a href="#environment-scopes">set an environment scope</a> to help
+differentiate the new cluster from your other clusters.</p>
+<h2>GitLab-managed clusters</h2>
+<p>You can choose to allow GitLab to manage your cluster for you. If GitLab manages
+your cluster, resources for your projects are automatically created. See the
+<a href="../../project/clusters/cluster_access.html">Access controls</a>
+section for details on which resources GitLab creates for you.</p>
+<p>For clusters not managed by GitLab, project-specific resources aren't created
+automatically. If you're using <a href="../../../topics/autodevops/_index.html">Auto DevOps</a>
+for deployments with a cluster not managed by GitLab, you must ensure:</p>
+<ul>
+<li>The project's deployment service account has permissions to deploy to
+  <a href="../../project/clusters/deploy_to_cluster.md#deployment-variables"><code>KUBE_NAMESPACE</code></a>.</li>
+<li><code>KUBECONFIG</code> correctly reflects any changes to <code>KUBE_NAMESPACE</code>
+  (this is <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/31519">not automatic</a>). Editing
+  <code>KUBE_NAMESPACE</code> directly is discouraged.</li>
+</ul>
+<h3>Clearing the cluster cache</h3>
+<p>If you choose to allow GitLab to manage your cluster for you, GitLab stores a cached
+version of the namespaces and service accounts it creates for your projects. If you
+modify these resources in your cluster manually, this cache can fall out of sync with
+your cluster, which can cause deployment jobs to fail.</p>
+<p>To clear the cache:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Operate</strong> &gt; <strong>Kubernetes</strong>.</li>
+<li>Select your cluster.</li>
+<li>Expand <strong>Advanced settings</strong>.</li>
+<li>Select <strong>Clear cluster cache</strong>.</li>
+</ol>
+<h2>Base domain</h2>
+<p>Domains at the cluster level permit support for multiple domains
+per <a href="#multiple-kubernetes-clusters">multiple Kubernetes clusters</a> When specifying a domain,
+this is automatically set as an environment variable (<code>KUBE_INGRESS_BASE_DOMAIN</code>) during
+the <a href="../../../topics/autodevops/_index.html">Auto DevOps</a> stages.</p>
+<p>The domain should have a wildcard DNS configured to the Ingress IP address. <a href="../../project/clusters/gitlab_managed_clusters.md#base-domain">More details</a>.</p>
+<h2>Environment scopes</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When adding more than one Kubernetes cluster to your project, you need to differentiate
+them with an environment scope. The environment scope associates clusters with
+<a href="../../../ci/environments/_index.html">environments</a> similar to how the
+<a href="../../../ci/environments/_index.md#limit-the-environment-scope-of-a-cicd-variable">environment-specific CI/CD variables</a>
+work.</p>
+<p>While evaluating which environment matches the environment scope of a
+cluster, <a href="#cluster-precedence">cluster precedence</a> takes
+effect. The cluster at the project level takes precedence, followed
+by the closest ancestor group, followed by that groups' parent and so
+on.</p>
+<p>For example, if your project has the following Kubernetes clusters:</p>
+<table>
+<thead>
+<tr>
+<th>Cluster</th>
+<th>Environment scope</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Project</td>
+<td><code>*</code></td>
+<td>Project</td>
+</tr>
+<tr>
+<td>Staging</td>
+<td><code>staging/*</code></td>
+<td>Project</td>
+</tr>
+<tr>
+<td>Production</td>
+<td><code>production/*</code></td>
+<td>Project</td>
+</tr>
+<tr>
+<td>Test</td>
+<td><code>test</code></td>
+<td>Group</td>
+</tr>
+<tr>
+<td>Development</td>
+<td><code>*</code></td>
+<td>Group</td>
+</tr>
+</tbody>
+</table>
+<p>And the following environments are set in the <code>.gitlab-ci.yml</code> file:</p>
+<pre><code class="language-yaml">stages:
+  - test
+  - deploy
+
+test:
+  stage: test
+  script: sh test
+
+deploy to staging:
+  stage: deploy
+  script: make deploy
+  environment:
+    name: staging/$CI_COMMIT_REF_NAME
+    url: https://staging.example.com/
+
+deploy to production:
+  stage: deploy
+  script: make deploy
+  environment:
+    name: production/$CI_COMMIT_REF_NAME
+    url: https://example.com/
+</code></pre>
+<p>The result is:</p>
+<ul>
+<li>The Project cluster is used for the <code>test</code> job.</li>
+<li>The Staging cluster is used for the <code>deploy to staging</code> job.</li>
+<li>The Production cluster is used for the <code>deploy to production</code> job.</li>
+</ul>
+<h2>Cluster environments</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>For a consolidated view of which CI <a href="../../../ci/environments/_index.html">environments</a>
+are deployed to the Kubernetes cluster, see the documentation for
+<a href="../../clusters/environments.html">cluster environments</a>.</p>
+<h2>Security of runners</h2>
+<p>For important information about securely configuring runners, see
+<a href="../../project/clusters/cluster_access.md#security-of-runners">Security of runners</a>
+documentation for project-level clusters.</p>
+<h2>More information</h2>
+<p>For information on integrating GitLab and Kubernetes, see
+<a href="../../infrastructure/clusters/_index.html">Kubernetes clusters</a>.</p></code></pre>
+</body>
+</html>

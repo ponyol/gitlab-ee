@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Create an incident</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Analytics
+group: Platform Insights
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Create, assign, update, and resolve incidents in GitLab, and change escalation policies.
+title: Manage incidents</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Ability to add an <a href="_index.html">incident</a> to an iteration <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/347153">introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>This page collects instructions for all the things you can do with <a href="incidents.html">incidents</a> or in relation to them.</p>
+<h2>Create an incident</h2>
+<p>You can create an incident manually or automatically.</p>
+<h2>Add an incident to an iteration</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To add an incident to an <a href="../../user/group/iterations/_index.html">iteration</a>:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong> or <strong>Monitor</strong> &gt; <strong>Incidents</strong>, then select your incident to view it.</li>
+<li>On the right sidebar, in the <strong>Iteration</strong> section, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select the iteration to add this incident to.</li>
+<li>Select any area outside the dropdown list.</li>
+</ol>
+<p>Alternatively, you can use the <a href="../../user/project/quick_actions.md#iteration"><code>/iteration</code> quick action</a>.</p>
+<h3>From the Incidents page</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project.</li>
+</ul>
+<p>To create an incident from the <strong>Incidents</strong> page:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>Incidents</strong>.</li>
+<li>Select <strong>Create incident</strong>.</li>
+</ol>
+<h3>From the Issues page</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project.</li>
+</ul>
+<p>To create an incident from the <strong>Issues</strong> page:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, and select <strong>New issue</strong>.</li>
+<li>From the <strong>Type</strong> dropdown list, select <strong>Incident</strong>. Only fields relevant to
+   incidents are available on the page.</li>
+<li>Select <strong>Create issue</strong>.</li>
+</ol>
+<h3>From an alert</h3>
+<p>Create an incident issue when viewing an <a href="alerts.html">alert</a>.
+The incident description is populated from the alert.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Developer role for the project.</li>
+</ul>
+<p>To create an incident from an alert:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>Alerts</strong>.</li>
+<li>Select your desired alert.</li>
+<li>Select <strong>Create incident</strong>.</li>
+</ol>
+<p>After an incident is created, to view it from the alert, select <strong>View incident</strong>.</p>
+<p>When you <a href="#close-an-incident">close an incident</a> linked to an alert, GitLab
+<a href="alerts.md#change-an-alerts-status">changes the alert's status</a> to <strong>Resolved</strong>.
+You are then credited with the alert's status change.</p>
+<h3>Automatically, when an alert is triggered</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>In the project settings, you can turn on <a href="alerts.md#trigger-actions-from-alerts">creating an incident automatically</a>
+whenever an alert is triggered.</p>
+<h3>Using the PagerDuty webhook</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://support.pagerduty.com/docs/webhooks">PagerDuty V3 Webhook</a> support <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/383029">introduced</a> in GitLab 15.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can set up a webhook with PagerDuty to automatically create a GitLab incident
+for each PagerDuty incident. This configuration requires you to make changes
+in both PagerDuty and GitLab.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To set up a webhook with PagerDuty:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Monitor</strong></li>
+<li>Expand <strong>Incidents</strong>.</li>
+<li>Select the <strong>PagerDuty integration</strong> tab.</li>
+<li>Turn on the <strong>Active</strong> toggle.</li>
+<li>Select <strong>Save integration</strong>.</li>
+<li>Copy the value of <strong>Webhook URL</strong> for use in a later step.</li>
+<li>To add the webhook URL to a PagerDuty webhook integration, follow the steps described in the <a href="https://support.pagerduty.com/docs/webhooks#manage-v3-webhook-subscriptions">PagerDuty documentation</a>.</li>
+</ol>
+<p>To confirm the integration is successful, trigger a test incident from PagerDuty to
+check if a GitLab incident is created from the incident.</p>
+<h2>View a list of incidents</h2>
+<p>To view a list of the <a href="incidents.md#incidents-list">incidents</a>:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Monitor</strong> &gt; <strong>Incidents</strong>.</li>
+</ol>
+<p>To view an incident's <a href="incidents.md#incident-details">details page</a>, select it from the list.</p>
+<h3>Who can view an incident</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Whether you can view an incident depends on the <a href="../../user/public_access.html">project visibility level</a> and
+the incident's confidentiality status:</p>
+<ul>
+<li>Public project and a non-confidential incident: Anyone can view the incident.</li>
+<li>Private project and non-confidential incident: You must have at least the Guest role for the project.</li>
+<li>Confidential incident (regardless of project visibility): You must have at least the Planner role for the project.</li>
+</ul>
+<h2>Assign to a user</h2>
+<p>Assign incidents to users that are actively responding.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project.</li>
+</ul>
+<p>To assign a user:</p>
+<ol>
+<li>In an incident, on the right sidebar, next to <strong>Assignees</strong>, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select one or <a href="../../user/project/issues/multiple_assignees_for_issues.html">multiple users</a> to add as <strong>assignees</strong>.</li>
+<li>Select any area outside the dropdown list.</li>
+</ol>
+<h2>Change severity</h2>
+<p>See the <a href="incidents.md#incidents-list">incidents list</a> topic for a full description of the severity levels available.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project.</li>
+</ul>
+<p>To change an incident's severity:</p>
+<ol>
+<li>In an incident, on the right sidebar, next to <strong>Severity</strong>, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select the new severity.</li>
+</ol>
+<p>You can also change the severity using the <a href="../../user/project/quick_actions.md#severity"><code>/severity</code> quick action</a>.</p>
+<h2>Change status</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/5716">Introduced</a> in GitLab 14.9 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>incident_escalations</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/345769">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 14.10.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/345769">Feature flag <code>incident_escalations</code></a> removed in GitLab 15.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Developer role for the project.</li>
+</ul>
+<p>To change the status of an incident:</p>
+<ol>
+<li>In an incident, on the right sidebar, next to <strong>Status</strong>, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select the new severity.</li>
+</ol>
+<p><strong>Triggered</strong> is the default status for new incidents.</p>
+<h3>As an on-call responder</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>On-call responders can respond to <a href="paging.md#escalating-an-incident">incident pages</a>
+by changing the status.</p>
+<p>Changing the status has the following effects:</p>
+<ul>
+<li>To <strong>Acknowledged</strong>: limits on-call pages based on the project's <a href="escalation_policies.html">escalation policy</a>.</li>
+<li>To <strong>Resolved</strong>: silences all on-call pages for the incident.</li>
+<li>From <strong>Resolved</strong> to <strong>Triggered</strong>: restarts the incident escalating.</li>
+</ul>
+<p>In GitLab 15.1 and earlier, changing the status of an <a href="#from-an-alert">incident created from an alert</a>
+also changes the alert status. In <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/356057">GitLab 15.2 and later</a>,
+the alert status is independent and does not change when the incident status changes.</p>
+<h2>Change escalation policy</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Developer role for the project.</li>
+</ul>
+<p>To change the escalation policy of an incident:</p>
+<ol>
+<li>In an incident, on the right sidebar, next to <strong>Escalation policy</strong>, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select the escalation policy.</li>
+</ol>
+<p>By default, new incidents do not have an escalation policy selected.</p>
+<p>Selecting an escalation policy <a href="#change-status">changes the incident status</a> to <strong>Triggered</strong> and begins
+<a href="paging.md#escalating-an-incident">escalating the incident to on-call responders</a>.</p>
+<p>In GitLab 15.1 and earlier, the escalation policy for <a href="#from-an-alert">incidents created from alerts</a>
+reflects the alert's escalation policy and cannot be changed. In <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/356057">GitLab 15.2 and later</a>,
+the incident escalation policy is independent and can be changed.</p>
+<h2>Close an incident</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project.</li>
+</ul>
+<p>To close an incident, in the upper-right corner, select <strong>Incident actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}) and then <strong>Close incident</strong>.</p>
+<p>When you close an incident that is linked to an <a href="alerts.html">alert</a>,
+the linked alert's status changes to <strong>Resolved</strong>.
+You are then credited with the alert's status change.</p>
+<h3>Automatically close incidents via recovery alerts</h3>
+<p>Turn on closing an incident automatically when GitLab receives a recovery alert
+from an HTTP or Prometheus webhook.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To configure the setting:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Monitor</strong>.</li>
+<li>Expand the <strong>Incidents</strong> section.</li>
+<li>Select the <strong>Automatically close associated incident</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>When GitLab receives a <a href="integrations.md#recovery-alerts">recovery alert</a>, it closes the associated incident.
+This action is recorded as a system note on the incident indicating that it
+was closed automatically by the GitLab Alert bot.</p>
+<h2>Delete an incident</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role for a project.</li>
+</ul>
+<p>To delete an incident:</p>
+<ol>
+<li>In an incident, select <strong>Incident actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Delete incident</strong>.</li>
+</ol>
+<p>Alternatively:</p>
+<ol>
+<li>In an incident, select <strong>Edit</strong>.</li>
+<li>Select <strong>Delete incident</strong>.</li>
+</ol>
+<h2>Other actions</h2>
+<p>Because incidents in GitLab are built on top of <a href="../../user/project/issues/_index.html">issues</a>,
+they have the following actions in common:</p>
+<ul>
+<li><a href="../../user/todos.md#create-a-to-do-item">Add a to-do item</a></li>
+<li><a href="../../user/project/labels.md#assign-and-unassign-labels">Add labels</a></li>
+<li><a href="../../user/project/milestones/_index.md#assign-a-milestone-to-an-item">Assign a milestone</a></li>
+<li><a href="../../user/project/issues/confidential_issues.html">Make an incident confidential</a></li>
+<li><a href="../../user/project/issues/due_dates.html">Set a due date</a></li>
+<li><a href="../../user/profile/notifications.md#subscribe-to-notifications-for-a-specific-issue-merge-request-or-epic">Toggle notifications</a></li>
+<li><a href="../../user/project/time_tracking.html">Track time spent</a></li>
+</ul></code></pre>
+</body>
+</html>

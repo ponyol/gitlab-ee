@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Types of labels</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Project Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Labels
+description: Project labels, group labels, nested scopes, and filtering.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Labels organize and track work across GitLab features.
+As projects grow from small teams to large organizations, labels help you track and manage increasing volumes of work.
+Labels:</p>
+<ul>
+<li>Categorize issues, merge requests, and epics with custom attributes.</li>
+<li>Filter content in lists and boards.</li>
+<li>Prioritize work items with colors and descriptive titles.</li>
+<li>Track priority and severity with scoped labels.</li>
+<li>Structure workflows through organized groupings.</li>
+</ul>
+<h2>Types of labels</h2>
+<p>Use three types of labels in GitLab:</p>
+<ul>
+<li><strong>Project labels</strong> can be assigned to issues and merge requests in that project only.</li>
+<li><strong>Group labels</strong> can be assigned to issues, merge requests, and <a href="../group/epics/_index.html">epics</a>
+  in any project in the selected group or its subgroups.</li>
+<li><strong>Instance labels</strong> <a href="../../administration/labels.html">are created</a> by instance
+  administrators and are copied to all new projects.</li>
+</ul>
+<h2>Assign and unassign labels</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Real-time updates in the sidebar <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/241538">introduced</a> in GitLab 14.10 with a <a href="../../administration/feature_flags/_index.html">feature flag</a> named <code>realtime_labels</code>, disabled by default.</li>
+<li>Real-time updates in the sidebar <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/357370#note_991987201">enabled on GitLab.com</a> in GitLab 15.1.</li>
+<li>Real-time updates in the sidebar <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/357370">enabled by default</a> in GitLab 15.5.</li>
+<li>Real-time updates in the sidebar <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/103199">generally available</a> in GitLab 15.6. Feature flag <code>realtime_labels</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can assign labels to any issue, merge request, or epic.</p>
+<p>Changed labels are immediately visible to other users, without refreshing the page, on the following:</p>
+<ul>
+<li>Epics</li>
+<li>Incidents</li>
+<li>Issues</li>
+<li>Merge requests</li>
+</ul>
+<p>To assign or unassign a label:</p>
+<ol>
+<li>In the <strong>Labels</strong> section of the sidebar, select <strong>Edit</strong>.</li>
+<li>In the <strong>Assign labels</strong> list, search for labels by typing their names.
+   You can search repeatedly to add more labels.
+   The selected labels are marked with a checkmark.</li>
+<li>Select the labels you want to assign or unassign.</li>
+<li>To apply your changes to labels, select <strong>X</strong> next to <strong>Assign labels</strong> or select any area
+   outside the label section.</li>
+</ol>
+<p>Alternatively, to unassign a label, select the <strong>X</strong> on the label you want to unassign.</p>
+<p>You can also assign and unassign labels with quick actions:</p>
+<ul>
+<li>Assign labels with <a href="quick_actions.md#label"><code>/label</code></a>.</li>
+<li>Remove labels with <a href="quick_actions.md#unlabel"><code>/unlabel</code></a>.</li>
+<li>Remove all labels and assign new ones with <a href="quick_actions.md#relabel"><code>/relabel</code></a>.</li>
+</ul>
+<h2>View available labels</h2>
+<h3>View project labels</h3>
+<p>To view the <strong>project's labels</strong>:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+</ol>
+<p>Or:</p>
+<ol>
+<li>View an issue or merge request.</li>
+<li>On the right sidebar, in the <strong>Labels</strong> section, select <strong>Edit</strong>.</li>
+<li>Select <strong>Manage project labels</strong>.</li>
+</ol>
+<p>The list of labels includes both the labels created in the project and
+all labels created in the project's ancestor groups. For each label, you can see the
+project or group path where it was created.</p>
+<h3>View group labels</h3>
+<p>To view the <strong>group's labels</strong>:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+</ol>
+<p>Or:</p>
+<ol>
+<li>View an epic.</li>
+<li>On the right sidebar, in the <strong>Labels</strong> section, select <strong>Edit</strong>.</li>
+<li>Select <strong>Manage group labels</strong>.</li>
+</ol>
+<p>The list includes all labels created only in the group. It does not list any labels created in
+the group's projects.</p>
+<h2>Create a label</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to create a label <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project or group.</li>
+</ul>
+<h3>Create a project label</h3>
+<p>To create a project label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Select <strong>New label</strong>.</li>
+<li>In the <strong>Title</strong> field, enter a short, descriptive name for the label. You
+   can also use this field to create <a href="#scoped-labels">scoped, mutually exclusive labels</a>.</li>
+<li>Optional. In the <strong>Description</strong> field, enter additional
+   information about how and when to use this label.</li>
+<li>Optional. Select a color by selecting from the available colors, or enter a hex color value for
+   a specific color in the <strong>Background color</strong> field.</li>
+<li>Select <strong>Create label</strong>.</li>
+</ol>
+<h3>Create a project label from an issue or merge request</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to create a label <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can also create a new project label from an issue or merge request.
+Labels you create this way belong to the same project as the issue or merge request.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To do so:</p>
+<ol>
+<li>View an issue or merge request.</li>
+<li>On the right sidebar, in the <strong>Labels</strong> section, select <strong>Edit</strong>.</li>
+<li>Select <strong>Create project label</strong>.</li>
+<li>Fill in the name field. You can't specify a description if creating a label this way.
+   You can add a description later by <a href="#edit-a-label">editing the label</a>.</li>
+<li>Select a color by selecting from the available colors, or enter a hex color value for a specific color.</li>
+<li>Select <strong>Create</strong>. Your label is created and selected.</li>
+</ol>
+<h3>Create a group label</h3>
+<p>To create a group label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Select <strong>New label</strong>.</li>
+<li>In the <strong>Title</strong> field, enter a short, descriptive name for the label. You
+   can also use this field to create <a href="#scoped-labels">scoped, mutually exclusive labels</a>.</li>
+<li>Optional. In the <strong>Description</strong> field, enter additional
+   information about how and when to use this label.</li>
+<li>Optional. Select a color by selecting from the available colors, or enter a hex color value for
+   a specific color in the <strong>Background color</strong> field.</li>
+<li>Select <strong>Create label</strong>.</li>
+</ol>
+<h3>Create a group label from an epic</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to create a group label <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can also create a new group label from an epic.
+Labels you create this way belong to the same group as the epic.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the group.</li>
+</ul>
+<p>To do so:</p>
+<ol>
+<li>View an epic.</li>
+<li>On the right sidebar, in the <strong>Labels</strong> section, select <strong>Edit</strong>.</li>
+<li>Select <strong>Create group label</strong>.</li>
+<li>Fill in the name field. You can't specify a description if creating a label this way.
+   You can add a description later by <a href="#edit-a-label">editing the label</a>.</li>
+<li>Select a color by selecting from the available colors,enter input a hex color value for a specific color.</li>
+<li>Select <strong>Create</strong>.</li>
+</ol>
+<h2>Edit a label</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to edit a label <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project or group.</li>
+</ul>
+<h3>Edit a project label</h3>
+<p>To edit a <strong>project</strong> label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Next to the label you want to edit, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), and then select <strong>Edit</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Edit a group label</h3>
+<p>To edit a <strong>group</strong> label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Next to the label you want to edit, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), and then select <strong>Edit</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Delete a label</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to delete a label <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>If you delete a label, it is permanently deleted. All references to the label are removed from the
+system and you cannot undo the deletion.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<h3>Delete a project label</h3>
+<p>To delete a <strong>project</strong> label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Next to the <strong>Subscribe</strong> button, select ({{&lt; icon name="ellipsis_v" &gt;}}), and then select <strong>Delete</strong>.</li>
+</ol>
+<h3>Delete a group label</h3>
+<p>To delete a <strong>group</strong> label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>
+<p>Either:</p>
+</li>
+<li>
+<p>Next to the <strong>Subscribe</strong> button, select ({{&lt; icon name="ellipsis_v" &gt;}}).</p>
+</li>
+<li>
+<p>Next to the label you want to edit, select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}).</p>
+</li>
+<li>
+<p>Select <strong>Delete</strong>.</p>
+</li>
+</ol>
+<h2>Archived labels</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/4233">Introduced</a> in GitLab 18.3 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>labels_archive</code>. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.
+This feature is available for testing, but not ready for production use.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>You can archive labels that are no longer actively used but need to be preserved
+for historical perspective and search purposes.</p>
+<p>For example, you might archive
+release labels like <code>Q4-25</code> after a release is complete, keeping them available
+for searches while removing them from the label selection dropdown list.</p>
+<p>When you archive a label:</p>
+<ul>
+<li>The label is hidden from the label selection dropdown list in issues, merge requests, and epics.</li>
+<li>The label remains visible on existing issues, merge requests, and epics where it was previously assigned.</li>
+<li>You can still search for the label and view historical data.</li>
+<li>The label appears in a separate <strong>Archived</strong> tab on the <strong>Labels</strong> page.</li>
+</ul>
+<h3>Archive a label</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project or group.</li>
+</ul>
+<p>To archive a label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project or group. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Next to the label you want to archive, select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}).</li>
+<li>Select the <strong>Archived</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>The label is archived and <a href="#set-label-priority">deprioritized</a>.</p>
+<h3>View archived labels</h3>
+<p>To view archived labels:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project or group. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Go to the labels page for your project or group.</li>
+<li>Select the <strong>Archived</strong> tab.</li>
+</ol>
+<h3>Unarchive a label</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project or group.</li>
+</ul>
+<p>To unarchive a label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Select the <strong>Archived</strong> tab.</li>
+<li>Next to the label you want to unarchive, select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}).</li>
+<li>Clear the <strong>Archived</strong> checkbox.</li>
+<li>Select Save changes.</li>
+</ol>
+<h2>Promote a project label to a group label</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to promote a label <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You might want to make a project label available for other
+projects in the same group. Then, you can promote the label to a group label.</p>
+<p>If other projects in the same group have a label with the same title, they are all
+merged with the new group label. If a group label with the same title exists, it is
+also merged.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Promoting a label is a permanent action and cannot be reversed.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+<li>You must have at least the Planner role for the project's parent group.</li>
+</ul>
+<p>To promote a project label to a group label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Next to the <strong>Subscribe</strong> button, select the three dots ({{&lt; icon name="ellipsis_v" &gt;}}) and
+   select <strong>Promote to group label</strong>.</li>
+</ol>
+<p>All issues, merge requests, issue board lists, issue board filters, and label subscriptions
+with the old labels are assigned to the new group label.</p>
+<p>The new group label has the same ID as the previous project label.</p>
+<h2>Promote a subgroup label to the parent group</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to promote a label <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>It's not possible to directly promote a group label to the parent group.
+To achieve this, use the following workaround.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>There must be a group that contains subgroups ("parent group").</li>
+<li>There must be a subgroup in the parent group, that has a label you want to promote.</li>
+<li>You must have at least the Planner role for both groups.</li>
+</ul>
+<p>To "promote" the label to the parent group:</p>
+<ol>
+<li>In the parent group, <a href="#create-a-group-label">create a label</a> with the same name as the original
+   one. We recommend making it a different color so you don't mistake the two while you're doing this.</li>
+<li>In the subgroup, <a href="#view-group-labels">view its labels</a>. You should see the two labels and where
+   they come from:</li>
+</ol>
+<p><img alt="parent group and subgroup labels in the subgroup's label list" src="img/promote_to_parent_group_workaround_v14_10.png" /></p>
+<ol>
+<li>Next to the subgroup label (the old one), select <strong>Issues</strong>, <strong>Merge requests</strong>, or <strong>Epics</strong>.</li>
+<li>Add the new label to issues, merge requests, and epics that have the old label.
+   To do it faster, use <a href="issues/managing_issues.md#bulk-edit-issues">bulk editing</a>.</li>
+<li>In the subgroup or the parent group, <a href="#delete-a-group-label">delete the label</a> that belongs to
+   the lower-level group.</li>
+</ol>
+<p>You should now have a label in the parent group that is named the same as the old one, and added
+to the same issues, MRs, and epics.</p>
+<h2>Generate default project labels</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to generate default labels <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>If a project or its parent group has no labels, you can generate a default set of project
+labels from the label list page.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+<li>The project must have no labels present.</li>
+</ul>
+<p>To add the default labels to the project:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Select <strong>Generate a default set of labels</strong>.</li>
+</ol>
+<p>The following labels are created:</p>
+<ul>
+<li><code>bug</code></li>
+<li><code>confirmed</code></li>
+<li><code>critical</code></li>
+<li><code>discussion</code></li>
+<li><code>documentation</code></li>
+<li><code>enhancement</code></li>
+<li><code>suggestion</code></li>
+<li><code>support</code></li>
+</ul>
+<h2>Scoped labels</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Teams can use scoped labels to annotate issues, merge requests, and epics with mutually exclusive
+labels. By preventing certain labels from being used together, you can create more complex workflows.</p>
+<p><img alt="Scoped labels" src="img/labels_key_value_v13_5.png" /></p>
+<p>A scoped label uses a double-colon (<code>::</code>) syntax in its title, for example: <code>workflow::in-review</code>.</p>
+<p>An issue, merge request, or epic cannot have two scoped labels, of the form <code>key::value</code>,
+with the same <code>key</code>. If you add a new label with the same <code>key</code> but a different <code>value</code>,
+the previous <code>key</code> label is replaced with the new label.</p>
+<div class="video-fallback">
+  See the video: <a href="https://www.youtube.com/watch?v=7l7tnEva6I8">Scoped Labels - Setting up your Organization with GitLab</a>.
+</div>
+<figure class="video-container">
+  <iframe src="https://www.youtube-nocookie.com/embed/7l7tnEva6I8" frameborder="0" allowfullscreen> </iframe>
+</figure>
+
+<h3>Filter by scoped labels</h3>
+<p>To filter issue, merge request, or epic lists by a given scope, enter
+<code>&lt;scope&gt;::*</code> in the searched label name.</p>
+<p>For example, filtering by the <code>platform::*</code> label returns issues that have <code>platform::iOS</code>,
+<code>platform::Android</code>, or <code>platform::Linux</code> labels.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Filtering by scoped labels not available on the issues or merge requests dashboard pages.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Scoped labels examples</h3>
+<p><strong>Example 1</strong>. Updating issue priority:</p>
+<ol>
+<li>You decide that an issue is of low priority, and assign it the <code>priority::low</code> label.</li>
+<li>After more review, you realize the issue's priority is higher increased, and you assign it the
+   <code>priority::high</code> label.</li>
+<li>Because an issue shouldn't have two priority labels at the same time, GitLab removes the
+   <code>priority::low</code> label.</li>
+</ol>
+<p><strong>Example 2</strong>. You want a custom field in issues to track the operating system platform
+that your features target, where each issue should only target one platform.</p>
+<p>You create three labels:</p>
+<ul>
+<li><code>platform::iOS</code></li>
+<li><code>platform::Android</code></li>
+<li><code>platform::Linux</code></li>
+</ul>
+<p>If you assign any of these labels to an issue automatically removes any other existing label that
+starts with <code>platform::</code>.</p>
+<p><strong>Example 3</strong>. You can use scoped labels to represent the workflow states of your teams.</p>
+<p>Suppose you have the following labels:</p>
+<ul>
+<li><code>workflow::development</code></li>
+<li><code>workflow::review</code></li>
+<li><code>workflow::deployed</code></li>
+</ul>
+<p>If an issue already has the label <code>workflow::development</code> and a developer wants to show that the
+issue is now under review, they assign the <code>workflow::review</code>, and the <code>workflow::development</code> label
+is removed.</p>
+<p>The same happens when you move issues across label lists in an
+<a href="issue_board.html">issue board</a>. With scoped labels, team members not working in an
+issue board can also advance workflow states consistently in issues themselves.</p>
+<p>For a video explanation, see:</p>
+<div class="video-fallback">
+  See the video: <a href="https://www.youtube.com/watch?v=4BCBby6du3c">Use scoped labels for custom fields and custom workflows</a>.
+</div>
+<figure class="video-container">
+  <iframe src="https://www.youtube-nocookie.com/embed/4BCBby6du3c" frameborder="0" allowfullscreen> </iframe>
+</figure>
+
+<h3>Nested scopes</h3>
+<p>You can create a label with a nested scope by using multiple double colons <code>::</code> when creating
+it. In this case, everything before the last <code>::</code> is the scope.</p>
+<p>For example, if your project has these labels:</p>
+<ul>
+<li><code>workflow::backend::review</code></li>
+<li><code>workflow::backend::development</code></li>
+<li><code>workflow::frontend::review</code></li>
+</ul>
+<p>An issue <strong>can't</strong> have both <code>workflow::backend::review</code> and <code>workflow::backend::development</code>
+labels at the same time, because they both share the same scope: <code>workflow::backend</code>.</p>
+<p>On the other hand, an issue <strong>can</strong> have both <code>workflow::backend::review</code> and <code>workflow::frontend::review</code>
+labels at the same time, because they both have different scopes: <code>workflow::frontend</code> and <code>workflow::backend</code>.</p>
+<h2>Receive notifications when a label is used</h2>
+<p>You can subscribe to a label to <a href="../profile/notifications.html">receive notifications</a> whenever the
+label is assigned to an issue, merge request, or epic.</p>
+<p>To subscribe to a label:</p>
+<ol>
+<li><a href="#view-available-labels">View the label list page.</a></li>
+<li>To the right of any label, select <strong>Subscribe</strong>.</li>
+<li>Optional. If you are subscribing to a group label from a project, select either:</li>
+<li><strong>Subscribe at project level</strong> to be notified about events in this project.</li>
+<li><strong>Subscribe at group level</strong> to be notified about events in the whole group.</li>
+</ol>
+<h2>Set label priority</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum role to set label priority <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Labels can have relative priorities, which are used when you sort issue and merge request lists
+by <a href="issues/sorting_issue_lists.md#sorting-by-label-priority">label priority</a> and <a href="issues/sorting_issue_lists.md#sorting-by-priority">priority</a>.</p>
+<p>When prioritizing labels, you must do it from a project.
+It's not possible to do it from the group label list.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Priority sorting is based on the highest priority label only.
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/14523">This discussion</a> considers changing this.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To prioritize a label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Next to a label you want to prioritize, select the star ({{&lt; icon name="star-o" &gt;}}).</li>
+</ol>
+<p><img alt="Labels prioritized" src="img/labels_prioritized_v13_5.png" /></p>
+<p>This label now appears at the top of the label list, under <strong>Prioritized Labels</strong>.</p>
+<p>To change the relative priority of these labels, drag them up and down the list.
+The labels higher in the list get higher priority.</p>
+<p>To learn what happens when you sort by priority or label priority, see
+<a href="issues/sorting_issue_lists.html">Sorting and ordering issue lists</a>.</p>
+<h2>Lock labels when a merge request is merged</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/408676">Introduced</a> in GitLab 16.3 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>enforce_locked_labels_on_merge</code>. This feature is <a href="../../policy/development_stages_support.html">beta</a>. Disabled by default.</li>
+<li>Minimum role to lock labels <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">changed</a> from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.
+This feature is available for testing, but not ready for production use.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>To comply with certain auditing requirements, you can set a label to be locked.
+When a merge request with locked labels gets merged, nobody can remove them from the MR.</p>
+<p>When you add locked labels to issues or epics, they behave like regular labels.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project or group.</li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>After you set a label as locked, nobody can undo it or delete the label.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>To set a label to get locked on merge:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group or project. If you've <a href="../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Next to the label you want to edit, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), and then select <strong>Edit</strong>.</li>
+<li>Select the <strong>Lock label after a merge request is merged</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Related topics</h2>
+<ul>
+<li>Tutorials:</li>
+<li><a href="../../tutorials/issue_triage/_index.html">Set up a single project for issue triage</a></li>
+<li><a href="../../tutorials/boards_for_teams/_index.html">Set up issue boards for team hand-off</a></li>
+<li><a href="../../administration/labels.html">Labels administration</a></li>
+</ul></code></pre>
+</body>
+</html>

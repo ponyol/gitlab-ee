@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Using feature flags</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Runner Core
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Create and maintain a custom feature flag for your GitLab application.
+title: Feature flags
+description: Progressive delivery, controlled deployment, and risk reduction.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>With feature flags, you can deploy your application's new features to production in smaller batches.
+You can toggle a feature on and off to subsets of users, helping you achieve Continuous Delivery.
+Feature flags help reduce risk, allowing you to do controlled testing, and separate feature
+delivery from customer launch.</p>
+<p>A <a href="../administration/feature_flags/list.html">complete list of feature flags</a> in GitLab is also available.</p>
+<p><i class="fa-youtube-play" aria-hidden="true"></i>
+For an example of feature flags in action, see <a href="https://www.youtube.com/watch?v=U9WqoK9froI">Eliminating risk with feature flags</a>.</p>
+<!-- Video published on 2024-02-01 -->
+
+<p>For a click-through demo, see <a href="https://tech-marketing.gitlab.io/static-demos/feature-flags/feature-flags-html.html">Feature Flags</a>.</p>
+<!-- Demo published on 2023-07-13 -->
+
+<h2>Using feature flags</h2>
+<p>GitLab offers an <a href="https://github.com/Unleash/unleash">Unleash</a>-compatible API for feature flags.</p>
+<p>By enabling or disabling a flag in GitLab, your application
+can determine which features to enable or disable.</p>
+<p>You can create feature flags in GitLab and use the API from your application
+to get the list of feature flags and their statuses. The application must be configured to communicate
+with GitLab, so it's up to developers to use a compatible client library and
+<a href="#integrate-feature-flags-with-your-application">integrate the feature flags in your app</a>.</p>
+<h2>Create a feature flag</h2>
+<p>To create and enable a feature flag:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Deploy</strong> &gt; <strong>Feature flags</strong>.</li>
+<li>Select <strong>New feature flag</strong>.</li>
+<li>Enter a name that starts with a letter and contains only lowercase letters, digits, underscores (<code>_</code>),
+   or dashes (<code>-</code>), and does not end with a dash (<code>-</code>) or underscore (<code>_</code>).</li>
+<li>Optional. Enter a description (255 characters maximum).</li>
+<li>Add feature flag <a href="#feature-flag-strategies"><strong>Strategies</strong></a> to define how the flag should be applied. For each strategy, include the <strong>Type</strong> (defaults to <a href="#all-users"><strong>All users</strong></a>)
+   and <strong>Environments</strong> (defaults to all environments).</li>
+<li>Select <strong>Create feature flag</strong>.</li>
+</ol>
+<p>To change these settings, select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}})
+next to any feature flag in the list.</p>
+<h2>Maximum number of feature flags</h2>
+<p>The maximum number of feature flags per project on GitLab Self-Managed
+is 200. For GitLab.com, the maximum number is determined by <a href="https://about.gitlab.com/pricing/">tier</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Feature flags per project (GitLab.com)</th>
+<th>Feature flags per project (GitLab Self-Managed)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Free</td>
+<td>50</td>
+<td>200</td>
+</tr>
+<tr>
+<td>Premium</td>
+<td>150</td>
+<td>200</td>
+</tr>
+<tr>
+<td>Ultimate</td>
+<td>200</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<h2>Feature flag strategies</h2>
+<p>You can apply a feature flag strategy across multiple environments, without defining
+the strategy multiple times.</p>
+<p>GitLab feature flags are based on <a href="https://docs.getunleash.io/">Unleash</a>. In Unleash, there are
+<a href="https://docs.getunleash.io/reference/activation-strategies">strategies</a> for granular feature
+flag controls. GitLab feature flags can have multiple strategies, and the supported strategies are:</p>
+<ul>
+<li><a href="#all-users">All users</a></li>
+<li><a href="#percent-of-users">Percent of Users</a></li>
+<li><a href="#user-ids">User IDs</a></li>
+<li><a href="#user-list">User List</a></li>
+</ul>
+<p>Strategies can be added to feature flags when <a href="#create-a-feature-flag">creating a feature flag</a>,
+or by editing an existing feature flag after creation by navigating to <strong>Deploy</strong> &gt; <strong>Feature flags</strong>
+and selecting <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}).</p>
+<h3>All users</h3>
+<p>Enables the feature for all users. It uses the Standard (<code>default</code>) Unleash activation <a href="https://docs.getunleash.io/reference/activation-strategies#standard">strategy</a>.</p>
+<h3>Percent Rollout</h3>
+<p>Enables the feature for a percentage of page views, with configurable consistency
+of behavior. This consistency is also known as stickiness. It uses the
+Gradual Rollout (<code>flexibleRollout</code>) Unleash activation <a href="https://docs.getunleash.io/reference/activation-strategies#gradual-rollout">strategy</a>.</p>
+<p>You can configure the consistency to be based on:</p>
+<ul>
+<li><strong>User IDs</strong>: Each user ID has a consistent behavior, ignoring session IDs.</li>
+<li><strong>Session IDs</strong>: Each session ID has a consistent behavior, ignoring user IDs.</li>
+<li><strong>Random</strong>: Consistent behavior is not guaranteed. The feature is enabled for the
+  selected percentage of page views randomly. User IDs and session IDs are ignored.</li>
+<li><strong>Available ID</strong>: Consistent behavior is attempted based on the status of the user:</li>
+<li>If the user is logged in, make behavior consistent based on user ID.</li>
+<li>If the user is anonymous, make the behavior consistent based on the session ID.</li>
+<li>If there is no user ID or session ID, then the feature is enabled for the selected
+    percentage of page view randomly.</li>
+</ul>
+<p>For example, set a value of 15% based on <strong>Available ID</strong> to enable the feature for 15% of page views. For
+authenticated users this is based on their user ID. For anonymous users with a session ID it would be based on their
+session ID instead as they do not have a user ID. Then if no session ID is provided, it falls back to random.</p>
+<p>The rollout percentage can be from 0% to 100%.</p>
+<p>Selecting a consistency based on User IDs functions the same as the <a href="#percent-of-users">percent of Users</a> rollout.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Selecting <strong>Random</strong> provides inconsistent application behavior for individual users.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Percent of Users</h3>
+<p>Enables the feature for a percentage of authenticated users. It uses the Unleash activation strategy
+<a href="https://docs.getunleash.io/reference/activation-strategies#gradual-rollout"><code>gradualRolloutUserId</code></a>.</p>
+<p>For example, set a value of 15% to enable the feature for 15% of authenticated users.</p>
+<p>The rollout percentage can be from 0% to 100%.</p>
+<p>Stickiness (consistent application behavior for the same user) is guaranteed for authenticated users,
+but not anonymous users.</p>
+<p><a href="#percent-rollout">Percent rollout</a> with a consistency based on <strong>User IDs</strong> has the same
+behavior. You should use percent rollout because it's more flexible than percent of users</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>If the percent of users strategy is selected, then the Unleash client <strong>must</strong> be given a user
+ID for the feature to be enabled. See the <a href="#ruby-application-example">Ruby example</a> below.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>User IDs</h3>
+<p>Enables the feature for a list of target users. It is implemented
+using the Unleash UserIDs (<code>userWithId</code>) activation <a href="https://docs.getunleash.io/reference/activation-strategies#userids">strategy</a>.</p>
+<p>Enter user IDs as a comma-separated list of values (for example,
+<code>user@example.com, user2@example.com</code>, or <code>username1,username2,username3</code>, and so on).
+User IDs are identifiers for your application users. They do not need to be GitLab users.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>The Unleash client <strong>must</strong> be given a user ID for the feature to be enabled for
+target users. See the <a href="#ruby-application-example">Ruby example</a> below.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>User List</h3>
+<p>Enables the feature for lists of users created <a href="#create-a-user-list">in the feature flags UI</a>, or with the <a href="../api/feature_flag_user_lists.html">feature flag user list API</a>.
+Similar to <a href="#user-ids">User IDs</a>, it uses the Unleash UsersIDs (<code>userWithId</code>) activation <a href="https://docs.getunleash.io/reference/activation-strategies#userids">strategy</a>.</p>
+<p>You can't disable a specific feature for a user, but you can achieve similar results by enabling it for a user list.</p>
+<p>For example:</p>
+<ul>
+<li><code>Full-user-list</code> = <code>User1A, User1B, User2A, User2B, User3A, User3B, ...</code></li>
+<li><code>Full-user-list-excluding-B-users</code> = <code>User1A, User2A, User3A, ...</code></li>
+</ul>
+<h4>Create a user list</h4>
+<p>To create a user list:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Deploy</strong> &gt; <strong>Feature flags</strong>.</li>
+<li>Select <strong>View user lists</strong></li>
+<li>Select <strong>New user list</strong>.</li>
+<li>Enter a name for the list.</li>
+<li>Select <strong>Create</strong>.</li>
+</ol>
+<p>You can view a list's User IDs by selecting <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}) next to it.
+When viewing a list, you can rename it by selecting <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}).</p>
+<h4>Add users to a user list</h4>
+<p>To add users to a user list:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Deploy</strong> &gt; <strong>Feature flags</strong>.</li>
+<li>Select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}) next to the list you want to add users to.</li>
+<li>Select <strong>Add Users</strong>.</li>
+<li>Enter the user IDs as a comma-separated list of values. For example,
+   <code>user@example.com, user2@example.com</code>, or <code>username1,username2,username3</code>, and so on.</li>
+<li>Select <strong>Add</strong>.</li>
+</ol>
+<h4>Remove users from a user list</h4>
+<p>To remove users from a user list:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Deploy</strong> &gt; <strong>Feature flags</strong>.</li>
+<li>Select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}) next to the list you want to change.</li>
+<li>Select <strong>Remove</strong> ({{&lt; icon name="remove" &gt;}}) next to the ID you want to remove.</li>
+</ol>
+<h2>Search for Code References</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To remove the feature flag from the code during cleanup, find any project references to it.</p>
+<p>To search for code references of a feature flag:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Deploy</strong> &gt; <strong>Feature flags</strong>.</li>
+<li>Edit the feature flag you want to remove.</li>
+<li>Select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Search code references</strong>.</li>
+</ol>
+<h2>Disable a feature flag for a specific environment</h2>
+<p>To disable a feature flag for a specific environment:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Deploy</strong> &gt; <strong>Feature flags</strong>.</li>
+<li>For the feature flag you want to disable, select <strong>Edit</strong> ({{&lt; icon name="pencil" &gt;}}).</li>
+<li>To disable the flag:</li>
+<li>For each strategy it applies to, under <strong>Environments</strong>, delete the environment.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Disable a feature flag for all environments</h2>
+<p>To disable a feature flag for all environments:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Deploy</strong> &gt; <strong>Feature flags</strong>.</li>
+<li>For the feature flag you want to disable, slide the Status toggle to <strong>Disabled</strong>.</li>
+</ol>
+<p>The feature flag is displayed on the <strong>Disabled</strong> tab.</p>
+<h2>Integrate feature flags with your application</h2>
+<p>To use feature flags with your application, get access credentials from GitLab.
+Then prepare your application with a client library.</p>
+<h3>Get access credentials</h3>
+<p>To get the access credentials that your application needs to communicate with GitLab:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Deploy</strong> &gt; <strong>Feature flags</strong>.</li>
+<li>Select <strong>Configure</strong> to view the following:</li>
+<li><strong>API URL</strong>: URL where the client (application) connects to get a list of feature flags.</li>
+<li><strong>Instance ID</strong>: Unique token that authorizes the retrieval of the feature flags.</li>
+<li>
+<p><strong>Application name</strong>: The name of the environment the application runs in
+     (not the name of the application itself).</p>
+<p>For example, if the application runs for a production server, the <strong>Application name</strong>
+ could be <code>production</code> or similar. This value is used for the environment spec evaluation.</p>
+</li>
+</ol>
+<p>The meaning of these fields might change over time. For example, <strong>Instance ID</strong> might be a
+single token or multiple tokens assigned to the <strong>Environment</strong>. Also,
+<strong>Application name</strong> could describe the application version instead of the running environment.</p>
+<h3>Choose a client library</h3>
+<p>GitLab implements a single backend that is compatible with Unleash clients.</p>
+<p>With the Unleash client, developers can define, in the application code, the default values for flags.
+Each feature flag evaluation can express the desired outcome if the flag isn't present in the
+provided configuration file.</p>
+<p>Unleash currently <a href="https://github.com/Unleash/unleash#unleash-sdks">offers many SDKs for various languages and frameworks</a>.</p>
+<h3>Feature flags API information</h3>
+<p>For API content, see:</p>
+<ul>
+<li><a href="../api/feature_flags.html">Feature flags API</a></li>
+<li><a href="../api/feature_flag_user_lists.html">Feature flag user lists API</a></li>
+</ul>
+<h3>Go application example</h3>
+<p>Here's an example of how to integrate feature flags in a Go application:</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;io&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+
+    &quot;github.com/Unleash/unleash-client-go/v3&quot;
+)
+
+type metricsInterface struct {
+}
+
+func init() {
+    unleash.Initialize(
+        unleash.WithUrl(&quot;https://gitlab.com/api/v4/feature_flags/unleash/42&quot;),
+        unleash.WithInstanceId(&quot;29QmjsW6KngPR5JNPMWx&quot;),
+        unleash.WithAppName(&quot;production&quot;), // Set to the running environment of your application
+        unleash.WithListener(&amp;metricsInterface{}),
+    )
+}
+
+func helloServer(w http.ResponseWriter, req *http.Request) {
+    if unleash.IsEnabled(&quot;my_feature_name&quot;) {
+        io.WriteString(w, &quot;Feature enabled\n&quot;)
+    } else {
+        io.WriteString(w, &quot;hello, world!\n&quot;)
+    }
+}
+
+func main() {
+    http.HandleFunc(&quot;/&quot;, helloServer)
+    log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))
+}
+</code></pre>
+<h3>Ruby application example</h3>
+<p>Here's an example of how to integrate feature flags in a Ruby application.</p>
+<p>The Unleash client is given a user ID for use with a <strong>Percent rollout (logged in users)</strong> rollout strategy or a list of <strong>Target Users</strong>.</p>
+<pre><code class="language-ruby">#!/usr/bin/env ruby
+
+require 'unleash'
+require 'unleash/context'
+
+unleash = Unleash::Client.new({
+  url: 'http://gitlab.com/api/v4/feature_flags/unleash/42',
+  app_name: 'production', # Set to the running environment of your application
+  instance_id: '29QmjsW6KngPR5JNPMWx'
+})
+
+unleash_context = Unleash::Context.new
+# Replace &quot;123&quot; with the ID of an authenticated user.
+# The context's user ID must be a string:
+# https://unleash.github.io/docs/unleash_context
+unleash_context.user_id = &quot;123&quot;
+
+if unleash.is_enabled?(&quot;my_feature_name&quot;, unleash_context)
+  puts &quot;Feature enabled&quot;
+else
+  puts &quot;hello, world!&quot;
+end
+</code></pre>
+<h3>Unleash Proxy example</h3>
+<p>As of <a href="https://docs.getunleash.io/reference/unleash-proxy">Unleash Proxy</a> version
+0.2, the proxy is compatible with feature flags.</p>
+<p>You should use Unleash Proxy for production on GitLab.com. See the <a href="#maximum-supported-clients-in-application-nodes">performance note</a> for details.</p>
+<p>To run a Docker container to
+connect to your project's feature flags, run the following command:</p>
+<pre><code class="language-shell">docker run \
+  -e UNLEASH_PROXY_SECRETS=&lt;secret&gt; \
+  -e UNLEASH_URL=&lt;project feature flags URL&gt; \
+  -e UNLEASH_INSTANCE_ID=&lt;project feature flags instance ID&gt; \
+  -e UNLEASH_APP_NAME=&lt;project environment&gt; \
+  -e UNLEASH_API_TOKEN=&lt;tokenNotUsed&gt; \
+  -p 3000:3000 \
+  unleashorg/unleash-proxy
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UNLEASH_PROXY_SECRETS</code></td>
+<td>Shared secret used to configure an <a href="https://docs.getunleash.io/reference/unleash-proxy#how-to-connect-to-the-proxy">Unleash Proxy client</a>.</td>
+</tr>
+<tr>
+<td><code>UNLEASH_URL</code></td>
+<td>Your project's API URL. For more details, read <a href="#get-access-credentials">Get access credentials</a>.</td>
+</tr>
+<tr>
+<td><code>UNLEASH_INSTANCE_ID</code></td>
+<td>Your project's Instance ID. For more details, read <a href="#get-access-credentials">Get access credentials</a>.</td>
+</tr>
+<tr>
+<td><code>UNLEASH_APP_NAME</code></td>
+<td>The name of the environment the application runs in. For more details, read <a href="#get-access-credentials">Get access credentials</a>.</td>
+</tr>
+<tr>
+<td><code>UNLEASH_API_TOKEN</code></td>
+<td>Required to start the Unleash Proxy, but not used to connect to GitLab. Can be set to any value.</td>
+</tr>
+</tbody>
+</table>
+<p>There is a limitation when using the Unleash Proxy where each proxy instance can request flags only for the environment named in <code>UNLEASH_APP_NAME</code>. The Proxy sends
+this to GitLab on behalf of the client, which means the client can't override it.</p>
+<h2>Feature flag related issues</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can link related issues to a feature flag. In the feature flag <strong>Linked issues</strong> section,
+select the <code>+</code> button and input the issue reference number or the full URL of the issue.
+The issues then appear in the related feature flag and the other way round.</p>
+<p>This feature is similar to the <a href="../user/project/issues/related_issues.html">linked issues</a> feature.</p>
+<h2>Performance factors</h2>
+<p>GitLab feature flags can be used in any application. Large applications might require advance configuration.
+This section explains the performance factors to help your organization to identify
+what's needed to be done before using the feature.
+For more information, see <a href="#using-feature-flags">using feature flags</a>.</p>
+<h3>Maximum supported clients in application nodes</h3>
+<p>GitLab accepts as many client requests as possible until it hits the <a href="../security/rate_limits.html">rate limit</a>.
+The feature flag API is considered <strong>Unauthenticated traffic (from a given IP address)</strong>. For GitLab.com, see the <a href="../user/gitlab_com/_index.html">GitLab.com specific limits</a>.</p>
+<p>The polling rate is configurable in SDKs. Provided that all clients are requesting from the same IP:</p>
+<ul>
+<li>Request once per minute ... 500 clients can be supported.</li>
+<li>Request once per 15 sec ... 125 clients can be supported.</li>
+</ul>
+<p>For applications looking for more scalable solution, you should use <a href="#unleash-proxy-example">Unleash Proxy</a>.
+On GitLab.com, you should use Unleash Proxy to reduce the chance of being rate limited across endpoints.
+This proxy server sits between the server and clients. It makes requests to the server on behalf of the client groups,
+so the number of outbound requests can be greatly reduced. If you still get <code>429</code> responses, increase the <code>UNLEASH_FETCH_INTERVAL</code> value in the Unleash Proxy.</p>
+<p>There is also an <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/295472">issue</a> to give more
+capacity to the current rate limit.</p>
+<h3>Recovering from network errors</h3>
+<p>In general, <a href="https://github.com/Unleash/unleash#unleash-sdks">Unleash clients</a> have
+a fall-back mechanism when the server returns an error code.
+For example, <code>unleash-ruby-client</code> reads flag data from the local backup so that
+application can keep running in the current state.</p>
+<p>Read the documentation in a SDK project for more information.</p>
+<h3>GitLab Self-Managed</h3>
+<p>Functionality-wise, there are no differences. Both GitLab.com and GitLab Self-Managed behave the same.</p>
+<p>In terms of scalability, it's up to the spec of the GitLab instance.
+For example, GitLab.com uses HA architecture so it can handle many concurrent requests. However, GitLab Self-Managed instances on underpowered machines won't deliver comparable performance.
+See <a href="../administration/reference_architectures/_index.html">Reference architectures</a>
+for more information.</p></code></pre>
+</body>
+</html>

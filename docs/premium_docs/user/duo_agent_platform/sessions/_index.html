@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># View sessions for your project</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Agent Foundations
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Sessions</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Beta</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Sessions show the status and execution data for the agents and flows you've run.</p>
+<p>Sessions are created by GitLab Duo Chat (Agentic) and foundational flows in the IDE or UI. Examples include:</p>
+<ul>
+<li>Flows that are executed on a runner, like the <a href="../flows/fix_pipeline.html">Fix your CI/CD Pipeline Flow</a>.
+  These sessions are visible in the UI under <strong>Automate</strong> &gt; <strong>Sessions</strong>.</li>
+<li>Flows that run in the IDE, like the <a href="../flows/software_development.html">Software development Flow</a>.
+  These sessions are visible in the IDE, on the <strong>Flows</strong> tab, under <strong>Sessions</strong>.</li>
+<li>Sessions created by GitLab Duo Chat. These sessions are visible on the right sidebar
+  by selecting <strong>GitLab Duo Chat history</strong>.</li>
+<li>Flows that are invoked by triggers. These sessions are visible in the UI under <strong>Automate</strong> &gt; <strong>Sessions</strong>.</li>
+</ul>
+<p>GitLab Duo Chat (Classic) does not create sessions, because it's not agentic.</p>
+<h2>View sessions for your project</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Developer, Maintainer, or Owner role for the project.</li>
+</ul>
+<p>To view sessions for your project:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Sessions</strong>.</li>
+<li>Select any session to view more details.</li>
+</ol>
+<h2>View sessions you've triggered</h2>
+<p>To view sessions you've triggered:</p>
+<ol>
+<li>On the right sidebar, select <strong>GitLab Duo sessions</strong>.</li>
+<li>Select any session to view more details.</li>
+<li>Optional. Filter the details to show all logs or a concise subset only.</li>
+</ol>
+<h2>GitLab Duo Chat (Agentic) sessions</h2>
+<p>Because chats are interactive, they require a clearer separation in the UI.
+You can think of the Chat history as a filtered view of sessions that exists
+exclusively for Chats.</p>
+<h2>Cancel a running session</h2>
+<p>You can cancel a session that is running or waiting for input. To cancel a session:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Sessions</strong>.</li>
+<li>On the <strong>Details</strong> tab, scroll to the bottom.</li>
+<li>Select <strong>Cancel session</strong>.</li>
+<li>In the confirmation dialog, select <strong>Cancel session</strong> to confirm.</li>
+</ol>
+<p>After cancellation:</p>
+<ul>
+<li>The session status changes to <strong>Stopped</strong>.</li>
+<li>The session cannot be resumed or restarted.</li>
+</ul>
+<h2>Session retention</h2>
+<p>Sessions are automatically deleted 30 days after the last activity.
+The retention period resets each time you interact with the session.
+For example, if you interact with a session every 20 days, it will never be automatically deleted.</p>
+<p>In the IDE, you can also manually delete sessions before the 30-day retention period expires.</p></code></pre>
+</body>
+</html>

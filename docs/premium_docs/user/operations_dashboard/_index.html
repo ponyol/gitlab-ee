@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Adding a project to the dashboard</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Runner Core
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Operations Dashboard</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>The Operations Dashboard provides a summary of each project's operational health,
+including pipeline and alert status.</p>
+<p>To access the dashboard:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong>.</li>
+<li>Select <strong>Your work</strong>.</li>
+<li>Select <strong>Operations</strong>.</li>
+</ol>
+<h2>Adding a project to the dashboard</h2>
+<p>To add a project to the dashboard:</p>
+<ol>
+<li>Ensure your alerts populate the <code>gitlab_environment_name</code> label on the <a href="../../operations/incident_management/integrations.md#expected-prometheus-request-attributes">alerts you set up in Prometheus</a>.
+   The value of this should match the name of your environment in GitLab.
+   You can display alerts for the <code>production</code> environment only.</li>
+<li>Select <strong>Add projects</strong> in the home screen of the dashboard.</li>
+<li>Search and add one or more projects using the <strong>Search your projects</strong> field.</li>
+<li>Select <strong>Add projects</strong>.</li>
+</ol>
+<p>Once added, the dashboard displays the project's number of active alerts,
+last commit, pipeline status, and when it was last deployed.</p>
+<p>The Operations and <a href="../../ci/environments/environments_dashboard.html">Environments</a> dashboards share the same list of projects. Adding or removing a project from one adds or removes the project from the other.</p>
+<p><img alt="Operations Dashboard with projects" src="img/index_operations_dashboard_with_projects_v11_10.png" /></p>
+<h2>Arranging projects on a dashboard</h2>
+<p>You can drag project cards to change their order. The card order is currently only saved to your browser, so it doesn't change the dashboard for other people.</p>
+<h2>Making it the default dashboard when you sign in</h2>
+<p>The Operations Dashboard can also be made the default GitLab dashboard shown when
+you sign in. To make it the default, see <a href="../profile/preferences.html">Profile preferences</a>.</p></code></pre>
+</body>
+</html>

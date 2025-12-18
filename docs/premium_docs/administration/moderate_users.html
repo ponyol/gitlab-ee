@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># View users by type</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Fulfillment
+group: Provision
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+gitlab_dedicated: yes
+title: Moderate users</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>If you are an instance administrator, you have several options to moderate and control user access.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>This topic is specifically related to user moderation in GitLab Self-Managed. For information related to groups, see the <a href="../user/group/moderate_users.html">group documentation</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>View users by type</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Filter users by type <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/541186">introduced</a> in GitLab 18.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Established GitLab instances can often have large numbers of human and bot users. You can filter the list of users
+to display only human or <a href="internal_users.html">bot users</a>.</p>
+<p>To view users by type:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>In the search box, enter a filter.</li>
+<li>To display human users, enter <strong>Type=Humans</strong>.</li>
+<li>To display bot users, enter <strong>Type=Bots</strong>.</li>
+<li>Press <kbd>Enter</kbd>.</li>
+</ol>
+<h2>Users pending approval</h2>
+<p>A user in a pending approval state requires action by an administrator. A user sign up can be in a
+pending approval state because an administrator has enabled any of the following options:</p>
+<ul>
+<li><a href="settings/sign_up_restrictions.md#require-administrator-approval-for-new-sign-ups">Require administrator approval for new sign-ups</a> setting.</li>
+<li><a href="settings/sign_up_restrictions.md#user-cap">User cap</a>.</li>
+<li><a href="../integration/omniauth.md#configure-common-settings">Block auto-created users (OmniAuth)</a></li>
+<li><a href="auth/ldap/_index.md#basic-configuration-settings">Block auto-created users (LDAP)</a></li>
+</ul>
+<p>When a user registers for an account while this setting is enabled:</p>
+<ul>
+<li>The user is placed in a <strong>Pending approval</strong> state.</li>
+<li>The user sees a message telling them their account is awaiting approval by an administrator.</li>
+</ul>
+<p>A user pending approval:</p>
+<ul>
+<li>Is functionally identical to a <a href="#block-a-user">blocked</a> user.</li>
+<li>Cannot sign in.</li>
+<li>Cannot access Git repositories or the GitLab API.</li>
+<li>Does not receive any notifications from GitLab.</li>
+<li>Does not consume a <a href="../subscriptions/manage_users_and_seats.md#billable-users">seat</a>.</li>
+</ul>
+<p>An administrator must <a href="#approve-or-reject-a-user-sign-up">approve their sign up</a> to allow them to
+sign in.</p>
+<h3>View user sign ups pending approval</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Filter users by state <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/238183">introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To view user sign ups pending approval:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>In the search box, filter by <strong>State=Pending approval</strong>, and press <kbd>Enter</kbd>.</li>
+</ol>
+<h3>Approve or reject a user sign up</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Filter users by state <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/238183">introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>A user sign up pending approval can be approved or rejected from the <strong>Admin</strong> area.</p>
+<p>To approve or reject a user sign up:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>In the search box, filter by <strong>State=Pending approval</strong> and press <kbd>Enter</kbd>.</li>
+<li>For the user sign up you want to approve or reject, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), then <strong>Approve</strong> or <strong>Reject</strong>.</li>
+</ol>
+<p>Approving a user:</p>
+<ul>
+<li>Activates their account.</li>
+<li>Changes the user's state to active.</li>
+<li>Consumes a subscription <a href="../subscriptions/manage_users_and_seats.md#billable-users">seat</a>.</li>
+</ul>
+<p>Rejecting a user:</p>
+<ul>
+<li>Prevents the user from signing in or accessing instance information.</li>
+<li>Deletes the user.</li>
+</ul>
+<h2>View users pending role promotion</h2>
+<p>If <a href="settings/sign_up_restrictions.md#turn-on-administrator-approval-for-role-promotions">administrator approval for role promotions</a> is turned on, membership requests that promote existing users into a billable role require administrator approval.</p>
+<p>To view users pending role promotion:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>Select <strong>Role Promotions</strong>.</li>
+</ol>
+<p>A list of users with the highest role requested is displayed.
+You can <strong>Approve</strong> or <strong>Reject</strong> the requests.</p>
+<h2>Block and unblock users</h2>
+<p>GitLab administrators can block and unblock users.
+You should block a user when you don't want them to access the instance, but you want to retain their data.</p>
+<p>A blocked user:</p>
+<ul>
+<li>Cannot sign in or access any repositories.</li>
+<li>Any associated data remains in these repositories.</li>
+<li>Cannot use <a href="../user/project/integrations/gitlab_slack_application.md#slash-commands">slash commands in Slack</a>.</li>
+<li>Does not occupy a <a href="../subscriptions/manage_users_and_seats.md#billable-users">seat</a>.</li>
+</ul>
+<h3>Block a user</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator for the instance.</li>
+</ul>
+<p>You can block a user's access to the instance.</p>
+<p>To block a user:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>For the user you want to block, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), then <strong>Block</strong>.</li>
+</ol>
+<p>To report abuse from other users, see <a href="../user/report_abuse.html">report abuse</a>. For more information on abuse reports in the <strong>Admin</strong> area, see <a href="review_abuse_reports.md#resolving-abuse-reports">resolving abuse reports</a>.</p>
+<h3>Unblock a user</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Filter users by state <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/238183">introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>A blocked user can be unblocked from the <strong>Admin</strong> area. To do this:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>In the search box, filter by <strong>State=Blocked</strong> and press <kbd>Enter</kbd>.</li>
+<li>For the user you want to unblock, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), then <strong>Unblock</strong>.</li>
+</ol>
+<p>The user's state is set to active and they consume a
+<a href="../subscriptions/manage_users_and_seats.md#billable-users">seat</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Users can also be unblocked using the <a href="../api/user_moderation.md#unblock-access-to-a-user">GitLab API</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>The unblock option may be unavailable for LDAP users. To enable the unblock option,
+the LDAP identity first needs to be deleted:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>In the search box, filter by <strong>State=Blocked</strong> and press <kbd>Enter</kbd>.</li>
+<li>Select a user.</li>
+<li>Select the <strong>Identities</strong> tab.</li>
+<li>Find the LDAP provider and select <strong>Delete</strong>.</li>
+</ol>
+<h2>Deactivate and reactivate users</h2>
+<p>GitLab administrators can deactivate and reactivate users.
+You should deactivate a user if they have no recent activity, and you do not want them to occupy a seat on the instance.</p>
+<p>A deactivated user:</p>
+<ul>
+<li>Can sign in to GitLab.</li>
+<li>If a deactivated user signs in, they are automatically reactivated.</li>
+<li>Cannot access repositories or the API.</li>
+<li>Cannot use <a href="../user/project/integrations/gitlab_slack_application.md#slash-commands">slash commands in Slack</a>.</li>
+<li>Does not occupy a seat. For more information, see <a href="../subscriptions/manage_users_and_seats.md#billable-users">billable users</a>.</li>
+</ul>
+<p>When you deactivate a user, their projects, groups, and history remain.</p>
+<h3>Deactivate a user</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>The user has had no activity in the last 90 days.</li>
+</ul>
+<p>To deactivate a user:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>For the user you want to deactivate, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) and then <strong>Deactivate</strong>.</li>
+<li>On the dialog, select <strong>Deactivate</strong>.</li>
+</ol>
+<p>The user receives an email notification that their account has been deactivated. After this email, they no longer receive notifications.
+For more information, see <a href="settings/email.md#user-deactivation-emails">user deactivation emails</a>.</p>
+<p>To deactivate users with the GitLab API, see <a href="../api/user_moderation.md#deactivate-a-user">deactivate user</a>. For information about permanent user restrictions, see <a href="#block-and-unblock-users">block and unblock users</a>.</p>
+<p>To remove a user from a GitLab.com subscription, see
+<a href="../subscriptions/manage_users_and_seats.md#remove-users-from-subscription">Remove users from your subscription</a>.</p>
+<h3>Automatically deactivate dormant users</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Customizable time period <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/336747">introduced</a> in GitLab 15.4</li>
+<li>The lower limit for inactive period set to 90 days <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/100793">introduced</a> in GitLab 15.5</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Administrators can enable automatic deactivation of users who either:</p>
+<ul>
+<li>Were created more than a week ago and have not signed in.</li>
+<li>Have no activity for a specified period of time (default and minimum is 90 days).</li>
+</ul>
+<p>To do this:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Account and limit</strong> section.</li>
+<li>Under <strong>Dormant users</strong>, check <strong>Deactivate dormant users after a period of inactivity</strong>.</li>
+<li>Under <strong>Days of inactivity before deactivation</strong>, enter the number of days before deactivation. Minimum value is 90 days.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>When this feature is enabled, GitLab runs a daily job to deactivate the dormant users.</p>
+<p>A maximum of 100,000 users can be deactivated per day.</p>
+<p>By default, users receive an email notification when their account is deactivated.
+You can disable <a href="settings/email.md#user-deactivation-emails">user deactivation emails</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>GitLab generated bots are excluded from the automatic deactivation of dormant users.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Automatically delete unconfirmed users</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/352514">Introduced</a> in GitLab 16.1 <a href="feature_flags/_index.html">with a flag</a> named <code>delete_unconfirmed_users_setting</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/124982">Enabled by default</a> in GitLab 16.2.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<p>You can enable automatic deletion of users who both:</p>
+<ul>
+<li>Never confirmed their email address.</li>
+<li>Signed up for GitLab more than a specified number of days in the past.</li>
+</ul>
+<p>You can configure these settings using either the <a href="../api/settings.html">Settings API</a> or in a Rails console:</p>
+<pre><code class="language-ruby"> Gitlab::CurrentSettings.update(delete_unconfirmed_users: true)
+ Gitlab::CurrentSettings.update(unconfirmed_users_delete_after_days: 365)
+</code></pre>
+<p>When the <code>delete_unconfirmed_users</code> setting is enabled, GitLab runs a job once an hour to delete the unconfirmed users.
+The job only deletes users who signed up more than <code>unconfirmed_users_delete_after_days</code> days in the past.</p>
+<p>This job only runs when the <code>email_confirmation_setting</code> is set to <code>soft</code> or <code>hard</code>.</p>
+<p>A maximum of 240,000 users can be deleted per day.</p>
+<h3>Reactivate a user</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Filter users by state <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/238183">introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can reactivate a deactivated user from the <strong>Admin</strong> area.</p>
+<p>To do this:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>In the search box, filter by <strong>State=Deactivated</strong> and press <kbd>Enter</kbd>.</li>
+<li>For the user you want to reactivate, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), then <strong>Activate</strong>.</li>
+</ol>
+<p>The user's state is set to active and they consume a
+<a href="../subscriptions/manage_users_and_seats.md#billable-users">seat</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>A deactivated user can also reactivate their account themselves by logging back in through the UI.
+Users can also be reactivated using the <a href="../api/user_moderation.md#reactivate-a-user">GitLab API</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Ban and unban users</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Hiding merge requests of banned users <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/107836">introduced</a> in GitLab 15.8 <a href="feature_flags/_index.html">with a flag</a> named <code>hide_merge_requests_from_banned_users</code>. Disabled by default.</li>
+<li>Hiding comments of banned users <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/112973">introduced</a> in GitLab 15.11 <a href="feature_flags/_index.html">with a flag</a> named <code>hidden_notes</code>. Disabled by default.</li>
+<li>Hiding projects of banned users <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/121488">introduced</a> in GitLab 16.2 <a href="feature_flags/_index.html">with a flag</a> named <code>hide_projects_of_banned_users</code>. Disabled by default.</li>
+<li>Hiding merge requests of banned users <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/188770">generally available</a> in GitLab 18.0. Feature flag <code>hide_merge_requests_from_banned_users</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab administrators can ban and unban users.
+You should ban a user when you want to block them and hide their activity from the instance.</p>
+<p>A banned user:</p>
+<ul>
+<li>Cannot sign in or access any repositories.</li>
+<li>Any associated projects, issues, merge requests, or comments are hidden.</li>
+<li>Cannot use <a href="../user/project/integrations/gitlab_slack_application.md#slash-commands">slash commands in Slack</a>.</li>
+<li>Does not occupy a <a href="../subscriptions/manage_users_and_seats.md#billable-users">seat</a>.</li>
+</ul>
+<h3>Ban a user</h3>
+<p>To block a user and hide their contributions, administrators can ban the user.</p>
+<p>To ban a user:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>Next to the member you want to ban, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>From the dropdown list, select <strong>Ban member</strong>.</li>
+</ol>
+<h3>Unban a user</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Filter users by state <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/238183">introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To unban a user:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>In the search box, filter by <strong>State=Banned</strong> and press <kbd>Enter</kbd>.</li>
+<li>Next to the member you want to ban, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>From the dropdown list, select <strong>Unban member</strong>.</li>
+</ol>
+<p>The user's state is set to active and they consume a
+<a href="../subscriptions/manage_users_and_seats.md#billable-users">seat</a>.</p>
+<h2>Delete a user</h2>
+<p>Use the <strong>Admin</strong> area to delete users.</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>For the user you want to delete, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), then <strong>Delete user</strong>.</li>
+<li>Type the username.</li>
+<li>Select <strong>Delete user</strong>.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>You can only delete a user if there are inherited or direct owners of a group. You cannot delete a user if they are the only group owner.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>You can also delete a user and their contributions, such as merge requests, issues, and groups of which they are the only group owner.</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>For the user you want to delete, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), then <strong>Delete user and contributions</strong>.</li>
+<li>Type the username.</li>
+<li>Select <strong>Delete user and contributions</strong>.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Before 15.1, additionally groups of which deleted user were the only owner among direct members were deleted.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Trust and untrust users</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/132402">Introduced</a> in GitLab 16.5.</li>
+<li>Filter users by state <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/238183">introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can trust and untrust users from the <strong>Admin</strong> area.</p>
+<p>By default, a user is not trusted and is blocked from creating issues, notes, and snippets considered to be spam. When you trust a user, they can create issues, notes, and snippets without being blocked.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must be an administrator.</li>
+</ul>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Trust a user" &gt;}}</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>Select a user.</li>
+<li>From the <strong>User administration</strong> dropdown list, select <strong>Trust user</strong>.</li>
+<li>On the confirmation dialog, select <strong>Trust user</strong>.</li>
+</ol>
+<p>The user is trusted.</p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Untrust a user" &gt;}}</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Overview</strong> &gt; <strong>Users</strong>.</li>
+<li>In the search box, filter by <strong>State=Trusted</strong> and press <kbd>Enter</kbd>.</li>
+<li>Select a user.</li>
+<li>From the <strong>User administration</strong> dropdown list, select <strong>Untrust user</strong>.</li>
+<li>On the confirmation dialog, select <strong>Untrust user</strong>.</li>
+</ol>
+<p>The user is untrusted.</p>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h2>Troubleshooting</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When moderating users, you may need to perform bulk actions on them based on certain conditions. The following rails console scripts show some examples of this. You may <a href="operations/rails_console.md#starting-a-rails-console-session">start a rails console session</a> and use scripts similar to the following:</p>
+<h3>Deactivate users that have no recent activity</h3>
+<p>Administrators can deactivate users that have no recent activity.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Commands that change data can cause damage if not run correctly or under the right conditions. Always run commands in a test environment first and have a backup instance ready to restore.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<pre><code class="language-ruby">days_inactive = 90
+inactive_users = User.active.where(&quot;last_activity_on &lt;= ?&quot;, days_inactive.days.ago)
+
+inactive_users.each do |user|
+    puts &quot;user '#{user.username}': #{user.last_activity_on}&quot;
+    user.deactivate!
+end
+</code></pre>
+<h3>Block users that have no recent activity</h3>
+<p>Administrators can block users that have no recent activity.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Commands that change data can cause damage if not run correctly or under the right conditions. Always run commands in a test environment first and have a backup instance ready to restore.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<pre><code class="language-ruby">days_inactive = 90
+inactive_users = User.active.where(&quot;last_activity_on &lt;= ?&quot;, days_inactive.days.ago)
+
+inactive_users.each do |user|
+    puts &quot;user '#{user.username}': #{user.last_activity_on}&quot;
+    user.block!
+end
+</code></pre>
+<h3>Block or delete users that have no projects or groups</h3>
+<p>Administrators can block or delete users that have no projects or groups.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Commands that change data can cause damage if not run correctly or under the right conditions. Always run commands in a test environment first and have a backup instance ready to restore.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<pre><code class="language-ruby">users = User.where('id NOT IN (select distinct(user_id) from project_authorizations)')
+
+# How many users are removed?
+users.count
+
+# If that count looks sane:
+
+# You can either block the users:
+users.each { |user|  user.blocked? ? nil  : user.block! }
+
+# Or you can delete them:
+  # need 'current user' (your user) for auditing purposes
+current_user = User.find_by(username: '&lt;your username&gt;')
+
+users.each do |user|
+  DeleteUserWorker.perform_async(current_user.id, user.id)
+end
+</code></pre></code></pre>
+</body>
+</html>

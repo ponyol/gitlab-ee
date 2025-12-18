@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Error: `HTTP Basic: Access denied. If a password was provided for Git authentication ...`</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Authentication
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+gitlab_dedicated: yes
+title: Troubleshooting two-factor authentication</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<h2>Error: <code>HTTP Basic: Access denied. If a password was provided for Git authentication ...</code></h2>
+<p>When making a request, you might get an error that states:</p>
+<pre><code class="language-plaintext">HTTP Basic: Access denied. If a password was provided for Git authentication,
+the password was incorrect or you're required to use a token instead of a password.
+If a token was provided, it was either incorrect, expired, or improperly scoped.
+</code></pre>
+<p>This error occurs when:</p>
+<ul>
+<li>You have enabled 2FA and attempted to authenticate with a username and password.</li>
+<li>You have not enabled 2FA and attempted to authenticate with an incorrect username or password.</li>
+<li>You have not enabled 2FA and the <a href="../../../security/two_factor_authentication.md#enforce-2fa-for-all-users">enforce 2FA for all users</a> setting is active.</li>
+<li>You have not enabled 2FA and the <a href="../../../administration/settings/sign_in_restrictions.md#password-authentication-enabled">password authentication enabled for Git over HTTP(S)</a>
+  setting is not active.</li>
+</ul>
+<p>To resolve this error:</p>
+<ul>
+<li>Use a <a href="../personal_access_tokens.html">personal access token</a> with the correct scopes:</li>
+<li>For Git requests over HTTP(S): <code>read_repository</code> or <code>write_repository</code></li>
+<li>For <a href="../../packages/container_registry/authenticate_with_container_registry.html">GitLab container registry</a>
+  requests: <code>read_registry</code> or <code>write_registry</code></li>
+<li>For <a href="../../packages/dependency_proxy/_index.md#authenticate-with-the-dependency-proxy-for-container-images">dependency proxy</a>
+  requests: <code>read_registry</code> and <code>write_registry</code></li>
+<li>If you configured LDAP, use an <a href="../../../administration/auth/ldap/_index.html">LDAP password</a>.</li>
+<li>Use an <a href="two_factor_authentication.md#oauth-credential-helpers">OAuth credential helper</a>.</li>
+</ul>
+<h2>Error: <code>invalid pin code</code></h2>
+<p>An <code>invalid pin code</code> error can indicate that there is a time sync issue between the authentication
+application and the GitLab instance itself.</p>
+<p>To resolve this issue, turn on time synchronization for the device that generates your 2FA codes.</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Android" &gt;}}</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Date &amp; time</strong>.</li>
+<li>Turn on <strong>Set time automatically</strong>. If the setting is already on, turn it off, wait a few seconds, and turn it on again.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="iOS" &gt;}}</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>General</strong> &gt; <strong>Date &amp; Time</strong>.</li>
+<li>Turn on <strong>Set Automatically</strong>. If the setting is already on, turn it off, wait a few seconds, and turn it on again.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h2>Error: <code>Permission denied (publickey)</code> when generating recovery codes</h2>
+<p>You might get an error that states <code>Permission denied (publickey)</code>.</p>
+<p>This issue occurs if you are using a non-default SSH key pair file path and attempt to
+<a href="two_factor_authentication_troubleshooting.md#regenerate-recovery-codes-with-ssh">generate recovery codes using SSH</a>.</p>
+<p>To resolve this, <a href="../../ssh.md#configure-ssh-to-point-to-a-different-directory">configure SSH to point to a different directory</a> using <code>ssh-agent</code>.</p>
+<h2>Email OTP troubleshooting</h2>
+<h3>Didn't receive email verification code or code has expired</h3>
+<p>Check your spam folder. On GitLab.com, emails are sent from <code>gitlab@mg.gitlab.com</code>
+and can be <a href="https://handbook.gitlab.com/handbook/security/corporate/systems/google/mail/verification/#verify-an-email-from-gitlabcom-is-genuine">verified as genuine</a>.</p>
+<p>If your code expires, you can request a new code. From the sign-in page, select <strong>Resend code</strong>.</p>
+<h3>Unable to access your email address</h3>
+<p>If you cannot access your primary email address, try a verified secondary email address associated
+to your account. From the sign-in page, select <strong>Send a code to another address associated with
+this account</strong>.</p>
+<p>On GitLab Self-Managed, if you are unable to access your primary or secondary email addresses,
+contact your GitLab administrator.</p>
+<h2>Recovery options and 2FA reset</h2>
+<h3>Use a recovery code</h3>
+<p>When you enabled a one-time password (OTP) authenticator, GitLab provided you with a series of
+<a href="two_factor_authentication.md#recovery-codes">recovery codes</a>.
+You can use these codes to sign in to your account.</p>
+<p>To use a recovery code:</p>
+<ol>
+<li>On the GitLab sign-in page, enter your username or email, and password.</li>
+<li>When prompted for a two-factor code, enter a recovery code.</li>
+</ol>
+<p>After you use a recovery code, you cannot use the same code again.
+Your other recovery codes remain valid.</p>
+<h3>Regenerate recovery codes with the UI</h3>
+<p>If you can still access your account, you can regenerate your recovery codes through your user settings.</p>
+<p>To regenerate recovery codes with the UI:</p>
+<ol>
+<li>Access your <a href="../_index.md#access-your-user-settings"><strong>User settings</strong></a>.</li>
+<li>Select <strong>Account</strong> &gt; <strong>Two-Factor Authentication (2FA)</strong>.</li>
+<li>Select <strong>Manage two-factor authentication</strong>.</li>
+<li>In the <strong>Disable two-factor authentication</strong> section, select <strong>Regenerate recovery codes</strong>.</li>
+<li>In the dialog, enter your current password and select <strong>Regenerate recovery codes</strong>.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Every time you regenerate 2FA recovery codes, save them. You can't use any previously created 2FA codes.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Regenerate recovery codes with SSH</h3>
+<p>If you added an SSH key to your GitLab account, you can regenerate your recovery codes with SSH:</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<ul>
+<li>You cannot use <code>gitlab-sshd</code> to regenerate recovery codes.</li>
+</ul>
+<p>{{&lt; /alert &gt;}}</p>
+<p>To regenerate recovery codes with SSH:</p>
+<ol>
+<li>In a terminal, run:</li>
+</ol>
+<p><code>shell
+   ssh git@gitlab.com 2fa_recovery_codes</code></p>
+<p>On GitLab Self-Managed instances, replace <code>gitlab.com</code> with the GitLab server hostname (<code>gitlab.example.com</code>).</p>
+<ol>
+<li>On the confirmation message, enter <code>yes</code>.</li>
+<li>Save the recovery codes that GitLab generates. Your previous recovery codes are no longer valid.</li>
+<li>On the sign-in page, enter your username or email, and password.</li>
+<li>When prompted for a two-factor code, enter one of your new recovery codes.</li>
+</ol>
+<p>After signing in, immediately set up 2FA with a new device.</p>
+<h3>Restore 2FA codes from authenticator backup</h3>
+<p>In addition to the GitLab recovery codes, many authenticator apps offer their own backup and
+recovery methods. If you lose your device, you may be able to restore your 2FA codes by
+logging into your authenticator app on a new device, provided you enabled backup features
+beforehand.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<ul>
+<li>You must enable your authenticator backup features before you lose access to your device.</li>
+<li>GitLab Support cannot assist with recovery issues related to third-party authenticator apps.</li>
+<li>GitLab recommends using recovery codes as your primary recovery method. Make sure you save
+  your recovery codes when you enable 2FA.</li>
+</ul>
+<p>{{&lt; /alert &gt;}}</p>
+<p>For more information, see the documentation for your specific authenticator app.
+Documentation for common authenticators is available through the following locations:</p>
+<ul>
+<li><a href="https://support.microsoft.com/en-us/account-billing/restore-account-credentials-from-microsoft-authenticator-ce53096e-1e1c-4840-9e32-1618bc33cd43">Microsoft Authenticator</a></li>
+<li><a href="https://support.google.com/accounts/answer/1066447">Google Authenticator</a></li>
+<li><a href="https://www.twilio.com/en-us/blog/how-the-authy-two-factor-backups-work">Authy</a></li>
+<li><a href="https://support.1password.com/recovery-codes/?mac#recover-your-account">1Password</a></li>
+</ul>
+<h3>Reset 2FA on your account</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>If the previous recovery options do not work, you can create a support request to disable 2FA for
+your account. This service is only available for accounts with a GitLab.com subscription.</p>
+<p>GitLab Support cannot reset 2FA for Free accounts. If you cannot recover your 2FA method, you will
+be permanently locked out of your account and must create a new one. For more information, see the
+<a href="https://about.gitlab.com/blog/2020/08/04/gitlab-support-no-longer-processing-mfa-resets-for-free-users/">blog announcement</a>.</p>
+<p>To create a support request:</p>
+<ol>
+<li>Go to <a href="https://support.gitlab.com">GitLab Support</a>.</li>
+<li>Select <strong>Submit a Ticket</strong>.</li>
+<li>Sign in with your GitLab Support account.
+   Your support account is different from your GitLab account and is not impacted by your 2FA issue.</li>
+<li>In the issue dropdown list, select <strong>GitLab.com user accounts and login issues</strong>.</li>
+<li>Complete the fields in the support form.</li>
+<li>Select <strong>Submit</strong>.</li>
+</ol>
+<p>After you regain access to your account, re-enable 2FA as soon as possible to keep your account secure.</p>
+<h3>Reset 2FA for enterprise users</h3>
+<p>If you are a top-level group Owner on a paid plan, you can disable 2FA for enterprise users.
+For more information, see <a href="../../../security/two_factor_authentication.md#enterprise-users">disable 2FA for enterprise users</a>.</p></code></pre>
+</body>
+</html>

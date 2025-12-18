@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Available options</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: none
+group: unassigned
+info: For assistance with this Style Guide page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments-to-other-projects-and-subjects.
+description: Writing styles, markup, formatting, and other standards for GitLab Documentation.
+title: Product availability details</p>
+<hr />
+<p>Product availability details provide information about a feature.</p>
+<ul>
+<li>If the details apply to the whole page, place them at the top
+  of the page, but after the front matter.</li>
+<li>If they apply to a specific section, place the details under the applicable
+  section titles.</li>
+</ul>
+<p>Availability details include the tier, add-on (if applicable), offering, status, and history.</p>
+<p>The Markdown for availability details should look like the following:</p>
+<pre><code class="language-markdown">title: 'Topic title'
+---
+
+{{&lt;/* details */&gt;}}
+
+- Tier: Free, Premium, Ultimate
+- Add-on: GitLab Duo Enterprise
+- Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated
+- Status: Experiment
+
+{{&lt;/* /details */&gt;}}
+
+{{&lt;/* history */&gt;}}
+
+- [Introduced](https://link-to-issue) in GitLab 16.3.
+- Updated in GitLab 16.4.
+
+{{&lt;/* /history */&gt;}}
+</code></pre>
+<h2>Available options</h2>
+<p>Use the following text for the tier, add-on, offering, status, and version history.</p>
+<h3>Tier</h3>
+<p>For tier, choose one:</p>
+<ul>
+<li><code>Free, Premium, Ultimate</code></li>
+<li><code>Premium, Ultimate</code></li>
+<li><code>Ultimate</code></li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>GitLab Dedicated and GitLab Dedicated for Government always include an Ultimate subscription.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Add-ons</h3>
+<p>For add-ons, the possibilities are:</p>
+<pre><code class="language-markdown">- Add-on: GitLab Duo Core, Pro, or Enterprise
+- Add-on: GitLab Duo Pro or Enterprise
+- Add-on: GitLab Duo Enterprise
+- Add-on: GitLab Duo with Amazon Q
+</code></pre>
+<h3>Offering</h3>
+<p>For offering, use any combination of these entries, in this order, separated by commas:</p>
+<ul>
+<li><code>GitLab.com</code></li>
+<li><code>GitLab Self-Managed</code></li>
+<li><code>GitLab Dedicated</code></li>
+<li><code>GitLab Dedicated for Government</code></li>
+</ul>
+<p>For example:</p>
+<ul>
+<li><code>GitLab.com</code></li>
+<li><code>GitLab.com, GitLab Self-Managed</code></li>
+<li><code>GitLab Self-Managed</code></li>
+<li><code>GitLab Self-Managed, GitLab Dedicated</code></li>
+<li><code>GitLab Dedicated, GitLab Dedicated for Government</code></li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If you have reviewed a page and it specifically doesn't apply to GitLab Dedicated,
+<a href="../metadata.md#indicate-gitlab-dedicated-support">assign metadata</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Status</h3>
+<p>For status, choose one:</p>
+<ul>
+<li><code>Beta</code></li>
+<li><code>Experiment</code></li>
+<li><code>Limited availability</code></li>
+</ul>
+<p>Generally available features should not have a status.</p>
+<h3>GitLab Duo with self-hosted models</h3>
+<p>For GitLab Duo features available with self-hosted models, use:</p>
+<pre><code class="language-markdown">{{&lt;/* collapsible title=&quot;Model information&quot; */&gt;}}
+
+- Available on [GitLab Duo with self-hosted models](&lt;relative_link_to_gitlab_duo_self_hosted_documentation&gt;)
+
+{{&lt;/* /collapsible */&gt;}}
+</code></pre>
+<p>Avoid stating that the feature is not available on GitLab Duo with self-hosted models.
+If you must state that a feature is not available, use <code>Not available on GitLab Duo with self-hosted models</code>. Do not include
+a link to the documentation.</p>
+<h3>LLMs</h3>
+<p>If you need to document the LLMs that the GitLab Duo feature uses:</p>
+<ul>
+<li>Include a link to the LLM.</li>
+<li>Use a separate entry if the feature uses different LLMs for:</li>
+<li>Code generation and code completion.</li>
+<li>GitLab Duo with Amazon Q.</li>
+</ul>
+<p>For example:</p>
+<pre><code class="language-markdown">{{&lt;/* collapsible title=&quot;Model information&quot; */&gt;}}
+
+- LLMs for code completion: Anthropic [Claude 4.0 Sonnet](https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-4)
+- LLMs for code generation: Anthropic [Claude 3.7 Sonnet](https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-3-7-sonnet)
+- LLM for Amazon Q: Amazon Q Developer
+
+{{&lt;/* /collapsible */&gt;}}
+</code></pre>
+<h3>History</h3>
+<p>The documentation site uses Hugo shortcodes to render the version history,
+for example:</p>
+<pre><code class="language-markdown">{{&lt;/* history */&gt;}}
+
+- [Introduced](https://issue-link) in GitLab 16.3.
+- [Changed](https://issue-link) in GitLab 16.4.
+
+{{&lt;/* /history */&gt;}}
+</code></pre>
+<p>In addition:</p>
+<ul>
+<li>Ensure that history notes are listed after the details (if any), and immediately
+  after the heading.</li>
+<li>Ensure that the output generates properly.</li>
+<li>Ensure the version history begins with <code>-</code>.</li>
+<li>If possible, include a link to the related issue. If there is no related issue, link to a merge request, or epic.</li>
+<li>Do not link to <a href="_index.md#confidential-or-restricted-access-links">confidential issues</a>.</li>
+<li>Do not link to the pricing page.</li>
+<li>Do not include the subscription tier, unless it's changing from one tier to another.</li>
+</ul>
+<h4>Updated features</h4>
+<p>For features that have changed or been updated, add a new list item.
+Start the sentence with the feature name or a gerund.</p>
+<p>For example:</p>
+<pre><code class="language-markdown">- [Introduced](https://issue-link) in GitLab 13.1.
+- Creating an issue from an issue board [introduced](https://issue-link) in GitLab 14.1.
+</code></pre>
+<p>Or:</p>
+<pre><code class="language-markdown">- [Introduced](https://issue-link) in GitLab 13.1.
+- Notifications for expiring tokens [introduced](https://issue-link) in GitLab 14.3.
+</code></pre>
+<h4>Moved subscription tiers</h4>
+<p>For features that move to another subscription tier, use <code>moved</code>:</p>
+<pre><code class="language-markdown">- [Moved](https://issue-link) from GitLab Ultimate to GitLab Premium in 11.8.
+- [Moved](https://issue-link) from GitLab Premium to GitLab Free in 12.0.
+</code></pre>
+<h4>Changed feature status</h4>
+<p>For a feature status change from experiment to beta, use <code>changed</code>:</p>
+<pre><code class="language-markdown">- [Introduced](https://issue-link) as an [experiment](../../policy/development_stages_support.md) in GitLab 15.7.
+- [Changed](https://issue-link) from experiment to beta in GitLab 16.0.
+</code></pre>
+<p>For a feature status change from beta to limited availability, use <code>changed</code>:</p>
+<pre><code class="language-markdown">- [Changed](https://issue-link) from experiment to beta in GitLab 16.0.
+- [Changed](https://issue-link) from beta to limited availability in GitLab 16.3.
+</code></pre>
+<p>For a change to generally available, use:</p>
+<pre><code class="language-markdown">- [Generally available](https://issue-link) in GitLab 16.10.
+</code></pre>
+<h4>Features made available as part of a program</h4>
+<p>For features made available to users as part of a program, add a new list item and link to the program.</p>
+<pre><code class="language-markdown">- [Introduced](https://issue-link) in GitLab 15.1.
+- Merged results pipelines [added](https://issue-link) to the [Registration Features Program](https://page-link) in GitLab 16.7.
+</code></pre>
+<h4>Features behind feature flags</h4>
+<p>For features introduced behind feature flags, add details about the feature flag. For more information, see <a href="../feature_flags.html">Document features deployed behind feature flags</a>.</p>
+<h4>Removing versions</h4>
+<p>Remove history items and inline text that refer to unsupported versions.</p>
+<p>GitLab supports the current major version and two previous major versions.
+For example, if 18.0 is the current major version, all major and minor releases of
+GitLab 18.0, 17.0, and 16.0 are supported.</p>
+<p>For the list of current supported versions, see <a href="https://about.gitlab.com/support/statement-of-support/#version-support">Version support</a>.</p>
+<p>Remove information about <a href="../feature_flags.html">features behind feature flags</a>
+only if all events related to the feature flag happened in unsupported versions.
+If the flag hasn't been removed, readers should know when it was introduced.</p>
+<h4>Timing version removals</h4>
+<p>When a new major version is about to be released, create merge
+requests to remove mentions of the last unsupported version. Only merge
+them during the milestone of the new major release.</p>
+<p>For example, if GitLab 19.0 is the next major upcoming release:</p>
+<ul>
+<li>The supported versions are 18, 17, and 16.</li>
+<li>When GitLab 19.0 is released, GitLab 16 is no longer supported.</li>
+</ul>
+<p>Create merge requests to remove mentions of GitLab 16, but only
+merge them during the 19.0 milestone, after 18.11 is released.</p>
+<h2>When to add availability details</h2>
+<p>Assign availability details under:</p>
+<ul>
+<li>Most H1 topic titles, except the pages under <code>doc/development/*</code> and <code>doc/solutions/*</code>.</li>
+<li>Topic titles for features that have different availability details than the H1 title.</li>
+</ul>
+<p>The H1 availability details should be the details that apply to the widest availability
+for the features on the page. For example:</p>
+<ul>
+<li>If some sections apply to Premium and Ultimate, and others apply to just Ultimate,
+  the H1 <code>Tier:</code> should be <code>Premium, Ultimate</code>.</li>
+<li>If some sections apply to all instances, and others apply to only <code>GitLab Self-Managed</code>,
+  the <code>Offering:</code> should be <code>GitLab.com, GitLab Self-Managed, GitLab Dedicated, GitLab Dedicated for Government</code>.</li>
+<li>If some sections are beta, and others are experiment, the H1 <code>Status:</code> should be <code>Beta</code>.
+  If some sections are beta, and others are generally available, then there should
+  be no <code>Status:</code> for the H1.</li>
+</ul>
+<h2>When not to add availability details</h2>
+<p>Do not assign availability details to the following pages:</p>
+<ul>
+<li>Tutorials.</li>
+<li>Pages that compare features from different tiers.</li>
+<li>Pages in the <code>/development</code> folder. These pages are automatically assigned a <code>Contribute</code> badge.</li>
+<li>Pages in the <code>/solutions</code> folder. These pages are automatically assigned a <code>Solutions</code> badge.</li>
+</ul>
+<p>Also, do not assign them when a feature does not have one obvious subscription tier or offering.
+For example, if a feature applies to one tier for GitLab.com and a different availability for GitLab Self-Managed.</p>
+<p>In this case, do any or all of the following:</p>
+<ul>
+<li>Use <a href="../metadata.md#indicate-lack-of-product-availability-details">metadata</a>
+  to indicate that the page has been reviewed and does not need availability details.</li>
+<li>Use a <a href="_index.md#note"><code>type="note"</code></a> alert box to describe the availability details.</li>
+<li>Add availability details under other topic titles where this information makes more sense.</li>
+<li>Do not add availability details under the H1.</li>
+</ul>
+<h3>Duplicating tier, offering, or status on subheadings</h3>
+<p>If a subheading has the same tier, offering, or status as its parent
+topic, you don't need to repeat the information in the subheading's
+badge.</p>
+<p>For example, subheadings that have <code>Tier: Premium, Ultimate</code> and <code>Offering: GitLab.com</code>
+don't need to duplicate the details if the page details match:</p>
+<pre><code class="language-markdown">title: My title
+---
+
+{{&lt;/* details */&gt;}}
+
+- Tier: Premium, Ultimate
+- Offering: GitLab.com
+
+{{&lt;/* /details */&gt;}}
+</code></pre>
+<p>Any lower-level heading that applies to a different tier but same offering would be:</p>
+<pre><code class="language-markdown">## My title
+
+{{&lt;/* details */&gt;}}
+
+- Tier: Ultimate
+
+{{&lt;/* /details */&gt;}}
+</code></pre>
+<h2>Inline availability details</h2>
+<p>Generally, you should not add availability details inline with other text.
+The single source of truth for a feature should be the topic where the
+functionality is described.</p>
+<p>If you do need to mention an availability details inline, write it in plain text.
+For example, for an API topic:</p>
+<pre><code class="language-markdown">IDs of the users to assign the issue to. Ultimate only.
+</code></pre>
+<p>For more examples, see the <a href="../restful_api_styleguide.html">REST API style guide</a>.</p>
+<h2>Inline history text</h2>
+<p>If you're adding content to an existing topic, add historical information
+inline with the existing text. If possible, include a link to the related issue,
+merge request, or epic. For example:</p>
+<pre><code class="language-markdown">The voting strategy [in GitLab 13.4 and later](https://issue-link) requires the primary and secondary
+voters to agree.
+</code></pre></code></pre>
+</body>
+</html>

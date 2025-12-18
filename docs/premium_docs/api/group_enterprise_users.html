@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># List all enterprise users</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Authentication
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Group enterprise users API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use these API endpoints to interact with enterprise users accounts. For more information, see <a href="../user/enterprise_user/_index.html">enterprise users</a>.</p>
+<p>These API endpoints only work for top-level groups. Users do not have to be a member of the group.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role in the top-level group.</li>
+</ul>
+<h2>List all enterprise users</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/438366">Introduced</a> in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Lists all enterprise users for a given top-level group.</p>
+<p>Use the <code>page</code> and <code>per_page</code> <a href="rest/_index.md#offset-based-pagination">pagination parameters</a> to filter the results.</p>
+<pre><code class="language-plaintext">GET /groups/:id/enterprise_users
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;">integer or string</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a top-level group.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>username</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Return a user with a given username.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>search</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Return users with a matching name, email, or username. Use partial values to increase results.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>active</code></td>
+<td style="text-align: left;">boolean</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Return only active users.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>blocked</code></td>
+<td style="text-align: left;">boolean</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Return only blocked users.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>created_after</code></td>
+<td style="text-align: left;">datetime</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Return users created after the specified time. Format: ISO 8601 (<code>YYYY-MM-DDTHH:MM:SSZ</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>created_before</code></td>
+<td style="text-align: left;">datetime</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Return users created before the specified time. Format: ISO 8601 (<code>YYYY-MM-DDTHH:MM:SSZ</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>two_factor</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Return users based on their two-factor authentication (2FA) enrollment status. Possible values: <code>enabled</code>, <code>disabled</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/groups/:id/enterprise_users&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 66,
+    &quot;username&quot;: &quot;user22&quot;,
+    &quot;name&quot;: &quot;Sidney Jones22&quot;,
+    &quot;state&quot;: &quot;active&quot;,
+    &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/xxx?s=80&amp;d=identicon&quot;,
+    &quot;web_url&quot;: &quot;http://my.gitlab.com/user22&quot;,
+    &quot;created_at&quot;: &quot;2021-09-10T12:48:22.381Z&quot;,
+    &quot;bio&quot;: &quot;&quot;,
+    &quot;location&quot;: null,
+    &quot;public_email&quot;: &quot;&quot;,
+    &quot;linkedin&quot;: &quot;&quot;,
+    &quot;twitter&quot;: &quot;&quot;,
+    &quot;website_url&quot;: &quot;&quot;,
+    &quot;organization&quot;: null,
+    &quot;job_title&quot;: &quot;&quot;,
+    &quot;pronouns&quot;: null,
+    &quot;bot&quot;: false,
+    &quot;work_information&quot;: null,
+    &quot;followers&quot;: 0,
+    &quot;following&quot;: 0,
+    &quot;local_time&quot;: null,
+    &quot;last_sign_in_at&quot;: null,
+    &quot;confirmed_at&quot;: &quot;2021-09-10T12:48:22.330Z&quot;,
+    &quot;last_activity_on&quot;: null,
+    &quot;email&quot;: &quot;user22@example.org&quot;,
+    &quot;theme_id&quot;: 1,
+    &quot;color_scheme_id&quot;: 1,
+    &quot;projects_limit&quot;: 100000,
+    &quot;current_sign_in_at&quot;: null,
+    &quot;identities&quot;: [
+      {
+        &quot;provider&quot;: &quot;group_saml&quot;,
+        &quot;extern_uid&quot;: &quot;2435223452345&quot;,
+        &quot;saml_provider_id&quot;: 1
+      }
+    ],
+    &quot;can_create_group&quot;: true,
+    &quot;can_create_project&quot;: true,
+    &quot;two_factor_enabled&quot;: false,
+    &quot;external&quot;: false,
+    &quot;private_profile&quot;: false,
+    &quot;commit_email&quot;: &quot;user22@example.org&quot;,
+    &quot;shared_runners_minutes_limit&quot;: null,
+    &quot;extra_shared_runners_minutes_limit&quot;: null,
+    &quot;scim_identities&quot;: [
+      {
+        &quot;extern_uid&quot;: &quot;2435223452345&quot;,
+        &quot;group_id&quot;: 1,
+        &quot;active&quot;: true
+      }
+    ]
+  },
+  ...
+]
+</code></pre>
+<h2>Get details on an enterprise user</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/176328">Introduced</a> in GitLab 17.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Gets details on a specified enterprise user.</p>
+<pre><code class="language-plaintext">GET /groups/:id/enterprise_users/:user_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;">integer or string</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a top-level group.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>user_id</code></td>
+<td style="text-align: left;">integer</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID of user account.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/groups/:id/enterprise_users/:user_id&quot;
+</code></pre>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 66,
+  &quot;username&quot;: &quot;user22&quot;,
+  &quot;name&quot;: &quot;Sidney Jones22&quot;,
+  &quot;state&quot;: &quot;active&quot;,
+  &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/xxx?s=80&amp;d=identicon&quot;,
+  &quot;web_url&quot;: &quot;http://my.gitlab.com/user22&quot;,
+  &quot;created_at&quot;: &quot;2021-09-10T12:48:22.381Z&quot;,
+  &quot;bio&quot;: &quot;&quot;,
+  &quot;location&quot;: null,
+  &quot;public_email&quot;: &quot;&quot;,
+  &quot;linkedin&quot;: &quot;&quot;,
+  &quot;twitter&quot;: &quot;&quot;,
+  &quot;website_url&quot;: &quot;&quot;,
+  &quot;organization&quot;: null,
+  &quot;job_title&quot;: &quot;&quot;,
+  &quot;pronouns&quot;: null,
+  &quot;bot&quot;: false,
+  &quot;work_information&quot;: null,
+  &quot;followers&quot;: 0,
+  &quot;following&quot;: 0,
+  &quot;local_time&quot;: null,
+  &quot;last_sign_in_at&quot;: null,
+  &quot;confirmed_at&quot;: &quot;2021-09-10T12:48:22.330Z&quot;,
+  &quot;last_activity_on&quot;: null,
+  &quot;email&quot;: &quot;user22@example.org&quot;,
+  &quot;theme_id&quot;: 1,
+  &quot;color_scheme_id&quot;: 1,
+  &quot;projects_limit&quot;: 100000,
+  &quot;current_sign_in_at&quot;: null,
+  &quot;identities&quot;: [
+    {
+      &quot;provider&quot;: &quot;group_saml&quot;,
+      &quot;extern_uid&quot;: &quot;2435223452345&quot;,
+      &quot;saml_provider_id&quot;: 1
+    }
+  ],
+  &quot;can_create_group&quot;: true,
+  &quot;can_create_project&quot;: true,
+  &quot;two_factor_enabled&quot;: false,
+  &quot;external&quot;: false,
+  &quot;private_profile&quot;: false,
+  &quot;commit_email&quot;: &quot;user22@example.org&quot;,
+  &quot;shared_runners_minutes_limit&quot;: null,
+  &quot;extra_shared_runners_minutes_limit&quot;: null,
+  &quot;scim_identities&quot;: [
+    {
+      &quot;extern_uid&quot;: &quot;2435223452345&quot;,
+      &quot;group_id&quot;: 1,
+      &quot;active&quot;: true
+    }
+  ]
+}
+</code></pre>
+<h2>Modify an enterprise user</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/199248">Introduced</a> in GitLab 18.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Updates attributes for a specified enterprise user.</p>
+<pre><code class="language-plaintext">PATCH /groups/:id/enterprise_users/:user_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;">integer or string</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a top-level group.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>user_id</code></td>
+<td style="text-align: left;">integer</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID of user account.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Name of the user account.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>email</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">Email address of the user account. Must be from a verified <a href="../user/enterprise_user/_index.md#manage-group-domains">group domain</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request PATCH --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; --data &quot;email=new-email@example.com&quot; --data &quot;name=New name&quot; &quot;https://gitlab.example.com/api/v4/groups/:id/enterprise_users/:user_id&quot;
+</code></pre>
+<p>If successful, returns <code>200 OK</code>.</p>
+<p>Example of successful response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 66,
+  &quot;username&quot;: &quot;user22&quot;,
+  &quot;name&quot;: &quot;New name&quot;,
+  &quot;state&quot;: &quot;active&quot;,
+  &quot;avatar_url&quot;: &quot;https://www.gravatar.com/avatar/xxx?s=80&amp;d=identicon&quot;,
+  &quot;web_url&quot;: &quot;http://my.gitlab.com/user22&quot;,
+  &quot;created_at&quot;: &quot;2021-09-10T12:48:22.381Z&quot;,
+  &quot;bio&quot;: &quot;&quot;,
+  &quot;location&quot;: null,
+  &quot;public_email&quot;: &quot;&quot;,
+  &quot;linkedin&quot;: &quot;&quot;,
+  &quot;twitter&quot;: &quot;&quot;,
+  &quot;website_url&quot;: &quot;&quot;,
+  &quot;organization&quot;: null,
+  &quot;job_title&quot;: &quot;&quot;,
+  &quot;pronouns&quot;: null,
+  &quot;bot&quot;: false,
+  &quot;work_information&quot;: null,
+  &quot;followers&quot;: 0,
+  &quot;following&quot;: 0,
+  &quot;local_time&quot;: null,
+  &quot;last_sign_in_at&quot;: null,
+  &quot;confirmed_at&quot;: &quot;2021-09-10T12:48:22.330Z&quot;,
+  &quot;last_activity_on&quot;: null,
+  &quot;email&quot;: &quot;new-email@example.com&quot;,
+  &quot;theme_id&quot;: 1,
+  &quot;color_scheme_id&quot;: 1,
+  &quot;projects_limit&quot;: 100000,
+  &quot;current_sign_in_at&quot;: null,
+  &quot;identities&quot;: [
+    {
+      &quot;provider&quot;: &quot;group_saml&quot;,
+      &quot;extern_uid&quot;: &quot;2435223452345&quot;,
+      &quot;saml_provider_id&quot;: 1
+    }
+  ],
+  &quot;can_create_group&quot;: true,
+  &quot;can_create_project&quot;: true,
+  &quot;two_factor_enabled&quot;: false,
+  &quot;external&quot;: false,
+  &quot;private_profile&quot;: false,
+  &quot;commit_email&quot;: &quot;user22@example.org&quot;,
+  &quot;shared_runners_minutes_limit&quot;: null,
+  &quot;extra_shared_runners_minutes_limit&quot;: null,
+  &quot;scim_identities&quot;: [
+    {
+      &quot;extern_uid&quot;: &quot;2435223452345&quot;,
+      &quot;group_id&quot;: 1,
+      &quot;active&quot;: true
+    }
+  ]
+}
+</code></pre>
+<p>Other possible responses:</p>
+<ul>
+<li><code>400 Bad Request</code>: Validation errors.</li>
+<li><code>403 Forbidden</code>: The authenticated user is not an Owner.</li>
+<li><code>404 Not found</code>: User can not be found.</li>
+</ul>
+<h2>Delete an enterprise user</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/199646">Introduced</a> in GitLab 18.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Deletes the specified enterprise user.</p>
+<pre><code class="language-plaintext">DELETE /groups/:id/enterprise_users/:user_id
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;">integer or string</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a top-level group.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>user_id</code></td>
+<td style="text-align: left;">integer</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID of user account.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hard_delete</code></td>
+<td style="text-align: left;">boolean</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">If <code>false</code>, deletes the user and moves their contributions <a href="../user/profile/account/delete_account.md#associated-records">to a system-wide "Ghost User"</a>. If <code>true</code>, deletes the user, their associated contributions, and any groups owned solely by the user. Default value: <code>false</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request DELETE --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/groups/:id/enterprise_users/:user_id&quot;
+</code></pre>
+<p>If successful, returns <code>204 No content</code>.</p>
+<p>Other possible responses:</p>
+<ul>
+<li><code>403 Forbidden</code>: The authenticated user is not an Owner.</li>
+<li><code>404 Not found</code>: The user can not be found.</li>
+<li><code>409 Conflict</code>: Can not remove a user who is the sole Owner of a group.</li>
+</ul>
+<h2>Disable two-factor authentication for an enterprise user</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/177943">Introduced</a> in GitLab 17.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Disables two-factor authentication (2FA) for a specified enterprise user.</p>
+<pre><code class="language-plaintext">PATCH /groups/:id/enterprise_users/:user_id/disable_two_factor
+</code></pre>
+<p>Supported attributes:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;">integer or string</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path</a> of a top-level group.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>user_id</code></td>
+<td style="text-align: left;">integer</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">ID of user account.</td>
+</tr>
+</tbody>
+</table>
+<p>Example request:</p>
+<pre><code class="language-shell">curl --request PATCH --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/groups/:id/enterprise_users/:user_id/disable_two_factor&quot;
+</code></pre>
+<p>If successful, returns <code>204 No content</code>.</p>
+<p>Other possible responses:</p>
+<ul>
+<li><code>400 Bad request</code>: 2FA is not enabled for the specified user.</li>
+<li><code>403 Forbidden</code>: The authenticated user is not an Owner.</li>
+<li><code>404 Not found</code>: User can not be found.</li>
+</ul></code></pre>
+</body>
+</html>

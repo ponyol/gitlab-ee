@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>remove_geo_site</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Removing secondary Geo sites</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p><strong>Secondary</strong> sites can be removed from the Geo cluster using the Geo administration page of the <strong>primary</strong> site. To remove a <strong>secondary</strong> site:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Geo</strong> &gt; <strong>Nodes</strong>.</li>
+<li>For the <strong>secondary</strong> site you want to remove, select <strong>Remove</strong>.</li>
+<li>Confirm by selecting <strong>Remove</strong> when the prompt appears.</li>
+</ol>
+<p>After the <strong>secondary</strong> site is removed from the Geo administration page, you must
+stop and uninstall this site. For each node on your secondary Geo site:</p>
+<ol>
+<li>Stop GitLab:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-ctl stop</code></p>
+<ol>
+<li>Uninstall GitLab:</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If GitLab data has to be cleaned from the instance as well, see how to <a href="https://docs.gitlab.com/omnibus/installation/#uninstall-the-linux-package-omnibus">uninstall the Linux package and all its data</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>```shell
+   # Stop gitlab and remove its supervision process
+   sudo gitlab-ctl uninstall</p>
+<p># Debian/Ubuntu
+   sudo dpkg --remove gitlab-ee</p>
+<p># Redhat/Centos
+   sudo rpm --erase gitlab-ee
+   ```</p>
+<p>When GitLab has been uninstalled from each node on the <strong>secondary</strong> site, the replication slot must be dropped from the <strong>primary</strong> site's database as follows:</p>
+<ol>
+<li>On the <strong>primary</strong> site's database node, start a PostgreSQL console session:</li>
+</ol>
+<p><code>shell
+   sudo gitlab-psql</code></p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Using <code>gitlab-rails dbconsole</code> does not work, because managing replication slots requires superuser permissions.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ol>
+<li>Find the name of the relevant replication slot. This is the slot that is specified with <code>--slot-name</code> when running the replicate command: <code>gitlab-ctl replicate-geo-database</code>.</li>
+</ol>
+<p><code>sql
+   SELECT * FROM pg_replication_slots;</code></p>
+<ol>
+<li>Remove the replication slot for the <strong>secondary</strong> site:</li>
+</ol>
+<p><code>sql
+   SELECT pg_drop_replication_slot('&lt;name_of_slot&gt;');</code></p></code></pre>
+</body>
+</html>

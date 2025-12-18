@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: GitLab Delivery
+group: Operate
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Update self-compiled instances with patch versions
+description: Update a single-node self-compiled instance with a patch version.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Update a self-compiled instance with a patch version.</p>
+<h2>Prerequisites</h2>
+<p>Before you update:</p>
+<ol>
+<li>You must <a href="plan_your_upgrade.html">read required information and perform required steps</a>.</li>
+<li><a href="../administration/backup_restore/_index.html">Back up</a> your self-compiled instance.</li>
+</ol>
+<h2>Update a self-compiled instance with a patch version</h2>
+<p>To update a self-compiled instance with a patch version:</p>
+<ol>
+<li>Consider <a href="../administration/maintenance_mode/_index.html">turning on maintenance mode</a> during the update.</li>
+<li>Pause <a href="plan_your_upgrade.md#pause-cicd-pipelines-and-jobs">running CI/CD pipelines and jobs</a>.</li>
+<li><a href="https://docs.gitlab.com/runner/install/">Upgrade GitLab Runner</a> to the same version as your target GitLab version.</li>
+<li>Update GitLab by following the instructions on this page.</li>
+</ol>
+<p>After you update:</p>
+<ol>
+<li>Unpause <a href="plan_your_upgrade.md#pause-cicd-pipelines-and-jobs">running CI/CD pipelines and jobs</a>.</li>
+<li>If enabled, <a href="../administration/maintenance_mode/_index.md#disable-maintenance-mode">turn off maintenance mode</a>.</li>
+<li>Run <a href="plan_your_upgrade.md#run-upgrade-health-checks">health checks</a>.</li>
+</ol>
+<h3>Stop GitLab server</h3>
+<p>To stop the GitLab server:</p>
+<pre><code class="language-shell"># For systems running systemd
+sudo systemctl stop gitlab.target
+
+# For systems running SysV init
+sudo service gitlab stop
+</code></pre>
+<h3>Get latest code for the stable branch</h3>
+<p>In the following commands, replace <code>LATEST_TAG</code> with the GitLab tag to update to. For example, <code>v8.0.3</code>.</p>
+<ol>
+<li>Check your current version:</li>
+</ol>
+<p><code>shell
+   cat VERSION</code></p>
+<ol>
+<li>Get a list of all available tags:</li>
+</ol>
+<p><code>shell
+   git tag -l 'v*.[0-9]' --sort='v:refname'</code></p>
+<ol>
+<li>Choose a patch version for your current major and minor version.</li>
+<li>Check out the code for the patch version to use:</li>
+</ol>
+<p>```shell
+   cd /home/git/gitlab</p>
+<p>sudo -u git -H git fetch --all
+   sudo -u git -H git checkout -- Gemfile.lock db/structure.sql locale
+   sudo -u git -H git checkout LATEST_TAG -b LATEST_TAG
+   ```</p>
+<h3>Install libraries and run migrations</h3>
+<p>To install libraries and run migrations, run the following commands:</p>
+<pre><code class="language-shell">cd /home/git/gitlab
+
+# If you haven't done so during installation or a previous upgrade already
+sudo -u git -H bundle config set --local deployment 'true'
+sudo -u git -H bundle config set --local without 'development test kerberos'
+
+# Update gems
+sudo -u git -H bundle install
+
+# Optional: clean up old gems
+sudo -u git -H bundle clean
+
+# Run database migrations
+sudo -u git -H bundle exec rake db:migrate RAILS_ENV=production
+
+# Clean up assets and cache
+sudo -u git -H bundle exec rake yarn:install gitlab:assets:clean gitlab:assets:compile cache:clear RAILS_ENV=production NODE_ENV=production NODE_OPTIONS=&quot;--max_old_space_size=4096&quot;
+</code></pre>
+<h3>Update GitLab Workhorse to the new patch version</h3>
+<p>To update GitLab Workhorse to the new patch version:</p>
+<pre><code class="language-shell">cd /home/git/gitlab
+
+sudo -u git -H bundle exec rake &quot;gitlab:workhorse:install[/home/git/gitlab-workhorse]&quot; RAILS_ENV=production
+</code></pre>
+<h3>Update Gitaly to the new patch version</h3>
+<p>To update Gitaly to the new patch version:</p>
+<pre><code class="language-shell">cd /home/git/gitlab
+
+sudo -u git -H bundle exec rake &quot;gitlab:gitaly:install[/home/git/gitaly,/home/git/repositories]&quot; RAILS_ENV=production
+</code></pre>
+<h3>Update GitLab Shell to the new patch version</h3>
+<p>To update GitLab Shell to the new patch version:</p>
+<pre><code class="language-shell">cd /home/git/gitlab-shell
+
+sudo -u git -H git fetch --all --tags
+sudo -u git -H git checkout v$(&lt;/home/git/gitlab/GITLAB_SHELL_VERSION) -b v$(&lt;/home/git/gitlab/GITLAB_SHELL_VERSION)
+sudo -u git -H make build
+</code></pre>
+<h3>Update GitLab Pages to the new patch version (if required)</h3>
+<p>If you're using GitLab Pages, update GitLab Pages to the new patch version:</p>
+<pre><code class="language-shell">cd /home/git/gitlab-pages
+
+sudo -u git -H git fetch --all --tags
+sudo -u git -H git checkout v$(&lt;/home/git/gitlab/GITLAB_PAGES_VERSION)
+sudo -u git -H make
+</code></pre>
+<h3>Install or update <code>gitlab-elasticsearch-indexer</code></h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To install or update <code>gitlab-elasticsearch-indexer</code>, follow the
+<a href="../integration/advanced_search/elasticsearch.md#install-an-elasticsearch-or-aws-opensearch-cluster">installation instruction</a>.</p>
+<h3>Start GitLab</h3>
+<p>To start GitLab, run the following commands:</p>
+<pre><code class="language-shell"># For systems running systemd
+sudo systemctl start gitlab.target
+sudo systemctl restart nginx.service
+
+# For systems running SysV init
+sudo service gitlab start
+sudo service nginx restart
+</code></pre>
+<h3>Check GitLab and its environment</h3>
+<p>To check if GitLab and its environment are configured correctly, run:</p>
+<pre><code class="language-shell">cd /home/git/gitlab
+
+sudo -u git -H bundle exec rake gitlab:env:info RAILS_ENV=production
+</code></pre>
+<p>To make sure you didn't miss anything run a more thorough check with:</p>
+<pre><code class="language-shell">sudo -u git -H bundle exec rake gitlab:check RAILS_ENV=production
+</code></pre>
+<h3>Make sure background migrations are finished</h3>
+<p><a href="background_migrations.html">Check the status of background migrations</a> and make sure they are finished.</p></code></pre>
+</body>
+</html>

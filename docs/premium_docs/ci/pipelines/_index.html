@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Types of pipelines</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Pipeline Authoring
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: CI/CD pipelines
+description: Configuration, automation, stages, schedules, and efficiency.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>CI/CD pipelines are the fundamental component of GitLab CI/CD. Pipelines are configured
+in a <code>.gitlab-ci.yml</code> file by using <a href="../yaml/_index.html">YAML keywords</a>.</p>
+<p>Pipelines can run automatically for specific events, like when pushing to a branch,
+creating a merge request, or on a schedule. When needed, you can also run pipelines manually.</p>
+<p>Pipelines are composed of:</p>
+<ul>
+<li><a href="../yaml/_index.md#global-keywords">Global YAML keywords</a> that control the overall
+  behavior of the project's pipelines.</li>
+<li><a href="../jobs/_index.html">Jobs</a> that execute commands to accomplish a task. For example,
+  a job could compile, test, or deploy code. Jobs run independently from each other,
+  and are executed by <a href="../runners/_index.html">runners</a>.</li>
+<li>Stages, which define how to group jobs together. Stages run in sequence, while the jobs
+  in a stage run in parallel. For example, an early stage could have jobs that lint and compile
+  code, while later stages could have jobs that test and deploy code. If all jobs in a stage succeed,
+  the pipeline moves on to the next stage. If any job in a stage fails, the next stage
+  is not (usually) executed and the pipeline ends early.</li>
+</ul>
+<p>A small pipeline could consist of three stages, executed in the following order:</p>
+<ul>
+<li>A <code>build</code> stage, with a job called <code>compile</code> that compiles the project's code.</li>
+<li>A <code>test</code> stage, with two jobs called <code>test1</code> and <code>test2</code> that run various tests on the code.
+  These tests would only run if the <code>compile</code> job completed successfully.</li>
+<li>A <code>deploy</code> stage, with a job called <code>deploy-to-production</code>. This job would only run
+  if both jobs in the <code>test</code> stage started and completed successfully.</li>
+</ul>
+<p>To get started with your first pipeline, see <a href="../quick_start/_index.html">Create and run your first GitLab CI/CD pipeline</a>.</p>
+<h2>Types of pipelines</h2>
+<p>Pipelines can be configured in many different ways:</p>
+<ul>
+<li><a href="pipeline_architectures.md#basic-pipelines">Basic pipelines</a> run everything in each stage concurrently,
+  followed by the next stage.</li>
+<li><a href="../yaml/needs.html">Pipelines that use the <code>needs</code> keyword</a> run based on dependencies
+  between jobs and can run more quickly than basic pipelines.</li>
+<li><a href="merge_request_pipelines.html">Merge request pipelines</a> run for merge
+  requests only (rather than for every commit).</li>
+<li><a href="merged_results_pipelines.html">Merged results pipelines</a>
+  are merge request pipelines that act as though the changes from the source branch have
+  already been merged into the target branch.</li>
+<li><a href="merge_trains.html">Merge trains</a>
+  use merged results pipelines to queue merges one after the other.</li>
+<li><a href="downstream_pipelines.md#parent-child-pipelines">Parent-child pipelines</a> break down complex pipelines
+  into one parent pipeline that can trigger multiple child sub-pipelines, which all
+  run in the same project and with the same SHA. This pipeline architecture is commonly used for mono-repos.</li>
+<li><a href="downstream_pipelines.md#multi-project-pipelines">Multi-project pipelines</a> combine pipelines for different projects together.</li>
+</ul>
+<h2>Configure a pipeline</h2>
+<p>Pipelines and their component jobs and stages are defined with <a href="../yaml/_index.html">YAML keywords</a>
+in the CI/CD pipeline configuration file for each project. When editing CI/CD configuration
+in GitLab, you should use the <a href="../pipeline_editor/_index.html">pipeline editor</a>.</p>
+<p>You can also configure specific aspects of your pipelines through the GitLab UI:</p>
+<ul>
+<li><a href="settings.html">Pipeline settings</a> for each project.</li>
+<li><a href="schedules.html">Pipeline schedules</a>.</li>
+<li><a href="../variables/_index.md#for-a-project">Custom CI/CD variables</a>.</li>
+</ul>
+<p>If you use VS Code to edit your GitLab CI/CD configuration, the <a href="../../editor_extensions/visual_studio_code/_index.html">GitLab Workflow extension for VS Code</a>
+helps you <a href="../../editor_extensions/visual_studio_code/cicd.md#test-gitlab-cicd-configuration">validate your configuration</a>
+and <a href="../../editor_extensions/visual_studio_code/cicd.md#view-pipeline-information">view your pipeline status</a>.</p>
+<h3>Run a pipeline manually</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><strong>Run pipeline</strong> name <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/482718">changed</a> to <strong>New pipeline</strong> in GitLab 17.7.</li>
+<li><strong>Inputs</strong> option <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/525504">introduced</a> in GitLab 17.11 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>ci_inputs_for_pipelines</code>. Enabled by default.</li>
+<li><strong>Inputs</strong> option <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/536548">generally available</a> in GitLab 18.1. Feature flag <code>ci_inputs_for_pipelines</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Pipelines can be manually executed, with predefined or manually-specified <a href="../variables/_index.html">variables</a>.</p>
+<p>You might do this if the results of a pipeline (for example, a code build) are required outside the standard
+operation of the pipeline.</p>
+<p>To execute a pipeline manually:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Build</strong> &gt; <strong>Pipelines</strong>.</li>
+<li>Select <strong>New pipeline</strong>.</li>
+<li>In the <strong>Run for branch name or tag</strong> field, select the branch or tag to run the pipeline for.</li>
+<li>Optional. Enter any:</li>
+<li><a href="../inputs/_index.html">Inputs</a> required for the pipeline to run. Default values for inputs are prefilled,
+     but can be modified. Input values must follow the expected type.</li>
+<li><a href="../variables/_index.html">CI/CD variables</a>. You can configure variables to have their
+     <a href="#prefill-variables-in-manual-pipelines">values prefilled in the form</a>. Using inputs to
+     control pipeline behavior offers improved security and flexibility over CI/CD variables.</li>
+<li>Select <strong>New pipeline</strong>.</li>
+</ol>
+<p>The pipeline now executes the jobs as configured.</p>
+<h4>View manual pipeline variables</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/323097">Introduced</a> in GitLab 17.2 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>ci_show_manual_variables_in_pipeline</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/505440">Generally available</a> in GitLab 18.4 with a project setting. Feature flag <code>ci_show_manual_variables_in_pipeline</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can see all variables that are specified when the pipeline runs manually.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role for the project.</li>
+</ul>
+<p>The required role depends on what you want to do:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Minimum role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View variable names</td>
+<td>Guest</td>
+</tr>
+<tr>
+<td>View variable values</td>
+<td>Developer</td>
+</tr>
+<tr>
+<td>Configure visibility setting</td>
+<td>Owner</td>
+</tr>
+</tbody>
+</table>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>When you turn on this setting, users with the Developer role can view variable values that might contain sensitive information from any manual pipeline run. For sensitive data like credentials or tokens, use <a href="../variables/_index.md#protect-a-cicd-variable">protected variables</a> or <a href="../secrets/_index.html">external secrets management</a> instead of manual pipeline variables.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>To view manual pipeline variables:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>CI/CD</strong>.</li>
+<li>Select <strong>Display pipeline variables</strong>.</li>
+<li>Go to <strong>Build</strong> &gt; <strong>Pipelines</strong> and select a pipeline that was run manually.</li>
+<li>Select the <strong>Manual Variables</strong> tab.</li>
+</ol>
+<p>Variable values are masked by default. If you have at least the Developer role,
+you can select the eye icon to reveal values.</p>
+<h4>Prefill variables in manual pipelines</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Markdown rendering on the <strong>Run pipeline</strong> page <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/441474">Introduced</a> in GitLab 17.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can use the <a href="../yaml/_index.md#variablesdescription"><code>description</code> and <code>value</code></a>
+keywords to <a href="../variables/_index.md#define-a-cicd-variable-in-the-gitlab-ciyml-file">define pipeline-level (global) variables</a>
+that are prefilled when running a pipeline manually. Use the description to explain
+information such as what the variable is used for, and what the acceptable values are.
+You can use Markdown in the description.</p>
+<p>Job-level variables cannot be pre-filled.</p>
+<p>In manually-triggered pipelines, the <strong>New pipeline</strong> page displays all pipeline-level variables
+that have a <code>description</code> defined in the <code>.gitlab-ci.yml</code> file. The description displays
+below the variable.</p>
+<p>You can change the prefilled value, which <a href="../variables/_index.md#use-pipeline-variables">overrides the value</a> for that single pipeline run.
+Any variables overridden by using this process are <a href="../variables/_index.md#allow-cicd-variable-expansion">expanded</a>
+and not <a href="../variables/_index.md#mask-a-cicd-variable">masked</a>.
+If you do not define a <code>value</code> for the variable in the configuration file, the variable name is still listed,
+but the value field is blank.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">variables:
+  DEPLOY_CREDENTIALS:
+    description: &quot;The deployment credentials.&quot;
+  DEPLOY_ENVIRONMENT:
+    description: &quot;Select the deployment target. Valid options are: 'canary', 'staging', 'production', or a stable branch of your choice.&quot;
+    value: &quot;canary&quot;
+</code></pre>
+<p>In this example:</p>
+<ul>
+<li><code>DEPLOY_CREDENTIALS</code> is listed in the <strong>New pipeline</strong> page, but with no value set.
+  The user is expected to define the value each time the pipeline is run manually.</li>
+<li><code>DEPLOY_ENVIRONMENT</code> is pre-filled in the <strong>New pipeline</strong> page with <code>canary</code> as the default value,
+  and the message explains the other options.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Because of a <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/382857">known issue</a>, projects that use <a href="../../user/compliance/compliance_pipelines.html">compliance pipelines</a> can have prefilled variables not appear
+when running a pipeline manually. To workaround this issue,
+<a href="../../user/compliance/compliance_pipelines.md#prefilled-variables-are-not-shown">change the compliance pipeline configuration</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h4>Configure a list of selectable prefilled variable values</h4>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/363660">Introduced</a> in GitLab 15.5 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>run_pipeline_graphql</code>. Disabled by default.</li>
+<li>The <code>options</code> keyword was <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/105502">introduced</a> in GitLab 15.7.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/106038">Generally available</a> in GitLab 15.7. Feature flag <code>run_pipeline_graphql</code> removed.</li>
+<li>The variables list sometimes did not populate correctly due to <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/386245">a bug</a>, which was resolved in GitLab 15.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can define an array of CI/CD variable values the user can select from when running a pipeline manually.
+These values are in a dropdown list in the <strong>New pipeline</strong> page. Add the list of
+value options to <code>options</code> and set the default value with <code>value</code>. The string in <code>value</code>
+must also be included in the <code>options</code> list.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">variables:
+  DEPLOY_ENVIRONMENT:
+    value: &quot;staging&quot;
+    options:
+      - &quot;production&quot;
+      - &quot;staging&quot;
+      - &quot;canary&quot;
+    description: &quot;The deployment target. Set to 'staging' by default.&quot;
+</code></pre>
+<h3>Run a pipeline by using a URL query string</h3>
+<p>You can use a query string to pre-populate the <strong>New pipeline</strong> page. For example, the query string
+<code>.../pipelines/new?ref=my_branch&amp;var[foo]=bar&amp;file_var[file_foo]=file_bar</code> pre-populates the
+<strong>New pipeline</strong> page with:</p>
+<ul>
+<li><strong>Run for</strong> field: <code>my_branch</code>.</li>
+<li><strong>Variables</strong> section:</li>
+<li>Variable:<ul>
+<li>Key: <code>foo</code></li>
+<li>Value: <code>bar</code></li>
+</ul>
+</li>
+<li>File:<ul>
+<li>Key: <code>file_foo</code></li>
+<li>Value: <code>file_bar</code></li>
+</ul>
+</li>
+</ul>
+<p>The format of the <code>pipelines/new</code> URL is:</p>
+<pre><code class="language-plaintext">.../pipelines/new?ref=&lt;branch&gt;&amp;var[&lt;variable_key&gt;]=&lt;value&gt;&amp;file_var[&lt;file_key&gt;]=&lt;value&gt;
+</code></pre>
+<p>The following parameters are supported:</p>
+<ul>
+<li><code>ref</code>: specify the branch to populate the <strong>Run for</strong> field with.</li>
+<li><code>var</code>: specify a <code>Variable</code> variable.</li>
+<li><code>file_var</code>: specify a <code>File</code> variable.</li>
+</ul>
+<p>For each <code>var</code> or <code>file_var</code>, a key and value are required.</p>
+<h3>Add manual interaction to your pipeline</h3>
+<p><a href="../jobs/job_control.md#create-a-job-that-must-be-run-manually">Manual jobs</a>,
+allow you to require manual interaction before moving forward in the pipeline.</p>
+<p>You can do this straight from the pipeline graph. Select <strong>Run</strong> ({{&lt; icon name="play" &gt;}}) to execute that particular job.</p>
+<p>For example, your pipeline can start automatically, but require a manual action to
+<a href="../environments/deployments.md#configure-manual-deployments">deploy to production</a>.
+In the following example, the <code>production</code> stage has a job with a manual action:</p>
+<p><img alt="Pipeline graph that shows four stages: build, test, canary, and production. First three stages show completed jobs with green checkmarks, while production stage shows a pending deploy job." src="img/manual_job_v17_9.png" /></p>
+<h4>Start all manual jobs in a stage</h4>
+<p>If a stage contains only manual jobs, you can start all the jobs at the same time
+by selecting <strong>Run all manual</strong> ({{&lt; icon name="play" &gt;}}) above the stage. If the stage contains
+non-manual jobs, the option is not displayed.</p>
+<h3>Skip a pipeline</h3>
+<p>To push a commit without triggering a pipeline, add <code>[ci skip]</code> or <code>[skip ci]</code>, using any
+capitalization, to your commit message.</p>
+<p>Alternatively, with Git 2.10 or later, use the <code>ci.skip</code> <a href="../../topics/git/commit.md#push-options-for-gitlab-cicd">Git push option</a>.
+The <code>ci.skip</code> push option does not skip merge request pipelines.</p>
+<p>When you skip a pipeline:</p>
+<ul>
+<li>An empty pipeline, with no jobs or stages, is still created in GitLab.
+  The pipeline appears in the UI and can be returned in API responses.</li>
+<li>The pipeline status is <strong>Skipped</strong> in the UI, and <code>skipped</code> in the API.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Pipeline execution policies and scan execution policies can restrict or disable the <code>[skip ci]</code> directive.
+For more information, see:</p>
+<ul>
+<li>The <a href="../../user/application_security/policies/pipeline_execution_policies.md#skip_ci-type"><code>skip_ci</code> type</a> in pipeline execution policies.</li>
+<li>The <a href="../../user/application_security/policies/scan_execution_policies.md#skip_ci-type"><code>skip_ci</code> type</a> in scan execution policies.</li>
+</ul>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Delete a pipeline</h3>
+<p>Users with the Owner role for a project can delete a pipeline:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Build</strong> &gt; <strong>Pipelines</strong>.</li>
+<li>Select either the pipeline ID (for example <code>#123456789</code>) or the pipeline status icon
+   (for example <strong>Passed</strong>) of the pipeline to delete.</li>
+<li>In the upper right of the pipeline details page, select <strong>Delete</strong>.</li>
+</ol>
+<p>Deleting a pipeline does not automatically delete its <a href="downstream_pipelines.md#parent-child-pipelines">child pipelines</a>.
+See <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/39503">issue 39503</a> for more details.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Deleting a pipeline expires all pipeline caches, and deletes all immediately
+related objects, such as jobs, logs, artifacts, and triggers.
+<strong>This action cannot be undone</strong>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Pipeline security on protected branches</h3>
+<p>A strict security model is enforced when pipelines are executed on
+<a href="../../user/project/repository/branches/protected.html">protected branches</a>.</p>
+<p>The following actions are allowed on protected branches if the user is
+<a href="../../user/project/repository/branches/protected.html">allowed to merge or push</a>
+to that specific branch:</p>
+<ul>
+<li>Run manual pipelines (using the <a href="#run-a-pipeline-manually">Web UI</a> or <a href="#pipelines-api">pipelines API</a>).</li>
+<li>Run scheduled pipelines.</li>
+<li>Run pipelines using triggers.</li>
+<li>Run on-demand DAST scan.</li>
+<li>Trigger manual actions on existing pipelines.</li>
+<li>Retry or cancel existing jobs (using the Web UI or pipelines API).</li>
+</ul>
+<p><strong>Variables</strong> marked as <strong>protected</strong> are accessible to jobs that run in pipelines for protected branches. Only assign users the right to merge to protected branches if they have permission to access sensitive information like deployment credentials and tokens.</p>
+<p><strong>Runners</strong> marked as <strong>protected</strong> can run jobs only on protected
+branches, preventing untrusted code from executing on the protected runner and
+preserving deployment keys and other credentials from being unintentionally
+accessed. To ensure that jobs intended to be executed on protected
+runners do not use regular runners, they must be <a href="../yaml/_index.md#tags">tagged</a> accordingly.</p>
+<p>Review how access to protected variables and runners work in the
+<a href="merge_request_pipelines.md#control-access-to-protected-variables-and-runners">context of Merge request pipelines</a>.</p>
+<p>Review the <a href="../environments/deployment_safety.html">deployment safety</a>
+page for additional security recommendations for securing your pipelines.</p>
+<h2>Trigger a pipeline when an upstream project is rebuilt</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can set up your project to automatically trigger a pipeline based on tags in a different project.
+When a new tag pipeline in the subscribed project finishes, it triggers a pipeline on your project's default branch,
+regardless of the tag pipeline's success, failure, or cancellation.</p>
+<p>As an alternative, you can use <a href="../triggers/_index.md#use-a-cicd-job">CI/CD jobs with pipeline trigger tokens</a>
+to trigger pipelines when another pipeline runs. This method is more reliable and flexible
+than pipeline subscriptions and is the recommended approach.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>The upstream project must be <a href="../../user/public_access.html">public</a>.</li>
+<li>The user must have the Developer role in the upstream project.</li>
+</ul>
+<p>To trigger the pipeline when the upstream project is rebuilt:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>CI/CD</strong>.</li>
+<li>Expand <strong>Pipeline subscriptions</strong>.</li>
+<li>Select <strong>Add project</strong>.</li>
+<li>Enter the project you want to subscribe to, in the format <code>&lt;namespace&gt;/&lt;project&gt;</code>.
+   For example, if the project is <code>https://gitlab.com/gitlab-org/gitlab</code>, use <code>gitlab-org/gitlab</code>.</li>
+<li>Select <strong>Subscribe</strong>.</li>
+</ol>
+<p>The maximum number of upstream pipeline subscriptions is 2 by default, for both the upstream and
+downstream projects. On GitLab Self-Managed, an administrator can change this
+<a href="../../administration/instance_limits.md#number-of-cicd-subscriptions-to-a-project">limit</a>.</p>
+<h2>How pipeline duration is calculated</h2>
+<p>The total running time for a given pipeline excludes:</p>
+<ul>
+<li>The duration of the initial run for any job that is retried or manually re-run.</li>
+<li>Any pending (queue) time.</li>
+</ul>
+<p>That means that if a job is retried or manually re-run, only the duration of the latest run is included in the total running time.</p>
+<p>Each job is represented as a <code>Period</code>, which consists of:</p>
+<ul>
+<li><code>Period#first</code> (when the job started).</li>
+<li><code>Period#last</code> (when the job finished).</li>
+</ul>
+<p>A simple example is:</p>
+<ul>
+<li>A (0, 2)</li>
+<li>A' (2, 4)</li>
+<li>This is retrying A</li>
+<li>B (1, 3)</li>
+<li>C (6, 7)</li>
+</ul>
+<p>In the example:</p>
+<ul>
+<li>A begins at 0 and ends at 2.</li>
+<li>A' begins at 2 and ends at 4.</li>
+<li>B begins at 1 and ends at 3.</li>
+<li>C begins at 6 and ends at 7.</li>
+</ul>
+<p>Visually, it can be viewed as:</p>
+<pre><code class="language-plaintext">0  1  2  3  4  5  6  7
+AAAAAAA
+   BBBBBBB
+      A'A'A'A
+                  CCCC
+</code></pre>
+<p>Because A is retried, it is ignored, and only job A' is counted.
+The union of B, A', and C is (1, 4) and (6, 7). Therefore, the total
+running time is:</p>
+<pre><code class="language-plaintext">(4 - 1) + (7 - 6) =&gt; 4
+</code></pre>
+<h2>View pipelines</h2>
+<p>To view all the pipelines that ran for your project:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Build</strong> &gt; <strong>Pipelines</strong>.</li>
+</ol>
+<p>You can filter the <strong>Pipelines</strong> page by:</p>
+<ul>
+<li>Trigger author</li>
+<li>Branch name</li>
+<li>Status</li>
+<li>Tag</li>
+<li>Source</li>
+</ul>
+<p>Select <strong>Pipeline ID</strong> in the dropdown list in the upper right to display the pipeline IDs
+(unique ID across the instance).
+Select <strong>pipeline IID</strong> to display the pipeline IIDs (internal ID, unique across the project only).</p>
+<p>For example:</p>
+<p><img alt="A list of pipelines displayed on the Pipelines page, with filters for trigger author, branch name, status, tag, and source." src="img/pipeline_list_v16_11.png" /></p>
+<p>To view the pipelines that relate to a specific merge request, go to the <strong>Pipelines</strong> tab
+in the merge request.</p>
+<h3>Pipeline details</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Pipeline detail view <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/424403">updated</a> in GitLab 16.6 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>new_pipeline_graph</code>. Disabled by default.</li>
+<li>Updated pipeline detail view <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/426902">enabled on GitLab.com</a> in GitLab 16.8.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Select a pipeline to open the pipeline details page which shows every job in the pipeline.
+From this page you can cancel a running pipeline, retry failed jobs, or <a href="#delete-a-pipeline">delete a pipeline</a>.</p>
+<p>The pipeline details page displays a graph of all the jobs in the pipeline:</p>
+<p><img alt="Pipeline detail page" src="img/pipeline_details_v17_9.png" /></p>
+<p>You can use a standard URL to access the details for specific pipelines:</p>
+<ul>
+<li><code>gitlab.example.com/my-group/my-project/-/pipelines/latest</code>: The details page
+  for the latest pipeline for the most recent commit on the default branch in the project.</li>
+<li><code>gitlab.example.com/my-group/my-project/-/pipelines/&lt;branch&gt;/latest</code>: The details page
+  for the latest pipeline for the most recent commit on branch <code>&lt;branch&gt;</code> in the project.</li>
+</ul>
+<h4>Group jobs by stage or <code>needs</code> configuration</h4>
+<p>When you configure jobs with the <a href="../yaml/_index.md#needs"><code>needs</code></a> keyword, you have
+two options for how to group the jobs in the pipeline details page. To group the jobs
+by stage configuration, select <strong>stage</strong> in the <strong>Group jobs by</strong> section:</p>
+<p><img alt="A pipeline graph showing jobs grouped under each stage" src="img/pipeline_stage_view_v17_9.png" /></p>
+<p>To group the jobs by <a href="../yaml/_index.md#needs"><code>needs</code></a> configuration, select <strong>Job dependencies</strong>.
+You can optionally select <strong>Show dependencies</strong> to render lines between dependent jobs.</p>
+<p><img alt="jobs grouped by job dependencies" src="img/pipeline_dependency_view_v17_9.png" /></p>
+<p>Jobs in the leftmost column run first, and jobs that depend on them are grouped in the next columns.
+In this example:</p>
+<ul>
+<li><code>lint-job</code> is configured with <code>needs: []</code> and depends on no jobs, so it displays in the first column,
+  despite being in the <code>test</code> stage.</li>
+<li><code>test-job1</code> depends on <code>build-job1</code>, and <code>test-job2</code> depends on both <code>build-job1</code> and <code>build-job2</code>,
+  so both test jobs display in the second column.</li>
+<li>Both <code>deploy</code> jobs depend on jobs in second column (which themselves depend on other earlier jobs),
+  so the deploy jobs display in the third column.</li>
+</ul>
+<p>When you hover over a job in the <strong>Job dependencies</strong> view, every job that must run
+before the selected job is highlighted:</p>
+<p><img alt="pipeline dependency view on hover" src="img/pipeline_dependency_view_on_hover_v17_9.png" /></p>
+<h3>Pipeline mini graphs</h3>
+<p>Pipeline mini graphs take less space and can tell you at a quick glance if all jobs passed
+or something failed. They show all related jobs for a single commit and the net result
+of each stage of your pipeline. You can quickly see what failed and fix it.</p>
+<p>The pipeline mini graph always group jobs by stage, and display throughout GitLab
+when displaying pipeline or commit details.</p>
+<p><img alt="Pipeline mini graph" src="img/pipeline_mini_graph_v16_11.png" /></p>
+<p>Stages in pipeline mini graphs are expandable. Hover your mouse over each stage
+to see the name and status, and select a stage to expand its jobs list.</p>
+<h3>Downstream pipeline graphs</h3>
+<p>When a pipeline contains a job that triggers a <a href="downstream_pipelines.html">downstream pipeline</a>,
+you can see the downstream pipeline in the pipeline details view and mini graphs.</p>
+<p>In the pipeline details view, a card displays for every triggered downstream pipeline
+on the right of the pipeline graph. Hover over a card to see which job triggered the
+downstream pipeline. Select a card to display the downstream pipeline to the right
+of the pipeline graph.</p>
+<p>In the pipeline mini graph, the status of every triggered downstream pipeline displays
+as additional status icons to the right of the mini graph. Select a downstream pipeline
+status icon to go to the detail page of that downstream pipeline.</p>
+<h2>Pipeline success and duration charts</h2>
+<p>Pipeline analytics are available on the <a href="../../user/analytics/ci_cd_analytics.html"><strong>CI/CD Analytics</strong> page</a>.</p>
+<h2>Pipeline badges</h2>
+<p>Pipeline status and test coverage report badges are available and configurable for each project.
+For information on adding pipeline badges to projects, see <a href="settings.md#pipeline-badges">Pipeline badges</a>.</p>
+<h2>Pipelines API</h2>
+<p>GitLab provides API endpoints to:</p>
+<ul>
+<li>Perform basic functions. For more information, see <a href="../../api/pipelines.html">Pipelines API</a>.</li>
+<li>Maintain pipeline schedules. For more information, see <a href="../../api/pipeline_schedules.html">Pipeline schedules API</a>.</li>
+<li>Trigger pipeline runs. For more information, see:</li>
+<li><a href="../triggers/_index.html">Triggering pipelines through the API</a>.</li>
+<li><a href="../../api/pipeline_triggers.html">Pipeline triggers API</a>.</li>
+</ul>
+<h2>Ref specs for runners</h2>
+<p>When a runner picks a pipeline job, GitLab provides that job's metadata. This includes the <a href="https://git-scm.com/book/en/v2/Git-Internals-The-Refspec">Git refspecs</a>,
+which indicate which ref (such as branch or tag) and commit (SHA1) are checked out from your
+project repository.</p>
+<p>This table lists the refspecs injected for each pipeline type:</p>
+<table>
+<thead>
+<tr>
+<th>Pipeline type</th>
+<th>Refspecs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pipeline for branches</td>
+<td><code>+&lt;sha&gt;:refs/pipelines/&lt;id&gt;</code> and <code>+refs/heads/&lt;name&gt;:refs/remotes/origin/&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>pipeline for tags</td>
+<td><code>+&lt;sha&gt;:refs/pipelines/&lt;id&gt;</code> and <code>+refs/tags/&lt;name&gt;:refs/tags/&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td><a href="merge_request_pipelines.html">merge request pipeline</a></td>
+<td><code>+refs/pipelines/&lt;id&gt;:refs/pipelines/&lt;id&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>The refs <code>refs/heads/&lt;name&gt;</code> and <code>refs/tags/&lt;name&gt;</code> exist in your
+project repository. GitLab generates the special ref <code>refs/pipelines/&lt;id&gt;</code> during a
+running pipeline job. This ref can be created even after the associated branch or tag has been
+deleted. It's therefore useful in some features such as <a href="../environments/_index.md#stopping-an-environment">automatically stopping an environment</a>,
+and <a href="merge_trains.html">merge trains</a> that might run pipelines after branch deletion.</p>
+<h2>Troubleshooting</h2>
+<h3>Pipeline subscriptions continue after user deletion</h3>
+<p>When a user <a href="../../user/profile/account/delete_account.md#delete-your-own-account">deletes their GitLab.com account</a>,
+the deletion does not occur for seven days. During this period, any pipeline subscriptions created by that user
+continue to run with the user's original permissions. To prevent unauthorized pipeline executions,
+immediately update pipeline subscription settings for the deleted user.</p>
+<h3>Pre-filled variables do not show up in <strong>New Pipeline</strong> page</h3>
+<p>If the predefined variables for a pipeline are <a href="../yaml/includes.html">defined in a separate file</a>,
+they might not display in the <strong>New Pipeline</strong> page. You must have permission to
+access the separate file, or else the predefined variables cannot be displayed.</p></code></pre>
+</body>
+</html>

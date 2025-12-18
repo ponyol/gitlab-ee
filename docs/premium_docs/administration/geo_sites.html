@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Common settings</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Geo
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+gitlab_dedicated: no
+title: Geo sites Admin area
+description: Configure Geo sites.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can configure various settings for GitLab Geo sites. For more information, see
+<a href="geo/_index.html">Geo documentation</a>.</p>
+<p>On either the primary or secondary site:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Geo</strong> &gt; <strong>Sites</strong>.</li>
+</ol>
+<h2>Common settings</h2>
+<p>All Geo sites have the following settings:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary</td>
+<td>This marks a Geo site as <strong>primary</strong> site. There can be only one <strong>primary</strong> site.</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>The unique identifier for the Geo site. It's highly recommended to use a physical location as a name. Good examples are <code>London Office</code> or <code>us-east-1</code>. Avoid words like <code>primary</code>, <code>secondary</code>, <code>Geo</code>, or <code>DR</code>. This makes the failover process easier because the physical location does not change, but the Geo site role can. All nodes in a single Geo site use the same site name. Nodes use the <code>gitlab_rails['geo_node_name']</code> setting in <code>/etc/gitlab/gitlab.rb</code> to lookup their Geo site record in the PostgreSQL database. If <code>gitlab_rails['geo_node_name']</code> is not set, the node's <code>external_url</code> with trailing slash is used as fallback. The value of <code>Name</code> is case-sensitive, and most characters are allowed.</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>The instance's user-facing URL.</td>
+</tr>
+</tbody>
+</table>
+<h3>Allowed Geo IP</h3>
+<p>The <strong>Allowed Geo IP</strong> setting controls which IP addresses are allowed to make requests to the primary site
+from secondary sites. The primary site uses this setting to validate:</p>
+<ul>
+<li>Git HTTP requests from secondary sites.</li>
+<li>Geo API requests from secondary sites.</li>
+</ul>
+<p>The <strong>Allowed Geo IP</strong> setting:</p>
+<ul>
+<li>Has no effect on secondary sites. The setting is replicated to secondary sites in the database, but is not used there.</li>
+<li>Accepts a comma-separated list of IP addresses and CIDR blocks, like <code>192.168.1.1, 10.0.0.0/8, 2001:db8::/32</code>.</li>
+<li>Has a default value of <code>0.0.0.0/0, ::/0</code>, which allows requests from any IP address.</li>
+<li>Cannot be modified on secondary sites, because their databases are read-only.</li>
+</ul>
+<h2>Secondary site settings</h2>
+<p><strong>Secondary</strong> sites have a number of additional settings available:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Selective synchronization</td>
+<td>Enable Geo <a href="geo/replication/selective_synchronization.html">selective sync</a> for this <strong>secondary</strong> site.</td>
+</tr>
+<tr>
+<td>Repository sync capacity</td>
+<td>Number of concurrent requests this <strong>secondary</strong> site makes to the <strong>primary</strong> site when backfilling repositories.</td>
+</tr>
+<tr>
+<td>File sync capacity</td>
+<td>Number of concurrent requests this <strong>secondary</strong> site makes to the <strong>primary</strong> site when backfilling files.</td>
+</tr>
+</tbody>
+</table>
+<h2>Geo backfill</h2>
+<p><strong>Secondary</strong> sites are notified of changes to repositories and files by the <strong>primary</strong> site,
+and always attempt to synchronize those changes as quickly as possible.</p>
+<p>Backfill is the act of populating the <strong>secondary</strong> site with repositories and files that
+existed before the <strong>secondary</strong> site was added to the database. Because there may be
+extremely large numbers of repositories and files, it's not feasible to attempt to
+download them all at once; so, GitLab places an upper limit on the concurrency of
+these operations.</p>
+<p>How long the backfill takes is dependent on the maximum concurrency, but higher
+values place more strain on the <strong>primary</strong> site. The limits are configurable.
+If your <strong>primary</strong> site has lots of surplus capacity,
+you can increase the values to complete backfill in a shorter time. If it's
+under heavy load and backfill reduces its availability for standard requests,
+you can decrease them.</p>
+<h2>Set up the internal URLs</h2>
+<p>You can set up a different URL for synchronization between the primary and secondary site.</p>
+<p>The <strong>primary</strong> site's Internal URL is used by <strong>secondary</strong> sites to contact
+it. For example, to sync repositories. The name Internal URL distinguishes it from
+<a href="https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab">External URL</a>,
+which is used by users. Internal URL does not need to be a private address.</p>
+<p>The Internal URL of a <strong>secondary</strong> site is used by the <strong>primary</strong> site to
+contact it. For example, to retrieve sync or verification tracking metadata for
+display in the Admin Area at <strong>Geo</strong> &gt; <strong>Sites</strong> &gt; <strong>Project Repositories</strong>.</p>
+<p>The internal URL defaults to external URL. To change it:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Geo</strong> &gt; <strong>Sites</strong>.</li>
+<li>Select <strong>Edit</strong> on the site you want to customize.</li>
+<li>Edit the internal URL.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>When enabled, the <strong>Admin</strong> area for Geo shows replication details for each site directly
+from the primary site's UI, and through the Geo secondary proxy, if enabled.</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>We recommend using an HTTPS connection while configuring the Geo sites. To avoid
+breaking communication between <strong>primary</strong> and <strong>secondary</strong> sites when using
+HTTPS, customize your Internal URL to point to a load balancer with TLS
+terminated at the load balancer.</p>
+<p>{{&lt; /alert &gt;}}</p></code></pre>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Integrated with GitLab</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Agent Foundations
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: External agent configuration examples</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise, GitLab Duo with Amazon Q</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Introduced in GitLab 18.3 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>ai_flow_triggers</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use the following examples to create your external agent configuration.
+These examples contain the following variables:</p>
+<ul>
+<li><code>AI_FLOW_CONTEXT</code>: the JSON-serialized parent object, including:</li>
+<li>In merge requests, the diff and comments (up to a limit)</li>
+<li>In issues or epics, the comments (up to a limit)</li>
+<li><code>$AI_FLOW_EVENT</code>: the type of trigger event (for example, <code>mention</code>)</li>
+<li><code>$AI_FLOW_INPUT</code>: the prompt the user enters as a comment in the merge request, issue, or epic</li>
+</ul>
+<h2>Integrated with GitLab</h2>
+<p>The following agents are integrated with GitLab and available on GitLab.com.</p>
+<h3>Anthropic Claude</h3>
+<pre><code class="language-yaml">injectGatewayToken: true
+image: node:22-slim
+commands:
+  - echo &quot;Installing claude&quot;
+  - npm install --global @anthropic-ai/claude-code
+  - echo &quot;Installing glab&quot;
+  - export GITLAB_TOKEN=$GITLAB_TOKEN_CLAUDE
+  - apt-get update --quiet &amp;&amp; apt-get install --yes curl wget gpg git &amp;&amp; rm --recursive --force /var/lib/apt/lists/*
+  - curl --silent --show-error --location &quot;https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository&quot; | bash
+  - apt-get install --yes glab
+  - echo &quot;Configuring git&quot;
+  - git config --global user.email &quot;claudecode@gitlab.com&quot;
+  - git config --global user.name &quot;Claude Code&quot;
+  - echo &quot;Configuring claude&quot;
+  - export ANTHROPIC_AUTH_TOKEN=$AI_FLOW_AI_GATEWAY_TOKEN
+  - export ANTHROPIC_CUSTOM_HEADERS=$AI_FLOW_AI_GATEWAY_HEADERS
+  - export ANTHROPIC_BASE_URL=&quot;https://cloud.gitlab.com/ai/v1/proxy/anthropic&quot;
+  - echo &quot;Running claude&quot;
+  - |
+    claude --debug --allowedTools=&quot;Bash(glab:*),Bash(git:*)&quot; --permission-mode acceptEdits --verbose --output-format stream-json -p &quot;
+    You are an AI assistant helping with GitLab operations.
+
+    Context: $AI_FLOW_CONTEXT
+    Task: $AI_FLOW_INPUT
+    Event: $AI_FLOW_EVENT
+
+    Please execute the requested task using the available GitLab tools.
+    Be thorough in your analysis and provide clear explanations.
+
+    &lt;important&gt;
+    Use the glab CLI to access data from GitLab. The glab CLI has already been authenticated. You can run the corresponding commands.
+
+    When you complete your work create a new Git branch, if you aren't already working on a feature branch, with the format of 'feature/&lt;short description of feature&gt;' and check in/push code.
+
+    When you check in and push code, you will need to use the access token stored in GITLAB_TOKEN and the user ClaudeCode.
+    Lastly, after pushing the code, if a merge request doesn't already exist, create a new merge request for the branch and link it to the issue using:
+    `glab mr create --title &quot;&lt;title&gt;&quot; --description &quot;&lt;desc&gt;&quot; --source-branch &lt;branch&gt; --target-branch &lt;branch&gt;`
+
+    If you are asked to summarize a merge request or issue, or asked to provide more information, then please post back a note to the merge request / issue so that the user can see it.
+
+    &lt;/important&gt;
+    &quot;
+variables:
+  - GITLAB_TOKEN_CLAUDE
+  - GITLAB_HOST
+</code></pre>
+<h3>OpenAI Codex</h3>
+<pre><code class="language-yaml">image: node:22-slim
+injectGatewayToken: true
+commands:
+  - echo &quot;Installing codex&quot;
+  - npm install --global @openai/codex
+  - echo &quot;Installing glab&quot;
+  - export OPENAI_API_KEY=$AI_FLOW_AI_GATEWAY_TOKEN
+  - export GITLAB_TOKEN=$GITLAB_TOKEN_CODEX
+  - apt-get update --quiet &amp;&amp; apt-get install --yes curl wget gpg git &amp;&amp; rm --recursive --force /var/lib/apt/lists/*
+  - curl --silent --show-error --location &quot;https://raw.githubusercontent.com/upciti/wakemeops/main/assets/install_repository&quot; | bash
+  - apt-get install --yes glab
+  - echo &quot;Configuring git&quot;
+  - git config --global user.email &quot;codex@gitlab.com&quot;
+  - git config --global user.name &quot;OpenAI Codex&quot;
+  - echo &quot;Running Codex&quot;
+  - |
+    # Parse AI_FLOW_AI_GATEWAY_HEADERS (newline-separated &quot;Key: Value&quot; pairs)
+    header_str=&quot;{&quot;
+    first=true
+    while IFS= read -r line; do
+      # skip empty lines
+      [ -z &quot;$line&quot; ] &amp;&amp; continue
+      key=&quot;${line%%:*}&quot;
+      value=&quot;${line#*: }&quot;
+      if [ &quot;$first&quot; = true ]; then
+        first=false
+      else
+        header_str+=&quot;, &quot;
+      fi
+      header_str+=&quot;\&quot;$key\&quot; = \&quot;$value\&quot;&quot;
+    done &lt;&lt;&lt; &quot;$AI_FLOW_AI_GATEWAY_HEADERS&quot;
+    header_str+=&quot;}&quot;
+
+    codex exec \
+      --config 'model_provider=&quot;gitlab&quot;' \
+      --config 'model_providers.gitlab.name=&quot;GitLab Managed Codex&quot;' \
+      --config 'model_providers.gitlab.base_url=&quot;https://cloud.gitlab.com/ai/v1/proxy/openai/v1&quot;' \
+      --config 'model_providers.gitlab.env_key=&quot;OPENAI_API_KEY&quot;' \
+      --config 'model_providers.gitlab.wire_api=&quot;responses&quot;' \
+      --config &quot;model_providers.gitlab.http_headers=${header_str}&quot; \
+      --config shell_environment_policy.ignore_default_excludes=true \
+      --dangerously-bypass-approvals-and-sandbox &quot;
+    You are an AI assistant helping with GitLab operations.
+
+    Context: $AI_FLOW_CONTEXT
+    Task: $AI_FLOW_INPUT
+    Event: $AI_FLOW_EVENT
+
+    Please execute the requested task using the available GitLab tools.
+    Be thorough in your analysis and provide clear explanations.
+
+    &lt;important&gt;
+    Use the glab CLI to access data from GitLab. The glab CLI has already been authenticated. You can run the corresponding commands.
+
+    When you complete your work create a new Git branch, if you aren't already working on a feature branch, with the format of 'feature/&lt;short description of feature&gt;' and check in/push code.
+
+    When you check in and push code, you will need to use the access token stored in GITLAB_TOKEN and the user Codex.
+    Lastly, after pushing the code, if a merge request doesn't already exist, create a new merge request for the branch and link it to the issue using:
+    glab mr create --title \&quot;&lt;title&gt;\&quot; --description \&quot;&lt;desc&gt;\&quot; --source-branch \&quot;&lt;branch&gt;\&quot; --target-branch \&quot;&lt;branch&gt;\&quot;
+
+    If you are asked to summarize a merge request or issue, or asked to provide more information then please post back a note to the merge request / issue so that the user can see it.
+
+    &lt;/important&gt;
+    &quot;
+variables:
+  - GITLAB_TOKEN_CODEX
+  - GITLAB_HOST
+</code></pre></code></pre>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># List project milestones</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Project Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Project milestones API</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Use this API to manage <a href="../user/project/milestones/_index.html">project milestones</a>.</p>
+<p>For group milestones, use the <a href="group_milestones.html">group milestones API</a>.</p>
+<h2>List project milestones</h2>
+<p>Returns a list of project milestones.</p>
+<pre><code class="language-plaintext">GET /projects/:id/milestones
+GET /projects/:id/milestones?iids[]=42
+GET /projects/:id/milestones?iids[]=42&amp;iids[]=43
+GET /projects/:id/milestones?state=active
+GET /projects/:id/milestones?state=closed
+GET /projects/:id/milestones?title=1.0
+GET /projects/:id/milestones?search=version
+GET /projects/:id/milestones?updated_before=2013-10-02T09%3A24%3A18Z
+GET /projects/:id/milestones?updated_after=2013-10-02T09%3A24%3A18Z
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>iids[]</code></td>
+<td>integer array</td>
+<td>no</td>
+<td>Return only the milestones having the given <code>iid</code>. Ignored if <code>include_ancestors</code> is <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return only <code>active</code> or <code>closed</code> milestones</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return only the milestones having the given <code>title</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>no</td>
+<td>Return only milestones with a title or description matching the provided string</td>
+</tr>
+<tr>
+<td><code>include_parent_milestones</code></td>
+<td>boolean</td>
+<td>no</td>
+<td><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/433298">Deprecated</a> in GitLab 16.7. Use <code>include_ancestors</code> instead.</td>
+</tr>
+<tr>
+<td><code>include_ancestors</code></td>
+<td>boolean</td>
+<td>no</td>
+<td>Include milestones from all parent groups.</td>
+</tr>
+<tr>
+<td><code>updated_before</code></td>
+<td>datetime</td>
+<td>no</td>
+<td>Return only milestones updated before the given datetime. Expected in ISO 8601 format (<code>2019-03-15T08:00:00Z</code>). Introduced in GitLab 15.10</td>
+</tr>
+<tr>
+<td><code>updated_after</code></td>
+<td>datetime</td>
+<td>no</td>
+<td>Return only milestones updated after the given datetime. Expected in ISO 8601 format (<code>2019-03-15T08:00:00Z</code>). Introduced in GitLab 15.10</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">curl --header &quot;PRIVATE-TOKEN: &lt;your_access_token&gt;&quot; &quot;https://gitlab.example.com/api/v4/projects/5/milestones&quot;
+</code></pre>
+<p>Example Response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 12,
+    &quot;iid&quot;: 3,
+    &quot;project_id&quot;: 16,
+    &quot;title&quot;: &quot;10.0&quot;,
+    &quot;description&quot;: &quot;Version&quot;,
+    &quot;due_date&quot;: &quot;2013-11-29&quot;,
+    &quot;start_date&quot;: &quot;2013-11-10&quot;,
+    &quot;state&quot;: &quot;active&quot;,
+    &quot;updated_at&quot;: &quot;2013-10-02T09:24:18Z&quot;,
+    &quot;created_at&quot;: &quot;2013-10-02T09:24:18Z&quot;,
+    &quot;expired&quot;: false
+  }
+]
+</code></pre>
+<h2>Get single milestone</h2>
+<p>Gets a single project milestone.</p>
+<pre><code class="language-plaintext">GET /projects/:id/milestones/:milestone_id
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>milestone_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project's milestone</td>
+</tr>
+</tbody>
+</table>
+<h2>Create new milestone</h2>
+<p>Creates a new project milestone.</p>
+<pre><code class="language-plaintext">POST /projects/:id/milestones
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>yes</td>
+<td>The title of a milestone</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>no</td>
+<td>The description of the milestone</td>
+</tr>
+<tr>
+<td><code>due_date</code></td>
+<td>string</td>
+<td>no</td>
+<td>The due date of the milestone (<code>YYYY-MM-DD</code>)</td>
+</tr>
+<tr>
+<td><code>start_date</code></td>
+<td>string</td>
+<td>no</td>
+<td>The start date of the milestone (<code>YYYY-MM-DD</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2>Edit milestone</h2>
+<p>Updates an existing project milestone.</p>
+<pre><code class="language-plaintext">PUT /projects/:id/milestones/:milestone_id
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>milestone_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project's milestone</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>no</td>
+<td>The title of a milestone</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>no</td>
+<td>The description of the milestone</td>
+</tr>
+<tr>
+<td><code>due_date</code></td>
+<td>string</td>
+<td>no</td>
+<td>The due date of the milestone (<code>YYYY-MM-DD</code>)</td>
+</tr>
+<tr>
+<td><code>start_date</code></td>
+<td>string</td>
+<td>no</td>
+<td>The start date of the milestone (<code>YYYY-MM-DD</code>)</td>
+</tr>
+<tr>
+<td><code>state_event</code></td>
+<td>string</td>
+<td>no</td>
+<td>The state event of the milestone (close or activate)</td>
+</tr>
+</tbody>
+</table>
+<h2>Delete project milestone</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/343889">Changed</a> the minimum user role from Developer to Reporter in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Only for users with at least the Planner role for the project.</p>
+<pre><code class="language-plaintext">DELETE /projects/:id/milestones/:milestone_id
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>milestone_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project's milestone</td>
+</tr>
+</tbody>
+</table>
+<h2>Get all issues assigned to a single milestone</h2>
+<p>Gets all issues assigned to a single project milestone.</p>
+<pre><code class="language-plaintext">GET /projects/:id/milestones/:milestone_id/issues
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>milestone_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project's milestone</td>
+</tr>
+</tbody>
+</table>
+<h2>Get all merge requests assigned to a single milestone</h2>
+<p>Gets all merge requests assigned to a single project milestone.</p>
+<pre><code class="language-plaintext">GET /projects/:id/milestones/:milestone_id/merge_requests
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>milestone_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project's milestone</td>
+</tr>
+</tbody>
+</table>
+<h2>Promote project milestone to a group milestone</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/343889">Changed</a> the minimum user role from Developer to Reporter in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Only for users with at least the Planner role for the group.</p>
+<pre><code class="language-plaintext">POST /projects/:id/milestones/:milestone_id/promote
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>milestone_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project's milestone</td>
+</tr>
+</tbody>
+</table>
+<h2>Get all burndown chart events for a single milestone</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Gets all burndown chart events for a single milestone.</p>
+<pre><code class="language-plaintext">GET /projects/:id/milestones/:milestone_id/burndown_events
+</code></pre>
+<p>Parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer or string</td>
+<td>yes</td>
+<td>The ID or <a href="rest/_index.md#namespaced-paths">URL-encoded path of the project</a></td>
+</tr>
+<tr>
+<td><code>milestone_id</code></td>
+<td>integer</td>
+<td>yes</td>
+<td>The ID of the project's milestone</td>
+</tr>
+</tbody>
+</table></code></pre>
+</body>
+</html>

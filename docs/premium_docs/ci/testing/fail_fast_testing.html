@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Example use case</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Pipeline Execution
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Run only relevant RSpec tests using the fail-fast template to get faster feedback on code changes.
+title: Fail Fast Testing</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>For applications that use RSpec for running tests, you can use the <code>Verify/Failfast</code>
+<a href="https://gitlab.com/gitlab-org/gitlab/-/tree/master/lib/gitlab/ci/templates/Verify/FailFast.gitlab-ci.yml">template to run subsets of your test suite</a>,
+based on the changes in your merge request.</p>
+<p>The template uses the <a href="https://gitlab.com/gitlab-org/ruby/gems/test_file_finder"><code>test_file_finder</code> (<code>tff</code>) gem</a>
+that accepts a list of files as input, and returns a list of spec (test) files
+that it believes to be relevant to the input files.</p>
+<p><code>tff</code> is designed for Ruby on Rails projects, so the <code>Verify/FailFast</code> template is
+configured to run when changes to Ruby files are detected. By default, it runs in
+the <a href="../yaml/_index.md#stage-pre"><code>.pre</code> stage</a> of a GitLab CI/CD pipeline,
+before all other stages.</p>
+<h2>Example use case</h2>
+<p>Fail fast testing is useful when adding new functionality to a project and adding
+new automated tests.</p>
+<p>Your project could have hundreds of thousands of tests that take a long time to complete.
+You may expect a new test to pass, but you have to wait for all the tests
+to complete to verify it. This could take an hour or more, even when using parallelization.</p>
+<p>Fail fast testing gives you a faster feedback loop from the pipeline. It lets you
+know quickly that the new tests are passing and the new functionality did not break
+other tests.</p>
+<h2>Prerequisites</h2>
+<p>This template requires:</p>
+<ul>
+<li>A project built in Rails that uses RSpec for testing.</li>
+<li>CI/CD configured to:</li>
+<li>Use a Docker image with Ruby available.</li>
+<li>Use <a href="../pipelines/merge_request_pipelines.md#prerequisites">Merge request pipelines</a></li>
+<li><a href="../pipelines/merged_results_pipelines.md#enable-merged-results-pipelines">Merged results pipelines</a>
+  enabled in the project settings.</li>
+<li>A Docker image with Ruby available. The template uses <code>image: ruby:2.6</code> by default, but you <a href="../yaml/includes.md#override-included-configuration-values">can override</a> this.</li>
+</ul>
+<h2>Configuring Fast RSpec Failure</h2>
+<p>You can use the following plain RSpec configuration as a starting point. It installs all the
+project gems and executes <code>rspec</code>, on merge request pipelines only.</p>
+<pre><code class="language-yaml">rspec-complete:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;
+  script:
+    - bundle install
+    - bundle exec rspec
+</code></pre>
+<p>To run the most relevant specs first instead of the whole suite, <a href="../yaml/_index.md#include"><code>include</code></a>
+the template by adding the following to your CI/CD configuration:</p>
+<pre><code class="language-yaml">include:
+  - template: Verify/FailFast.gitlab-ci.yml
+</code></pre>
+<p>To customize the job, specific options may be set to override the template. For example, to override the default Docker image:</p>
+<pre><code class="language-yaml">include:
+  - template: Verify/FailFast.gitlab-ci.yml
+
+rspec-rails-modified-path-specs:
+  image: custom-docker-image-with-ruby
+</code></pre>
+<h3>Example test loads</h3>
+<p>For illustrative purposes, our Rails app spec suite consists of 100 specs per model for ten models.</p>
+<p>If no Ruby files are changed:</p>
+<ul>
+<li><code>rspec-rails-modified-paths-specs</code> does not run any tests.</li>
+<li><code>rspec-complete</code> runs the full suite of 1000 tests.</li>
+</ul>
+<p>If one Ruby model is changed, for example <code>app/models/example.rb</code>, then <code>rspec-rails-modified-paths-specs</code>
+runs the 100 tests for <code>example.rb</code>:</p>
+<ul>
+<li>If all of these 100 tests pass, then the full <code>rspec-complete</code> suite of 1000 tests is allowed to run.</li>
+<li>If any of these 100 tests fail, they fail quickly, and <code>rspec-complete</code> does not run any tests.</li>
+</ul>
+<p>The final case saves resources and time as the full 1000 test suite does not run.</p></code></pre>
+</body>
+</html>

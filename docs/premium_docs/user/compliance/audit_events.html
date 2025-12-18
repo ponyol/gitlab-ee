@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Prerequisites</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Compliance
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Audit events</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>A security audit is an in-depth analysis and review of your infrastructure, which is used to display
+areas of concern and potentially hazardous practices. To assist with the audit process, GitLab provides
+audit events which allow you to track a variety of different actions within GitLab.
+GitLab can help owners and administrators respond to auditors by generating
+comprehensive reports. These audit reports vary in scope, depending on the
+needs.</p>
+<p>For example, you can use audit events to track:</p>
+<ul>
+<li>Who changed the permission level of a particular user for a GitLab project, and when.</li>
+<li>Who added a new user or removed a user, and when.</li>
+</ul>
+<p>These events can be used to in an audit to assess risk, strengthen security measures, respond to incidents, and adhere to compliance. For a complete list the audit
+events GitLab provides, see <a href="audit_event_types.html">audit event types</a>. For example:</p>
+<ul>
+<li>Generate a report of audit events to provide to an external auditor requesting proof of certain logging capabilities.</li>
+<li>Provide a report of all users showing their group and project memberships for a quarterly access review so the auditor can verify compliance with an organization's access management policy.</li>
+</ul>
+<p>Audit events are retained indefinitely. Because there is no retention timeframe, all audit events are available.</p>
+<h2>Prerequisites</h2>
+<p>To view specific types of audit events, you need a minimum role.</p>
+<ul>
+<li>To view the group audit events of all users in a group, you must have the <a href="../permissions.md#roles">Owner role</a> for the group.</li>
+<li>To view the project audit events of all users in a project, you must have at least the <a href="../permissions.md#roles">Maintainer role</a> for the project.</li>
+<li>To view the group and project audit events based on your own actions in a group or project, you must have at least the <a href="../permissions.md#roles">Developer role</a>
+  for the group or project.</li>
+</ul>
+<p>Users with the <a href="../../administration/auditor_users.html">Auditor access level</a> can see group and project events for all users.</p>
+<h2>Viewing audit events</h2>
+<p>Audit events can be viewed at the group, project, instance, and sign-in level. Each level has different audit events which it logs.</p>
+<h3>Sign-in audit events</h3>
+<p>Successful sign-in events are the only audit events available at all tiers. To see successful sign-in events:</p>
+<ol>
+<li>In the upper-right corner, select your avatar.</li>
+<li>Select <strong>Edit profile</strong> &gt; <strong>Authentication log</strong>.</li>
+</ol>
+<p>After upgrading to a paid tier, you can also see successful sign-in events on audit event pages.</p>
+<h3>Group audit events</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To view a group's audit events:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Audit events</strong>.</li>
+<li>Filter the audit events by the member of the project (user) who performed the action and date range.</li>
+</ol>
+<p>Group audit events can also be accessed using the <a href="../../api/audit_events.md#group-audit-events">group audit events API</a>. Group audit event queries <code>created_after</code> and <code>created_before</code> parameters are limited to a maximum 30 day difference between the dates.</p>
+<h3>Project audit events</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Secure</strong> &gt; <strong>Audit events</strong>.</li>
+<li>Filter the audit events by the member of the project (user) who performed the action and date range.</li>
+</ol>
+<p>Project audit events can also be accessed using the <a href="../../api/audit_events.md#project-audit-events">project audit events API</a>. Project audit event queries <code>created_after</code> and <code>created_before</code> parameters are limited to a maximum 30 day difference between the dates.</p>
+<h2>Time zones</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/242014">Introduced</a> in GitLab 15.7, GitLab UI shows dates and times in the user's local time zone instead of UTC.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>The time zone used for audit events depends on where you view them:</p>
+<ul>
+<li>In the GitLab UI, your local time zone is used.</li>
+<li>The <a href="../../api/audit_events.html">audit events API</a> returns dates and times in UTC by default, or the
+  <a href="../../administration/timezone.html">configured time zone</a> on GitLab Self-Managed.</li>
+<li>In CSV exports, UTC is used.</li>
+</ul>
+<h2>Known issues</h2>
+<p>The audit events interface has limited search capabilities. Text based searching in audit event details is not supported. You can only filter audit events by:</p>
+<ul>
+<li>Member events: the author who performed the action.</li>
+<li>Date range: maximum 30 days rolling period.</li>
+</ul>
+<p>Expanding audit event report usability is proposed in <a href="https://gitlab.com/groups/gitlab-org/-/epics/418">epic 418</a>.</p>
+<p>For advanced searching and analysis of audit events, consider <a href="audit_event_streaming.html">streaming audit events</a> to an external destination where you can perform
+comprehensive text searches and analysis.</p>
+<h2>Contribute to audit events</h2>
+<p>If you don't see the event you want in any of the epics, you can either:</p>
+<ul>
+<li>Use the audit event proposal issue template to
+  <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/new?issuable_template=Audit%20Event%20Proposal">create an issue</a> to request it.</li>
+<li>Contribute to GitLab and add the event.</li>
+</ul>
+<h2>Administer topics</h2>
+<p>Instance administrators can <a href="../../administration/compliance/audit_event_reports.html">administer audit events</a> from the <strong>Admin</strong> area.</p></code></pre>
+</body>
+</html>

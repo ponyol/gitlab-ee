@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Set up the Beyond Identity integration for your instance</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Integrate GitLab with Beyond Identity to verify GPG keys added to user accounts.
+title: Beyond Identity</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/431433">Introduced</a> in GitLab 16.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>In GitLab, users can sign their commits after <a href="../repository/signed_commits/gpg.html">adding a GPG key to their profile</a>.
+The GitLab integration with <a href="https://www.beyondidentity.com/">Beyond Identity</a> extends this feature.</p>
+<p>When configured, this integration uses Beyond Identity to validate any new GPG key that a user adds
+to their profile. Keys that do not pass validation are rejected, and the user must upload a new key.</p>
+<p>When a user pushes a signed commit to the GitLab instance, GitLab runs a pre-receive
+check to validate those commits against the GPG key stored in the user's profile.
+This ensures that only commits signed with validated keys are accepted.</p>
+<h2>Set up the Beyond Identity integration for your instance</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have administrator access to the GitLab instance.</li>
+<li>The email address used in the GitLab profile must be the same as the email assigned to the key in the Beyond Identity Authenticator.</li>
+<li>You must have a Beyond Identity API token. You can request it from their Sales Engineer.</li>
+</ul>
+<p>To enable the Beyond Identity integration for your instance:</p>
+<ol>
+<li>Sign in to GitLab as an administrator.</li>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Integrations</strong>.</li>
+<li>Select <strong>Beyond Identity</strong>.</li>
+<li>Under <strong>Enable integration</strong>, select the <strong>Active</strong> checkbox.</li>
+<li>In <strong>API token</strong>, paste the API token you received from Beyond Identity.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>The Beyond Identity integration for your instance is now enabled.</p>
+<h2>GPG key verification</h2>
+<p>When a user adds a GPG key to their profile, the key is verified:</p>
+<ul>
+<li>If the key wasn't issued by the Beyond Identity Authenticator, it's accepted.</li>
+<li>If the key was issued by the Beyond Identity Authenticator, but the key is invalid, it's rejected.
+  For example: the email used in the user's GitLab profile is different from the email assigned to
+  the key in the Beyond Identity Authenticator.</li>
+</ul>
+<p>When a user pushes a commit, GitLab checks that the commit was signed by a GPG signature uploaded to the
+user profile.
+If the signature cannot be verified, the push is rejected.
+Web commits are accepted without a signature.</p>
+<h2>Skip push check for service accounts</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/454369">Introduced</a> in GitLab 16.11.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have administrator access to the GitLab instance.</li>
+</ul>
+<p>To skip the push check for <a href="../../profile/service_accounts.html">service accounts</a>:</p>
+<ol>
+<li>Sign in to GitLab as an administrator.</li>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Integrations</strong>.</li>
+<li>Select <strong>Beyond Identity</strong>.</li>
+<li>Select the <strong>Exclude service accounts</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Exclude groups or projects from the Beyond Identity check</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/454372">Introduced</a> in GitLab 17.0 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>beyond_identity_exclusions</code>. Enabled by default.</li>
+<li>Option to exclude groups <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/454372">introduced</a> in GitLab 17.1.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/457893">Generally available</a> in GitLab 17.7. Feature flag <code>beyond_identity_exclusions</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have administrator access to the GitLab instance.</li>
+</ul>
+<p>To exclude groups or projects from the Beyond Identity check:</p>
+<ol>
+<li>Sign in to GitLab as an administrator.</li>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Integrations</strong>.</li>
+<li>Select <strong>Beyond Identity</strong>.</li>
+<li>Select the <strong>Exclusions</strong> tab.</li>
+<li>Select <strong>Add exclusions</strong>.</li>
+<li>On the drawer, search and select groups or projects to exclude.</li>
+<li>Select <strong>Add exclusions</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

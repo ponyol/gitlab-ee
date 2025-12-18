@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Configure the integration</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Verify
+group: Pipeline Execution
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: GitHub</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can update GitHub with pipeline status updates from GitLab.
+The GitHub integration can help you if you use GitLab for CI/CD.</p>
+<p><img alt="Pipeline status update on GitHub" src="img/github_status_check_pipeline_update_v10_6.png" /></p>
+<p>This project integration is separate from the <a href="../import/github.md#mirror-a-repository-and-share-pipeline-status">instance-wide GitHub integration</a>
+and is automatically configured when you import a <a href="../../../integration/github.html">GitHub project</a>.</p>
+<h2>Configure the integration</h2>
+<p>This integration requires a <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">GitHub API token</a>
+with <code>repo:status</code> access granted.</p>
+<p>Complete these steps on GitHub:</p>
+<ol>
+<li>Go to your <strong>Personal access tokens</strong> page at <a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a>.</li>
+<li>Select <strong>Generate new token</strong>.</li>
+<li>Under <strong>Note</strong>, enter a name for the new token.</li>
+<li>Ensure <code>repo:status</code> is selected and select <strong>Generate token</strong>.</li>
+<li>Copy the generated token to use in GitLab.</li>
+</ol>
+<p>Complete these steps in GitLab:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Integrations</strong>.</li>
+<li>Select <strong>GitHub</strong>.</li>
+<li>Ensure the <strong>Active</strong> checkbox is selected.</li>
+<li>In <strong>Token</strong>, paste the token you generated on GitHub.</li>
+<li>In <strong>Repository URL</strong>, enter the path to your project on GitHub, such as <code>https://github.com/username/repository</code>.</li>
+<li>Optional. To disable <a href="#static-or-dynamic-status-check-names">static status check names</a>, clear the <strong>Enable static status check names</strong> checkbox.</li>
+<li>Optional. Select <strong>Test settings</strong>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>After configuring the integration, see <a href="../../../ci/ci_cd_for_external_repos/_index.md#pipelines-for-external-pull-requests">Pipelines for external pull requests</a>
+to configure pipelines to run for open pull requests.</p>
+<h3>Static or dynamic status check names</h3>
+<p>A status check name can be static or dynamic:</p>
+<ul>
+<li>
+<p><strong>Static</strong>: The hostname of your
+  GitLab instance is appended to the status check name.</p>
+</li>
+<li>
+<p><strong>Dynamic</strong>: The branch name is appended
+  to the status check name.</p>
+</li>
+</ul>
+<p>The <strong>Enable static status check names</strong> option enables you to configure
+required status checks in GitHub, which need a consistent (static) name to work correctly.</p>
+<p>If you <a href="#configure-the-integration">disable this option</a>,
+GitLab uses dynamic status check names instead.</p></code></pre>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Create a trigger</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Agent Foundations
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Triggers</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Core, Pro, or Enterprise</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Introduced in GitLab 18.3 <a href="../../../administration/feature_flags/_index.html">with a flag</a> named <code>ai_flow_triggers</code>. Enabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>A trigger determines when a flow runs.</p>
+<p>You specify the service account that runs the flow, and which conditions make the flow run.</p>
+<p>For example, you can specify flows to be triggered when you mention a service account
+in a discussion, or when you assign the service account as a reviewer.</p>
+<h2>Create a trigger</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><strong>Assign</strong> and <strong>Assign reviewer</strong> event types <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/567787">introduced</a> in GitLab 18.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Maintainer role for the project.</li>
+</ul>
+<p>To create a trigger:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Triggers</strong>.</li>
+<li>Select <strong>New flow trigger</strong>.</li>
+<li>In <strong>Description</strong>, enter a description for the trigger.</li>
+<li>From the <strong>Event types</strong> dropdown list, select one or more event types:</li>
+<li><strong>Mention</strong>: When the service account user is mentioned
+     in a comment on an issue or merge request.</li>
+<li><strong>Assign</strong>: When the service account user is assigned
+     to an issue or merge request.</li>
+<li><strong>Assign reviewer</strong>: When the service account user is assigned
+     as a reviewer to a merge request.</li>
+<li>From the <strong>Service account user</strong> dropdown list,
+   select the service account user.</li>
+<li>For <strong>Configuration source</strong>, select one of the following:</li>
+<li><strong>AI Catalog</strong>: From the flows configured for this project,
+     select a flow for the trigger to execute.</li>
+<li><strong>Configuration path</strong>: Enter the path to the flow configuration file
+     (for example, <code>.gitlab/duo/flows/claude.yaml</code>).</li>
+<li>Select <strong>Create flow trigger</strong>.</li>
+</ol>
+<p>The trigger now appears in <strong>Automate</strong> &gt; <strong>Triggers</strong>.</p>
+<h3>Edit a trigger</h3>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Triggers</strong>.</li>
+<li>For the trigger you want to change, select <strong>Edit flow trigger</strong> ({{&lt; icon name="pencil" &gt;}}).</li>
+<li>Make the changes and select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Delete a trigger</h3>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Automate</strong> &gt; <strong>Triggers</strong>.</li>
+<li>For the trigger you want to change, select <strong>Delete flow trigger</strong> ({{&lt; icon name="remove" &gt;}}).</li>
+<li>On the confirmation dialog, select <strong>OK</strong>.</li>
+</ol></code></pre>
+</body>
+</html>

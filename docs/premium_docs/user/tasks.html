@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># View tasks</title>
+    <link rel="stylesheet" href="/../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Project Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+gitlab_dedicated: yes
+title: Tasks
+description: Task labels, confidential tasks, linked items, and task weights.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/334812">Introduced</a> in GitLab 14.5 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_items</code>. Disabled by default.</li>
+<li>Creating, editing, and deleting tasks <a href="https://gitlab.com/groups/gitlab-org/-/epics/7169">introduced</a> in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/334812">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 15.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>A task in GitLab is a planning item that can be created in an issue.
+Use tasks to break down user stories captured in <a href="project/issues/_index.html">issues</a> into
+smaller, trackable items.</p>
+<p>When planning an issue, you need a way to capture and break down technical
+requirements or steps necessary to complete it. An issue with related tasks is better defined,
+and so you can provide a more accurate issue weight and completion criteria.</p>
+<p>For the latest updates, check the <a href="https://gitlab.com/groups/gitlab-org/-/epics/7103">Tasks roadmap</a>.</p>
+<p>Tasks are a type of work item, a step towards <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/323404">default issue types</a>
+in GitLab.
+For the roadmap of migrating issues and <a href="group/epics/_index.html">epics</a>
+to work items and adding custom work item types, see
+<a href="https://gitlab.com/groups/gitlab-org/-/epics/6033">epic 6033</a> or the
+<a href="https://about.gitlab.com/direction/plan/">Plan direction page</a>.</p>
+<h2>View tasks</h2>
+<p>View tasks in issues, in the <strong>Child items</strong> section.</p>
+<p>You can also <a href="project/issues/managing_issues.md#filter-the-list-of-issues">filter the list of issues</a>
+for <code>Type = task</code>.</p>
+<p>If you select a task from an issue, it opens in a dialog window.
+If you select a task to open in a new browser tab, or select it from the issue list,
+the task opens in a full-page view.</p>
+<h2>Create a task</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Option to select the project where tasks are created <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/436255">introduced</a> in GitLab 17.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Guest role for the project, or the project must be public.</li>
+</ul>
+<p>To create a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select <strong>Add</strong>.</li>
+<li>Select <strong>New task</strong>.</li>
+<li>Enter the task title.</li>
+<li>Select the <a href="project/organize_work_with_projects.html">project</a> to create the new task in.</li>
+<li>Select <strong>Create task</strong>.</li>
+</ol>
+<h3>From a task list item</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/377307">Introduced</a> in GitLab 15.9.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must have at least the Guest role for the project.</p>
+</li>
+<li>
+<p>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</p>
+</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, hover over a task list item and select the options menu ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Convert to task</strong>.</li>
+</ul>
+<p>The task list item is removed from the issue description and a task is created in the tasks widget from its contents.
+Any nested task list items are moved up a nested level.</p>
+<h2>Add existing tasks to an issue</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/381868">Introduced</a> in GitLab 15.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Guest role for the project, or the project must be public.</li>
+</ul>
+<p>To add a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select <strong>Add</strong>.</li>
+<li>Select <strong>Existing task</strong>.</li>
+<li>Search tasks by title.</li>
+<li>Select one or multiple tasks to add to the issue.</li>
+<li>Select <strong>Add task</strong>.</li>
+</ol>
+<h2>Edit a task</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To edit a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the task you want to edit.
+   The task window opens.</li>
+<li>Optional. To edit the title, select it and make your changes.</li>
+<li>Optional. To edit the description, select the edit icon ({{&lt; icon name="pencil" &gt;}}), make your changes, and
+   select <strong>Save</strong>.</li>
+<li>Select the close icon ({{&lt; icon name="close" &gt;}}).</li>
+</ol>
+<h3>Using the rich text editor</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Rich text editing in the dialog view <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/363007">introduced</a> in GitLab 15.6 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_items_mvc</code>. Disabled by default.</li>
+<li>Rich text editing in the full page view <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/104533">introduced</a> in GitLab 15.7.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/10378">Generally available</a> in GitLab 16.2. Feature flag <code>work_items_mvc</code> removed.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Use a rich text editor to edit a task's description.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To edit the description of a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit.
+   The task window opens.</li>
+<li>Next to <strong>Description</strong>, select the edit icon ({{&lt; icon name="pencil" &gt;}}). The description text box appears.</li>
+<li>Above the text box, select <strong>Rich text</strong>.</li>
+<li>Make your changes, and select <strong>Save</strong>.</li>
+</ol>
+<h2>Promote a task to an issue</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/412534">Introduced</a> in GitLab 16.1.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To promote a task to an issue:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the task you want to edit.
+   The task window opens.</li>
+<li>Unlink the parent issue and promote the task: In the task window, use these two
+   <a href="project/quick_actions.html">quick actions</a> in separate comments:</li>
+</ol>
+<p><code>plaintext
+   /remove_parent</code></p>
+<p><code>plaintext
+   /promote_to issue</code></p>
+<p>The task is converted to an issue and gets a new URL with <code>/issues/</code>.
+The previous URL with <code>/work_items/</code> still works.</p>
+<h2>Convert a task into another item type</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/385131">Introduced</a> in GitLab 17.8 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_items_beta</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/385131">Moved</a> <a href="../administration/feature_flags/_index.html">to the flag</a> named <code>okrs_mvc</code>. For current flag state, see the top of this page.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Convert a task into another item type, such as:</p>
+<ul>
+<li>Issue</li>
+<li>Objective</li>
+<li>Key result</li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Changing the type might result in data loss if the target type does not support all fields from the original type.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>The task you want to convert must not have a parent item assigned.</li>
+</ul>
+<p>To convert a task into another item type:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>.</li>
+<li>In the issue list, find your task.</li>
+<li>Optional. If the task has a parent issue assigned, remove it.
+   Add a comment to the task with the <code>/remove_parent</code> quick action.</li>
+<li>In the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}), then select <strong>Change type</strong>.</li>
+<li>Select the desired item type.</li>
+<li>If all conditions are met, select <strong>Change type</strong>.</li>
+</ol>
+<p>Alternatively, you can use the <a href="project/quick_actions.md#type"><code>/type</code> quick action</a>, followed
+by <code>issue</code>, <code>objective</code> or <code>key result</code> in a comment.</p>
+<h2>Remove a task from an issue</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Minimum required role <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/404799">changed</a> from Reporter to Guest in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Guest role for the project.</li>
+</ul>
+<p>You can remove a task from an issue. The task is not deleted, but the two are no longer connected.
+It's not possible to connect them again.</p>
+<p>To remove a task from an issue:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the options menu ({{&lt; icon name="ellipsis_v" &gt;}})
+   next to the task you want to remove.</li>
+<li>Select <strong>Remove task</strong>.</li>
+</ol>
+<h2>Delete a task</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Owner to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must either:</li>
+<li>Be the author of the task and have at least the Guest role for the project.</li>
+<li>Have the Planner or Owner role for the project.</li>
+</ul>
+<p>To delete a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the task you want to edit.</li>
+<li>In the task window, in the options menu ({{&lt; icon name="ellipsis_v" &gt;}}), select <strong>Delete task</strong>.</li>
+<li>Select <strong>OK</strong>.</li>
+</ol>
+<h2>Reorder tasks</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/385887">Introduced</a> in GitLab 16.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>By default, tasks are ordered by creation date.
+To reorder them, drag them around.</p>
+<h2>Change status</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/543862">Introduced</a> in GitLab 18.2 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_item_status_feature_flag</code>. Enabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/521286">Generally available</a> in GitLab 18.4. Feature flag <code>work_item_status_feature_flag</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<!-- Turn off the future tense test because of "won't do". -->
+<!-- vale gitlab_base.FutureTense = NO -->
+
+<p>You can assign a status to tasks to track their progress through your workflow. Status provides more granular tracking than the basic open/closed states, allowing you to use specific stages like <strong>In progress</strong>, <strong>Done</strong>, or <strong>Won't do</strong>.</p>
+<!-- vale gitlab_base.FutureTense = YES -->
+
+<p>For more information about status, including how to configure custom statuses, see <a href="work_items/status.html">Status</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project, be the author of the task, or be assigned to the task.</li>
+</ul>
+<p>To change the status of a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your task to view it.</li>
+<li>On the right sidebar, in the <strong>Status</strong> section, select <strong>Edit</strong>.</li>
+<li>From the dropdown list, select the status.</li>
+</ol>
+<p>The task's status updates immediately.</p>
+<p>You can also set the status by using the <a href="project/quick_actions.md#status"><code>/status</code> quick action</a>.</p>
+<h2>Assign users to a task</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To show who is responsible for a task, you can assign users to it.</p>
+<p>Users on GitLab Free can assign one user per task.
+Users on GitLab Premium and Ultimate can assign multiple users to a single task.
+See also <a href="project/issues/multiple_assignees_for_issues.html">multiple assignees for issues</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To change the assignee on a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit.
+   The task window opens.</li>
+<li>Next to <strong>Assignees</strong>, select <strong>Add assignees</strong>.</li>
+<li>From the dropdown list, select the users to add as an assignee.</li>
+<li>Select any area outside the dropdown list.</li>
+</ol>
+<h2>Assign labels to a task</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/339756">Introduced</a> in GitLab 15.5.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To add <a href="project/labels.html">labels</a> to a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit. The task window opens.</li>
+<li>Next to <strong>Labels</strong>, select <strong>Add labels</strong>.</li>
+<li>From the dropdown list, select the labels to add.</li>
+<li>Select any area outside the dropdown list.</li>
+</ol>
+<h2>Set a start and due date</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/365399">Introduced</a> in GitLab 15.4 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_items_mvc_2</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/365399">Generally available</a> in GitLab 15.5. Feature flag <code>work_items_mvc_2</code> removed.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can set a <a href="project/issues/due_dates.html">start and due date</a> on a task.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>You can set start and due dates on a task to show when work should begin and end.</p>
+<p>To set a due date:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit.
+   The task window opens.</li>
+<li>If the task already has a due date next to <strong>Due date</strong>, select it. Otherwise, select <strong>Add due date</strong>.</li>
+<li>In the date picker, select the desired due date.</li>
+</ol>
+<p>To set a start date:</p>
+<ol>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit.
+   The task window opens.</li>
+<li>If the task already has a start date next to <strong>Start date</strong>, select it. Otherwise, select <strong>Add start date</strong>.</li>
+<li>In the date picker, select the desired due date.</li>
+</ol>
+<p>The due date must be the same or later than the start date.
+   If you select a start date to be later than the due date, the due date is then changed to the same day.</p>
+<h2>Add a task to a milestone</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367463">Introduced</a> in GitLab 15.5 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_items_mvc_2</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367463">Moved</a> to feature flag named <code>work_items_mvc</code> in GitLab 15.7. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367463">Generally available</a> in GitLab 15.7. Feature flag <code>work_items_mvc</code> removed.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can add a task to a <a href="project/milestones/_index.html">milestone</a>.
+You can see the milestone title when you view a task.
+If you create a task for an issue that already belongs to a milestone,
+the new task inherits the milestone.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for the project.</li>
+</ul>
+<p>To add a task to a milestone:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit.
+   The task window opens.</li>
+<li>Next to <strong>Milestone</strong>, select <strong>Add to milestone</strong>.
+   If a task already belongs to a milestone, the dropdown list shows the current milestone.</li>
+<li>From the dropdown list, select the milestone to be associated with the task.</li>
+</ol>
+<h2>Set task weight</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/362550">Introduced</a> in GitLab 15.3.</li>
+<li>Edit button <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429137">introduced</a> in GitLab 16.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project.</li>
+</ul>
+<p>You can set weight on each task to show how much work it needs.
+This value is visible only when you view a task.</p>
+<p>To set issue weight of a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit.
+   The task window opens.</li>
+<li>Next to <strong>Weight</strong>, select <strong>Edit</strong>.</li>
+<li>Enter a whole, positive number.</li>
+<li>Select <strong>Apply</strong> or press <kbd>Enter</kbd>.</li>
+</ol>
+<h3>View count and weight of tasks in the parent issue</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520886">Introduced</a> in GitLab 18.3 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>use_cached_rolled_up_weights</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520886">Enabled on GitLab.com</a> in GitLab 18.4.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520886">Generally available</a> in GitLab 18.6. Feature flag <code>use_cached_rolled_up_weights</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>The number of descendant tasks and their total weight is displayed in the issue
+description, in the <strong>Child items</strong> section header.</p>
+<p>To see the number of open and closed tasks:</p>
+<ul>
+<li>In the section header, hover over the total counts.</li>
+</ul>
+<p>The numbers reflect all child tasks associated with the issue, including those you might
+not have permission to view.</p>
+<h3>View progress of the parent issue</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520886">Introduced</a> in GitLab 18.3 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>use_cached_rolled_up_weights</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520886">Enabled on GitLab.com</a> in GitLab 18.4.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/520886">Generally available</a> in GitLab 18.6. Feature flag <code>use_cached_rolled_up_weights</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>The issue progress percentage is displayed in the issue description, in the <strong>Child items</strong> section header.</p>
+<p>To see the completed and total weight of child tasks:</p>
+<ul>
+<li>In the section header, hover over the percentage.</li>
+</ul>
+<p>The weights and progress reflect all tasks associated with the issue, including those you might
+not have permission to view.</p>
+<h2>Add a task to an iteration</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367456">Introduced</a> in GitLab 15.5 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_items_mvc_2</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367456">Moved</a> to feature flag named <code>work_items_mvc</code> in GitLab 15.7. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367456">Generally available</a> in GitLab 15.7. Feature flag <code>work_items_mvc</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can add a task to an <a href="group/iterations/_index.html">iteration</a>.
+You can see the iteration title and period only when you view a task.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project.</li>
+</ul>
+<p>To add a task to an iteration:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit.
+   The task window opens.</li>
+<li>Next to <strong>Iteration</strong>, select <strong>Add to iteration</strong>.</li>
+<li>From the dropdown list, select the iteration to be associated with the task.</li>
+</ol>
+<h2>Estimate and track spent time</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/438577">Introduced</a> in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can estimate and track the time you spend on a task.</p>
+<p>For more information, see <a href="project/time_tracking.html">Time tracking</a>.</p>
+<h2>Prevent truncating descriptions with <strong>Read more</strong></h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/181184">Introduced</a> in GitLab 17.10.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>If a task description is long, GitLab displays only part of it.
+To see the whole description, you must select <strong>Read more</strong>.
+This truncation makes it easier to find other elements on the page without scrolling through lengthy text.</p>
+<p>To change whether descriptions are truncated:</p>
+<ol>
+<li>On a task, in the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Toggle <strong>Truncate descriptions</strong> according to your preference.</li>
+</ol>
+<p>This setting is remembered and affects all issues, tasks, epics, objectives, and key results.</p>
+<h2>Hide the right sidebar</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/181184">Introduced</a> in GitLab 17.10.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Task attributes are shown in a sidebar to the right of the description when space allows.
+To hide the sidebar and increase space for the description:</p>
+<ol>
+<li>On a task, in the upper-right corner, select <strong>More actions</strong> ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Hide sidebar</strong>.</li>
+</ol>
+<p>This setting is remembered and affects all issues, tasks, epics, objectives, and key results.</p>
+<p>To show the sidebar again:</p>
+<ul>
+<li>Repeat the previous steps and select <strong>Show sidebar</strong>.</li>
+</ul>
+<h2>View task system notes</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/378949">Introduced</a> in GitLab 15.7 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_items_mvc_2</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/378949">Moved</a> to feature flag named <code>work_items_mvc</code> in GitLab 15.8. Disabled by default.</li>
+<li>Changing activity sort order <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/378949">introduced</a> in GitLab 15.8.</li>
+<li>Filtering activity <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/389971">introduced</a> in GitLab 15.10.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/334812">Generally available</a> in GitLab 15.10. Feature flag <code>work_items_mvc</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can view all the system notes related to the task. By default they are sorted by <strong>Oldest first</strong>.
+You can always change the sorting order to <strong>Newest first</strong>, which is remembered across sessions.
+You can also filter activity by <strong>Comments only</strong> and <strong>History only</strong> in addition to the default <strong>All activity</strong> which is remembered across sessions.</p>
+<h2>Comments and threads</h2>
+<p>You can add <a href="discussions/_index.html">comments</a> and reply to threads in tasks.</p>
+<h2>Copy task reference</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/396553">Introduced</a> in GitLab 16.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To refer to a task elsewhere in GitLab, you can use its full URL or a short reference, which looks like
+<code>namespace/project-name#123</code>, where <code>namespace</code> is either a group or a username.</p>
+<p>To copy the task reference to your clipboard:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select your task.</li>
+<li>In the upper-right corner, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), then select <strong>Copy Reference</strong>.</li>
+</ol>
+<p>You can now paste the reference into another description or comment.</p>
+<p>For more information about task references, see <a href="markdown.md#gitlab-specific-references">GitLab-Flavored Markdown</a>.</p>
+<h2>Copy task email address</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/396553">Introduced</a> in GitLab 16.1.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can create a comment in a task by sending an email.
+Sending an email to this address creates a comment that contains the email body.</p>
+<p>For more information about creating comments by sending an email and the necessary configuration, see
+<a href="discussions/_index.md#reply-to-a-comment-by-sending-email">Reply to a comment by sending email</a>.</p>
+<p>To copy the task's email address:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the upper-right corner, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}), then select <strong>Copy task email address</strong>.</li>
+</ol>
+<h2>Set an issue as a parent</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/11198">Introduced</a> in GitLab 16.5.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Guest role for the project.</li>
+<li>The issue and task must belong to the same project.</li>
+</ul>
+<p>To set an issue as a parent of a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select the title of the task you want to edit.
+   The task window opens.</li>
+<li>Next to <strong>Parent</strong>, from the dropdown list, select the parent to add.</li>
+<li>Select any area outside the dropdown list.</li>
+</ol>
+<p>To remove the parent item of the task,
+next to <strong>Parent</strong>, select the dropdown list and then select <strong>Unassign</strong>.</p>
+<h2>Confidential tasks</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/8410">Introduced</a> in GitLab 15.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Confidential tasks are tasks visible only to members of a project with
+<a href="#who-can-see-confidential-tasks">sufficient permissions</a>.
+You can use confidential tasks to keep security vulnerabilities private or prevent surprises from
+leaking out.</p>
+<h3>Make a task confidential</h3>
+<p>By default, tasks are public.
+You can make a task confidential when you create or edit it.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role for the project.</li>
+<li>If the task has a parent issue which is non-confidential, and you want to make the issue confidential,
+  you must first make all the child tasks confidential.
+  A <a href="project/issues/confidential_issues.html">confidential issue</a> can have only confidential children.</li>
+</ul>
+<h4>In a new task</h4>
+<p>When you create a new task, a checkbox right below the text area is available to mark the
+task as confidential.</p>
+<p>Check that box and select <strong>Create task</strong>.</p>
+<h4>In an existing task</h4>
+<p>To change the confidentiality of an existing task:</p>
+<ol>
+<li><a href="#view-tasks">Open the task</a>.</li>
+<li>In the upper-right corner, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Turn on confidentiality</strong>.</li>
+</ol>
+<h3>Who can see confidential tasks</h3>
+<p>When a task is made confidential, only users with at least the Reporter role for the project have
+access to the task.
+Users with Guest or <a href="permissions.md#users-with-minimal-access">Minimal</a> roles can't access
+the task even if they were actively participating before the change.</p>
+<p>However, a user with the <strong>Guest role</strong> can create confidential tasks, but can only view the ones
+that they created themselves.</p>
+<p>Users with the Guest role or non-members can read the confidential task if they are assigned to the task.
+When a Guest user or non-member is unassigned from a confidential task, they can no longer view it.</p>
+<p>Confidential tasks are hidden in search results for users without the necessary permissions.</p>
+<h3>Confidential task indicators</h3>
+<p>Confidential tasks are visually different from regular tasks in a few ways.
+Wherever tasks are listed, you can see the confidential ({{&lt; icon name="eye-slash" &gt;}}) icon
+next to the tasks that are marked as confidential.</p>
+<p>If you don't have <a href="#who-can-see-confidential-tasks">enough permissions</a>,
+you cannot see confidential tasks at all.</p>
+<p>Likewise, while inside the task, you can see the confidential ({{&lt; icon name="eye-slash" &gt;}}) icon right next to
+the breadcrumbs.</p>
+<p>Every change from regular to confidential and vice versa, is indicated by a
+system note in the task's comments, for example:</p>
+<ul>
+<li>{{&lt; icon name="eye-slash" &gt;}} Jo Garcia made the issue confidential 5 minutes ago</li>
+<li>{{&lt; icon name="eye" &gt;}} Jo Garcia made the issue visible to everyone just now</li>
+</ul>
+<h2>Lock discussion</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/398649">Introduced</a> in GitLab 16.9 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>work_items_beta</code>. Disabled by default.</li>
+<li>Feature flag <code>work_items_beta</code> <a href="https://gitlab.com/gitlab-com/gl-infra/production/-/issues/17549">removed</a> in GitLab 18.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.
+This feature is available for testing, but not ready for production use.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>You can prevent public comments in a task.
+When you do, only project members can add and edit comments.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Reporter role.</li>
+</ul>
+<p>To lock a task:</p>
+<ol>
+<li>In the upper-right corner, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}).</li>
+<li>Select <strong>Lock discussion</strong>.</li>
+</ol>
+<p>A system note is added to the page details.</p>
+<p>If a task is closed with a locked discussion, then you cannot reopen it until the discussion is unlocked.</p>
+<h2>Linked items in tasks</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/416558">Introduced</a> in GitLab 16.5 <a href="../administration/feature_flags/_index.html">with a flag</a> named <code>linked_work_items</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/139394">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 16.7.</li>
+<li>Adding related items by entering their URLs and IDs <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/427594">introduced</a> in GitLab 16.8.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/150148">Generally available</a> in GitLab 17.0. Feature flag <code>linked_work_items</code> removed.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/10267">Changed</a> minimum required role from Reporter (if true) to Guest in GitLab 17.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Linked items are a bi-directional relationship and appear in a block below
+the emoji reactions section. You can link an objective, key result, or a task in the same project with each other.</p>
+<p>The relationship only shows up in the UI if the user can see both items.</p>
+<h3>Add a linked item</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Guest role for the project.</li>
+</ul>
+<p>To link an item to a task:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select your task.</li>
+<li>In the <strong>Linked items</strong> section of a task,
+   select <strong>Add</strong>.</li>
+<li>Select the relationship between the two items. Either:</li>
+<li><strong>relates to</strong></li>
+<li><strong>blocks</strong></li>
+<li><strong>is blocked by</strong></li>
+<li>Enter the search text of the item, URL, or its reference ID.</li>
+<li>When you have added all the items to be linked, select <strong>Add</strong> below the search box.</li>
+</ol>
+<p>When you have finished adding all linked items, you can see
+them categorized so their relationships can be better understood visually.</p>
+<p><img alt="Linked items block" src="img/linked_items_list_v16_5.png" /></p>
+<h3>Remove a linked item</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>
+<p>You must have at least the Guest role for the project.</p>
+</li>
+<li>
+<p>On the left sidebar, select <strong>Search or go to</strong> and find your project. If you've <a href="interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</p>
+</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issues</strong>, then select your issue to view it.</li>
+<li>In the issue description, in the <strong>Child items</strong> section, select your task.</li>
+<li>In the <strong>Linked items</strong> section of a task, next to each item, select the vertical
+   ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) and then select <strong>Remove</strong>.</li>
+</ul>
+<p>Due to the bi-directional relationship, the relationship no longer appears in either item.</p>
+<h3>Add a merge request and automatically close tasks</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/440851">Introduced</a> in GitLab 17.3.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can set a task to close when a merge request merges.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least a Developer role for the project containing the merge request.</li>
+<li>
+<p>You must have at least a Reporter role for the project containing the task.</p>
+</li>
+<li>
+<p>Edit your merge request.</p>
+</li>
+<li>In the <strong>Description</strong> box, find and add the task.</li>
+<li>Use the <a href="project/issues/managing_issues.md#closing-issues-automatically">closing pattern</a> that you would for adding a merge request to an issue.</li>
+<li>If your task is in the same project as your merge request, you can search for your task by typing <kbd>#</kbd> followed by the task's ID or title.</li>
+<li>If your task is in a different project, with a task open, copy the URL from the browser or
+     copy the task's reference by selecting the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) in the upper-right corner, then <strong>Copy Reference</strong>.</li>
+</ul>
+<p>The merge requests are now visible in the main body, in the <strong>Development</strong> section.</p>
+<p>You must use the exact closing pattern to add the merge request to the task. Other text will not work.</p>
+<p>If <a href="project/issues/managing_issues.md#disable-automatic-issue-closing">automatic issue closing</a> is enabled in your project settings, the task will be automatically closed when either:</p>
+<ul>
+<li>The added merge request is merged.</li>
+<li>A commit referencing a task with the closing pattern is committed to your project's default branch.</li>
+</ul>
+<h2>Related topics</h2>
+<ul>
+<li><a href="project/merge_requests/creating_merge_requests.md#from-a-task">Create a merge request from a task</a></li>
+</ul></code></pre>
+</body>
+</html>

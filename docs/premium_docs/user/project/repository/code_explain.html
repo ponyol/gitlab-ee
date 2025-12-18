@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code_explain</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Code Creation
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Explain code in a file</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Add-on: GitLab Duo Pro or Enterprise, GitLab Duo with Amazon Q</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; collapsible title="Model information" &gt;}}</p>
+<ul>
+<li>Default LLM: Anthropic <a href="https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-sonnet-4-5">Claude Sonnet 4.5</a></li>
+<li>LLM for Amazon Q: Amazon Q Developer</li>
+<li>Available on <a href="../../../administration/gitlab_duo_self_hosted/_index.html">GitLab Duo with self-hosted models</a></li>
+</ul>
+<p>{{&lt; /collapsible &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/429915">Generally available</a> in GitLab 16.8.</li>
+<li>Changed to require GitLab Duo add-on in GitLab 17.6 and later.</li>
+<li><a href="https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/issues/1541">Updated default LLM</a> to Claude Sonnet 4.5 in GitLab 18.6.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>If you spend a lot of time trying to understand code that others have created, or
+you struggle to understand code written in a language you are not familiar with,
+you can ask GitLab Duo to explain the code to you.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must belong to at least one group with the
+  <a href="../../gitlab_duo/turn_on_off.md#turn-on-beta-and-experimental-features">experiment and beta features setting</a> enabled.</li>
+<li>You must have access to view the project.</li>
+</ul>
+<p>To explain the code in a file:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select a file that contains code.</li>
+<li>Select the lines you want explained.</li>
+<li>On the left side, select the question mark ({{&lt; icon name="question" &gt;}}).
+   You might have to scroll to the first line of your selection to view it.</li>
+</ol>
+<p><img alt="File view showing selected lines and the question mark icon which you can use to explain the code." src="img/explain_code_v17_1.png" /></p>
+<p>GitLab Duo Chat explains the code. It might take a moment for the explanation to be generated.</p>
+<p>If you'd like, you can provide feedback about the quality of the explanation.</p>
+<p>We cannot guarantee that the large language model produces results that are correct. Use the explanation with caution.</p>
+<p>You can also explain code in:</p>
+<ul>
+<li>A <a href="../merge_requests/changes.md#explain-code-in-a-merge-request">merge request</a>.</li>
+<li>The <a href="../../gitlab_duo_chat/examples.md#explain-selected-code">IDE</a>.</li>
+</ul></code></pre>
+</body>
+</html>

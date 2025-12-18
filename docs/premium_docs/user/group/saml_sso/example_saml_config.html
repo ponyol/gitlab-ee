@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># SAML and SCIM screenshots</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Authentication
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Example group SAML and SCIM configurations</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>These are notes and screenshots regarding Group SAML and SCIM that the GitLab Support Team sometimes uses while troubleshooting, but which do not fit into the official documentation. GitLab is making this public, so that anyone can make use of the Support team's collected knowledge.</p>
+<p>Refer to the GitLab <a href="_index.html">Group SAML</a> documentation for information on the feature and how to set it up.</p>
+<p>When troubleshooting a SAML configuration, GitLab team members will frequently start with the <a href="_index.md#troubleshooting">SAML troubleshooting section</a>.</p>
+<p>They may then set up a test configuration of the desired identity provider. We include example screenshots in this section.</p>
+<h2>SAML and SCIM screenshots</h2>
+<p>This section includes relevant screenshots of the following example configurations of <a href="_index.html">Group SAML</a> and <a href="scim_setup.html">Group SCIM</a>:</p>
+<ul>
+<li><a href="#azure-active-directory">Azure Active Directory</a></li>
+<li><a href="#google-workspace">Google Workspace</a></li>
+<li><a href="#okta">Okta</a></li>
+<li><a href="#onelogin">OneLogin</a></li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>These screenshots are updated only as needed by GitLab Support. They are <strong>not</strong> official documentation.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>If you are currently having an issue with GitLab, you may want to check your <a href="https://about.gitlab.com/support/">support options</a>.</p>
+<h2>Azure Active Directory</h2>
+<p>This section has screenshots for the elements of Azure Active Directory configuration.</p>
+<h3>Basic SAML app configuration</h3>
+<p><img alt="Azure AD basic SAML" src="img/AzureAD-basic_SAML_v14_1.png" /></p>
+<h3>User claims and attributes</h3>
+<p><img alt="Azure AD user claims" src="img/AzureAD-claims_v14_1.png" /></p>
+<h3>SCIM mapping</h3>
+<p>Provisioning:</p>
+<p><img alt="Azure AD SCIM Provisioning" src="img/AzureAD-scim_provisioning_v14_8.png" /></p>
+<h3>Attribute mapping</h3>
+<p><img alt="Azure AD SCIM Attribute Mapping" src="img/AzureAD-scim_attribute_mapping_v12_2.png" /></p>
+<h3>Group Sync</h3>
+<p><img alt="Azure Group Claims" src="img/azure_configure_group_claim_v14_0.png" /></p>
+<p>Using the <strong>Group ID</strong> source attribute requires users to enter the group ID or object ID when configuring SAML group links.</p>
+<p>If available, you can add user-friendly group names instead. When setting up Azure group claims:</p>
+<ol>
+<li>Select the <strong>sAMAccountName</strong> source attribute.</li>
+<li>Enter a group name. You can specify a name up to 256 characters long.</li>
+<li>To ensure the attribute is part of the assertion, select <strong>Emit group names for cloud-only groups</strong>.</li>
+</ol>
+<p><a href="https://support.esri.com/en-us/knowledge-base/when-azure-ad-is-the-saml-identify-provider-the-group-a-000022190">Azure AD limits the number of groups that can be sent in a SAML response to 150</a>. If a user is a member of more than 150 groups, Azure does not include that user's group claim in the SAML response.</p>
+<h2>Google Workspace</h2>
+<h3>Basic SAML app configuration</h3>
+<p><img alt="Google Workspace basic SAML" src="img/GoogleWorkspace-basic-SAML_v14_10.png" /></p>
+<h3>User claims and attributes</h3>
+<p><img alt="Google Workspace user claims" src="img/GoogleWorkspace-claims_v14_10.png" /></p>
+<h3>IdP links and certificate</h3>
+<p><img alt="Google Workspace Links and Certificate" src="img/GoogleWorkspace-linkscert_v14_10.png" /></p>
+<h2>Okta</h2>
+<h3>Basic SAML app configuration for GitLab.com groups</h3>
+<p><img alt="Okta basic SAML" src="img/Okta-GroupSAML_v15_3.png" /></p>
+<h3>Basic SAML app configuration for GitLab Self-Managed</h3>
+<p><img alt="Okta admin panel view" src="img/Okta-SM_v15_3.png" /></p>
+<h3>User claims and attributes</h3>
+<p><img alt="Okta Attributes" src="img/Okta-attributes_v15_3.png" /></p>
+<h3>Group Sync</h3>
+<p><img alt="Okta Group attribute" src="img/Okta-GroupAttribute_v15_3.png" /></p>
+<h3>Advanced SAML app settings (defaults)</h3>
+<p><img alt="Okta Advanced Settings" src="img/Okta-advancedsettings_v15_3.png" /></p>
+<h3>IdP links and certificate</h3>
+<p><img alt="Okta Links and Certificate" src="img/Okta-linkscert_v15_3.png" /></p>
+<h3>SAML sign on settings</h3>
+<p><img alt="Okta SAML settings" src="img/okta_saml_settings_v15_3.png" /></p>
+<h3>SCIM settings</h3>
+<p>Setting the username for the newly provisioned users when assigning them the SCIM app:</p>
+<p><img alt="Assigning SCIM app to users on Okta" src="img/okta_setting_username_v14_6.png" /></p>
+<h2>OneLogin</h2>
+<h3>Basic SAML app configuration</h3>
+<p><img alt="OneLogin application details" src="img/OneLogin-app_details_v12_8.png" /></p>
+<h3>Parameters</h3>
+<p><img alt="OneLogin application details" src="img/OneLogin-parameters_v12_8.png" /></p>
+<h3>Adding a user</h3>
+<p><img alt="OneLogin user add" src="img/OneLogin-userAdd_v12_8.png" /></p>
+<h3>SSO settings</h3>
+<p><img alt="OneLogin SSO settings" src="img/OneLogin-SSOsettings_v12_8.png" /></p>
+<h2>SAML response example</h2>
+<p>When a user signs in using SAML, GitLab receives a SAML response. The SAML response can be found in <code>production.log</code> logs as a base64-encoded message. Locate the response by
+searching for <code>SAMLResponse</code>. The decoded SAML response is in XML format. For example:</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;saml2p:Response xmlns:saml2p=&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; Destination=&quot;https://gitlabexample/-/saml/callback&quot; ID=&quot;id4898983630840142426821432&quot; InResponseTo=&quot;_c65e4c88-9425-4472-b42c-37f4186ac0ee&quot; IssueInstant=&quot;2022-05-30T21:30:35.696Z&quot; Version=&quot;2.0&quot;&gt;
+ &lt;saml2:Issuer xmlns:saml2=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; Format=&quot;urn:oasis:names:tc:SAML:2.0:nameid-format:entity&quot;&gt;http://www.okta.com/exk2y6j57o1Pdr2lI8qh7&lt;/saml2:Issuer&gt;
+ &lt;ds:Signature xmlns:ds=&quot;http://www.w3.org/2000/09/xmldsig#&quot;&gt;
+   &lt;ds:SignedInfo&gt;
+     &lt;ds:CanonicalizationMethod Algorithm=&quot;http://www.w3.org/2001/10/xml-exc-c14n#&quot;/&gt;
+     &lt;ds:SignatureMethod Algorithm=&quot;http://www.w3.org/2001/04/xmldsig-more#rsa-sha256&quot;/&gt;
+     &lt;ds:Reference URI=&quot;#id4898983630840142426821432&quot;&gt;
+       &lt;ds:Transforms&gt;
+         &lt;ds:Transform Algorithm=&quot;http://www.w3.org/2000/09/xmldsig#enveloped-signature&quot;/&gt;
+         &lt;ds:Transform Algorithm=&quot;http://www.w3.org/2001/10/xml-exc-c14n#&quot;&gt;
+           &lt;ec:InclusiveNamespaces xmlns:ec=&quot;http://www.w3.org/2001/10/xml-exc-c14n#&quot; PrefixList=&quot;xs&quot;/&gt;
+         &lt;/ds:Transform&gt;
+       &lt;/ds:Transforms&gt;
+       &lt;ds:DigestMethod Algorithm=&quot;http://www.w3.org/2001/04/xmlenc#sha256&quot;/&gt;
+       &lt;ds:DigestValue&gt;neiQvv9d3OgS4GZW8Nptp4JhjpKs3GCefibn+vmRgk4=&lt;/ds:DigestValue&gt;
+     &lt;/ds:Reference&gt;
+   &lt;/ds:SignedInfo&gt;
+   &lt;ds:SignatureValue&gt;dMsQX8ivi...HMuKGhyLRvabGU6CuPrf7==&lt;/ds:SignatureValue&gt;
+   &lt;ds:KeyInfo&gt;
+     &lt;ds:X509Data&gt;
+       &lt;ds:X509Certificate&gt;MIIDq...cptGr3vN9TQ==&lt;/ds:X509Certificate&gt;
+     &lt;/ds:X509Data&gt;
+   &lt;/ds:KeyInfo&gt;
+ &lt;/ds:Signature&gt;
+ &lt;saml2p:Status xmlns:saml2p=&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;&gt;
+   &lt;saml2p:StatusCode Value=&quot;urn:oasis:names:tc:SAML:2.0:status:Success&quot;/&gt;
+ &lt;/saml2p:Status&gt;
+ &lt;saml2:Assertion xmlns:saml2=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; ID=&quot;id489&quot; IssueInstant=&quot;2022-05-30T21:30:35.696Z&quot; Version=&quot;2.0&quot;&gt;
+   &lt;saml2:Issuer xmlns:saml2=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; Format=&quot;urn:oasis:names:tc:SAML:2.0:nameid-format:entity&quot;&gt;http://www.okta.com/exk2y6j57o1Pdr2lI8qh7&lt;/saml2:Issuer&gt;
+   &lt;ds:Signature xmlns:ds=&quot;http://www.w3.org/2000/09/xmldsig#&quot;&gt;
+     &lt;ds:SignedInfo&gt;
+       &lt;ds:CanonicalizationMethod Algorithm=&quot;http://www.w3.org/2001/10/xml-exc-c14n#&quot;/&gt;
+       &lt;ds:SignatureMethod Algorithm=&quot;http://www.w3.org/2001/04/xmldsig-more#rsa-sha256&quot;/&gt;
+       &lt;ds:Reference URI=&quot;#id48989836309833801859473359&quot;&gt;
+         &lt;ds:Transforms&gt;
+           &lt;ds:Transform Algorithm=&quot;http://www.w3.org/2000/09/xmldsig#enveloped-signature&quot;/&gt;
+           &lt;ds:Transform Algorithm=&quot;http://www.w3.org/2001/10/xml-exc-c14n#&quot;&gt;
+             &lt;ec:InclusiveNamespaces xmlns:ec=&quot;http://www.w3.org/2001/10/xml-exc-c14n#&quot; PrefixList=&quot;xs&quot;/&gt;
+           &lt;/ds:Transform&gt;
+         &lt;/ds:Transforms&gt;
+         &lt;ds:DigestMethod Algorithm=&quot;http://www.w3.org/2001/04/xmlenc#sha256&quot;/&gt;
+         &lt;ds:DigestValue&gt;MaIsoi8hbT9gsi/mNZsz449mUuAcuEWY0q3bc4asOQs=&lt;/ds:DigestValue&gt;
+       &lt;/ds:Reference&gt;
+     &lt;/ds:SignedInfo&gt;
+     &lt;ds:SignatureValue&gt;dMsQX8ivi...HMuKGhyLRvabGU6CuPrf7==&lt;&lt;/ds:SignatureValue&gt;
+     &lt;ds:KeyInfo&gt;
+       &lt;ds:X509Data&gt;
+         &lt;ds:X509Certificate&gt;MIIDq...cptGr3vN9TQ==&lt;/ds:X509Certificate&gt;
+       &lt;/ds:X509Data&gt;
+     &lt;/ds:KeyInfo&gt;
+   &lt;/ds:Signature&gt;
+   &lt;saml2:Subject xmlns:saml2=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot;&gt;
+     &lt;saml2:NameID Format=&quot;urn:oasis:names:tc:SAML:2.0:nameid-format:persistent&quot;&gt;useremail@domain.com&lt;/saml2:NameID&gt;
+     &lt;saml2:SubjectConfirmation Method=&quot;urn:oasis:names:tc:SAML:2.0:cm:bearer&quot;&gt;
+       &lt;saml2:SubjectConfirmationData InResponseTo=&quot;_c65e4c88-9425-4472-b42c-37f4186ac0ee&quot; NotOnOrAfter=&quot;2022-05-30T21:35:35.696Z&quot; Recipient=&quot;https://gitlab.example.com/-/saml/callback&quot;/&gt;
+     &lt;/saml2:SubjectConfirmation&gt;
+   &lt;/saml2:Subject&gt;
+   &lt;saml2:Conditions xmlns:saml2=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; NotBefore=&quot;2022-05-30T21:25:35.696Z&quot; NotOnOrAfter=&quot;2022-05-30T21:35:35.696Z&quot;&gt;
+     &lt;saml2:AudienceRestriction&gt;
+       &lt;saml2:Audience&gt;https://gitlab.example.com/&lt;/saml2:Audience&gt;
+     &lt;/saml2:AudienceRestriction&gt;
+   &lt;/saml2:Conditions&gt;
+   &lt;saml2:AuthnStatement xmlns:saml2=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; AuthnInstant=&quot;2022-05-30T21:30:35.696Z&quot; SessionIndex=&quot;_c65e4c88-9425-4472-b42c-37f4186ac0ee&quot;&gt;
+     &lt;saml2:AuthnContext&gt;
+       &lt;saml2:AuthnContextClassRef&gt;urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport&lt;/saml2:AuthnContextClassRef&gt;
+     &lt;/saml2:AuthnContext&gt;
+   &lt;/saml2:AuthnStatement&gt;
+   &lt;saml2:AttributeStatement xmlns:saml2=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot;&gt;
+     &lt;saml2:Attribute Name=&quot;email&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified&quot;&gt;
+       &lt;saml2:AttributeValue xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:type=&quot;xs:string&quot;&gt;useremail@domain.com&lt;/saml2:AttributeValue&gt;
+     &lt;/saml2:Attribute&gt;
+     &lt;saml2:Attribute Name=&quot;firstname&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified&quot;&gt;
+       &lt;saml2:AttributeValue xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:type=&quot;xs:string&quot;&gt;John&lt;/saml2:AttributeValue&gt;
+     &lt;/saml2:Attribute&gt;
+     &lt;saml2:Attribute Name=&quot;lastname&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified&quot;&gt;
+       &lt;saml2:AttributeValue xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:type=&quot;xs:string&quot;&gt;Doe&lt;/saml2:AttributeValue&gt;
+     &lt;/saml2:Attribute&gt;
+     &lt;saml2:Attribute Name=&quot;Groups&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified&quot;&gt;
+       &lt;saml2:AttributeValue xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:type=&quot;xs:string&quot;&gt;Super-awesome-group&lt;/saml2:AttributeValue&gt;
+     &lt;/saml2:Attribute&gt;
+   &lt;/saml2:AttributeStatement&gt;
+ &lt;/saml2:Assertion&gt;
+&lt;/saml2p:Response&gt;
+</code></pre></code></pre>
+</body>
+</html>

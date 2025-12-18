@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Move data in a GitLab instance</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Tenant Scale
+group: Gitaly
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Moving repositories managed by GitLab</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Move all repositories managed by GitLab to another file system or another server.</p>
+<h2>Move data in a GitLab instance</h2>
+<p>Use the GitLab API to move Git repositories:</p>
+<ul>
+<li>Between servers.</li>
+<li>Between different storages.</li>
+<li>From single-node Gitaly to Gitaly Cluster (Praefect).</li>
+</ul>
+<p>GitLab repositories can be associated with projects, groups, and snippets. Each of these types has a separate API for
+moving the repositories. To move all repositories on a GitLab instance, each of type of repository must be moved for
+each storage.</p>
+<p>Each repository is made read-only for the duration of the move and is not writable until the move is finished.</p>
+<p>To move repositories:</p>
+<ol>
+<li>Ensure all <a href="../gitaly/configure_gitaly.md#mixed-configuration">local and cluster storages</a> are accessible to the GitLab instance. In
+   this example, these are <code>&lt;original_storage_name&gt;</code> and <code>&lt;cluster_storage_name&gt;</code>.</li>
+<li><a href="../repository_storage_paths.md#configure-where-new-repositories-are-stored">Configure repository storage weights</a>
+   so that the new storages receives all new projects. This stops new projects from being created on existing storages
+   while the migration is in progress.</li>
+<li>Schedule repository moves for projects, snippets, and group.</li>
+<li>If you use <a href="../geo/_index.html">Geo</a>,
+   <a href="../geo/replication/troubleshooting/synchronization_verification.md#resync-resources-for-the-selected-component">resync all repositories</a>.</li>
+</ol>
+<h3>Move projects</h3>
+<p>You can move all projects or individual projects.</p>
+<p>To move all projects by using the API:</p>
+<ol>
+<li><a href="../../api/project_repository_storage_moves.md#schedule-repository-storage-moves-for-all-projects-on-a-storage-shard">Schedule repository storage moves for all projects on a storage shard</a>
+   using the API. For example:</li>
+</ol>
+<p><code>shell
+   curl --request POST --header "PRIVATE-TOKEN: &lt;your_access_token&gt;" \
+        --header "Content-Type: application/json" \
+        --data '{"source_storage_name":"&lt;original_storage_name&gt;","destination_storage_name":"&lt;cluster_storage_name&gt;"}' \
+        "https://gitlab.example.com/api/v4/project_repository_storage_moves"</code></p>
+<ol>
+<li><a href="../../api/project_repository_storage_moves.md#retrieve-all-project-repository-storage-moves">Query the most recent repository moves</a>
+   using the API. The response indicates either:</li>
+<li>The moves have completed successfully. The <code>state</code> field is <code>finished</code>.</li>
+<li>The moves are in progress. Re-query the repository move until it completes successfully.</li>
+<li>
+<p>The moves have failed. Most failures are temporary and are solved by rescheduling the move.</p>
+</li>
+<li>
+<p>After the moves are complete, use the API to <a href="../../api/projects.md#list-all-projects">query projects</a> and confirm
+   that all projects have moved. None of the projects should be returned with the <code>repository_storage</code> field set to the
+   old storage. For example:</p>
+</li>
+</ol>
+<p><code>shell
+   curl --header "PRIVATE-TOKEN: &lt;your_access_token&gt;" --header "Content-Type: application/json" \
+   "https://gitlab.example.com/api/v4/projects?repository_storage=&lt;original_storage_name&gt;"</code></p>
+<p>Alternatively, use the Rails console to confirm that all projects have moved:</p>
+<p><code>ruby
+   ProjectRepository.for_repository_storage('&lt;original_storage_name&gt;')</code></p>
+<ol>
+<li>Repeat for each storage as required.</li>
+</ol>
+<p>If you don't want to move all projects, follow the instructions for
+<a href="../../api/project_repository_storage_moves.md#schedule-a-repository-storage-move-for-a-project">moving individual projects</a>.</p>
+<h3>Move snippets</h3>
+<p>You can move all snippets or individual snippets.</p>
+<p>To move all snippets by using the API:</p>
+<ol>
+<li><a href="../../api/snippet_repository_storage_moves.md#schedule-repository-storage-moves-for-all-snippets-on-a-storage-shard">Schedule repository storage moves for all snippets on a storage shard</a>. For example:</li>
+</ol>
+<p><code>shell
+   curl --request POST --header "PRIVATE-TOKEN: &lt;your_access_token&gt;" \
+        --header "Content-Type: application/json" \
+        --data '{"source_storage_name":"&lt;original_storage_name&gt;","destination_storage_name":"&lt;cluster_storage_name&gt;"}' \
+        "https://gitlab.example.com/api/v4/snippet_repository_storage_moves"</code></p>
+<ol>
+<li><a href="../../api/snippet_repository_storage_moves.md#retrieve-all-snippet-repository-storage-moves">Query the most recent repository moves</a>.
+   The response indicates either:</li>
+<li>The moves have completed successfully. The <code>state</code> field is <code>finished</code>.</li>
+<li>The moves are in progress. Re-query the repository move until it completes successfully.</li>
+<li>
+<p>The moves have failed. Most failures are temporary and are solved by rescheduling the move.</p>
+</li>
+<li>
+<p>After the moves are complete, use the Rails console to confirm that all snippets have moved:</p>
+</li>
+</ol>
+<p><code>ruby
+   SnippetRepository.for_repository_storage('&lt;original_storage_name&gt;')</code></p>
+<p>The command should not return snippets for the original storage.</p>
+<ol>
+<li>Repeat for each storage as required.</li>
+</ol>
+<p>If you don't want to move all snippets, follow the instructions for
+<a href="../../api/snippet_repository_storage_moves.md#schedule-a-repository-storage-move-for-a-snippet">individual snippets</a>.</p>
+<h3>Move groups</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can move all groups or individual groups.</p>
+<p>To move all groups by using the API:</p>
+<ol>
+<li><a href="../../api/group_repository_storage_moves.md#schedule-repository-storage-moves-for-all-groups-on-a-storage-shard">Schedule repository storage moves for all groups on a storage shard</a>.
+   For example:</li>
+</ol>
+<p><code>shell
+   curl --request POST --header "PRIVATE-TOKEN: &lt;your_access_token&gt;" \
+        --header "Content-Type: application/json" \
+        --data '{"source_storage_name":"&lt;original_storage_name&gt;","destination_storage_name":"&lt;cluster_storage_name&gt;"}' \
+        "https://gitlab.example.com/api/v4/group_repository_storage_moves"</code></p>
+<ol>
+<li><a href="../../api/group_repository_storage_moves.md#retrieve-all-group-repository-storage-moves">Query the most recent repository moves</a>.
+   The response indicates either:</li>
+<li>The moves have completed successfully. The <code>state</code> field is <code>finished</code>.</li>
+<li>The moves are in progress. Re-query the repository move until it completes successfully.</li>
+<li>
+<p>The moves have failed. Most failures are temporary and are solved by rescheduling the move.</p>
+</li>
+<li>
+<p>After the moves are complete, use the Rails console to confirm that all groups have moved:</p>
+</li>
+</ol>
+<p><code>ruby
+   GroupWikiRepository.for_repository_storage('&lt;original_storage_name&gt;')</code></p>
+<p>The command should not return groups for the original storage.</p>
+<ol>
+<li>Repeat for each storage as required.</li>
+</ol>
+<p>If you don't want to move all groups, follow the instructions for
+<a href="../../api/group_repository_storage_moves.md#schedule-a-repository-storage-move-for-a-group">individual groups</a>.</p>
+<h2>Migrate to another GitLab instance</h2>
+<p>You can't <a href="#move-data-in-a-gitlab-instance">move data by using the API</a> if you are migrating to a new GitLab
+environment. For example:</p>
+<ul>
+<li>From a single-node GitLab to a scaled-out architecture.</li>
+<li>From a GitLab instance in your private data center to a cloud provider.</li>
+</ul>
+<p>In this case, there are ways you can copy all your repositories from <code>/var/opt/gitlab/git-data/repositories</code> to
+<code>/mnt/gitlab/repositories</code> depending on the scenario:</p>
+<ul>
+<li>The target directory is empty.</li>
+<li>The target directory contains an outdated copy of the repositories.</li>
+<li>When you have thousands of repositories.</li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Each of the approaches can or does overwrite data in the target directory <code>/mnt/gitlab/repositories</code>. You must correctly
+specify the source and the target.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Use backup and restore (recommended)</h3>
+<p>For either Gitaly or Gitaly Cluster (Praefect) targets, you should use the GitLab
+<a href="../backup_restore/_index.html">backup and restore capability</a>. Git repositories are accessed, managed, and stored on
+GitLab servers by Gitaly as a database. You can experience data loss if you directly access and copy Gitaly files using
+tools like <code>rsync</code>. You can:</p>
+<ul>
+<li>Improve backup performance by
+  <a href="../backup_restore/backup_gitlab.md#back-up-git-repositories-concurrently">processing multiple repositories concurrently</a>.</li>
+<li>Create backups of just the repositories by using the
+  <a href="../backup_restore/backup_gitlab.md#excluding-specific-data-from-the-backup">skip feature</a>.</li>
+</ul>
+<p>You must use the back up and restore method for Gitaly Cluster (Praefect) targets.</p>
+<h3>Use <code>tar</code></h3>
+<p>You can use a <code>tar</code> pipe to move repositories if:</p>
+<ul>
+<li>You specify Gitaly targets and not Gitaly Cluster targets.</li>
+<li>The target directory <code>/mnt/gitlab/repositories</code> is empty.</li>
+</ul>
+<p>This method has low overhead and <code>tar</code> is usually pre-installed on your system. However, you cannot resume an
+interrupted <code>tar</code> pipe. If <code>tar</code> is interrupted, you must empty the target directory and copy all the data again.</p>
+<p>To see progress of the <code>tar</code> process, replace <code>-xf</code> with <code>-xvf</code>.</p>
+<pre><code class="language-shell">sudo -u git sh -c 'tar -C /var/opt/gitlab/git-data/repositories -cf - -- . |\
+  tar -C /mnt/gitlab/repositories -xf -'
+</code></pre>
+<h4>Use a <code>tar</code> pipe to another server</h4>
+<p>For Gitaly targets, you can use a <code>tar</code> pipe to copy data to another server. If your <code>git</code> user has SSH access to the
+new server as <code>git@&lt;newserver&gt;</code>, you can pipe the data through SSH.</p>
+<p>If you want to compress the data before it goes over the network (which increases CPU usage) you can replace
+<code>ssh</code> with <code>ssh -C</code>.</p>
+<pre><code class="language-shell">sudo -u git sh -c 'tar -C /var/opt/gitlab/git-data/repositories -cf - -- . |\
+  ssh git@newserver tar -C /mnt/gitlab/repositories -xf -'
+</code></pre>
+<h3>Use <code>rsync</code></h3>
+<p>You can use a <code>rsync</code> to move repositories if:</p>
+<ul>
+<li>You specify Gitaly targets and not Gitaly Cluster targets.</li>
+<li>The target directory already contains a partial or outdated copy of the repositories, which means copying all the data
+  again with <code>tar</code> is inefficient.</li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>You must use the <code>--delete</code> option when using <code>rsync</code>. Using <code>rsync</code> without <code>--delete</code> can cause data loss and
+repository corruption. For more information, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/270422">issue 270422</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>The <code>/.</code> in the following command is very important, otherwise you can get the wrong directory structure in the target
+directory. If you want to see progress, replace <code>-a</code> with <code>-av</code>.</p>
+<pre><code class="language-shell">sudo -u git  sh -c 'rsync -a --delete /var/opt/gitlab/git-data/repositories/. \
+  /mnt/gitlab/repositories'
+</code></pre>
+<h4>Use <code>rsync</code> to another server</h4>
+<p>For Gitaly targets, you can send the repositories over the network with <code>rsync</code> if the <code>git</code> user on your source system
+has SSH access to the target server.</p>
+<pre><code class="language-shell">sudo -u git sh -c 'rsync -a --delete /var/opt/gitlab/git-data/repositories/. \
+  git@newserver:/mnt/gitlab/repositories'
+</code></pre>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../gitaly/configure_gitaly.html">Configure Gitaly</a></li>
+<li><a href="../gitaly/praefect/_index.html">Gitaly Cluster (Praefect)</a></li>
+<li><a href="../../api/project_repository_storage_moves.html">Project repository storage moves API</a></li>
+<li><a href="../../api/group_repository_storage_moves.html">Group repository storage moves API</a></li>
+<li><a href="../../api/snippet_repository_storage_moves.html">Snippet repository storage moves API</a></li>
+</ul></code></pre>
+</body>
+</html>

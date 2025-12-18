@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Configure approval rules</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: To ensure all changes are reviewed, configure optional or required approvals for merge requests in your project.
+title: Merge request approvals</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>To set up a review process for changes in your project, configure merge request approvals.
+They help to ensure that changes are reviewed before they're merged into your project.
+You can configure approvals to be optional or required, depending on your project's needs and GitLab tier.</p>
+<ul>
+<li><a href="https://about.gitlab.com/pricing/">GitLab Free</a> allows
+  all users with at least the Developer <a href="../../../permissions.html">role</a> to
+  approve merge requests. These approvals are optional and don't prevent merging without approval.</li>
+<li>
+<p><a href="https://about.gitlab.com/pricing/">GitLab Premium</a> and
+  <a href="https://about.gitlab.com/pricing/">GitLab Ultimate</a> provide you with more
+  flexibility to:</p>
+</li>
+<li>
+<p>Create required <a href="rules.html">rules</a> about the number and type of required approvals.</p>
+</li>
+<li>Create a list of <a href="../../codeowners/_index.html">Code Owners</a> for specific files.</li>
+<li>Configure approvals
+    <a href="../../../../administration/merge_requests_approvals.html">for the entire instance</a>.</li>
+<li>
+<p>Configure  <a href="../../../group/manage.md#group-merge-request-approval-settings">group merge request approval settings</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Support for group merge request approval settings is tracked in
+<a href="https://gitlab.com/groups/gitlab-org/-/epics/4367">epic 4367</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+</li>
+</ul>
+<h2>Configure approval rules</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Developer role for the project.</li>
+</ul>
+<p>To configure approval rules:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>On the left sidebar, select <strong>Settings</strong> &gt; <strong>Merge requests</strong>.</li>
+<li>Go to the <strong>Merge request approvals</strong> section.</li>
+<li>Set up your desired rules.</li>
+</ol>
+<p>You can also configure:</p>
+<ul>
+<li>More <a href="settings.html">merge request approval settings</a> for more control of the
+  level of oversight and security your project needs.</li>
+<li>Merge request approval rules with the
+  <a href="../../../../api/merge_request_approvals.html">Merge request approvals API</a>.</li>
+</ul>
+<p>For more information on configuring rules, see <a href="rules.html">Approval rules</a>.</p>
+<h3>Required approvals</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Required approvals enforce code reviews by specified users. Without these approvals, merging is not possible.</p>
+<p>Use cases include:</p>
+<ul>
+<li>Enforce review of all code that gets merged into a repository.</li>
+<li>Specify reviewers and a minimum number of approvals.</li>
+<li>Specify categories of reviewers, such as backend, frontend, quality assurance, database, or documentation.</li>
+<li>Use the <a href="../../codeowners/_index.html">Code Owners</a> files to determine reviewers.</li>
+<li>Require approval for <a href="../../../../ci/testing/code_coverage/_index.md#add-a-coverage-check-approval-rule">declining test coverage</a>.</li>
+<li>GitLab Ultimate: <a href="../../../application_security/policies/merge_request_approval_policies.html">Require security team approval</a> for potential vulnerabilities.</li>
+</ul>
+<h2>View approval status</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>More granular approver display <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/183058">generally available</a> in GitLab 17.10. Feature flag <code>mr_approvers_filter_hidden_users</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>To view the approval status of a merge request, check the merge request itself, or the list of
+merge requests for your project or group.</p>
+<h3>For a single merge request</h3>
+<p><a href="rules.md#eligible-approvers">Eligible approvers</a> can view the approval status on a single merge request.</p>
+<p>To view the approval status:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>On the left sidebar, select <strong>Code</strong> &gt; <strong>Merge requests</strong> and find your merge request.</li>
+<li>To view the merge request, select its title.</li>
+<li>Go to the merge request widget to see the approval status. In this example, you can approve the merge request:</li>
+</ol>
+<p><img alt="Merge request widget showing approval status" src="img/approval_and_merge_status_v17_3.png" /></p>
+<p>The widget displays one of these statuses:</p>
+<ul>
+<li><strong>Approve</strong>: The merge request needs more approvals.</li>
+<li><strong>Approve additionally</strong>: The merge request has the required approvals.</li>
+<li><strong>Revoke approval</strong>: You have already approved the merge request.</li>
+</ul>
+<p>To check if your approval satisfies Code Owner requirements, select <strong>Expand eligible approvers</strong> ({{&lt; icon name="chevron-lg-down" &gt;}}).</p>
+<p>Approver visibility depends on your project membership, and group privacy:</p>
+<ul>
+<li>Project members see all approvers.</li>
+<li>Project non-members see:</li>
+<li>All approvers, if the approvers are all from public groups.</li>
+<li>No information about approvers, if any of the approvers are from private groups.</li>
+</ul>
+<h3>In the list of merge requests</h3>
+<p>The list of merge requests for <a href="../_index.md#view-merge-requests">your project or group</a>
+shows the approval status for each merge request:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Approvals not yet satisfied" src="img/approvals_unsatisfied_v17_1.png" /></td>
+<td>Required approvals are missing. ({{&lt; icon name="approval" &gt;}})</td>
+</tr>
+<tr>
+<td style="text-align: center;"><img alt="Approvals are satisfied" src="img/approvals_satisfied_v17_1.png" /></td>
+<td>Approvals are satisfied. ({{&lt; icon name="check" &gt;}})</td>
+</tr>
+<tr>
+<td style="text-align: center;"><img alt="Approvals are satisfied, and you approved" src="img/you_approvals_satisfied_v17_1.png" /></td>
+<td>Approvals are satisfied, and you are one of the approvers. ({{&lt; icon name="approval-solid" &gt;}})</td>
+</tr>
+</tbody>
+</table>
+<h3>Individual reviewer status</h3>
+<p>To see the review and approval status for each reviewer:</p>
+<ol>
+<li>Open the merge request.</li>
+<li>Check the right sidebar.</li>
+</ol>
+<p>Each reviewer's status is shown next to their name.</p>
+<ul>
+<li>{{&lt; icon name="dash-circle" &gt;}} Awaiting review</li>
+<li>{{&lt; icon name="status_running" &gt;}} Review in progress</li>
+<li>{{&lt; icon name="check-circle" &gt;}} Approved</li>
+<li>{{&lt; icon name="comment-lines" &gt;}} Reviewer commented</li>
+<li>{{&lt; icon name="status_warning" &gt;}} Reviewer requested changes</li>
+</ul>
+<p><img alt="This reviewer has requested changes, and blocked this merge request." src="img/reviewer_blocks_mr_v17_3.png" /></p>
+<p>To <a href="../reviews/_index.md#re-request-a-review">re-request a review</a>, select the <strong>Re-request a review</strong> icon ({{&lt; icon name="redo" &gt;}}) next to the user.</p>
+<h2>Approve a merge request</h2>
+<p>Eligible approvers can approve merge requests in two ways:</p>
+<ul>
+<li>In the merge request widget, select <strong>Approve</strong>.</li>
+<li>Use the <a href="../../quick_actions.md#approve"><code>/approve</code> quick action</a> in a comment.</li>
+</ul>
+<p>Approved merge requests display a green check mark ({{&lt; icon name="check-circle-filled" &gt;}}) next to the user's name in the reviewer list.
+After a merge request receives the required approvals, it is ready to merge, unless it's blocked due to:</p>
+<ul>
+<li><a href="../conflicts.html">Merge conflicts</a></li>
+<li><a href="../_index.md#prevent-merge-unless-all-threads-are-resolved">Open threads</a></li>
+<li><a href="../auto_merge.html">Failed CI/CD pipeline</a></li>
+</ul>
+<h3>Prevent merge request creator approval</h3>
+<p>To prevent merge request creators from approving their own work, enable the <a href="settings.md#prevent-approval-by-merge-request-creator">Prevent approval by merge request creator</a> setting.</p>
+<h3>Approval rule changes</h3>
+<p>If you enable <a href="settings.md#prevent-editing-approval-rules-in-merge-requests">approval rule overrides</a>, changes to default approval rules
+don't affect existing merge requests, except for <a href="rules.md#approvals-for-protected-branches">target branch</a> changes.</p>
+<h2>Invalid rules</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/405023">Generally available</a> in GitLab 16.2. Feature flag <code>invalid_scan_result_policy_prevents_merge</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab marks approval rules as <strong>Auto approved</strong> when they're impossible to satisfy, such as when:</p>
+<ul>
+<li>The only eligible approver is the merge request author.</li>
+<li>No eligible approvers are assigned to the rule.</li>
+<li>The required approvals exceed the number of eligible approvers.</li>
+</ul>
+<p>These rules are automatically approved to unblock merge requests, unless you created rules through a
+<a href="../../../application_security/policies/merge_request_approval_policies.html">merge request approval policy</a>.</p>
+<p>Invalid policy-created rules:</p>
+<ul>
+<li>Display as <strong>Action required</strong>.</li>
+<li>Are not automatically approved.</li>
+<li>Block affected merge requests.</li>
+</ul>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../../../../api/merge_request_approvals.html">Merge request approvals API</a></li>
+<li><a href="../../../../administration/merge_requests_approvals.html">Instance approval rules</a> for GitLab Self-Managed instances</li>
+<li><a href="rules.md#enable-approval-permissions-for-additional-users">Enable approval permissions for users with the Planner or Reporter role</a></li>
+<li><a href="rules.md#edit-or-override-merge-request-approval-rules">Edit or override merge request approval rules</a></li>
+</ul></code></pre>
+</body>
+</html>

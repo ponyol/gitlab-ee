@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Example configurations</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Software Supply Chain Security
+group: Authentication
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Use OpenID Connect as an authentication provider</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can use GitLab as a client application with <a href="https://openid.net/specs/openid-connect-core-1_0.html">OpenID Connect</a>
+as an OmniAuth provider.</p>
+<p>To enable the OpenID Connect OmniAuth provider, you must register your application
+with an OpenID Connect provider.
+The OpenID Connect provider provides you with a client's details and secret for you to use.</p>
+<ol>
+<li>On your GitLab server, open the configuration file.</li>
+</ol>
+<p>For Linux package installations:</p>
+<p><code>shell
+   sudo editor /etc/gitlab/gitlab.rb</code></p>
+<p>For self-compiled installations:</p>
+<p><code>shell
+   cd /home/git/gitlab
+   sudo -u git -H editor config/gitlab.yml</code></p>
+<ol>
+<li>
+<p>Configure the <a href="../../integration/omniauth.md#configure-common-settings">common settings</a>
+   to add <code>openid_connect</code> as a single sign-on provider. This enables Just-In-Time
+   account provisioning for users who do not have an existing GitLab account.</p>
+</li>
+<li>
+<p>Add the provider configuration.</p>
+</li>
+</ol>
+<p>For Linux package installations:</p>
+<p><code>ruby
+   gitlab_rails['omniauth_providers'] = [
+     {
+       name: "openid_connect", # do not change this parameter
+       label: "Provider name", # optional label for login button, defaults to "Openid Connect"
+       icon: "&lt;custom_provider_icon&gt;",
+       args: {
+         name: "openid_connect",
+         scope: ["openid","profile","email"],
+         response_type: "code",
+         issuer: "&lt;your_oidc_url&gt;",
+         discovery: true,
+         client_auth_method: "query",
+         uid_field: "&lt;uid_field&gt;",
+         send_scope_to_token_endpoint: "false",
+         pkce: true,
+         client_options: {
+           identifier: "&lt;your_oidc_client_id&gt;",
+           secret: "&lt;your_oidc_client_secret&gt;",
+           redirect_uri: "&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback"
+         }
+       }
+     }
+   ]</code></p>
+<p>For Linux package installations with multiple identity providers:</p>
+<p><code>ruby
+   { 'name' =&gt; 'openid_connect',
+     'label' =&gt; '...',
+     'icon' =&gt; '...',
+     'args' =&gt; {
+       'name' =&gt; 'openid_connect',
+       'strategy_class': 'OmniAuth::Strategies::OpenIDConnect',
+       'scope' =&gt; ['openid', 'profile', 'email'],
+       'discovery' =&gt; true,
+       'response_type' =&gt; 'code',
+       'issuer' =&gt; 'https://...',
+       'client_auth_method' =&gt; 'query',
+       'uid_field' =&gt; '...',
+       'client_options' =&gt; {
+         `identifier`: "&lt;your_oidc_client_id&gt;",
+         `secret`: "&lt;your_oidc_client_secret&gt;",
+         'redirect_uri' =&gt; 'https://.../users/auth/openid_connect/callback'
+      }
+    }
+   },
+   { 'name' =&gt; 'openid_connect_2fa',
+     'label' =&gt; '...',
+     'icon' =&gt; '...',
+     'args' =&gt; {
+       'name' =&gt; 'openid_connect_2fa',
+       'strategy_class': 'OmniAuth::Strategies::OpenIDConnect',
+       'scope' =&gt; ['openid', 'profile', 'email'],
+       'discovery' =&gt; true,
+       'response_type' =&gt; 'code',
+       'issuer' =&gt; 'https://...',
+       'client_auth_method' =&gt; 'query',
+       'uid_field' =&gt; '...',
+       'client_options' =&gt; {
+        ...
+        'redirect_uri' =&gt; 'https://.../users/auth/openid_connect_2fa/callback'
+      }
+    }
+   }</code></p>
+<p>For self-compiled installations:</p>
+<p><code>yaml
+     - { name: 'openid_connect', # do not change this parameter
+         label: 'Provider name', # optional label for login button, defaults to "Openid Connect"
+         icon: '&lt;custom_provider_icon&gt;',
+         args: {
+           name: 'openid_connect',
+           scope: ['openid','profile','email'],
+           response_type: 'code',
+           issuer: '&lt;your_oidc_url&gt;',
+           discovery: true,
+           client_auth_method: 'query',
+           uid_field: '&lt;uid_field&gt;',
+           send_scope_to_token_endpoint: false,
+           pkce: true,
+           client_options: {
+             identifier: '&lt;your_oidc_client_id&gt;',
+             secret: '&lt;your_oidc_client_secret&gt;',
+             redirect_uri: '&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback'
+           }
+         }
+       }</code></p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>For more information on each configuration option, refer to the <a href="https://github.com/omniauth/omniauth_openid_connect#usage">OmniAuth OpenID Connect usage documentation</a> and <a href="https://openid.net/specs/openid-connect-core-1_0.html">OpenID Connect Core 1.0 specification</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ol>
+<li>
+<p>For the provider configuration, change the values for the provider to match your
+   OpenID Connect client setup. Use the following as a guide:</p>
+</li>
+<li>
+<p><code>&lt;your_oidc_label&gt;</code> is the label that appears on the login page.</p>
+</li>
+<li><code>&lt;custom_provider_icon&gt;</code> (optional) is the icon that appears on the login page.
+     Icons for the major social login platforms are built into GitLab,
+     but you can override these icons by specifying this parameter. GitLab accepts both
+     local paths and absolute URLs.
+     GitLab includes icons for most major social login platforms,
+     but you can override these icons by specifying an external URL or
+     an absolute or relative path to your own icon file.<ul>
+<li>For local absolute paths, configure the provider settings as <code>icon: &lt;path&gt;/&lt;to&gt;/&lt;your-icon&gt;</code>.</li>
+<li>Store the icon file in <code>/opt/gitlab/embedded/service/gitlab-rails/public/&lt;path&gt;/&lt;to&gt;/&lt;your-icon&gt;</code>.</li>
+<li>Access the icon file at <code>https://gitlab.example/&lt;path&gt;/&lt;to&gt;/&lt;your-icon&gt;</code>.</li>
+<li>For local relative paths, configure the provider settings as <code>icon: &lt;your-icon&gt;</code>.</li>
+<li>Store the icon file in <code>/opt/gitlab/embedded/service/gitlab-rails/public/images/&lt;your-icon&gt;</code>.</li>
+<li>Access the icon file at <code>https://gitlab.example.com/images/&lt;your-icon&gt;</code>.</li>
+</ul>
+</li>
+<li><code>&lt;your_oidc_url&gt;</code> (optional) is the URL that points to the OpenID Connect
+     provider (for example, <code>https://example.com/auth/realms/your-realm</code>).
+     If this value is not provided, the URL is constructed from <code>client_options</code>
+     in the following format: <code>&lt;client_options.scheme&gt;://&lt;client_options.host&gt;:&lt;client_options.port&gt;</code>.</li>
+<li>If <code>discovery</code> is set to <code>true</code>, the OpenID Connect provider attempts to automatically
+     discover the client options using <code>&lt;your_oidc_url&gt;/.well-known/openid-configuration</code>.
+     Defaults to <code>false</code>.</li>
+<li><code>client_auth_method</code> (optional) specifies the method used for authenticating
+     the client with the OpenID Connect provider.<ul>
+<li>Supported values are:</li>
+<li><code>basic</code> - HTTP Basic Authentication.</li>
+<li><code>jwt_bearer</code> - JWT-based authentication (private key and client secret signing).</li>
+<li><code>mtls</code> - Mutual TLS or X.509 certificate validation.</li>
+<li>Any other value posts the client ID and secret in the request body.</li>
+<li>If not specified, this value defaults to <code>basic</code>.</li>
+</ul>
+</li>
+<li><code>&lt;uid_field&gt;</code> (optional) is the field name from <code>user_info.raw_attributes</code>
+     that defines the value for <code>uid</code> (for example, <code>preferred_username</code>).
+     If you do not provide this value, or the field with the configured value is missing
+     from the <code>user_info.raw_attributes</code> details, <code>uid</code> uses the <code>sub</code> field.</li>
+<li><code>send_scope_to_token_endpoint</code> is <code>true</code> by default, so the <code>scope</code> parameter
+     is usually included in requests to the token endpoint.
+     However, if your OpenID Connect provider does not accept the <code>scope</code> parameter
+     in such requests, set this to <code>false</code>.</li>
+<li><code>pkce</code> (optional): Enable <a href="https://www.rfc-editor.org/rfc/rfc7636">Proof Key for Code Exchange</a>.</li>
+<li>
+<p><code>client_options</code> are the OpenID Connect client-specific options. Specifically:</p>
+<ul>
+<li><code>identifier</code> is the client identifier as configured in the OpenID Connect service provider.</li>
+<li><code>secret</code> is the client secret as configured in the OpenID Connect service provider. For example,
+   <a href="https://github.com/omniauth/omniauth_openid_connect">OmniAuth OpenID Connect</a> requires this. If the service provider doesn't require a secret,
+   provide any value and it is ignored.</li>
+<li><code>redirect_uri</code> is the GitLab URL to redirect the user to after successful login
+   (for example, <code>http://example.com/users/auth/openid_connect/callback</code>).</li>
+<li><code>end_session_endpoint</code> (optional) is the URL to the endpoint that ends the
+   session. You can provide this URL if auto-discovery is disabled or unsuccessful.</li>
+<li>The following <code>client_options</code> are optional unless auto-discovery is disabled or unsuccessful:</li>
+<li><code>authorization_endpoint</code> is the URL to the endpoint that authorizes the end user.</li>
+<li><code>token_endpoint</code> is the URL to the endpoint that provides Access Token.</li>
+<li><code>userinfo_endpoint</code> is the URL to the endpoint that provides the user information.</li>
+<li><code>jwks_uri</code> is the URL to the endpoint where the Token signer publishes its keys.</li>
+</ul>
+</li>
+<li>
+<p>Save the configuration file.</p>
+</li>
+<li>
+<p>For changes to take effect, if you:</p>
+</li>
+<li>
+<p>Used the Linux package to install GitLab, <a href="../restart_gitlab.md#reconfigure-a-linux-package-installation">reconfigure GitLab</a>.</p>
+</li>
+<li>Self-compiled your GitLab installation, <a href="../restart_gitlab.md#self-compiled-installations">restart GitLab</a>.</li>
+</ol>
+<p>On the sign in page, you have an OpenID Connect option below the regular sign in form.
+Select this option to begin the authentication process. The OpenID Connect provider
+asks you to sign in and authorize the GitLab application if confirmation is required
+by the client. You are redirected to GitLab and signed in.</p>
+<h2>Example configurations</h2>
+<p>The following configurations illustrate how to set up OpenID with
+different providers when using the Linux package installation.</p>
+<h3>Configure Google</h3>
+<p>See the <a href="https://developers.google.com/identity/openid-connect/openid-connect">Google documentation</a>
+for more details:</p>
+<pre><code class="language-ruby">gitlab_rails['omniauth_providers'] = [
+  {
+    name: &quot;openid_connect&quot;, # do not change this parameter
+    label: &quot;Google OpenID&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+    args: {
+      name: &quot;openid_connect&quot;,
+      scope: [&quot;openid&quot;, &quot;profile&quot;, &quot;email&quot;],
+      response_type: &quot;code&quot;,
+      issuer: &quot;https://accounts.google.com&quot;,
+      client_auth_method: &quot;query&quot;,
+      discovery: true,
+      uid_field: &quot;preferred_username&quot;,
+      pkce: true,
+      client_options: {
+        identifier: &quot;&lt;YOUR PROJECT CLIENT ID&gt;&quot;,
+        secret: &quot;&lt;YOUR PROJECT CLIENT SECRET&gt;&quot;,
+        redirect_uri: &quot;https://example.com/users/auth/openid_connect/callback&quot;,
+       }
+     }
+  }
+]
+</code></pre>
+<h3>Configure Microsoft Azure</h3>
+<p>The OpenID Connect (OIDC) protocol for Microsoft Azure uses the <a href="https://learn.microsoft.com/en-us/previous-versions/azure/active-directory/azuread-dev/azure-ad-endpoint-comparison">Microsoft identity platform (v2) endpoints</a>.
+To get started, sign in to the <a href="https://portal.azure.com">Azure Portal</a>. For your app,
+you need the following information:</p>
+<ul>
+<li>A tenant ID. You may already have one. For more information, see the
+  <a href="https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-create-new-tenant">Microsoft Azure Tenant</a> documentation.</li>
+<li>A client ID and a client secret. Follow the instructions in the
+  <a href="https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app">Microsoft Quickstart Register an Application</a> documentation
+  to obtain the tenant ID, client ID, and client secret for your app.</li>
+</ul>
+<p>When you register a Microsoft Azure application, you must grant API permissions to allow GitLab to
+retrieve required details. You must provide at least the <code>openid</code>, <code>profile</code>, and <code>email</code> permissions.
+For more information, see the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis#add-permissions-to-access-microsoft-graph">Microsoft documentation for configuring app permissions for a web API</a>.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>All accounts provisioned by Azure must have an email address defined. If an email address is not defined, Azure assigns a randomly generated address. If you've configured <a href="../settings/sign_up_restrictions.md#allow-or-deny-sign-ups-using-specific-email-domains">domain sign-up restrictions</a>, this random address might prevent the account from being created.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>Example configuration block for Linux package installations:</p>
+<pre><code class="language-ruby">gitlab_rails['omniauth_providers'] = [
+  {
+    name: &quot;openid_connect&quot;, # do not change this parameter
+    label: &quot;Azure OIDC&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+    args: {
+      name: &quot;openid_connect&quot;,
+      scope: [&quot;openid&quot;, &quot;profile&quot;, &quot;email&quot;],
+      response_type: &quot;code&quot;,
+      issuer:  &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/v2.0&quot;,
+      client_auth_method: &quot;query&quot;,
+      discovery: true,
+      uid_field: &quot;preferred_username&quot;,
+      pkce: true,
+      client_options: {
+        identifier: &quot;&lt;YOUR APP CLIENT ID&gt;&quot;,
+        secret: &quot;&lt;YOUR APP CLIENT SECRET&gt;&quot;,
+        redirect_uri: &quot;https://gitlab.example.com/users/auth/openid_connect/callback&quot;
+      }
+    }
+  }
+]
+</code></pre>
+<p>Microsoft has documented how its platform works with <a href="https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols-oidc">the OIDC protocol</a>.</p>
+<h4>Microsoft Entra custom signing keys</h4>
+<p>If your application has custom signing keys because you use the
+<a href="https://learn.microsoft.com/en-us/entra/identity-platform/saml-claims-customization">SAML claims-mapping feature</a>,
+you must configure the OpenID provider in the following ways:</p>
+<ul>
+<li>Disable OpenID Connect Discovery by omitting <code>args.discovery</code>, or setting it to <code>false</code>.</li>
+<li>In <code>client_options</code>, specify the following:</li>
+<li>A <code>jwks_uri</code> with the <code>appid</code> query parameter: <code>https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/discovery/v2.0/keys?appid=&lt;YOUR APP CLIENT ID&gt;</code>.</li>
+<li><code>end_session_endpoint</code>.</li>
+<li><code>authorization_endpoint</code>.</li>
+<li><code>userinfo_endpoint</code>.</li>
+</ul>
+<p>Example configuration for Linux package installations:</p>
+<pre><code class="language-ruby">gitlab_rails['omniauth_providers'] = [
+ {
+    name: &quot;openid_connect&quot;, # do not change this parameter
+    label: &quot;Azure OIDC&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+    args: {
+      name: &quot;openid_connect&quot;,
+      scope: [&quot;openid&quot;, &quot;profile&quot;, &quot;email&quot;],
+      response_type: &quot;code&quot;,
+      issuer:  &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/v2.0&quot;,
+      client_auth_method: &quot;basic&quot;,
+      discovery: false,
+      uid_field: &quot;preferred_username&quot;,
+      pkce: true,
+      client_options: {
+        identifier: &quot;&lt;YOUR APP CLIENT ID&gt;&quot;,
+        secret: &quot;&lt;YOUR APP CLIENT SECRET&gt;&quot;,
+        redirect_uri: &quot;https://gitlab.example.com/users/auth/openid_connect/callback&quot;,
+        end_session_endpoint: &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/oauth2/v2.0/logout&quot;,
+        authorization_endpoint: &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/oauth2/v2.0/authorize&quot;,
+        token_endpoint: &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/oauth2/v2.0/token&quot;,
+        userinfo_endpoint: &quot;https://graph.microsoft.com/oidc/userinfo&quot;,
+        jwks_uri: &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/discovery/v2.0/keys?appid=&lt;YOUR APP CLIENT ID&gt;&quot;
+      }
+    }
+  }
+]
+</code></pre>
+<p>If you see authentication failures with a <code>KidNotFound</code> message, this
+is probably because of a missing or incorrect <code>appid</code> query
+parameter. GitLab raises that error if the ID token returned by
+Microsoft cannot be validated with the keys provided by the <code>jwks_uri</code>
+endpoint.</p>
+<p>For more information, see the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens#validate-tokens">Microsoft Entra documentation on validating tokens</a>.</p>
+<h4>Migrate to Generic OpenID Connect configuration</h4>
+<p>You can migrate to the Generic OpenID Connect configuration from both <code>azure_activedirectory_v2</code> and <code>azure_oauth2</code>.</p>
+<p>First, set the <code>uid_field</code>. Both the <code>uid_field</code> and the <code>sub</code> claim that you can select as a <code>uid_field</code> vary depending on the provider. Signing in without setting the <code>uid_field</code> results in additional identities being created in GitLab that have to be manually modified:</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th><code>uid_field</code></th>
+<th>Supporting information</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://gitlab.com/gitlab-org/gitlab/-/tree/master/vendor/gems/omniauth-azure-oauth2"><code>omniauth-azure-oauth2</code></a></td>
+<td><code>sub</code></td>
+<td>Additional attributes <code>oid</code> and <code>tid</code> are offered in the <code>info</code> object.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/RIPAGlobal/omniauth-azure-activedirectory-v2/"><code>omniauth-azure-activedirectory-v2</code></a></td>
+<td><code>oid</code></td>
+<td>You must configure <code>oid</code> as <code>uid_field</code> when migrating.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/omniauth/omniauth_openid_connect/"><code>omniauth_openid_connect</code></a></td>
+<td><code>sub</code></td>
+<td>Specify <code>uid_field</code> to use another field.</td>
+</tr>
+</tbody>
+</table>
+<p>To migrate to the Generic OpenID Connect configuration, you must update the configuration.</p>
+<p>For Linux package installations, update the configuration as follows:</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Azure OAuth 2.0" &gt;}}</p>
+<pre><code class="language-ruby">gitlab_rails['omniauth_providers'] = [
+  {
+    name: &quot;azure_oauth2&quot;,
+    label: &quot;Azure OIDC&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+    args: {
+      name: &quot;azure_oauth2&quot;, # this matches the existing azure_oauth2 provider name, and only the strategy_class immediately below configures OpenID Connect
+      strategy_class: &quot;OmniAuth::Strategies::OpenIDConnect&quot;,
+      scope: [&quot;openid&quot;, &quot;profile&quot;, &quot;email&quot;],
+      response_type: &quot;code&quot;,
+      issuer:  &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/v2.0&quot;,
+      client_auth_method: &quot;query&quot;,
+      discovery: true,
+      uid_field: &quot;sub&quot;,
+      send_scope_to_token_endpoint: &quot;false&quot;,
+      client_options: {
+        identifier: &quot;&lt;YOUR APP CLIENT ID&gt;&quot;,
+        secret: &quot;&lt;YOUR APP CLIENT SECRET&gt;&quot;,
+        redirect_uri: &quot;https://gitlab.example.com/users/auth/azure_oauth2/callback&quot;
+      }
+    }
+  }
+]
+</code></pre>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Azure Active Directory v2" &gt;}}</p>
+<pre><code class="language-ruby">gitlab_rails['omniauth_providers'] = [
+  {
+    name: &quot;azure_activedirectory_v2&quot;,
+    label: &quot;Azure OIDC&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+    args: {
+      name: &quot;azure_activedirectory_v2&quot;,
+      strategy_class: &quot;OmniAuth::Strategies::OpenIDConnect&quot;,
+      scope: [&quot;openid&quot;, &quot;profile&quot;, &quot;email&quot;],
+      response_type: &quot;code&quot;,
+      issuer:  &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/v2.0&quot;,
+      client_auth_method: &quot;query&quot;,
+      discovery: true,
+      uid_field: &quot;oid&quot;,
+      send_scope_to_token_endpoint: &quot;false&quot;,
+      client_options: {
+        identifier: &quot;&lt;YOUR APP CLIENT ID&gt;&quot;,
+        secret: &quot;&lt;YOUR APP CLIENT SECRET&gt;&quot;,
+        redirect_uri: &quot;https://gitlab.example.com/users/auth/azure_activedirectory_v2/callback&quot;
+      }
+    }
+  }
+]
+</code></pre>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<p>For Helm installations:</p>
+<p>Add the <a href="https://docs.gitlab.com/charts/charts/globals.html#providers">provider's configuration</a> in a YAML file (for example, <code>provider.yaml</code>):</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Azure OAuth 2.0" &gt;}}</p>
+<pre><code class="language-ruby">{
+  &quot;name&quot;: &quot;azure_oauth2&quot;,
+  &quot;args&quot;: {
+    &quot;name&quot;: &quot;azure_oauth2&quot;,
+    &quot;strategy_class&quot;: &quot;OmniAuth::Strategies::OpenIDConnect&quot;,
+    &quot;scope&quot;: [
+      &quot;openid&quot;,
+      &quot;profile&quot;,
+      &quot;email&quot;
+    ],
+    &quot;response_type&quot;: &quot;code&quot;,
+    &quot;issuer&quot;: &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/v2.0&quot;,
+    &quot;client_auth_method&quot;: &quot;query&quot;,
+    &quot;discovery&quot;: true,
+    &quot;uid_field&quot;: &quot;sub&quot;,
+    &quot;send_scope_to_token_endpoint&quot;: false,
+    &quot;client_options&quot;: {
+      &quot;identifier&quot;: &quot;&lt;YOUR APP CLIENT ID&gt;&quot;,
+      &quot;secret&quot;: &quot;&lt;YOUR APP CLIENT SECRET&gt;&quot;,
+      &quot;redirect_uri&quot;: &quot;https://gitlab.example.com/users/auth/azure_oauth2/callback&quot;
+    }
+  }
+}
+</code></pre>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Azure Active Directory v2" &gt;}}</p>
+<pre><code class="language-ruby">{
+  &quot;name&quot;: &quot;azure_activedirectory_v2&quot;,
+  &quot;args&quot;: {
+    &quot;name&quot;: &quot;azure_activedirectory_v2&quot;,
+    &quot;strategy_class&quot;: &quot;OmniAuth::Strategies::OpenIDConnect&quot;,
+    &quot;scope&quot;: [
+      &quot;openid&quot;,
+      &quot;profile&quot;,
+      &quot;email&quot;
+    ],
+    &quot;response_type&quot;: &quot;code&quot;,
+    &quot;issuer&quot;: &quot;https://login.microsoftonline.com/&lt;YOUR-TENANT-ID&gt;/v2.0&quot;,
+    &quot;client_auth_method&quot;: &quot;query&quot;,
+    &quot;discovery&quot;: true,
+    &quot;uid_field&quot;: &quot;sub&quot;,
+    &quot;send_scope_to_token_endpoint&quot;: false,
+    &quot;client_options&quot;: {
+      &quot;identifier&quot;: &quot;&lt;YOUR APP CLIENT ID&gt;&quot;,
+      &quot;secret&quot;: &quot;&lt;YOUR APP CLIENT SECRET&gt;&quot;,
+      &quot;redirect_uri&quot;: &quot;https://gitlab.example.com/users/auth/activedirectory_v2/callback&quot;
+    }
+  }
+}
+</code></pre>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<p>As you migrate from <code>azure_oauth2</code> to <code>omniauth_openid_connect</code> as part of upgrading to GitLab 17.0 or later, the <code>sub</code> claim value set for your organization can vary. <code>azure_oauth2</code> uses Microsoft V1 endpoint while <code>azure_activedirectory_v2</code> and <code>omniauth_openid_connect</code> both use Microsoft V2 endpoint with a common <code>sub</code> value.</p>
+<ul>
+<li><strong>For users with an email address in Entra ID</strong>, to allow falling back to email address and updating the user's identity,
+  configure the following:</li>
+<li>In a Linux package installation, <a href="../../integration/omniauth.md#link-existing-users-to-omniauth-users"><code>omniauth_auto_link_user</code></a>.</li>
+<li>
+<p>In a Helm installation, <a href="https://docs.gitlab.com/charts/charts/globals.html#omniauth"><code>autoLinkUser</code></a>.</p>
+</li>
+<li>
+<p><strong>For users with no email address</strong>, administrators must take one of the following actions:</p>
+</li>
+<li>
+<p>Set up another authentication method or enable sign-in using GitLab username and password. The user can then sign in and link their Azure identity manually using their profile.</p>
+</li>
+<li>Implement OpenID Connect as a new provider alongside the existing <code>azure_oauth2</code> so the user can sign in through OAuth 2.0, and link their OpenID Connect identity (similar to the previous method). This method would also work for users with email addresses, as long as <code>auto_link_user</code> is enabled.</li>
+<li>Update <code>extern_uid</code> manually. To do this, use the <a href="../../integration/omniauth.md#change-apps-or-configuration">API or Rails console</a> to update the <code>extern_uid</code> for each user.
+    This method may be required if the instance has already been upgraded to 17.0 or later, and users have attempted to sign in.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p><code>azure_oauth2</code> might have used Entra ID's <code>upn</code> claim as the email address, if the <code>email</code> claim was missing or blank when provisioning GitLab accounts.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Configure Microsoft Azure Active Directory B2C</h3>
+<p>GitLab requires special
+configuration to work with <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure Active Directory B2C</a>. To get started, sign in to the <a href="https://portal.azure.com">Azure Portal</a>.
+For your app, you need the following information from Azure:</p>
+<ul>
+<li>A tenant ID. You may already have one. For more information, review the
+  <a href="https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-create-new-tenant">Microsoft Azure Tenant</a> documentation.</li>
+<li>A client ID and a client secret. Follow the instructions in the
+  <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-register-applications?tabs=app-reg-ga">Microsoft tutorial</a> documentation to obtain the
+  client ID and client secret for your app.</li>
+<li>The user flow or policy name. Follow the instructions in the <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-user-flow">Microsoft tutorial</a>.</li>
+</ul>
+<p>Configure the app:</p>
+<ol>
+<li>
+<p>Set the app <code>Redirect URI</code>. For example, If your GitLab domain is <code>gitlab.example.com</code>,
+   set the app <code>Redirect URI</code> to <code>https://gitlab.example.com/users/auth/openid_connect/callback</code>.</p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-register-applications?tabs=app-reg-ga#enable-id-token-implicit-grant">Enable the ID tokens</a>.</p>
+</li>
+<li>
+<p>Add the following API permissions to the app:</p>
+</li>
+<li>
+<p><code>openid</code></p>
+</li>
+<li><code>offline_access</code></li>
+</ol>
+<h4>Configure custom policies</h4>
+<p>Azure B2C <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview">offers two ways of defining the business logic for logging in a user</a>:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview#user-flows">User flows</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview#custom-policies">Custom policies</a></li>
+</ul>
+<p>Custom policies are required because standard Azure B2C user flows
+<a href="https://github.com/MicrosoftDocs/azure-docs/issues/16566">do not send the OpenID <code>email</code> claim</a>.
+Therefore, the standard user flows do not work with the
+<a href="../../integration/omniauth.md#configure-common-settings"><code>allow_single_sign_on</code> or <code>auto_link_user</code> parameters</a>.
+With a standard Azure B2C policy, GitLab cannot create a new account or
+link to an existing account with an email address.</p>
+<p>First, <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy">create a custom policy</a>.</p>
+<p>The Microsoft instructions use <code>SocialAndLocalAccounts</code> in the <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#custom-policy-starter-pack">custom policy starter pack</a>,
+but <code>LocalAccounts</code> authenticates against local Active Directory accounts. Before you <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#upload-the-policies">upload the polices</a>, do the following:</p>
+<ol>
+<li>To export the <code>email</code> claim, modify the <code>SignUpOrSignin.xml</code>. Replace the following line:</li>
+</ol>
+<p><code>xml
+   &lt;OutputClaim ClaimTypeReferenceId="email" /&gt;</code></p>
+<p>with:</p>
+<p><code>xml
+   &lt;OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" PartnerClaimType="email" /&gt;</code></p>
+<ol>
+<li>For OIDC discovery to work with B2C, configure the policy with an issuer compatible with the
+   <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.3">OIDC specification</a>.
+   See the <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/configure-tokens?pivots=b2c-custom-policy#token-compatibility-settings">token compatibility settings</a>.
+   In <code>TrustFrameworkBase.xml</code> under <code>JwtIssuer</code>, set <code>IssuanceClaimPattern</code> to <code>AuthorityWithTfp</code>:</li>
+</ol>
+<p><code>xml
+   &lt;ClaimsProvider&gt;
+     &lt;DisplayName&gt;Token Issuer&lt;/DisplayName&gt;
+     &lt;TechnicalProfiles&gt;
+       &lt;TechnicalProfile Id="JwtIssuer"&gt;
+         &lt;DisplayName&gt;JWT Issuer&lt;/DisplayName&gt;
+         &lt;Protocol Name="None" /&gt;
+         &lt;OutputTokenFormat&gt;JWT&lt;/OutputTokenFormat&gt;
+         &lt;Metadata&gt;
+           &lt;Item Key="IssuanceClaimPattern"&gt;AuthorityWithTfp&lt;/Item&gt;
+           ...</code></p>
+<ol>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#upload-the-policies">Upload the policy</a>. Overwrite
+   the existing files if you are updating an existing policy.</p>
+</li>
+<li>
+<p>To determine the issuer URL, use the sign-in policy. The issuer URL is in the form:</p>
+</li>
+</ol>
+<p><code>markdown
+   https://&lt;YOUR-DOMAIN&gt;/tfp/&lt;YOUR-TENANT-ID&gt;/&lt;YOUR-SIGN-IN-POLICY-NAME&gt;/v2.0/</code></p>
+<p>The policy name is lowercase in the URL. For example, <code>B2C_1A_signup_signin</code>
+   policy appears as <code>b2c_1a_signup_sigin</code>.</p>
+<p>Ensure you include the trailing forward slash.</p>
+<ol>
+<li>Verify the operation of the OIDC discovery URL and issuer URL and append
+   <code>.well-known/openid-configuration</code> to the issuer URL:</li>
+</ol>
+<p><code>markdown
+   https://&lt;YOUR-DOMAIN&gt;/tfp/&lt;YOUR-TENANT-ID&gt;/&lt;YOUR-SIGN-IN-POLICY-NAME&gt;/v2.0/.well-known/openid-configuration</code></p>
+<p>For example, if <code>domain</code> is <code>example.b2clogin.com</code> and tenant ID is
+   <code>fc40c736-476c-4da1-b489-ee48cee84386</code>, you can use <code>curl</code> and <code>jq</code> to extract the issuer:</p>
+<p><code>shell
+   $ curl --silent "https://example.b2clogin.com/tfp/fc40c736-476c-4da1-b489-ee48cee84386/b2c_1a_signup_signin/v2.0/.well-known/openid-configuration" | jq .issuer
+   "https://example.b2clogin.com/tfp/fc40c736-476c-4da1-b489-ee48cee84386/b2c_1a_signup_signin/v2.0/"</code></p>
+<ol>
+<li>Configure the issuer URL with the custom policy used for <code>signup_signin</code>. For example, this is
+   the configuration with a custom policy for <code>b2c_1a_signup_signin</code> for Linux package installations:</li>
+</ol>
+<p><code>ruby
+   gitlab_rails['omniauth_providers'] = [
+   {
+     name: "openid_connect", # do not change this parameter
+     label: "Azure B2C OIDC", # optional label for login button, defaults to "Openid Connect"
+     args: {
+       name: "openid_connect",
+       scope: ["openid"],
+       response_mode: "query",
+       response_type: "id_token",
+       issuer:  "https://&lt;YOUR-DOMAIN&gt;/tfp/&lt;YOUR-TENANT-ID&gt;/b2c_1a_signup_signin/v2.0/",
+       client_auth_method: "query",
+       discovery: true,
+       send_scope_to_token_endpoint: true,
+       pkce: true,
+       client_options: {
+         identifier: "&lt;YOUR APP CLIENT ID&gt;",
+         secret: "&lt;YOUR APP CLIENT SECRET&gt;",
+         redirect_uri: "https://gitlab.example.com/users/auth/openid_connect/callback"
+       }
+     }
+   }]</code></p>
+<h4>Troubleshooting Azure B2C</h4>
+<ul>
+<li>Ensure all occurrences of <code>yourtenant.onmicrosoft.com</code>, <code>ProxyIdentityExperienceFrameworkAppId</code>, and <code>IdentityExperienceFrameworkAppId</code> match your B2C tenant hostname and
+  the respective client IDs in the XML policy files.</li>
+<li>Add <code>https://jwt.ms</code> as a redirect URI to the app, and use the <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-user-flows?pivots=b2c-custom-policy#test-the-custom-policy">custom policy tester</a>.
+  Ensure the payload includes <code>email</code> that matches the user's email access.</li>
+<li>
+<p>After you enable the custom policy, users might see <code>Invalid username or password</code>
+  after they try to sign in. This might be a configuration issue with the <code>IdentityExperienceFramework</code>
+  app. See <a href="https://learn.microsoft.com/en-us/answers/questions/50355/unable-to-sign-on-using-custom-policy?childtoview=122370#comment-122370">this Microsoft comment</a> that suggests you check that the app manifest
+  contains these settings:</p>
+</li>
+<li>
+<p><code>"accessTokenAcceptedVersion": null</code></p>
+</li>
+<li><code>"signInAudience": "AzureADMyOrg"</code></li>
+</ul>
+<p>This configuration corresponds with the <code>Supported account types</code> setting used when
+creating the <code>IdentityExperienceFramework</code> app.</p>
+<h3>Configure Keycloak</h3>
+<p>GitLab works with OpenID providers that use HTTPS. Although you can set up a
+Keycloak server that uses HTTP, GitLab can only communicate with a Keycloak server
+that uses HTTPS.</p>
+<p>Configure Keycloak to use public key algorithms to sign tokens.
+For example, use RSA256 or RSA512 instead of HS256 or HS358.
+Public key encryption algorithms are:</p>
+<ul>
+<li>Easier to configure.</li>
+<li>
+<p>More secure because leaking the private key has severe security consequences.</p>
+</li>
+<li>
+<p>Open the Keycloak administration console.</p>
+</li>
+<li>Select <strong>Realm Settings</strong> &gt; <strong>Tokens</strong> &gt; <strong>Default Signature Algorithm</strong>.</li>
+<li>Configure the signature algorithm.</li>
+</ul>
+<p>Example configuration block for Linux package installations:</p>
+<pre><code class="language-ruby">gitlab_rails['omniauth_providers'] = [
+  {
+    name: &quot;openid_connect&quot;, # do not change this parameter
+    label: &quot;Keycloak&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+    args: {
+      name: &quot;openid_connect&quot;,
+      scope: [&quot;openid&quot;, &quot;profile&quot;, &quot;email&quot;],
+      response_type: &quot;code&quot;,
+      issuer:  &quot;https://keycloak.example.com/realms/myrealm&quot;,
+      client_auth_method: &quot;query&quot;,
+      discovery: true,
+      uid_field: &quot;preferred_username&quot;,
+      pkce: true,
+      client_options: {
+        identifier: &quot;&lt;YOUR CLIENT ID&gt;&quot;,
+        secret: &quot;&lt;YOUR CLIENT SECRET&gt;&quot;,
+        redirect_uri: &quot;https://gitlab.example.com/users/auth/openid_connect/callback&quot;
+      }
+    }
+  }
+]
+</code></pre>
+<h4>Configure Keycloak with a symmetric key algorithm</h4>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>The following instructions are included for completeness, but only use symmetric key
+encryption if absolutely necessary.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>To use symmetric key encryption:</p>
+<ol>
+<li>Extract the secret key from the Keycloak database. Keycloak does not expose this
+   value in the web interface. The client secret seen in the web interface is the
+   OAuth 2.0 client secret, which is different from the secret used to sign JSON Web Tokens.</li>
+</ol>
+<p>For example, if you use PostgreSQL as the backend database for Keycloak:</p>
+<ul>
+<li>Sign in to the database console.</li>
+<li>
+<p>Run the following SQL query to extract the key:</p>
+<p>```sql
+ $ psql -U keycloak
+ psql (13.3 (Debian 13.3-1.pgdg100+1))
+ Type "help" for help.</p>
+<p>keycloak=# SELECT c.name, value FROM component_config CC INNER JOIN component C ON(CC.component_id = C.id) WHERE C.realm_id = 'master' and provider_id = 'hmac-generated' AND CC.name = 'secret';
+ -[ RECORD 1 ]---------------------------------------------------------------------------------
+ name  | hmac-generated
+ value | lo6cqjD6Ika8pk7qc3fpFx9ysrhf7E62-sqGc8drp3XW-wr93zru8PFsQokHZZuJJbaUXvmiOftCZM3C4KW3-g
+ -[ RECORD 2 ]---------------------------------------------------------------------------------
+ name  | fallback-HS384
+ value | UfVqmIs--U61UYsRH-NYBH3_mlluLONpg_zN7CXEwkJcO9xdRNlzZfmfDLPtf2xSTMvqu08R2VhLr-8G-oZ47A
+ ```</p>
+<p>In this example, there are two private keys: one for HS256 (<code>hmac-generated</code>)
+ and another for HS384 (<code>fallback-HS384</code>). We use the first <code>value</code> to configure GitLab.</p>
+</li>
+<li>
+<p>Convert <code>value</code> to standard base64. As discussed in the <a href="https://keycloak.discourse.group/t/invalid-signature-with-hs256-token/3228/9">"Invalid signature with HS256 token" post</a>,
+   <code>value</code> is encoded in the <a href="https://datatracker.ietf.org/doc/html/rfc4648#section-5">"Base 64 Encoding with URL and Filename Safe Alphabet section</a> of RFC 4648.
+   This must be converted to <a href="https://datatracker.ietf.org/doc/html/rfc2045">standard base64 as defined in RFC 2045</a>.
+   The following Ruby script does this:</p>
+</li>
+</ul>
+<p>```ruby
+   require 'base64'</p>
+<p>value = "lo6cqjD6Ika8pk7qc3fpFx9ysrhf7E62-sqGc8drp3XW-wr93zru8PFsQokHZZuJJbaUXvmiOftCZM3C4KW3-g"
+   Base64.encode64(Base64.urlsafe_decode64(value))
+   ```</p>
+<p>This results in the following value:</p>
+<p><code>markdown
+   lo6cqjD6Ika8pk7qc3fpFx9ysrhf7E62+sqGc8drp3XW+wr93zru8PFsQokH\nZZuJJbaUXvmiOftCZM3C4KW3+g==\n</code></p>
+<ol>
+<li>Specify this base64-encoded secret in <code>jwt_secret_base64</code>. For example:</li>
+</ol>
+<p><code>ruby
+   gitlab_rails['omniauth_providers'] = [
+     {
+       name: "openid_connect", # do not change this parameter
+       label: "Keycloak", # optional label for login button, defaults to "Openid Connect"
+       args: {
+         name: "openid_connect",
+         scope: ["openid", "profile", "email"],
+         response_type: "code",
+         issuer:  "https://keycloak.example.com/auth/realms/myrealm",
+         client_auth_method: "query",
+         discovery: true,
+         uid_field: "preferred_username",
+         jwt_secret_base64: "&lt;YOUR BASE64-ENCODED SECRET&gt;",
+         pkce: true,
+         client_options: {
+           identifier: "&lt;YOUR CLIENT ID&gt;",
+           secret: "&lt;YOUR CLIENT SECRET&gt;",
+           redirect_uri: "https://gitlab.example.com/users/auth/openid_connect/callback"
+         }
+       }
+     }
+   ]</code></p>
+<p>If you see a <code>JSON::JWS::VerificationFailed</code> error,
+you have specified the wrong secret.</p>
+<h3>Casdoor</h3>
+<p>GitLab works with OpenID providers that use HTTPS. Use HTTPS to connect to GitLab
+through OpenID with Casdoor.</p>
+<p>For your app, complete the following steps on Casdoor:</p>
+<ol>
+<li>Get a client ID and a client secret.</li>
+<li>Add your GitLab redirect URL. For example, if your GitLab domain is <code>gitlab.example.com</code>,
+   ensure the Casdoor app has the following
+   <code>Redirect URI</code>: <code>https://gitlab.example.com/users/auth/openid_connect/callback</code>.</li>
+</ol>
+<p>See the <a href="https://casdoor.org/docs/integration/ruby/gitlab/">Casdoor documentation</a> for more details.</p>
+<p>Example configuration for Linux package installations (file path: <code>/etc/gitlab/gitlab.rb</code>):</p>
+<pre><code class="language-ruby">gitlab_rails['omniauth_providers'] = [
+    {
+        name: &quot;openid_connect&quot;, # do not change this parameter
+        label: &quot;Casdoor&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+        args: {
+            name: &quot;openid_connect&quot;,
+            scope: [&quot;openid&quot;, &quot;profile&quot;, &quot;email&quot;],
+            response_type: &quot;code&quot;,
+            issuer:  &quot;https://&lt;CASDOOR_HOSTNAME&gt;&quot;,
+            client_auth_method: &quot;query&quot;,
+            discovery: true,
+            uid_field: &quot;sub&quot;,
+            client_options: {
+                identifier: &quot;&lt;YOUR CLIENT ID&gt;&quot;,
+                secret: &quot;&lt;YOUR CLIENT SECRET&gt;&quot;,
+                redirect_uri: &quot;https://gitlab.example.com/users/auth/openid_connect/callback&quot;
+            }
+        }
+    }
+]
+</code></pre>
+<p>Example configuration for self-compiled installations (file path: <code>config/gitlab.yml</code>):</p>
+<pre><code class="language-yaml">  - { name: 'openid_connect', # do not change this parameter
+      label: 'Casdoor', # optional label for login button, defaults to &quot;Openid Connect&quot;
+      args: {
+        name: 'openid_connect',
+        scope: ['openid', 'profile', 'email'],
+        response_type: 'code',
+        issuer: 'https://&lt;CASDOOR_HOSTNAME&gt;',
+        discovery: true,
+        client_auth_method: 'query',
+        uid_field: 'sub',
+        client_options: {
+          identifier: '&lt;YOUR CLIENT ID&gt;',
+          secret: '&lt;YOUR CLIENT SECRET&gt;',
+          redirect_uri: 'https://gitlab.example.com/users/auth/openid_connect/callback'
+        }
+      }
+    }
+</code></pre>
+<h2>Configure multiple OpenID Connect providers</h2>
+<p>You can configure your application to use multiple OpenID Connect (OIDC) providers. You do this by explicitly setting the <code>strategy_class</code> in your configuration file.</p>
+<p>You should do this in either of the following scenarios:</p>
+<ul>
+<li><a href="#migrate-to-generic-openid-connect-configuration">Migrating to the OpenID Connect protocol</a>.</li>
+<li>Offering different levels of authentication.</li>
+</ul>
+<p>The following example configurations show how to offer different levels of authentication, one option with 2FA and one without 2FA.</p>
+<p>For Linux package installations:</p>
+<pre><code class="language-ruby">gitlab_rails['omniauth_providers'] = [
+  {
+    name: &quot;openid_connect&quot;,
+    label: &quot;Provider name&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+    icon: &quot;&lt;custom_provider_icon&gt;&quot;,
+    args: {
+      name: &quot;openid_connect&quot;,
+      strategy_class: &quot;OmniAuth::Strategies::OpenIDConnect&quot;,
+      scope: [&quot;openid&quot;,&quot;profile&quot;,&quot;email&quot;],
+      response_type: &quot;code&quot;,
+      issuer: &quot;&lt;your_oidc_url&gt;&quot;,
+      discovery: true,
+      client_auth_method: &quot;query&quot;,
+      uid_field: &quot;&lt;uid_field&gt;&quot;,
+      send_scope_to_token_endpoint: &quot;false&quot;,
+      pkce: true,
+      client_options: {
+        identifier: &quot;&lt;your_oidc_client_id&gt;&quot;,
+        secret: &quot;&lt;your_oidc_client_secret&gt;&quot;,
+        redirect_uri: &quot;&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback&quot;
+      }
+    }
+  },
+  {
+    name: &quot;openid_connect_2fa&quot;,
+    label: &quot;Provider name 2FA&quot;, # optional label for login button, defaults to &quot;Openid Connect&quot;
+    icon: &quot;&lt;custom_provider_icon&gt;&quot;,
+    args: {
+      name: &quot;openid_connect_2fa&quot;,
+      strategy_class: &quot;OmniAuth::Strategies::OpenIDConnect&quot;,
+      scope: [&quot;openid&quot;,&quot;profile&quot;,&quot;email&quot;],
+      response_type: &quot;code&quot;,
+      issuer: &quot;&lt;your_oidc_url&gt;&quot;,
+      discovery: true,
+      client_auth_method: &quot;query&quot;,
+      uid_field: &quot;&lt;uid_field&gt;&quot;,
+      send_scope_to_token_endpoint: &quot;false&quot;,
+      pkce: true,
+      client_options: {
+        identifier: &quot;&lt;your_oidc_client_id&gt;&quot;,
+        secret: &quot;&lt;your_oidc_client_secret&gt;&quot;,
+        redirect_uri: &quot;&lt;your_gitlab_url&gt;/users/auth/openid_connect_2fa/callback&quot;
+      }
+    }
+  }
+]
+</code></pre>
+<p>For self-compiled installations:</p>
+<pre><code class="language-yaml">  - { name: 'openid_connect',
+      label: 'Provider name', # optional label for login button, defaults to &quot;Openid Connect&quot;
+      icon: '&lt;custom_provider_icon&gt;',
+      args: {
+        name: 'openid_connect',
+        strategy_class: &quot;OmniAuth::Strategies::OpenIDConnect&quot;,
+        scope: ['openid', 'profile', 'email'],
+        response_type: 'code',
+        issuer: '&lt;your_oidc_url&gt;',
+        discovery: true,
+        client_auth_method: 'query',
+        uid_field: '&lt;uid_field&gt;',
+        send_scope_to_token_endpoint: false,
+        pkce: true,
+        client_options: {
+          identifier: '&lt;your_oidc_client_id&gt;',
+          secret: '&lt;your_oidc_client_secret&gt;',
+          redirect_uri: '&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback'
+        }
+      }
+    }
+  - { name: 'openid_connect_2fa',
+      label: 'Provider name 2FA', # optional label for login button, defaults to &quot;Openid Connect&quot;
+      icon: '&lt;custom_provider_icon&gt;',
+      args: {
+        name: 'openid_connect_2fa',
+        strategy_class: &quot;OmniAuth::Strategies::OpenIDConnect&quot;,
+        scope: ['openid', 'profile', 'email'],
+        response_type: 'code',
+        issuer: '&lt;your_oidc_url&gt;',
+        discovery: true,
+        client_auth_method: 'query',
+        uid_field: '&lt;uid_field&gt;',
+        send_scope_to_token_endpoint: false,
+        pkce: true,
+        client_options: {
+          identifier: '&lt;your_oidc_client_id&gt;',
+          secret: '&lt;your_oidc_client_secret&gt;',
+          redirect_uri: '&lt;your_gitlab_url&gt;/users/auth/openid_connect_2fa/callback'
+        }
+      }
+    }
+</code></pre>
+<p>In this use case, you might want to synchronize the <code>extern_uid</code> across the
+different providers based on an existing known identifier in your
+corporate directory.</p>
+<p>To do this, you set the <code>uid_field</code>. The following example code shows how to
+do this:</p>
+<pre><code class="language-python">def sync_missing_provider(self, user: User, extern_uid: str)
+  existing_identities = []
+  for identity in user.identities:
+      existing_identities.append(identity.get(&quot;provider&quot;))
+
+  local_extern_uid = extern_uid.lower()
+  for provider in (&quot;openid_connect_2fa&quot;, &quot;openid_connect&quot;):
+      identity = [
+          identity
+          for identity in user.identities
+          if identity.get(&quot;provider&quot;) == provider
+          and identity.get(&quot;extern_uid&quot;).lower() != local_extern_uid
+      ]
+      if provider not in existing_identities or identity:
+          if identity and identity[0].get(&quot;extern_uid&quot;) != &quot;&quot;:
+              logger.error(f&quot;Found different identity for provider {provider} for user {user.id}&quot;)
+              continue
+          else:
+              logger.info(f&quot;Add identity 'provider': {provider}, 'extern_uid': {extern_uid} for user {user.id}&quot;)
+              user.provider = provider
+              user.extern_uid = extern_uid
+              user = self.save_user(user)
+  return user
+</code></pre>
+<p>For more information, see the <a href="https://python-gitlab.readthedocs.io/en/stable/gl_objects/users.html#examples">GitLab API user method documentation</a>.</p>
+<h2>Configure users based on OIDC group membership</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>You can configure OIDC group membership to:</p>
+<ul>
+<li>Require users to be members of a certain group.</li>
+<li>Assign users <a href="../external_users.html">external</a>, administrator or
+  <a href="../auditor_users.html">auditor</a> roles based on group membership.</li>
+</ul>
+<p>GitLab checks these groups on each sign in and updates user attributes as necessary.
+This feature <strong>does not</strong> allow you to automatically add users to GitLab
+<a href="../../user/group/_index.html">groups</a>.</p>
+<h3>Required groups</h3>
+<p>Your identity provider (IdP) must pass group information to GitLab in the OIDC response. To use this
+response to require users to be members of a certain group, configure GitLab to identify:</p>
+<ul>
+<li>Where to look for the groups in the OIDC response, using the <code>groups_attribute</code> setting.</li>
+<li>Which group membership is required to sign in, using the <code>required_groups</code> setting.</li>
+</ul>
+<p>If you do not set <code>required_groups</code> or leave the setting empty, any user authenticated by the IdP through OIDC can use GitLab.</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Linux package (Omnibus)" &gt;}}</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p><code>ruby
+   gitlab_rails['omniauth_providers'] = [
+     {
+       name: "openid_connect",
+       label: "Provider name",
+       args: {
+         name: "openid_connect",
+         scope: ["openid","profile","email"],
+         response_type: "code",
+         issuer: "&lt;your_oidc_url&gt;",
+         discovery: true,
+         client_auth_method: "query",
+         uid_field: "&lt;uid_field&gt;",
+         client_options: {
+           identifier: "&lt;your_oidc_client_id&gt;",
+           secret: "&lt;your_oidc_client_secret&gt;",
+           redirect_uri: "&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback",
+           gitlab: {
+             groups_attribute: "groups",
+             required_groups: ["Developer"]
+           }
+         }
+       }
+     }
+   ]</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#reconfigure-a-linux-package-installation">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Self-compiled (source)" &gt;}}</p>
+<ol>
+<li>Edit <code>/home/git/gitlab/config/gitlab.yml</code>:</li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+        - { name: 'openid_connect',
+            label: 'Provider name',
+         args: {
+           name: 'openid_connect',
+           scope: ['openid','profile','email'],
+           response_type: 'code',
+           issuer: '&lt;your_oidc_url&gt;',
+           discovery: true,
+           client_auth_method: 'query',
+           uid_field: '&lt;uid_field&gt;',
+           client_options: {
+             identifier: '&lt;your_oidc_client_id&gt;',
+             secret: '&lt;your_oidc_client_secret&gt;',
+             redirect_uri: '&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback',
+             gitlab: {
+               groups_attribute: "groups",
+               required_groups: ["Developer"]
+             }
+           }
+         }
+       }</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#self-compiled-installations">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h3>External groups</h3>
+<p>Your IdP must pass group information to GitLab in the OIDC response. To use this
+response to identify users as <a href="../external_users.html">external users</a>
+based on group membership, configure GitLab to identify:</p>
+<ul>
+<li>Where to look for the groups in the OIDC response, using the <code>groups_attribute</code> setting.</li>
+<li>Which group memberships should identify a user as an
+  <a href="../external_users.html">external user</a>, using the
+ <code>external_groups</code> setting.</li>
+</ul>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Linux package (Omnibus)" &gt;}}</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p><code>ruby
+   gitlab_rails['omniauth_providers'] = [
+     {
+       name: "openid_connect",
+       label: "Provider name",
+       args: {
+         name: "openid_connect",
+         scope: ["openid","profile","email"],
+         response_type: "code",
+         issuer: "&lt;your_oidc_url&gt;",
+         discovery: true,
+         client_auth_method: "query",
+         uid_field: "&lt;uid_field&gt;",
+         client_options: {
+           identifier: "&lt;your_oidc_client_id&gt;",
+           secret: "&lt;your_oidc_client_secret&gt;",
+           redirect_uri: "&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback",
+           gitlab: {
+             groups_attribute: "groups",
+             external_groups: ["Freelancer"]
+           }
+         }
+       }
+     }
+   ]</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#reconfigure-a-linux-package-installation">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Self-compiled (source)" &gt;}}</p>
+<ol>
+<li>Edit <code>/home/git/gitlab/config/gitlab.yml</code>:</li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+        - { name: 'openid_connect',
+            label: 'Provider name',
+         args: {
+           name: 'openid_connect',
+           scope: ['openid','profile','email'],
+           response_type: 'code',
+           issuer: '&lt;your_oidc_url&gt;',
+           discovery: true,
+           client_auth_method: 'query',
+           uid_field: '&lt;uid_field&gt;',
+           client_options: {
+             identifier: '&lt;your_oidc_client_id&gt;',
+             secret: '&lt;your_oidc_client_secret&gt;',
+             redirect_uri: '&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback',
+             gitlab: {
+               groups_attribute: "groups",
+               external_groups: ["Freelancer"]
+             }
+           }
+         }
+       }</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#self-compiled-installations">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h3>Auditor groups</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Your IdP must pass group information to GitLab in the OIDC response. To use this
+response to assign users as auditors based on group membership, configure GitLab to identify:</p>
+<ul>
+<li>Where to look for the groups in the OIDC response, using the <code>groups_attribute</code> setting.</li>
+<li>Which group memberships grant the user auditor access, using the <code>auditor_groups</code>
+  setting.</li>
+</ul>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Linux package (Omnibus)" &gt;}}</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p><code>ruby
+   gitlab_rails['omniauth_providers'] = [
+     {
+       name: "openid_connect",
+       label: "Provider name",
+       args: {
+         name: "openid_connect",
+         scope: ["openid","profile","email","groups"],
+         response_type: "code",
+         issuer: "&lt;your_oidc_url&gt;",
+         discovery: true,
+         client_auth_method: "query",
+         uid_field: "&lt;uid_field&gt;",
+         client_options: {
+           identifier: "&lt;your_oidc_client_id&gt;",
+           secret: "&lt;your_oidc_client_secret&gt;",
+           redirect_uri: "&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback",
+           gitlab: {
+             groups_attribute: "groups",
+             auditor_groups: ["Auditor"]
+           }
+         }
+       }
+     }
+   ]</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#reconfigure-a-linux-package-installation">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Self-compiled (source)" &gt;}}</p>
+<ol>
+<li>Edit <code>/home/git/gitlab/config/gitlab.yml</code>:</li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+        - { name: 'openid_connect',
+            label: 'Provider name',
+         args: {
+           name: 'openid_connect',
+           scope: ['openid','profile','email','groups'],
+           response_type: 'code',
+           issuer: '&lt;your_oidc_url&gt;',
+           discovery: true,
+           client_auth_method: 'query',
+           uid_field: '&lt;uid_field&gt;',
+           client_options: {
+             identifier: '&lt;your_oidc_client_id&gt;',
+             secret: '&lt;your_oidc_client_secret&gt;',
+             redirect_uri: '&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback',
+             gitlab: {
+               groups_attribute: "groups",
+               auditor_groups: ["Auditor"]
+             }
+           }
+         }
+       }</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#self-compiled-installations">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h3>Administrator groups</h3>
+<p>Your IdP must pass group information to GitLab in the OIDC response. To use this
+response to assign users as administrator based on group membership, configure GitLab to identify:</p>
+<ul>
+<li>Where to look for the groups in the OIDC response, using the <code>groups_attribute</code> setting.</li>
+<li>Which group memberships grant the user administrator access, using the
+  <code>admin_groups</code> setting.</li>
+</ul>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Linux package (Omnibus)" &gt;}}</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p><code>ruby
+   gitlab_rails['omniauth_providers'] = [
+     {
+       name: "openid_connect",
+       label: "Provider name",
+       args: {
+         name: "openid_connect",
+         scope: ["openid","profile","email"],
+         response_type: "code",
+         issuer: "&lt;your_oidc_url&gt;",
+         discovery: true,
+         client_auth_method: "query",
+         uid_field: "&lt;uid_field&gt;",
+         client_options: {
+           identifier: "&lt;your_oidc_client_id&gt;",
+           secret: "&lt;your_oidc_client_secret&gt;",
+           redirect_uri: "&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback",
+           gitlab: {
+             groups_attribute: "groups",
+             admin_groups: ["Admin"]
+           }
+         }
+       }
+     }
+   ]</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#reconfigure-a-linux-package-installation">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Self-compiled (source)" &gt;}}</p>
+<ol>
+<li>Edit <code>/home/git/gitlab/config/gitlab.yml</code>:</li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+        - { name: 'openid_connect',
+            label: 'Provider name',
+         args: {
+           name: 'openid_connect',
+           scope: ['openid','profile','email'],
+           response_type: 'code',
+           issuer: '&lt;your_oidc_url&gt;',
+           discovery: true,
+           client_auth_method: 'query',
+           uid_field: '&lt;uid_field&gt;',
+           client_options: {
+             identifier: '&lt;your_oidc_client_id&gt;',
+             secret: '&lt;your_oidc_client_secret&gt;',
+             redirect_uri: '&lt;your_gitlab_url&gt;/users/auth/openid_connect/callback',
+             gitlab: {
+               groups_attribute: "groups",
+               admin_groups: ["Admin"]
+             }
+           }
+         }
+       }</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#self-compiled-installations">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h3>Configure a custom duration for ID Tokens</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/377654">Introduced</a> in GitLab 17.8.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>By default, GitLab ID tokens expire after 120 seconds.</p>
+<p>To configure a custom duration for your ID tokens:</p>
+<p>{{&lt; tabs &gt;}}</p>
+<p>{{&lt; tab title="Linux package (Omnibus)" &gt;}}</p>
+<ol>
+<li>Edit <code>/etc/gitlab/gitlab.rb</code>:</li>
+</ol>
+<p><code>ruby
+   gitlab_rails['oidc_provider_openid_id_token_expire_in_seconds'] = 3600</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#reconfigure-a-linux-package-installation">reconfigure GitLab</a> for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; tab title="Self-compiled (source)" &gt;}}</p>
+<ol>
+<li>Edit <code>/home/git/gitlab/config/gitlab.yml</code>:</li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     oidc_provider:
+      openid_id_token_expire_in_seconds: 3600</code></p>
+<ol>
+<li>Save the file and <a href="../restart_gitlab.md#self-compiled-installations">reconfigure GitLab</a>
+   for the changes to take effect.</li>
+</ol>
+<p>{{&lt; /tab &gt;}}</p>
+<p>{{&lt; /tabs &gt;}}</p>
+<h2>Step-up authentication</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed</li>
+<li>Status: Experiment</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; alert type="flag" &gt;}}</p>
+<p>The availability of this feature is controlled by a feature flag.
+For more information, see the history.
+This feature is available for testing, but not ready for production use.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>In some cases, default authentication methods don't protect critical resources or high-risk actions.
+Step-up authentication adds an extra layer for privileged actions or sensitive operations.
+For example, accessing the Admin area.</p>
+<p>With step-up authentication, users must complete additional authentication with an enrolled
+<a href="../../user/profile/account/two_factor_authentication.html">two-factor authentication method</a>
+before they can access certain features.</p>
+<p>The OIDC standard includes authentication context class references (<code>ACR</code>). The <code>ACR</code> concept
+helps configure and implement step-up authentication for different scenarios, such as Admin Mode.</p>
+<p>This feature is an <a href="../../policy/development_stages_support.html">experiment</a> and subject to change without notice. This feature is not ready for production use. If you want to use this feature, you should test outside of production first.</p>
+<h3>Enable step-up authentication for Admin Mode</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/474650">Introduced</a> in GitLab 17.11 <a href="../feature_flags/_index.html">with a flag</a> named <code>omniauth_step_up_auth_for_admin_mode</code>. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}
+To enable step-up authentication for Admin Mode:</p>
+<ol>
+<li>Edit your GitLab configuration file (<code>gitlab.yml</code> or <code>/etc/gitlab/gitlab.rb</code>) to enable
+   step-up authentication for an specific OmniAuth provider.</li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+       - { name: 'openid_connect',
+           label: 'Provider name',
+           args: {
+             name: 'openid_connect',
+             # ...
+             allow_authorize_params: ["claims"], # Match this to the parameters defined in `step_up_auth =&gt; admin_mode =&gt; params`
+           },
+           step_up_auth: {
+             admin_mode: {
+               # The `id_token` field defines the claims that must be included with the token.
+               # You can specify claims in one or both of the `required` or `included` fields.
+               # The token must include matching values for every claim you define in these fields.
+               id_token: {
+                 # The `required` field defines key-value pairs that must be included with the ID token.
+                 # The values must match exactly what is defined.
+                 # In this example, the 'acr' (Authentication Context Class Reference) claim
+                 # must have the value 'gold' to pass the step-up authentication challenge.
+                 # This ensures a specific level of authentication assurance.
+                 required: {
+                   acr: 'gold'
+                 },
+                 # The `included` field also defines key-value pairs that must be included with the ID token.
+                 # Multiple accepted values can be defined in an array. If an array is not used, the value must match exactly.
+                 # In this example, the 'amr' (Authentication Method References) claim
+                 # must have a value of either 'mfa' or 'fpt' to pass the step-up authentication challenge.
+                 # This is useful for scenarios where the user must provide additional authentication factors.
+                 included: {
+                   amr: ['mfa', 'fpt']
+                 },
+               },
+               # The `params` field defines any additional parameters that are sent during the authentication process.
+               # In this example, the `claims` parameter is added to the authorization request and instructs the
+               # identity provider to include an 'acr' claim with the value 'gold' in the ID token.
+               # The 'essential: true' indicates that this claim is required for successful authentication.
+               params: {
+                 claims: {
+                   id_token: {
+                     acr: {
+                       essential: true,
+                       values: ['gold']
+                     }
+                   }
+                 }
+               },
+               # Optional: Provide a custom documentation link for users who fail step-up authentication
+               # This link is displayed when step-up authentication fails, directing users to
+               # organization-specific authentication documentation.
+               documentation_link: 'https://internal.example.com/path/to/documentation'
+             },
+           }
+         }</code></p>
+<ol>
+<li>Save the configuration file and restart GitLab for the changes to take effect.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Although OIDC is standardized, different Identity Providers (IdPs) might have unique requirements.
+The <code>params</code> setting allows a flexible hash to define necessary parameters for step-up authentication.
+These values can vary based on the requirements for each IdP.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Require step-up authentication with Keycloak</h3>
+<p>Keycloak supports step-up authentication by defining levels of authentication and custom browser login flows.</p>
+<p>To require step-up authentication for Admin Mode with Keycloak:</p>
+<ol>
+<li>
+<p><a href="#configure-keycloak">Configure Keycloak</a> in GitLab.</p>
+</li>
+<li>
+<p>Follow the steps in the Keycloak documentation to <a href="https://www.keycloak.org/docs/latest/server_admin/#_step-up-flow">create a browser login flow with step-up authentication in Keycloak</a>.</p>
+</li>
+<li>
+<p>Edit your GitLab configuration file (<code>gitlab.yml</code> or <code>/etc/gitlab/gitlab.rb</code>) to enable
+   step-up authentication in the Keycloak OIDC provider configuration.</p>
+</li>
+</ol>
+<p>Keycloak defines two different authentication levels: <code>silver</code> and <code>gold</code>. The following example
+   uses <code>gold</code> to represent the increased security level.</p>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+       - { name: 'openid_connect',
+           label: 'Keycloak',
+           args: {
+             name: 'openid_connect',
+             # ...
+             allow_authorize_params: ["claims"] # Match this to the parameters defined in `step_up_auth =&gt; admin_mode =&gt; params`
+           },
+           step_up_auth: {
+             admin_mode: {
+               id_token: {
+                 # In this example, the 'acr' claim must have the value 'gold' that is also defined in the Keycloak documentation.
+                 required: {
+                   acr: 'gold'
+                 }
+               },
+               params: {
+                 claims: {
+                   id_token: {
+                     acr: { essential: true, values: ['gold'] }
+                   }
+                 },
+               },
+               # Optional: Add a custom documentation link for Keycloak-specific step-up authentication help
+               documentation_link: 'https://internal.example.com/path/to/documentation'
+             },
+           }
+         }</code></p>
+<ol>
+<li>Save the configuration file and restart GitLab for the changes to take effect.</li>
+</ol>
+<h3>Require step-up authentication with Microsoft Entra ID</h3>
+<p>Microsoft Entra ID (formerly known as Azure Active Directory) supports step-up authentication
+through <a href="https://learn.microsoft.com/en-us/entra/identity-platform/developer-guide-conditional-access-authentication-context">conditional access authentication context</a>.
+You should work with your Microsoft Entra ID administrators to define the correct configuration.</p>
+<p>Consider the following aspects:</p>
+<ul>
+<li>Authentication context IDs are requested through the <code>acrs</code> claim only, not through the ID token
+  claim <code>acr</code> used for other identity providers.</li>
+<li>Authentication context IDs use fixed values from <code>c1</code> to <code>c99</code>, each representing a specific
+  authentication context with conditional access policies.</li>
+<li>By default, Microsoft Entra ID does not include the <code>acrs</code> claim in the ID token. To enable this, you must
+  <a href="https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims?tabs=appui#configure-optional-claims-in-your-application">configure optional claims</a>.</li>
+<li>When step-up authentication succeeds, the response returns the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference#payload-claims"><code>acrs</code> claim</a> as a JSON array
+  of strings. For example: <code>acrs: ["c1", "c2", "c3"]</code>.</li>
+</ul>
+<p>To require step-up authentication for Admin Mode with Microsoft Entra ID:</p>
+<ol>
+<li>
+<p><a href="#configure-microsoft-azure">Configure Microsoft Entra ID</a> in GitLab.</p>
+</li>
+<li>
+<p>Follow the steps in the Microsoft Entra ID documentation to
+   <a href="https://learn.microsoft.com/en-us/entra/identity-platform/developer-guide-conditional-access-authentication-context">define conditional access authentication contexts in Microsoft Entra ID</a>.</p>
+</li>
+<li>
+<p>In Microsoft Entra ID, define <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">the optional claim <code>acrs</code> to include in the ID token</a>.</p>
+</li>
+<li>
+<p>Edit your GitLab configuration file (<code>gitlab.yml</code> or <code>/etc/gitlab/gitlab.rb</code>) to enable
+   step-up authentication in the Microsoft Entra ID provider configuration:</p>
+</li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+       - { name: 'openid_connect',
+         label: 'Azure OIDC',
+         args: {
+           name: 'openid_connect',
+           # ...
+           allow_authorize_params: ["claims"] # Match this to the parameters defined in `step_up_auth =&gt; admin_mode =&gt; params`
+         },
+         step_up_auth: {
+           admin_mode: {
+             id_token: {
+               # In this example, the Microsoft Entra ID administrators have defined `c20`
+               # as the authentication context ID with the desired security level and
+               # an optional claim `acrs` to be included in the ID token.
+               # The `included` field declares that the id token claim `acrs` must include the value `c20`.
+               included: {
+                 acrs: ["c20"],
+               },
+             },
+             params: {
+               claims: {
+                 id_token: {
+                   acrs: { essential: true, value: 'c20' }
+                 }
+               },
+             },
+             # Optional: Add a custom documentation link for Microsoft Entra ID step-up authentication
+             documentation_link: 'https://internal.example.com/path/to/documentation'
+           },
+         }
+       }</code></p>
+<ol>
+<li>Save the configuration file and restart GitLab for the changes to take effect.</li>
+</ol>
+<h3>Add a step-up authentication provider for groups</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/556943">Introduced</a> in GitLab 18.4 <a href="../feature_flags/_index.html">with a flag</a> named <code>omniauth_step_up_auth_for_namespace</code>. Disabled by default.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>You can also add step-up authentication providers available to all groups in your instance. This does not force groups to use step-up authentication, each group must still <a href="#force-step-up-authentication-for-a-group">set up</a> this feature individually.</p>
+<p>To add a step-up authentication provider for groups:</p>
+<ol>
+<li>Edit your GitLab configuration file (<code>gitlab.yml</code> or <code>/etc/gitlab/gitlab.rb</code>) to enable
+   step-up authentication for an specific OmniAuth provider.</li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+       - { name: 'openid_connect',
+           label: 'Provider name',
+           args: {
+             name: 'openid_connect',
+             # ...
+             allow_authorize_params: ["claims"], # Match this to the parameters defined in `step_up_auth =&gt; admin_mode =&gt; params`
+           },
+           step_up_auth: {
+             # Unlike step-up authentication configuration for Admin Mode, you use the `namespace`
+             # object. This is because you're adding step-up authentication to access the entire
+             # group, not just Admin Mode.
+             namespace : {
+               # The `id_token` field defines the claims that must be included with the token.
+               # You can specify claims in one or both of the `required` or `included` fields.
+               # The token must include matching values for every claim you define in these fields.
+               id_token: {
+                 # The `required` field defines key-value pairs that must be included with the ID token.
+                 # The values must match exactly what is defined.
+                 # In this example, the 'acr' (Authentication Context Class Reference) claim
+                 # must have the value 'gold' to pass the step-up authentication challenge.
+                 # This ensures a specific level of authentication assurance.
+                 required: {
+                   acr: 'gold'
+                 },
+                 # The `included` field also defines key-value pairs that must be included with the ID token.
+                 # Multiple accepted values can be defined in an array. If an array is not used, the value must match exactly.
+                 # In this example, the 'amr' (Authentication Method References) claim
+                 # must have a value of either 'mfa' or 'fpt' to pass the step-up authentication challenge.
+                 # This is useful for scenarios where the user must provide additional authentication factors.
+                 included: {
+                   amr: ['mfa', 'fpt']
+                 },
+               },
+               # The `params` field defines any additional parameters that are sent during the authentication process.
+               # In this example, the `claims` parameter is added to the authorization request and instructs the
+               # identity provider to include an 'acr' claim with the value 'gold' in the ID token.
+               # The 'essential: true' indicates that this claim is required for successful authentication.
+               params: {
+                 claims: {
+                   id_token: {
+                     acr: {
+                       essential: true,
+                       values: ['gold']
+                     }
+                   }
+                 }
+               }
+             },
+           }
+         }</code></p>
+<ol>
+<li>Save the configuration file and restart GitLab for the changes to take effect.</li>
+</ol>
+<h3>Force step-up authentication for a group</h3>
+<p>You can force users to complete step-up authentication before they access a group. This setting is managed for each group individually, but requires a step-up authentication provider that was previously added for the entire instance.</p>
+<p>Prerequisites:</p>
+<ul>
+<li><a href="#add-a-step-up-authentication-provider-for-groups">A step-up authentication provider for groups in your instance</a>.</li>
+<li>You must have the Owner role.</li>
+</ul>
+<p>To force step-up authentication for a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>General</strong>.</li>
+<li>Expand the <strong>Permissions and group features</strong> section.</li>
+<li>Under Step-up authentication, select an available authentication provider.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h3>Add custom documentation links for step-up authentication</h3>
+<p>When step-up authentication fails, GitLab can display custom documentation links to help users understand
+the authentication requirements for your organization. This feature allows administrators to provide
+organization-specific guidance that directs users to internal documentation or help resources.</p>
+<p>To add custom documentation links:</p>
+<ol>
+<li>Edit your GitLab configuration file (<code>gitlab.yml</code> or <code>/etc/gitlab/gitlab.rb</code>) to add a <code>documentation_link</code> field to <code>step_up_auth =&gt; admin_mode</code></li>
+</ol>
+<p><code>yaml
+   production: &amp;base
+     omniauth:
+       providers:
+       - { name: 'openid_connect',
+           label: 'Corporate SSO',
+           # ... other provider configuration ...
+           step_up_auth: {
+             admin_mode: {
+               # ... id_token and params configuration ...
+               documentation_link: 'https://internal.example.com/path/to/documentation'
+             }
+           }
+         }</code></p>
+<ol>
+<li>Save the configuration file and restart GitLab for the changes to take effect.</li>
+</ol>
+<p>When users fail step-up authentication, they see a helpful error message with links to the relevant
+documentation for the providers that failed. The links are displayed only for providers where the
+step-up authentication actually failed, making the guidance more relevant and actionable.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>Best practices for documentation links:</p>
+<ul>
+<li>Use HTTPS URLs for security.</li>
+<li>Link to internal documentation that explains the specific authentication requirements for your organization.</li>
+<li>Include information about how to enable <code>MFA</code> or other required authentication methods.</li>
+</ul>
+<p>{{&lt; /alert &gt;}}</p>
+<h2>Troubleshooting</h2>
+<ol>
+<li>
+<p>Ensure <code>discovery</code> is set to <code>true</code>. If you set it to <code>false</code>, you must
+   specify all the URLs and keys required to make OpenID work.</p>
+</li>
+<li>
+<p>Check your system clock to ensure the time is synchronized properly.</p>
+</li>
+<li>
+<p>As mentioned in <a href="https://github.com/omniauth/omniauth_openid_connect">the OmniAuth OpenID Connect documentation</a>,
+   make sure <code>issuer</code> corresponds to the base URL of the Discovery URL. For
+   example, <code>https://accounts.google.com</code> is used for the URL
+   <code>https://accounts.google.com/.well-known/openid-configuration</code>.</p>
+</li>
+<li>
+<p>The OpenID Connect client uses HTTP Basic Authentication to send the
+   OAuth 2.0 access token if <code>client_auth_method</code> is not defined or if set to <code>basic</code>.
+   If you see 401 errors when retrieving the <code>userinfo</code> endpoint, check
+   your OpenID web server configuration. For example, for
+   <a href="https://github.com/bshaffer/oauth2-server-php"><code>oauth2-server-php</code></a>, you may have to
+   <a href="https://github.com/bshaffer/oauth2-server-php/issues/926#issuecomment-387502778">add a configuration parameter to Apache</a>.</p>
+</li>
+<li>
+<p><strong>Step-up authentication only</strong>: Ensure that any parameters defined in
+   <code>step_up_auth =&gt; admin_mode =&gt; params</code> are also defined in <code>args =&gt; allow_authorize_params</code>.
+   This includes the parameters in the request query parameters used to
+   redirect to the IdP authorization endpoint.</p>
+</li>
+</ol></code></pre>
+</body>
+</html>

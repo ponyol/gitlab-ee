@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Planning workflows with iterations</title>
+    <link rel="stylesheet" href="/../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Project Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Iterations
+description: Time-boxed workflow, program increments, cadence, and sprints.</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>An iteration in GitLab refers to a time-boxed workflow that groups issues to be worked on during
+a specific period of time, usually lasting 1-3 weeks.</p>
+<p>Teams can use iterations to track velocity and volatility metrics.
+For tracking the same item over multiple concurrent periods, you can use iterations with <a href="../../project/milestones/_index.html">milestones</a>.
+Create and manage various <a href="#iteration-cadences">iteration cadences</a> in a group.</p>
+<p>For example, you can use:</p>
+<ul>
+<li>Milestones for Program Increments, which span 8-12 weeks.</li>
+<li>Iterations for Sprints, which span 2 weeks.</li>
+</ul>
+<p>In GitLab, iterations are similar to milestones, with a few differences:</p>
+<ul>
+<li>Iterations are only available to groups.</li>
+<li>Iterations are grouped into iteration cadences.</li>
+<li>Iterations require both a start and an end date.</li>
+<li>Iteration date ranges cannot overlap within an iteration cadence.</li>
+</ul>
+<h2>Planning workflows with iterations</h2>
+<p>You can use iterations to organize and track work in fixed time periods.
+The following examples show how iterations help teams maintain consistent delivery cycles.</p>
+<h3>Sprint planning and execution</h3>
+<p>Use iterations to plan and execute work in fixed time periods, and help teams maintain a
+predictable delivery cadence.
+When teams work in sprints, each iteration provides a clear timebox for planning,
+execution, and delivery of work items.
+For more information, see
+<a href="../../../tutorials/scrum_events/_index.html">Tutorial: Use GitLab to facilitate Scrum</a>.</p>
+<p>For example, when running two-week sprints, teams often need to coordinate multiple workstreams.
+The development team tracks implementation in the current sprint, while product managers prepare
+backlog items for upcoming sprints.</p>
+<p>By using iterations:</p>
+<ul>
+<li>Teams can visualize their entire sprint schedule.</li>
+<li>Work automatically rolls over between sprints.</li>
+<li>Stakeholders can track sprint progress through burndown charts.</li>
+<li>Teams can measure velocity across multiple sprints.</li>
+</ul>
+<p>This structure helps teams complete work consistently while maintaining visibility into progress.</p>
+<p>When you set up iterations for sprints:</p>
+<ul>
+<li>Each team works in the same iteration cadence.</li>
+<li>Teams can view work status in iteration reports.</li>
+<li>Sprint planning becomes more predictable.</li>
+</ul>
+<h3>Rapid development cycles</h3>
+<p>Use iterations to support shorter development cycles when your team needs frequent releases.
+When practicing methodologies like Extreme Programming (XP), teams can use one-week iterations
+to maintain fast feedback loops.</p>
+<p>For example, when implementing rapid changes, teams might deploy to production multiple times
+per iteration.
+The team tracks their work in weekly iterations while maintaining the flexibility
+to release whenever code is ready.</p>
+<p>By using iterations:</p>
+<ul>
+<li>Teams maintain structured timeboxes.</li>
+<li>You can track development velocity.</li>
+<li>Teams can adapt planning based on weekly metrics.</li>
+<li>Stakeholders can see concrete progress each week.</li>
+</ul>
+<p>This approach helps teams balance agile practices with organized planning.</p>
+<p>When you use iterations for rapid cycles:</p>
+<ul>
+<li>Work is organized into clear weekly boundaries.</li>
+<li>Teams track progress in smaller increments.</li>
+<li>Release planning aligns with iteration boundaries.</li>
+</ul>
+<h2>Iteration cadences</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/5077">Introduced</a> in GitLab 14.1 <a href="../../../administration/feature_flags/_index.html">with a flag</a>, named <code>iteration_cadences</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/354977">Changed</a> in GitLab 15.0: All scheduled iterations must start on the same day of the week as the cadence start day. Start date of cadence cannot be edited after the first iteration starts.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/354878">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/367493">Changed</a> in GitLab 15.4: A new automation start date can be selected for cadence. Upcoming iterations are scheduled to start on the same day of the week as the changed start date. Iteration cadences can be manually managed by turning off the automatic scheduling feature.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/354878">Generally available</a> in GitLab 15.5. Feature flag <code>iteration_cadences</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Iteration cadences are containers for iterations and can be used to automate iteration scheduling.
+You can use them to automate creating iterations every 1, 2, 3, or 4 weeks. You can also
+configure iteration cadences to automatically roll over incomplete issues to the next iteration.</p>
+<h3>Create an iteration cadence</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/343889">Changed</a> the minimum user role from Developer to Reporter in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for a group.</li>
+</ul>
+<p>To create an iteration cadence:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong>.</li>
+<li>Select <strong>New iteration cadence</strong>.</li>
+<li>Enter the title and description of the iteration cadence.</li>
+</ol>
+<p>To manually manage the iteration cadence, clear the <strong>Enable automatic scheduling</strong> checkbox and skip the next step.
+1. Complete the required fields to use automatic scheduling.
+   - Select the automation start date of the iteration cadence. Iterations are scheduled to
+     begin on the same day of the week as the day of the week of the start date.
+   - From the <strong>Duration</strong> dropdown list, select how many weeks each iteration should last.
+   - From the <strong>Upcoming iterations</strong> dropdown list, select how many upcoming iterations should be
+     created and maintained by GitLab.
+   - Optional. To move incomplete issues to the next iteration, select the <strong>Enable roll over</strong> checkbox.
+     At the end of the current iteration, <a href="#gitlab-automation-bot-user">Automation Bot</a> moves all open
+     issues to the next iteration.
+     Issues are moved at midnight in the instance time zone (UTC by default).
+     Administrators can change the instance time zone.
+1. Select <strong>Create cadence</strong>. The cadence list page opens.</p>
+<p>To manually manage the created cadence, see <a href="#create-an-iteration-manually">Create an iteration manually</a>.</p>
+<h3>View the iterations list</h3>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong>.</li>
+</ol>
+<p>To view all the iterations in a cadence, ordered by descending date, select that iteration cadence.
+From there you can create a new iteration or select an iteration to get a more detailed view.</p>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>If a project has issue tracking
+<a href="../../project/settings/_index.md#configure-project-features-and-permissions">turned off</a>,
+to view the iterations list, enter its URL. To do so, add: <code>/-/cadences</code> to your project or group URL.
+For example <code>https://gitlab.com/gitlab-org/sample-data-templates/sample-gitlab-project/-/cadences</code>.
+<a href="https://gitlab.com/gitlab-org/gitlab/-/issues/339009">Issue 339009</a> tracks improving this.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>Edit an iteration cadence</h3>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for a group.</li>
+</ul>
+<p>To edit an iteration cadence:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong>.</li>
+<li>To the right of the cadence you want to edit, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) and
+   then select <strong>Edit cadence</strong>.</li>
+<li>Edit the fields.</li>
+<li>When you use automatic scheduling and edit the <strong>Automation start date</strong> field,
+     you must set a new start date that doesn't overlap with the existing
+     current or past iterations.</li>
+<li>Editing <strong>Upcoming iterations</strong> is a non-destructive action.
+     For example, if ten upcoming iterations already exist, changing the number under <strong>Upcoming iterations</strong> to <code>2</code>
+     doesn't delete the eight existing upcoming iterations.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h4>Turn on and off automatic scheduling for an iteration cadence</h4>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong>.</li>
+<li>To the right of the cadence for which you want to turn on or off automatic scheduling, select the
+   vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) and then select <strong>Edit cadence</strong>.</li>
+<li>Select or clear the <strong>Enable automatic scheduling</strong> checkbox.</li>
+<li>If you're turning on automatic scheduling,
+   complete the required fields <strong>Automation start date</strong>, <strong>Duration</strong>, and <strong>Upcoming iterations</strong>.</li>
+<li>For <strong>Automation start date</strong>, you can select any date that doesn't overlap with the existing open iterations.
+     If you have upcoming iterations, the automatic scheduling adjusts them appropriately to fit
+     your chosen duration.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h4>Example: Turn on automatic scheduling for a manual iteration cadence</h4>
+<p>Suppose it's Friday, April 15, and you have three iterations in a manual iteration cadence:</p>
+<ul>
+<li>Monday, April 4 - Friday, April 8 (closed)</li>
+<li>Tuesday, April 12 - Friday, April 15 (ongoing)</li>
+<li>Tuesday, May 3 - Friday, May 6 (upcoming)</li>
+</ul>
+<p>The earliest possible <strong>Automation start date</strong> you can choose in this scenario
+is Saturday, April 16, because April 15 overlaps with the ongoing iteration.</p>
+<p>If you select Monday, April 18 as the automation start date to
+automate scheduling iterations every week up to two upcoming iterations,
+after the conversion you have the following iterations:</p>
+<ul>
+<li>Monday, April 4 - Friday, April 8 (closed)</li>
+<li>Tuesday, April 12 - Friday, April 15 (ongoing)</li>
+<li>Monday, April 18 - Sunday, April 24 (upcoming)</li>
+<li>Monday, April 25 - Sunday, May 1 (upcoming)</li>
+</ul>
+<p>Your existing upcoming iteration "Tuesday, April 12 - Friday, April 15"
+is changed to "April 18 - Sunday, April 24".</p>
+<p>An additional upcoming iteration "April 25 - Sunday, May 1" is scheduled
+to satisfy the requirement that there are at least two upcoming iterations scheduled.</p>
+<h3>Delete an iteration cadence</h3>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/343889">Changed</a> the minimum user role from Developer to Reporter in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for a group.</li>
+</ul>
+<p>Deleting an iteration cadence also deletes all iterations in that cadence.</p>
+<p>To delete an iteration cadence:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong>.</li>
+<li>To the right of the cadence you want to delete, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) and then select <strong>Delete cadence</strong>.</li>
+<li>Select <strong>Delete cadence</strong>.</li>
+</ol>
+<h3>GitLab Automation Bot user</h3>
+<p>When iteration roll-over is enabled, at the end of the current iteration, all open issues are moved
+to the next iteration.</p>
+<p>Iterations are changed by the special GitLab Automation Bot user, which you can see in the issue
+<a href="../../project/system_notes.html">system notes</a>.
+This user isn't a <a href="../../../subscriptions/manage_users_and_seats.md#criteria-for-non-billable-users">billable user</a>,
+so it does not count toward the license limit count.</p>
+<p>On GitLab.com, this is the <code>automation-bot1</code> user.</p>
+<h2>Create an iteration manually</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/343889">Changed</a> the minimum user role from Developer to Reporter in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>When an iteration cadence has automatic scheduling enabled, iterations are created on schedule.
+If you disable that option, you can create iterations manually.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for a group.</li>
+<li>There must be at least one iteration cadence in the group and
+  <a href="#turn-on-and-off-automatic-scheduling-for-an-iteration-cadence">automatic scheduling must be disabled</a> for the iteration cadence.</li>
+</ul>
+<p>To create an iteration:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong>.</li>
+<li>To the right of the cadence in which you want create an iteration, select the vertical ellipsis
+   ({{&lt; icon name="ellipsis_v" &gt;}}) and then select <strong>Add iteration</strong>.</li>
+<li>Complete the fields.</li>
+<li>Select <strong>Create iteration</strong>. The iteration details page opens.</li>
+</ol>
+<h2>Edit an iteration</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/343889">Changed</a> the minimum user role from Developer to Reporter in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for a group.</li>
+</ul>
+<p>To edit an iteration:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong> and select an iteration cadence.</li>
+<li>Select the iteration you want edit. The iteration details page opens.</li>
+<li>In the upper-right corner, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) and then select <strong>Edit</strong>.</li>
+<li>Edit the fields:</li>
+<li>You can edit <strong>Title</strong>, <strong>Start date</strong>, and <strong>Due date</strong> only if <a href="#turn-on-and-off-automatic-scheduling-for-an-iteration-cadence">automatic scheduling is disabled</a> for the iteration cadence.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Delete an iteration</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/343889">Changed</a> the minimum user role from Developer to Reporter in GitLab 15.0.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/169256">Changed</a> the minimum user role from Reporter to Planner in GitLab 17.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have at least the Planner role for a group.</li>
+<li><a href="#turn-on-and-off-automatic-scheduling-for-an-iteration-cadence">Automatic scheduling must be disabled</a> for the iteration cadence.</li>
+</ul>
+<p>To delete an iteration:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong> and select an iteration cadence.</li>
+<li>Select the iteration you want edit. The iteration details page opens.</li>
+<li>In the upper-right corner, select the vertical ellipsis ({{&lt; icon name="ellipsis_v" &gt;}}) and then select <strong>Delete</strong>.</li>
+<li>Select <strong>Delete</strong>.</li>
+</ol>
+<h2>Iteration report</h2>
+<p>You can track the progress of an iteration by reviewing iteration reports.
+An iteration report displays a list of all the issues assigned to an iteration and their status.</p>
+<p>The report also shows a breakdown of total issues in an iteration.
+Open iteration reports show a summary of completed, unstarted, and in-progress issues.
+Closed iteration reports show the total number of issues completed by the due date.</p>
+<h3>View an iteration report</h3>
+<p>To view an iteration report:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong> and select an iteration cadence.</li>
+<li>Select an iteration.</li>
+</ol>
+<h3>Iteration burndown and burnup charts</h3>
+<p>The iteration report includes <a href="../../project/milestones/burndown_and_burnup_charts.html">burndown and burnup charts</a>,
+similar to how they appear when viewing a <a href="../../project/milestones/_index.html">milestone</a>:</p>
+<ul>
+<li>Burndown charts help track completion progress of total scope.</li>
+<li>Burnup charts track the daily total count and weight of issues added to and completed in a given timebox.</li>
+</ul>
+<h4>View iteration charts scoped to subgroups or projects</h4>
+<p>View burndown and burnup charts for iterations created for a group in any of its
+subgroups or projects.
+When you do this, the charts only count the issues that belong to the subgroup or project.</p>
+<p>For example, suppose a group has two projects named <code>Project 1</code> and <code>Project 2</code>.
+Each project has a single issue assigned to the same iteration from the group.</p>
+<p>An iteration report generated for the group shows issue counts for all the group's projects:</p>
+<ul>
+<li>Completed: 0 of 2</li>
+<li>Incomplete: 0 of 2</li>
+<li>Unstarted: 2 of 2</li>
+<li>Burndown chart total issues: 2</li>
+<li>Burnup chart total issues: 2</li>
+</ul>
+<p>An iteration report generated for <code>Project 1</code> shows only issues that belong to this project:</p>
+<ul>
+<li>Completed: 0 of 1</li>
+<li>Incomplete: 0 of 1</li>
+<li>Unstarted: 1 of 1</li>
+<li>Burndown chart total issues: 1</li>
+<li>Burnup chart total issues: 1</li>
+</ul>
+<h3>Group issues by label</h3>
+<p>Group the list of issues by label to view issues that belong to your team, and get a more accurate
+understanding of scope attributable to each label.</p>
+<p>To group issues by label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your group. If you've <a href="../../interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Iterations</strong> and select an iteration cadence.</li>
+<li>Select an iteration.</li>
+<li>From the <strong>Group by</strong> dropdown list, select <strong>Label</strong>.</li>
+<li>From the <strong>Filter by label</strong> dropdown list, select the labels you want to group by.</li>
+<li>Select any area outside the label dropdown list. The page is now grouped by the selected labels.</li>
+</ol>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../../project/issues/managing_issues.md#add-an-issue-to-an-iteration">Add an issue to an iteration</a></li>
+<li><a href="../../../tutorials/agile_sprint/_index.html">Tutorial: Use GitLab to run an Agile iteration</a></li>
+</ul></code></pre>
+</body>
+</html>

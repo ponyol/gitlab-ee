@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Change the default branch name for a project</title>
+    <link rel="stylesheet" href="/../../../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Create
+group: Source Code
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+description: Use Git branches to develop new features. Add branch protections to critical branches to ensure only trusted users can merge into them.
+title: Default branch</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>When you create a new <a href="../../_index.html">project</a>, GitLab creates a default branch
+in the repository. A default branch has special configuration options not shared
+by other branches:</p>
+<ul>
+<li>It cannot be deleted.</li>
+<li>It's <a href="protected.html">initially protected</a> against
+  forced pushes.</li>
+<li>When a merge request uses an
+  <a href="../../issues/managing_issues.md#closing-issues-automatically">issue closing pattern</a>
+  to close an issue, the work is merged into this branch.</li>
+</ul>
+<p>The name of your <a href="../../_index.html">new project's</a> default branch depends on any
+configuration changes made to your instance or group by your GitLab administrator.
+GitLab checks first for specific customizations, then checks at a broader level,
+using the GitLab default only if no customizations are set:</p>
+<ol>
+<li>A <a href="#change-the-default-branch-name-for-a-project">project-specific</a> custom default branch name.</li>
+<li><a href="#change-the-default-branch-name-for-new-projects-in-a-group">Custom group default branch name</a> specified in a project's direct subgroup.</li>
+<li>Custom group default branch name specified in a project's top-level group.</li>
+<li>A custom default branch name set for the <a href="#change-the-default-branch-name-for-new-projects-in-an-instance">instance</a>.</li>
+<li>If no custom default branch name is set at any level, GitLab defaults to <code>main</code>.</li>
+</ol>
+<p>In the GitLab UI, you can change the defaults at any level. GitLab also provides
+the <a href="#update-the-default-branch-name-in-your-repository">Git commands you need</a> to update your copy of the repository.</p>
+<h2>Change the default branch name for a project</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You have the Owner or Maintainer role for the project.</li>
+</ul>
+<p>To update the default branch for an individual <a href="../../_index.html">project</a>:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your project.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand <strong>Branch defaults</strong>. For <strong>Default branch</strong>, select a new default branch.</li>
+<li>Optional. Select the <strong>Auto-close referenced issues on default branch</strong> checkbox to close
+   issues when a merge request
+   <a href="../../issues/managing_issues.md#closing-issues-automatically">uses a closing pattern</a>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>API users can also use the <code>default_branch</code> attribute of the
+<a href="../../../../api/projects.html">Projects API</a> when creating or editing a project.</p>
+<h2>Change the default branch name for new projects in an instance</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p><a href="../../../permissions.html">Administrators</a> of GitLab Self-Managed can
+customize the initial branch for projects hosted on that instance. Individual
+groups and subgroups can override the instance default for their projects.</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand <strong>Default branch</strong>.</li>
+<li>For <strong>Initial default branch name</strong>, select a new default branch.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>Projects created on this instance after you change the setting use the
+custom branch name, unless a group or subgroup configuration
+overrides it.</p>
+<h2>Change the default branch name for new projects in a group</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>You must have the Owner role for the group and subgroups.</li>
+</ul>
+<p>To change the default branch name for new projects in a group:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand <strong>Default branch</strong>.</li>
+<li>For <strong>Initial default branch name</strong>, select a new default branch.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>Projects created in this group after you change the setting use the custom branch name,
+unless a subgroup configuration overrides it.</p>
+<h2>Protect initial default branches</h2>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li>Full protection after initial push <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/118729">introduced</a> in GitLab 16.0.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab administrators and group owners can define <a href="protected.html">branch protections</a>
+to apply to every repository's default branch for the instance, or for individual groups, with one of these options:</p>
+<ul>
+<li><strong>Fully protected</strong> - Default value. Developers cannot push new commits, but maintainers can.
+  No one can force push.</li>
+<li><strong>Fully protected after initial push</strong> - Developers can push the initial commit
+  to a repository, but none afterward. Maintainers can always push. No one can force push.</li>
+<li><strong>Protected against pushes</strong> - Developers cannot push new commits, but are
+  allowed to accept merge requests to the branch. Maintainers can push to the branch.</li>
+<li><strong>Partially protected</strong> - Both developers and maintainers can push new commits,
+  but cannot force push.</li>
+<li><strong>Not protected</strong> - Both developers and maintainers can push new commits
+  and force push.</li>
+</ul>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Unless <strong>Fully protected</strong> is chosen, a malicious developer could attempt to steal your sensitive data. For example, a malicious <code>.gitlab-ci.yml</code> file could be committed to a protected branch and later, if a pipeline is run against that branch, result in exfiltration of group CI/CD variables.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>For all projects in an instance</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Free, Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>This setting applies only to each repository's default branch. To protect other branches,
+you must either:</p>
+<ul>
+<li>Configure <a href="protected.html">branch protection in the repository</a>.</li>
+<li>Configure <a href="../../../group/manage.md#change-the-default-branch-protection-of-a-group">branch protection for groups</a>.</li>
+</ul>
+<p>Administrators of GitLab Self-Managed instances can customize the initial default branch protection for projects hosted on that instance. Individual
+groups and subgroups can override the instance default setting for their projects.</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand <strong>Default branch</strong>.</li>
+<li>Select <a href="#protect-initial-default-branches"><strong>Initial default branch protection</strong></a>.</li>
+<li>To allow group owners to override the instance's default branch protection, select
+   <a href="#prevent-overrides-of-default-branch-protection"><strong>Allow owners to manage default branch protection per group</strong></a>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h4>Prevent overrides of default branch protection</h4>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Group owners can override protections for default branches set for an entire instance
+on a per-group basis. In
+<a href="https://about.gitlab.com/pricing/">GitLab Premium or Ultimate</a>, GitLab administrators can
+disable this privilege for group owners, enforcing the protection rule set for the instance:</p>
+<ol>
+<li>In the upper-right corner, select <strong>Admin</strong>.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand the <strong>Default branch</strong> section.</li>
+<li>Clear the <strong>Allow owners to manage default branch protection per group</strong> checkbox.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>GitLab administrators can still update the default branch protection of a group.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<h3>For all projects in a group</h3>
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>Group owners can override protections for default branches set for an entire instance
+on a per-group basis. In
+<a href="https://about.gitlab.com/pricing/">GitLab Premium or Ultimate</a>, GitLab administrators can
+<a href="#prevent-overrides-of-default-branch-protection">enforce protection of initial default branches</a>
+which locks this setting for group owners.</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong> and find your group.</li>
+<li>Select <strong>Settings</strong> &gt; <strong>Repository</strong>.</li>
+<li>Expand <strong>Default branch</strong>.</li>
+<li>Select <a href="#protect-initial-default-branches"><strong>Initial default branch protection</strong></a>.</li>
+<li>Select <strong>Save changes</strong>.</li>
+</ol>
+<h2>Update the default branch name in your repository</h2>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>Changing the name of your default branch can potentially break tests,
+CI/CD configuration, services, helper utilities, and any integrations your repository
+uses. Before you change this branch name, consult with your project owners and maintainers.
+Ensure they understand the scope of this change includes references to the old
+branch name in related code and scripts.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>When you change the default branch name for an existing repository, don't create a new branch.
+Preserve the history of your default branch by renaming it. This example renames a Git repository's
+(<code>example</code>) default branch:</p>
+<ol>
+<li>On your local command line, go to your <code>example</code> repository, and ensure
+   you're on the default branch:</li>
+</ol>
+<p><code>plaintext
+   cd example
+   git checkout master</code></p>
+<ol>
+<li>Rename the existing default branch to the new name (<code>main</code>). The argument <code>-m</code>
+   transfers all commit history to the new branch:</li>
+</ol>
+<p><code>plaintext
+   git branch -m master main</code></p>
+<ol>
+<li>Push the newly created <code>main</code> branch upstream, and set your local branch to track
+   the remote branch with the same name:</li>
+</ol>
+<p><code>plaintext
+   git push -u origin main</code></p>
+<ol>
+<li>If you plan to remove the old default branch, update <code>HEAD</code> to point to your new default branch, <code>main</code>:</li>
+</ol>
+<p><code>plaintext
+   git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main</code></p>
+<ol>
+<li>Sign in to GitLab with at least the Maintainer
+   role and follow the instructions to
+   <a href="#change-the-default-branch-name-for-a-project">change the default branch for this project</a>.
+   Select <code>main</code> as your new default branch.</li>
+<li>Protect your new <code>main</code> branch as described in the <a href="protected.html">protected branches documentation</a>.</li>
+<li>Optional. If you want to delete the old default branch:</li>
+<li>Verify that nothing is pointing to it.</li>
+<li>
+<p>Delete the branch on the remote:</p>
+<p><code>plaintext
+  git push origin --delete master</code></p>
+<p>You can delete the branch at a later time, after you confirm the new default branch is working as expected.</p>
+</li>
+<li>
+<p>Notify your project contributors of this change, because they must also take some steps:</p>
+</li>
+<li>
+<p>Contributors should pull the new default branch to their local copy of the repository.</p>
+</li>
+<li>Contributors with open merge requests that target the old default branch should manually
+     re-point the merge requests to use <code>main</code> instead.</li>
+<li>In your repository, update any references to the old branch name in your code.</li>
+<li>Update references to the old branch name in related code and scripts that reside outside
+   your repository, such as helper utilities and integrations.</li>
+</ol>
+<h2>Default branch rename redirect</h2>
+<p>URLs for specific files or directories in a project embed the project's default
+branch name, and are often found in documentation or browser bookmarks. When you
+<a href="#update-the-default-branch-name-in-your-repository">update the default branch name in your repository</a>,
+these URLs change, and must be updated.</p>
+<p>To ease the transition period, whenever the default branch for a project is
+changed, GitLab records the name of the old default branch. If that branch is
+deleted, attempts to view a file or directory on it are redirected to the
+current default branch, instead of displaying the "not found" page.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../../wiki/_index.html">Configure a default branch for your wiki</a></li>
+<li><a href="https://lore.kernel.org/git/pull.656.v4.git.1593009996.gitgitgadget@gmail.com/">Discussion of default branch renaming</a>
+  on the Git mailing list</li>
+<li><a href="https://about.gitlab.com/blog/2021/03/10/new-git-default-branch-name/">March 2021 blog post: The new Git default branch name</a></li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Unable to change default branch: resets to current branch</h3>
+<p>We are tracking this problem in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/20474">issue 20474</a>.
+This issue often occurs when a branch named <code>HEAD</code> is present in the repository.
+To fix the problem:</p>
+<ol>
+<li>In your local repository, create a new temporary branch and push it:</li>
+</ol>
+<p><code>shell
+   git checkout -b tmp_default &amp;&amp; git push -u origin tmp_default</code></p>
+<ol>
+<li>In GitLab, proceed to <a href="#change-the-default-branch-name-for-a-project">change the default branch</a> to that temporary branch.</li>
+<li>From your local repository, delete the <code>HEAD</code> branch:</li>
+</ol>
+<p><code>shell
+   git push -d origin HEAD</code></p>
+<ol>
+<li>In GitLab, <a href="#change-the-default-branch-name-for-a-project">change the default branch</a> to the one you intend to use.</li>
+</ol>
+<h3>Query GraphQL for default branches</h3>
+<p>You can use a <a href="../../../../api/graphql/_index.html">GraphQL query</a>
+to retrieve the default branches for all projects in a group.</p>
+<p>To return all projects in a single page of results, replace <code>GROUPNAME</code> with the
+full path to your group. GitLab returns the first page of results. If <code>hasNextPage</code>
+is <code>true</code>, you can request the next page by replacing the <code>null</code> in <code>after: null</code>
+with the value of <code>endCursor</code>:</p>
+<pre><code class="language-graphql">{
+ group(fullPath: &quot;GROUPNAME&quot;) {
+   projects(after: null) {
+     pageInfo {
+       hasNextPage
+       endCursor
+     }
+     nodes {
+       name
+       repository {
+         rootRef
+       }
+     }
+   }
+ }
+}
+</code></pre>
+<h3>New subgroups do not inherit default branch name from a higher-level subgroup</h3>
+<p>When you configured a default branch in a subgroup that contains another subgroup that contains a project,
+the default branch is not inherited.</p>
+<p>We are tracking this problem in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/327208">issue 327208</a>.</p></code></pre>
+</body>
+</html>

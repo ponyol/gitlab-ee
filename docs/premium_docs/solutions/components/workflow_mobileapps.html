@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Getting Started</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Solutions Architecture
+group: Solutions Architecture
+info: This page is owned by the Solutions Architecture team.
+description: Learn about the GitLab DevSecOps workflow for hybrid React Native mobile apps, including CI/CD setup, Snyk security scanning, Sauce Labs functional testing, and ServiceNow integration.
+title: DevSecOps Workflow - Mobile Apps</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>This document provides the instruction and functional detail for GitLab DevSecOps Workflow solution for building and delivering hybrid (React Native) mobile apps.</p>
+<p>For native mobile application using fastlane, refer to product documentation.</p>
+<p>The instructions include a sample <a href="https://reactnative.dev"><strong>React Native</strong></a> application, bootstrapped using <code>react-native-community/cli</code>, and provide a cross-platform solution on both iOS and Android devices. The sample project provides an end-to-end solution for using GitLab CI/CD pipelines to build, test and deploy a mobile application.</p>
+<h2>Getting Started</h2>
+<p>Follow the steps below on how to use this React Native Mobile App sample project to jump start your mobile application delivery using GitLab.</p>
+<h3>Download the Solution Component</h3>
+<ol>
+<li>Obtain the invitation code from your account team.</li>
+<li>Download the solution component from <a href="https://cloud.gitlab-accelerator-marketplace.com">the solution component webstore</a> by using your invitation code.</li>
+</ol>
+<h3>Set Up the Solution Component Project</h3>
+<ul>
+<li>The Mobile App solution component from the Product Accelerator marketplace has been downloaded. In the solution pack, it includes the mobile app sample project with the CI/CD files.</li>
+<li>Create a new GitLab CI/CD catalog project to host the Snyk component in your environment. In the mobile app solution pack, it includes the Snyk CI/CD component project files which allow you to set up the Snyk CI/CD catalog project.</li>
+<li>Create a new GitLab project to host this Snyk CI/CD catalog project</li>
+<li>Copy the provided files into your project</li>
+<li>Configure the required CI/CD variables in your project settings</li>
+<li>Make sure the project is marked as a CI/CD catalog project. For more information, see <a href="../../ci/components/_index.md#publish-a-component-project">publish a component project</a>.</li>
+</ul>
+<p>{{&lt; alert type="note" &gt;}}</p>
+<p>There is a public GitLab Snyk component on GitLab.com, if you are on SaaS, and you are able to access the public GitLab Snyk component, to set up your own Snyk CI/CD catalog project is not needed, and you can follow the documentation in the public GitLab Snyk component on GitLab.com to use the component directly.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<ul>
+<li>Use the Change Control Workflow with ServiceNow solution pack to configure the DevOps Change Velocity integration with GitLab to automate change request creation in ServiceNow for deployments require change controls. See the documentation for the <a href="../../solutions/components/integrated_servicenow.html">change control workflow with ServiceNow solution component</a>, and work with your account team to get an access code to download the Change Control Workflow with ServiceNow solution package.</li>
+<li>Copy the CI YAML files into your project:</li>
+<li><code>.gitlab-ci.yml</code></li>
+<li><code>build-android.yml</code> in the pipelines directory. You will need to update the file path in <code>.gitlab-ci.yml</code> if the <code>build-android.yml</code> file is put in a different location other than /pipeline because the main <code>.gitlab-ci.yml</code> file references the <code>build-android.yml</code> file for the build job.</li>
+<li><code>build-ios.yml</code> in the pipelines directory. You will need to update the file path in <code>.gitlab-ci.yml</code> if the <code>build-ios.yml</code> file is put in a different location other than /pipeline because the main <code>.gitlab-ci.yml</code> file references the <code>build-ios.yml</code> file for the build job.</li>
+</ul>
+<p><code>yaml
+   include:
+  - local: "pipelines/build-ios.yml"
+    inputs:
+      image: macos-15-xcode-16
+      tag: saas-macos-medium-m1
+  - local: "pipelines/build-android.yml"
+    inputs:
+      image: reactnativecommunity/react-native-android</code></p>
+<ul>
+<li>Configure the required CI/CD variables in your project settings. See the following section to learn how the pipeline works.</li>
+</ul>
+<h2>How the Pipeline Works</h2>
+<p>This pipeline is designed for a React Native project, handling both iOS and Android builds, test and deploy the Mobile App.</p>
+<p>This project includes a simple reactCounter demo app for React Native build for both iOS and Android. This version does not sign the artifacts yet, so we cannot upload to TestFlight or the Play Store.</p>
+<p>Each change uses a component for semantic versioning bumps, which has that version stored as an ephemeral variable used to commit
+generic packages to the package registry.</p>
+<h2>Pipeline Structure</h2>
+<p>The pipeline consists of the following stages and jobs:</p>
+<ol>
+<li><code>prebuild</code></li>
+<li><code>unit test</code></li>
+<li><code>Snyk scans</code></li>
+<li><code>build</code></li>
+<li><code>build IoS package</code></li>
+<li><code>build Android package</code></li>
+<li><code>test</code></li>
+<li><code>dependency scanning</code></li>
+<li><code>SAST scanning</code></li>
+<li><code>functional-test</code></li>
+<li><code>upload_ios/android_app_to_sauce_labs</code></li>
+<li><code>automated_test_appium_saucelabs</code></li>
+<li><code>app-distribution</code></li>
+<li><code>app_distribution_sauce_android</code></li>
+<li><code>app_distribution_sauce_ios</code></li>
+<li><code>beta-release</code></li>
+<li><code>beta-release-dev</code></li>
+<li><code>beta-release-approval</code></li>
+</ol>
+<h2>Prerequisites</h2>
+<p>There are multiple third party tools integrated in the mobile pipeline workflow. In order to successfully run the pipeline, make sure the following prerequisites are in place.</p>
+<h3>Snyk Integration using the Component</h3>
+<p>In order to use the GitLab Snyk CI/CD component for security scans, make sure your group or project in GitLab is already connected with Snyk, if not, follow <a href="https://docs.snyk.io/scm-ide-and-ci-cd-integrations/snyk-scm-integrations/gitlab">this tutorial</a> to configure it.</p>
+<p>In the mobile app project, add the required variables for the Snyk integration.</p>
+<h4>Required CI/CD Variables</h4>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Example Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SNYK_TOKEN</code></td>
+<td>API token to access Snyk</td>
+<td><code>d7da134c-xxxxxxxxxx</code></td>
+</tr>
+</tbody>
+</table>
+<p>This mobile app demo project uses a private Snyk component, that's the reason why we added the following additional variables for the mobile app project to access the private Snyk component project, but this is not needed if your Snyk component is public or accessible within your group.</p>
+<pre><code class="language-yaml">SNYK_PROJECT_ACCESS_USERNAME: &quot;MOBILE_APP_SNYK_COMPONENT_ACCESS&quot;
+DOCKER_AUTH_CONFIG: '{&quot;auths&quot;:{&quot;registry.gitlab.com&quot;:{&quot;username&quot;:&quot;$SNYK_PROJECT_ACCESS_USERNAME&quot;,&quot;password&quot;:&quot;$SNYK_PROJECT_ACCESS_TOKEN&quot;}}}'
+</code></pre>
+<h4>Update the component path</h4>
+<p>Update the component path in the <code>.gitlab-ci.yml</code> file so that the pipeline can successfully reference the Snyk component.</p>
+<pre><code class="language-yaml"> - component: $CI_SERVER_FQDN/gitlab-com/product-accelerator/work-streams/packaging/snyk/snyk@1.0.0 #snky sast scan, this examples uses the component in GitLab the product accelerator group. Please update the path and stage accordingly.
+    inputs:
+      stage: prebuild
+      token: $SNYK_TOKEN
+</code></pre>
+<h3>Sauce Labs Integration</h3>
+<p>This mobile app demo project CI/CD is integrated with Sauce Labs for automated functional testing. In order to run the automated test in Sauce Labs, the application needs to be uploaded into Sauce Labs app storage. You will need to set the required variables for the project in GitLab to access Sauce Labs and upload the artifacts.</p>
+<h4>Required CI/CD Variables</h4>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Example Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SAUCE_USERNAME</code></td>
+<td>Sauce Labs username</td>
+<td><code>rz</code></td>
+</tr>
+<tr>
+<td><code>SAUCE_ACCESS_KEY</code></td>
+<td>API key to access Sauce Labs</td>
+<td><code>9f5wewwc-xxxxxxx</code></td>
+</tr>
+<tr>
+<td><code>APP_FILE_PATH_IOS</code></td>
+<td>file path to find the build artifacts</td>
+<td><code>ios/build/reactCounter.ipa</code></td>
+</tr>
+<tr>
+<td><code>APP_FILE_PATH_ANDROID</code></td>
+<td>file path to find the build artifacts</td>
+<td><code>android/app/build/outputs/apk/release/app-release.apk</code></td>
+</tr>
+</tbody>
+</table>
+<h4>Use Appium for automated testing</h4>
+<p>In order to use SauceLabs for automated testing, the app has to be uploaded to SauceLab App Management. The pipeline uses the API endpoint to upload the app to SauceLabs and make it available for testing.</p>
+<p>Added an Appium test script file in <code>tests/appium</code>for testing the React Native mobile application using WebdriverIO and Sauce Labs. The test script will use the following environment variables to access SauceLabs</p>
+<pre><code class="language-bash"># Using the variables defined in the project
+
+const SAUCE_USERNAME = process.env.SAUCE_USERNAME;
+const SAUCE_ACCESS_KEY = process.env.SAUCE_ACCESS_KEY;
+
+</code></pre>
+<h4>App Distribution (Android and iOS)</h4>
+<p>GitLab pipeline distributes the app builds to SauceLabs TestFairy for demo purposes. SauceLabs TestFairy allows users to get new versions of the app to testers for review and testing.</p>
+<h3>ServiceNow Integration</h3>
+<p>This mobile app demo project CI/CD is integrated with ServiceNow for change controls. When the pipeline reaches the deployment job that has the change control enabled in ServiceNow, it will automatically create a change request. Once the change request is approved, the deployment job will resume. With this demo project, the beta release approval job is gated in ServiceNow and requires manual approval to proceed.</p>
+<h4>CI/CD Variables</h4>
+<p>In order for the pipeline to communicate with ServiceNow, the webhook integrations need to be created. If you are using API endpoints to communicates with ServiceNow, you will need to include the following variables. However, this is not required when using the ServiceNow DevOps Change Velocity integration. As part of the ServiceNow DevOps Change Velocity onboarding, the webhooks will be created.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Example Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SNOW_URL</code></td>
+<td>URL of your ServiceNow instance</td>
+<td><code>https://&lt;SNOW_INSTANCE&gt;.com/</code></td>
+</tr>
+<tr>
+<td><code>SNOW_TOOLID</code></td>
+<td>ServiceNow instance ID</td>
+<td><code>3b5w345629212105c5ddaccwonworw2</code></td>
+</tr>
+<tr>
+<td><code>SNOW_TOKEN</code></td>
+<td>API token to access ServiceNow</td>
+<td><code>Oxxxxxxxxxx</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Included Files and Components</h2>
+<p>The mobile app project pipeline includes several external configurations and components:</p>
+<ul>
+<li>Local build configurations for iOS and Android</li>
+<li>SAST (static application security testing) component</li>
+<li>Auto-semversioning component</li>
+<li>Dependency scanning</li>
+<li>Snyk SAST scan component</li>
+</ul>
+<h2>Notes</h2>
+<p>Reach out to your account team for obtaining an invitation code to access the solution component and for any additional questions.</p></code></pre>
+</body>
+</html>

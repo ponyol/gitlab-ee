@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Use exact code search</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: AI-powered
+group: Global Search
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: Exact code search</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed</li>
+<li>Status: Limited availability</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/105049">Introduced</a> as a <a href="../../policy/development_stages_support.md#beta">beta</a> in GitLab 15.9 <a href="../../administration/feature_flags/_index.html">with flags</a> named <code>index_code_with_zoekt</code> and <code>search_code_with_zoekt</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/388519">Enabled on GitLab.com and GitLab Self-Managed</a> in GitLab 16.6.</li>
+<li>Global code search <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/147077">introduced</a> in GitLab 16.11 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>zoekt_cross_namespace_search</code>. Disabled by default.</li>
+<li>Feature flags <code>index_code_with_zoekt</code> and <code>search_code_with_zoekt</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/148378">removed</a> in GitLab 17.1.</li>
+<li><a href="https://gitlab.com/groups/gitlab-org/-/epics/17918">Changed</a> from beta to limited availability in GitLab 18.6.</li>
+<li>Feature flag <code>zoekt_cross_namespace_search</code> <a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/213413">removed</a> in GitLab 18.7.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>{{&lt; alert type="warning" &gt;}}</p>
+<p>This feature is in <a href="../../policy/development_stages_support.md#limited-availability">limited availability</a>.
+For more information, see <a href="https://gitlab.com/groups/gitlab-org/-/epics/9404">epic 9404</a>.
+Provide feedback in <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/420920">issue 420920</a>.</p>
+<p>{{&lt; /alert &gt;}}</p>
+<p>With exact code search, you can use exact match and regular expression modes
+to search for code in all GitLab or in a specific project.</p>
+<p>Exact code search is powered by Zoekt and is used by default
+in groups where the feature is enabled.</p>
+<h2>Use exact code search</h2>
+<p>Prerequisites:</p>
+<ul>
+<li>Exact code search must be enabled:</li>
+<li>For GitLab.com, exact code search is enabled by default in paid subscriptions.</li>
+<li>For GitLab Self-Managed, an administrator must
+    <a href="../../integration/zoekt/_index.md#install-zoekt">install Zoekt</a> and
+    <a href="../../integration/zoekt/_index.md#enable-exact-code-search">enable exact code search</a>.</li>
+</ul>
+<p>To use exact code search:</p>
+<ol>
+<li>On the top bar, select <strong>Search or go to</strong>.</li>
+<li>In the search box, enter your search term.</li>
+<li>On the left sidebar, select <strong>Code</strong>.</li>
+</ol>
+<p>You can also use exact code search in a project or group.</p>
+<h2>Available scopes</h2>
+<p>Scopes describe the type of data you're searching.
+The following scopes are available for exact code search:</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th style="text-align: center;">Global <sup>1</sup> <sup>2</sup></th>
+<th style="text-align: center;">Group</th>
+<th style="text-align: center;">Project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code</td>
+<td style="text-align: center;">{{&lt; no &gt;}}</td>
+<td style="text-align: center;">{{&lt; yes &gt;}}</td>
+<td style="text-align: center;">{{&lt; yes &gt;}}</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Footnotes</strong>:</p>
+<ol>
+<li>An administrator can <a href="_index.md#disable-global-search-scopes">disable global search scopes</a>.
+   In GitLab 18.6 and earlier, to enable global search on GitLab Self-Managed,
+   an administrator must also enable the <code>zoekt_cross_namespace_search</code> feature flag.</li>
+<li>On GitLab.com, global search is not enabled.</li>
+</ol>
+<h2>Zoekt search API</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/merge_requests/143666">Introduced</a> in GitLab 16.9 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>zoekt_search_api</code>. Enabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-com/gl-infra/production/-/issues/17522">Generally available</a> in GitLab 18.4. Feature flag <code>zoekt_search_api</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>With the Zoekt search API, you can use the search API for exact code search.
+To use advanced search or basic search instead, <a href="_index.md#specify-a-search-type">specify a search type</a>.</p>
+<h2>Search modes</h2>
+<p>{{&lt; history &gt;}}</p>
+<ul>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/434417">Introduced</a> in GitLab 16.8 <a href="../../administration/feature_flags/_index.html">with a flag</a> named <code>zoekt_exact_search</code>. Disabled by default.</li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/436457">Generally available</a> in GitLab 17.3. Feature flag <code>zoekt_exact_search</code> removed.</li>
+</ul>
+<p>{{&lt; /history &gt;}}</p>
+<p>GitLab has two search modes:</p>
+<ul>
+<li><strong>Exact match mode</strong>: returns results that exactly match the query.</li>
+<li><strong>Regular expression mode</strong>: supports regular and boolean expressions.</li>
+</ul>
+<p>The exact match mode is used by default.
+To switch to the regular expression mode, to the right of the search box,
+select <strong>Use regular expression</strong> ({{&lt; icon name="regular-expression" &gt;}}).</p>
+<h3>Syntax</h3>
+<!-- Remember to also update the table in `doc/drawers/exact_code_search_syntax.md` -->
+
+<p>This table shows some example queries for exact match and regular expression modes.</p>
+<table>
+<thead>
+<tr>
+<th>Query</th>
+<th>Exact match mode</th>
+<th>Regular expression mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"foo"</code></td>
+<td><code>"foo"</code></td>
+<td><code>foo</code></td>
+</tr>
+<tr>
+<td><code>foo file:^doc/</code></td>
+<td><code>foo</code> in directories that start with <code>/doc</code></td>
+<td><code>foo</code> in directories that start with <code>/doc</code></td>
+</tr>
+<tr>
+<td><code>"class foo"</code></td>
+<td><code>"class foo"</code></td>
+<td><code>class foo</code></td>
+</tr>
+<tr>
+<td><code>class foo</code></td>
+<td><code>class foo</code></td>
+<td><code>class</code> and <code>foo</code></td>
+</tr>
+<tr>
+<td><code>foo or bar</code></td>
+<td><code>foo or bar</code></td>
+<td><code>foo</code> or <code>bar</code></td>
+</tr>
+<tr>
+<td><code>class Foo</code></td>
+<td><code>class Foo</code> (case-sensitive)</td>
+<td><code>class</code> (case-insensitive) and <code>Foo</code> (case-sensitive)</td>
+</tr>
+<tr>
+<td><code>class Foo case:yes</code></td>
+<td><code>class Foo</code> (case-sensitive)</td>
+<td><code>class</code> and <code>Foo</code> (both case-sensitive)</td>
+</tr>
+<tr>
+<td><code>foo -bar</code></td>
+<td><code>foo -bar</code></td>
+<td><code>foo</code> but not <code>bar</code></td>
+</tr>
+<tr>
+<td><code>foo file:js</code></td>
+<td><code>foo</code> in files with names that contain <code>js</code></td>
+<td><code>foo</code> in files with names that contain <code>js</code></td>
+</tr>
+<tr>
+<td><code>foo -file:test</code></td>
+<td><code>foo</code> in files with names that do not contain <code>test</code></td>
+<td><code>foo</code> in files with names that do not contain <code>test</code></td>
+</tr>
+<tr>
+<td><code>foo lang:ruby</code></td>
+<td><code>foo</code> in Ruby source code</td>
+<td><code>foo</code> in Ruby source code</td>
+</tr>
+<tr>
+<td><code>foo file:\.js$</code></td>
+<td><code>foo</code> in files with names that end with <code>.js</code></td>
+<td><code>foo</code> in files with names that end with <code>.js</code></td>
+</tr>
+<tr>
+<td><code>foo.*bar</code></td>
+<td><code>foo.*bar</code> (literal)</td>
+<td><code>foo.*bar</code> (regular expression)</td>
+</tr>
+<tr>
+<td><code>sym:foo</code></td>
+<td><code>foo</code> in symbols like class, method, and variable names</td>
+<td><code>foo</code> in symbols like class, method, and variable names</td>
+</tr>
+</tbody>
+</table>
+<h2>Known issues</h2>
+<ul>
+<li>You can search only files smaller than 1 MB with less than <code>20_000</code> trigrams.
+  For more information, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/455073">issue 455073</a>.</li>
+<li>You can use exact code search only on the default branch of a project.
+  For more information, see <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/403307">issue 403307</a>.</li>
+<li>Multiple matches on a single line are counted as one result.</li>
+<li>If you encounter results where newlines are not displayed correctly,
+  update <code>gitlab-zoekt</code> to version 1.5.0 or later.</li>
+</ul></code></pre>
+</body>
+</html>

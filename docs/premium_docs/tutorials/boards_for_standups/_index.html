@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title># Before you begin</title>
+    <link rel="stylesheet" href="/../../style.css">
+</head>
+<body>
+    <pre><code><hr />
+<p>stage: Plan
+group: Project Management
+info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://handbook.gitlab.com/handbook/product/ux/technical-writing/#assignments
+title: 'Tutorial: Set up an issue board for a team stand-up'</p>
+<hr />
+<p>{{&lt; details &gt;}}</p>
+<ul>
+<li>Tier: Premium, Ultimate</li>
+<li>Offering: GitLab.com, GitLab Self-Managed, GitLab Dedicated</li>
+</ul>
+<p>{{&lt; /details &gt;}}</p>
+<!-- vale gitlab_base.FutureTense = NO -->
+
+<p>This tutorial shows you how to create and configure an issue board that helps teams run effective stand-ups.
+When you're done, you'll have a board that supports this workflow:</p>
+<ol>
+<li>
+<p>Before each stand-up:</p>
+</li>
+<li>
+<p>Team members update the status of their assigned tasks.</p>
+</li>
+<li>
+<p>Tasks flow through lists that show their current state: planning, in development, blocked, or complete.</p>
+</li>
+<li>
+<p>During the stand-up:</p>
+</li>
+<li>
+<p>Team members discuss in-progress work and share completion timelines.</p>
+</li>
+<li>Blocked tasks are identified and plans made to resolve them.</li>
+<li>New tasks are added to the ready list.</li>
+<li>Completed tasks are celebrated and moved to done.</li>
+</ol>
+<p>The result: Your team leaves each stand-up aligned on sprint progress, with risks identified and plans to address them.</p>
+<p>To set up an issue board for team stand-ups:</p>
+<ol>
+<li><a href="#create-a-group">Create a group</a></li>
+<li><a href="#create-a-project">Create a project</a></li>
+<li><a href="#create-labels">Create labels</a></li>
+<li><a href="#create-the-team-stand-up-board">Create the team stand-up board</a></li>
+<li><a href="#configure-your-board-lists">Configure your board lists</a></li>
+<li><a href="#create-issues-for-team-tasks">Create issues for team tasks</a></li>
+</ol>
+<h2>Before you begin</h2>
+<ul>
+<li>If you're using an existing group for this tutorial, make sure you have at least the Planner role for the group.</li>
+<li>If you're using an existing project for this tutorial, make sure you have at least the Planner role for the project.</li>
+</ul>
+<h2>Create a group</h2>
+<p>Start by creating a group to manage one or more related projects.
+Groups let you manage member access and share settings across projects.</p>
+<p>To create a group:</p>
+<ol>
+<li>On the left sidebar, at the top, select <strong>Create new</strong> ({{&lt; icon name="plus" &gt;}}) and <strong>New group</strong>. If you've <a href="../../user/interface_redesign.html">turned on the new navigation</a>, this button is in the upper-right corner.</li>
+<li>Select <strong>Create group</strong>.</li>
+<li>Complete the fields:</li>
+<li>In <strong>Group name</strong>, enter <code>Paperclip Software Factory</code>.</li>
+<li>Select <strong>Create group</strong>.</li>
+</ol>
+<p>You've created an empty group.
+Next, create a project to store your issues and code.</p>
+<h2>Create a project</h2>
+<p>Projects store your code repositories and issues you'll use for planning.
+All development work happens in projects.</p>
+<p>To create a blank project:</p>
+<ol>
+<li>In your group, in the upper-right corner, select <strong>New project</strong>.</li>
+<li>Select <strong>Create blank project</strong>.</li>
+<li>Complete the fields:</li>
+<li>In <strong>Project name</strong>, enter <code>Paperclip Assistant</code>.</li>
+<li>Select <strong>Create project</strong>.</li>
+</ol>
+<h2>Create labels</h2>
+<p>To track issue status during stand-ups, you need workflow labels.</p>
+<p>Create these labels in your <code>Paperclip Software Factory</code> group rather than the project.
+Group-level labels are available to all projects in the group, which helps establish consistent
+workflows across teams.</p>
+<p>To create a workflow label:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your <strong>Paperclip Software Factory</strong> group. If you've <a href="../../user/interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Manage</strong> &gt; <strong>Labels</strong>.</li>
+<li>Select <strong>New label</strong>.</li>
+<li>In the <strong>Title</strong> field, enter the label name.</li>
+<li>Optional. Select a background color or enter a hex color value.</li>
+<li>Select <strong>Create label</strong>.</li>
+</ol>
+<p>Repeat these steps to create all the workflow labels:</p>
+<ul>
+<li><code>workflow::planning breakdown</code></li>
+<li><code>workflow::ready for development</code></li>
+<li><code>workflow::in development</code></li>
+<li><code>workflow::ready for review</code></li>
+<li><code>workflow::in review</code></li>
+<li><code>workflow::blocked</code></li>
+<li><code>workflow::verification</code></li>
+<li><code>workflow::complete</code></li>
+</ul>
+<h2>Create the team stand-up board</h2>
+<p>Create your board in the group so you can manage issues from any project in the group.</p>
+<p>To create a group issue board:</p>
+<ol>
+<li>On the left sidebar, select <strong>Search or go to</strong> and find your <strong>Paperclip Software Factory</strong> group. If you've <a href="../../user/interface_redesign.html">turned on the new navigation</a>, this field is on the top bar.</li>
+<li>Select <strong>Plan</strong> &gt; <strong>Issue boards</strong>.</li>
+<li>In the upper-left corner, select the dropdown list with the current board name.</li>
+<li>Select <strong>Create new board</strong>.</li>
+<li>Complete the fields:</li>
+<li>In <strong>Title</strong>, enter <code>Team stand-up</code>.</li>
+<li>Select both <strong>Show the Open list</strong> and <strong>Show the Closed list</strong>.</li>
+<li>Select <strong>Create board</strong>.</li>
+</ol>
+<h3>Add workflow lists to your board</h3>
+<ol>
+<li>In the upper-right corner, select <strong>Add list</strong> ({{&lt; icon name="plus" &gt;}}).</li>
+<li>From <strong>New list</strong>, select <strong>Label</strong>.</li>
+<li>From the <strong>Value</strong> dropdown list, select a workflow label.</li>
+<li>Select <strong>Add to board</strong>.</li>
+<li>Repeat steps 1-4 for each workflow label.</li>
+</ol>
+<p>Your board now has lists for each workflow state, though they'll be empty until you add issues in later steps.</p>
+<p><img alt="Issue board called &quot;Team stand-up&quot; with workflow lists but no issues" src="img/team_standup_board_with_workflow_lists_v17_8.png" /></p>
+<h2>Configure your board lists</h2>
+<p>You can customize your board by setting filters that apply to all lists.
+For example, you can show issues only from the current iteration or with specific labels.</p>
+<p>To configure your board:</p>
+<ol>
+<li>On your team stand-up board, select <strong>Configure board</strong> ({{&lt; icon name="settings" &gt;}}).</li>
+<li>Complete any of these fields to filter issues:</li>
+<li><strong>Milestone</strong>: to show issues from a specific milestone.</li>
+<li><strong>Assignee</strong>: to show issues assigned to specific team members.</li>
+<li><strong>Labels</strong>: to show issues with specific labels.</li>
+<li><strong>Weight</strong>: to show issues with specific weight values.</li>
+<li><strong>Iteration</strong>: to show issues from the current iteration.</li>
+<li>Select <strong>Create board</strong>.</li>
+</ol>
+<p>Your board now shows only issues that match your filters.
+For example, if you select a milestone, only issues assigned to that milestone appear in the board lists.</p>
+<p><img alt="Issue board called &quot;Team stand-up&quot; with workflow lists" src="img/team_standup_board_with_workflow_lists_v17_8.png" /></p>
+<h2>Create issues for team tasks</h2>
+<p>You can create issues directly from your board during the team stand-up.</p>
+<p>To create an issue:</p>
+<ol>
+<li>On your team stand-up board, in the <code>workflow::ready for development</code> list, select <strong>Create new issue</strong> ({{&lt; icon name="plus" &gt;}}).</li>
+<li>Complete the fields:</li>
+<li>In <strong>Title</strong>, enter <code>Redesign user profile page</code></li>
+<li>From the <strong>Projects</strong> dropdown list, select <strong>Paperclip Software Factory / Paperclip Assistant</strong></li>
+<li>Select <strong>Create issue</strong>.</li>
+</ol>
+<p>The issue is created with the <code>workflow::ready for development</code> label because you created it in that list.</p>
+<h3>Add metadata to the issue</h3>
+<ol>
+<li>On the issue card, select anywhere except the title.</li>
+<li>On the right sidebar, in the field you want to update, select <strong>Edit</strong>.</li>
+<li>Select your changes.</li>
+<li>Select any area outside the field to save.</li>
+</ol>
+<p>Congratulations!
+You've set up a team stand-up board that helps track work and facilitate discussions.
+Your team can now use this board to run effective stand-ups.</p>
+<h2>Related topics</h2>
+<ul>
+<li><a href="../plan_and_track.html">Plan and track work tutorials</a>.</li>
+<li><a href="../scrum_events/standups_retrospectives_velocity.html">Stand-ups, retrospectives, and velocity</a></li>
+</ul></code></pre>
+</body>
+</html>
