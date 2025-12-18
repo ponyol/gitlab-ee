@@ -3,11 +3,10 @@ import { Article } from '../types/types';
 
 interface ArticleCardProps {
   article: Article;
+  onCardClick: (article: Article) => void; // New prop
 }
 
-// A simple function to get an icon based on category
 const getIconForCategory = (category: string) => {
-    // In a real app, you might have a map of categories to icon components or URLs
     switch (category.toLowerCase()) {
         case 'administration':
             return '⚙️';
@@ -24,13 +23,13 @@ const getIconForCategory = (category: string) => {
     }
 };
 
-const ArticleCard = ({ article }: ArticleCardProps) => {
+const ArticleCard = ({ article, onCardClick }: ArticleCardProps) => {
   const shortDescription = article.description.length > 100
     ? `${article.description.substring(0, 100)}...`
     : article.description;
 
   return (
-    <Link to={`/articles/${article.id}`} className="article-card">
+    <div className="article-card" onClick={() => onCardClick(article)}>
         <div className="card-header">
             <div className="card-icon">{getIconForCategory(article.category)}</div>
             <span className="card-category">{article.category.toUpperCase()}</span>
@@ -38,9 +37,11 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
         <h3>{article.title}</h3>
         <p>{shortDescription}</p>
         <div className="card-footer">
-            <span>Подробнее →</span>
+            <Link to={`/articles/${article.id}`} onClick={(e) => e.stopPropagation()}>
+                Подробнее →
+            </Link>
         </div>
-    </Link>
+    </div>
   );
 };
 

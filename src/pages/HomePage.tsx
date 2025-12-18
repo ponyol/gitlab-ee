@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import ArticleGrid from '../components/ArticleGrid';
+import ArticleModal from '../components/ArticleModal';
 import { Database, Article } from '../types/types';
 
 const HomePage = () => {
@@ -8,9 +9,11 @@ const HomePage = () => {
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('Все категории');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [modalArticle, setModalArticle] = useState<Article | null>(null);
 
   useEffect(() => {
-    fetch('db.json')
+    // Correctly reference the file from the public folder
+    fetch(import.meta.env.BASE_URL + 'db.json')
       .then((res) => res.json())
       .then((data: Database) => {
         setDb(data);
@@ -35,12 +38,20 @@ const HomePage = () => {
     setFilteredArticles(articles);
   }, [selectedCategory, searchTerm, db.articles]);
 
+  const handleCardClick = (article: Article) => {
+    setModalArticle(article);
+  };
+
+  const handleCloseModal = () => {
+    setModalArticle(null);
+  };
+
   return (
     <div className="container">
       <aside className="sidebar-container">
         <header className="sidebar-header">
           <div className="logo">
-            <img src="/logo.svg" alt="GitLab Logo" />
+            <img src={import.meta.env.BASE_URL + 'logo.svg'} alt="GitLab Logo" />
             <div>
               <h1>GitLab Premium</h1>
               <span>БАЗА ЗНАНИЙ</span>
@@ -67,8 +78,9 @@ const HomePage = () => {
           />
           <button className="share-button">Поделиться</button>
         </div>
-        <ArticleGrid articles={filteredArticles} />
+        <ArticleGrid articles={filteredArticles} onCardClick={handleCardClick} />
       </main>
+      <ArticleModal article={modalArticle} onClose={handleCloseModal} />
     </div>
   );
 };

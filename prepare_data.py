@@ -1,6 +1,7 @@
 import os
 import json
 import re
+import markdown
 
 # --- Configuration ---
 SOURCE_MAIN_MD = 'gitlab_premium_summaries_ru.md'
@@ -10,36 +11,50 @@ OUTPUT_FILE = 'db.json'
 
 def get_category_from_path(path):
     """Extracts a category from the file path."""
-    # path is like 'administration/auditor_users.md'
     parts = path.split(os.sep)
     if len(parts) > 1:
         category = parts[0].replace('_', ' ').capitalize()
         return category
     return "General"
 
-def get_title_from_md_content(md_content, fallback_path):
-    """Extracts the title from the first H1 heading of the markdown content."""
-    match = re.search(r'^#\s*(.*)', md_content, re.MULTILINE)
-    if match:
-        return match.group(1).strip()
-    # Fallback to a title-cased filename if no H1 is found
-    return os.path.basename(fallback_path).replace('.md', '').replace('_', ' ').capitalize()
-
 def get_description_from_summary(summary_block):
     """Extracts the description from the 'Зачем это нужно' section."""
-    # First, try the '1. Зачем это нужно' or 'Зачем это нужно' format
     patterns = [
         r'(?:#+\s*1\.\s*)?Зачем это нужно\s*\n\n(.*?)(?=\n###|\n---|$)',
-        r'(?:#+\s*1\.\s*)?Зачем это нужно\s*\n(.*?)(?=\n###|\n---|$)' # Handles cases with no blank line
+        r'(?:#+\s*1\.\s*)?Зачем это нужно\s*\n(.*?)(?=\n###|\n---|$)'
     ]
     for pattern in patterns:
         match = re.search(pattern, summary_block, re.DOTALL)
         if match:
-            # Clean up the description: remove newlines and extra spaces
             description = match.group(1).strip().replace('\n', ' ')
             return ' '.join(description.split())
     return ""
 
+def get_title_from_description(description):
+    """Generates a title from the first 7 words of the description."""
+    if not description:
+        return "Без заголовка"
+    words = description.split()
+    title = ' '.join(words[:7])
+    if len(words) > 7:
+        title += '...'
+    return title
+
+def get_details_html_from_summary(summary_block):
+    """Extracts 'Основные возможности' and 'Важные нюансы' into a single HTML string."""
+    features_match = re.search(r'###\s*(?:2\.\s*)?Основные возможности\s*\n(.*?)(?=\n###|\n---|$)', summary_block, re.DOTALL)
+    nuances_match = re.search(r'###\s*(?:3\.\s*)?Важные нюансы\s*\n(.*?)(?=\n###|\n---|$)', summary_block, re.DOTALL)
+    
+    details_md = ""
+    if features_match:
+        details_md += "<h3>Основные возможности</h3>\n" + features_match.group(1).strip() + "\n\n"
+    if nuances_match:
+        details_md += "<h3>Важные нюансы</h3>\n" + nuances_match.group(1).strip() + "\n\n"
+        
+    if not details_md:
+        return ""
+        
+    return markdown.markdown(details_md)
 
 def main():
     """
@@ -54,9 +69,7 @@ def main():
     with open(SOURCE_MAIN_MD, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Split the main summary file into blocks for each article
     article_summaries = re.split(r'\n---\n', content)
-
     all_articles = []
     all_categories = set()
     
@@ -66,7 +79,6 @@ def main():
         if not summary_block.strip():
             continue
 
-        # Extract the file path from the header, e.g., '## 📄 administration/auditor_users.md'
         path_match = re.search(r'##\s*📄\s*([^\s]+)', summary_block)
         if not path_match:
             continue
@@ -79,11 +91,11 @@ def main():
                 with open(full_path, 'r', encoding='utf-8') as f:
                     content_md = f.read()
                 
-                title = get_title_from_md_content(content_md, relative_path)
                 description = get_description_from_summary(summary_block)
+                title = get_title_from_description(description)
+                details_html = get_details_html_from_summary(summary_block)
                 category = get_category_from_path(relative_path)
                 
-                # Create a more URL-friendly and unique ID
                 article_id = f"{category.lower().replace(' ', '-')}-{os.path.splitext(os.path.basename(relative_path))[0]}"
 
                 all_articles.append({
@@ -91,6 +103,7 @@ def main():
                     "title": title,
                     "path": relative_path,
                     "description": description,
+                    "details_html": details_html,
                     "category": category,
                     "content_md": content_md,
                 })
@@ -101,13 +114,11 @@ def main():
         else:
             print(f"Warning: File path '{full_path}' found in summary but does not exist.")
 
-    # Prepare final JSON structure
     final_data = {
         "articles": sorted(all_articles, key=lambda x: x['title']),
         "categories": ["Все категории"] + sorted(list(all_categories))
     }
 
-    # Ensure output directory exists
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     output_path = os.path.join(OUTPUT_DIR, OUTPUT_FILE)
     
