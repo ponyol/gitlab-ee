@@ -16,7 +16,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
-    <link rel="stylesheet" href="/{css_path}">
+    <link rel="stylesheet" href="{css_path}">
 </head>
 <body>
     <pre><code>{content}</code></pre>
@@ -91,7 +91,7 @@ def generate_site():
             full_html = HTML_TEMPLATE.format(title="Введение", content=html_content, css_path=CSS_FILE)
             with open(os.path.join(OUTPUT_DIR, filename), 'w', encoding='utf-8') as out_f:
                 out_f.write(full_html)
-            index_links.append(f'- <a href="/{filename}">Введение</a>')
+            index_links.append(f'- <a href="{filename}">Введение</a>')
             section_counter += 1
         sections = sections[1:] # Remove the processed intro section
 
@@ -115,7 +115,7 @@ def generate_site():
             with open(section_path, 'w', encoding='utf-8') as out_f:
                 out_f.write(full_html)
             print(f"Generated section: '{section_title_clean}' -> '{section_path}'")
-            index_links.append(f'- <a href="/{filename}">{section_title_clean}</a>')
+            index_links.append(f'- <a href="{filename}">{section_title_clean}</a>')
 
     # Create main index.html
     index_title = "Обзор функций GitLab EE"
