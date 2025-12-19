@@ -1,13 +1,87 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GitLab Premium Docs</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitLab EE Documentation - Terminal Edition</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+        <div class="terminal-title">
+            <span class="terminal-icon">●●●</span>
+            <span class="terminal-path">~/gitlab-ee-docs</span>
+        </div>
+        <div class="terminal-search">
+            <span class="prompt">$</span>
+            <input type="text" id="search" placeholder="search documentation..." autocomplete="off">
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Sidebar - Categories -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="prompt">$</span>
+                <span>ls categories/</span>
+            </div>
+            <nav id="categories" class="categories">
+                <!-- Categories will be loaded here by JavaScript -->
+            </nav>
+        </aside>
+
+        <!-- Right Content - Cards -->
+        <main class="content">
+            <div class="content-header">
+                <span class="prompt">$</span>
+                <span id="current-category">cat all_docs.md</span>
+            </div>
+            <div id="cards-container" class="cards-container">
+                <!-- Cards will be loaded here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Card Details -->
+    <div id="card-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-card-title"></span>
+                <button class="modal-close" onclick="closeCardModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-card-body">
+                <!-- Card details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Full Document -->
+    <div id="doc-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-doc-title"></span>
+                <button class="modal-close" onclick="closeDocModal()">&times;</button>
+            </div>
+            <div class="modal-body markdown-body" id="modal-doc-body">
+                <!-- Full document will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="loading" class="loading">
+        <div class="loading-text">
+            <span class="prompt">$</span>
+            <span class="blink">Loading documentation...</span>
+        </div>
+    </div>
+
+    <!-- External Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.0.0/marked.min.js"></script>
+
+    <!-- Main Script -->
+    <script src="script.js"></script>
+</body>
 </html>
